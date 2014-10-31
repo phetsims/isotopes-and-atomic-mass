@@ -10,6 +10,14 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var inherit = require( 'PHET_CORE/inherit' );
+  var PropertySet = require( 'AXON/PropertySet' );
+  var Vector2 = require( 'DOT/Vector2' );
+  var ObservableArray = require( 'AXON/ObservableArray' );
+  var SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
+
+  // Strings
+  var neutronsNameString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons.name' );
 
   //----------------------------------------------------------------------------
   // Class Data
@@ -32,9 +40,55 @@ define( function( require ) {
   var DEFAULT_ATOM_CONFIG = new ImmutableAtom( 1, 0, 1 ); // Hydrogen.
 
 
-} );
-//public class MakeIsotopesModel implements Resettable, IConfigurableAtomModel {
+  /**
+   * Constructor for a make iosotpes model
+   * @constructor
+   */
+  function MakeIsotopesModel() {
 
+    //  private final BuildAnAtomClock clock;
+    //  private final Atom atom;
+
+    // Arrays that contain the subatomic particles, whether they are in the  bucket or in the atom.  This is part of a
+    // basic assumption about how the model works, which is that the model contains all the particles, and the particles
+    // move back and forth from being in the bucket or in in the atom.
+    this.neutrons = [];
+    this.protons = new [];
+    this.electrons = new [];
+
+//    The buckets that holds the neutrons that are not in the atom.
+    this.neutronBucket = new SphereBucket( {
+      position: NEUTRON_BUCKET_POSITION,
+      size: BUCKET_SIZE,
+      baseColor: Color.gray,
+      caption: neutronsNameString
+//      sphereRadius: Neutron.RADIUS // TODO: Requires the Neutron.js ported file.
+    } );
+
+//  // Listener support
+//  private final ArrayList<Listener> listeners = new ArrayList<Listener>();
+//
+//  // An event listener that watches for when the user releases a neutron and
+//  // decides whether it should go in the bucket or the atom's nucleus.
+//  private final SphericalParticle.Adapter neutronDropListener = new SphericalParticle.Adapter() {
+//    @Override
+//    public void droppedByUser( SphericalParticle particle ) {
+//      assert particle instanceof Neutron; // Should always be a neutron.
+//      assert neutrons.contains( particle ); // Particle should always be contained by model.
+//      // The user just released this neutron.  If it is close
+//      // enough to the nucleus, send it there, otherwise
+//      // send it to its bucket.
+//      if ( particle.getPosition().distance( atom.getPosition() ) < NUCLEUS_CAPTURE_DISTANCE ) {
+//        atom.addNeutron( (Neutron) particle, false );
+//      }
+//      else {
+//        neutronBucket.addParticleNearestOpen( particle, false );
+//      }
+//    }
+//  };
+
+  }
+} );
 //  //----------------------------------------------------------------------------
 //  // Instance Data
 //  //----------------------------------------------------------------------------
