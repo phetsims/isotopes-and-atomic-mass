@@ -61,7 +61,7 @@ define( function( require ) {
     this.clock = clock; // TODO: Clock seems to be the JAVA way to step in time, might be unnecessary now.
 
     // Create the atom.
-    this.atom = new ParticleAtom( {position: Vector2.ZERO } ); // TODO: Java file passed clock into atom.
+    this.particleAtom = new ParticleAtom( {position: Vector2.ZERO } ); // TODO: Java file passed clock into atom.
 
     // Make available a 'number atom' that tracks the state of the particle atom.
     this.numberAtom = new NumberAtom();
@@ -153,7 +153,7 @@ define( function( require ) {
      * @returns {Atom}
      */
     getAtom: function() {
-      return this.atom;
+      return this.numberAtom;
     },
 
     /**
@@ -168,22 +168,22 @@ define( function( require ) {
       if ( !this.numberAtom.equals( numberAtom ) ) {
 
         // Clear the atom.
-        this.atom.clear();
+        this.particleAtom.clear();
 
         // Add the particles.
         for ( var i = 0; i < numberAtom.electronCount; i++ ) {
           var electron = new Particle( 'electron' );
-          this.atom.addParticle( electron );
+          this.particleAtom.addParticle( electron );
           this.electrons.push( electron );
         }
         for ( var j = 0; j < numberAtom.protonCount; j++ ) {
           var proton = new Particle( 'proton' );
-          this.atom.addParticle( proton );
+          this.particleAtom.addParticle( proton );
           this.protons.push( proton );
         }
         for ( var k = 0; k < numberAtom.neutronCount; k++ ) {
           var neutron = new Particle( 'neutron', { velocity: NEUTRON_MOTION_VELOCITY } );
-          this.atom.addParticle( neutron );
+          this.particleAtom.addParticle( neutron );
           this.neutrons.push( neutron );
         }
 
@@ -204,8 +204,7 @@ define( function( require ) {
       // the additions.
       for ( var i = 0; i < targetNumNeutrons; i++ ) {
         var newNeutron = new Particle( 'neutron', { velocity: NEUTRON_MOTION_VELOCITY } );
-        //      newNeutron.addListener( neutronDropListener );
-        this.neutronBucket.addParticleFirstOpen( newNeutron, true ); // TODO: I do not understand what the value of this boolean should be.
+        this.neutronBucket.addParticleFirstOpen( newNeutron, true ); // TODO: I do not understand what the value of this boolean should be yet.
         this.neutrons.push( newNeutron );
       }
     },
