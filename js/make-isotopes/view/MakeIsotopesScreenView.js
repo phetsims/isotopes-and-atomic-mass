@@ -64,6 +64,11 @@ define( function( require ) {
     particleCountLegend.scale( 1.1 );
     particleCountLegend.setLeftTop( new Vector2( 20, 10 ) );
     indicatorLayer.addChild( particleCountLegend );
+
+    // Create the node that represents the scale upon which the atom sits.
+//    var scaleNode = new AtomScaleNode( model.getAtom() ); TODO: Requires the AtomScaleNode file to be ported.
+    // The scale needs to sit just below the atom, and there are some "tweak factors" needed to get it looking right.
+//    setOffset( this.mvt.modelToViewX( 0 ) - this.getFullBoundsReference().width / 2, 530 );
   }
 
   return inherit( ScreenView, MakeIsotopesScreenView, {
@@ -79,22 +84,9 @@ define( function( require ) {
 //  //----------------------------------------------------------------------------
 //  // Constructor(s)
 //  //----------------------------------------------------------------------------
-//
-
-//
 
 //
 //
-
-//
-
-//
-//    // Create the node that represents the scale upon which the atom sits.
-//    scaleNode = new AtomScaleNode( model.getAtom() ) {{
-//      // The scale needs to sit just below the atom, and there are some
-//      // "tweak factors" needed to get it looking right.
-//      setOffset( mvt.modelToViewX( 0 ) - getFullBoundsReference().width / 2, 530 );
-//    }};
 //
 //    // Create the node that contains both the atom and the neutron bucket.
 //    Point2D topCenterOfScale = new Point2D.Double( scaleNode.getFullBoundsReference().getCenterX(),
