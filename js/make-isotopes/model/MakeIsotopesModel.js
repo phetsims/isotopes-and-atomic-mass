@@ -150,7 +150,6 @@ define( function( require ) {
      * @param {NumberAtom} numberAtom - New configuration of atomic properties to which the atom should be set.
      */
     setAtomConfiguration: function( numberAtom ) {
-      debugger;
       if ( !this.toNumberAtom( this.atom ).equals( numberAtom ) ) {
 
         // Clear the atom.
