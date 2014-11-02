@@ -38,7 +38,11 @@ require.config(
       SUN: '../../sun/js',
 
       // this sim
-      ISOTOPES_AND_ATOMIC_MASS: '.'
+      ISOTOPES_AND_ATOMIC_MASS: '.',
+
+      // sim with many shared files.
+      BUILD_AN_ATOM: '../../build-an-atom/js'
+
     },
 
     urlArgs: new Date().getTime()  // cache buster to make browser reload all included scripts

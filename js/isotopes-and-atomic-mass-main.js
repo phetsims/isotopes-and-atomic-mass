@@ -9,7 +9,9 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var IsotopesAndAtomicMassScreen = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopes-and-atomic-mass/IsotopesAndAtomicMassScreen' );
+  var MakeIsotopesScreen = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/MakeIsotopesScreen' );
+  // TODO: Getting the MakeIsotopesScreen to work first for simplicity
+//  var MixIsotopesScreen = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopes-and-atomic-mass/IsotopesAndAtomicMassScreen' );
   var Sim = require( 'JOIST/Sim' );
   var SimLauncher = require( 'JOIST/SimLauncher' );
 
@@ -36,7 +38,7 @@ define( function( require ) {
   }
 
   SimLauncher.launch( function() {
-    var sim = new Sim( simTitle, [ new IsotopesAndAtomicMassScreen() ], simOptions );
+    var sim = new Sim( simTitle, [ new MakeIsotopesScreen() ], simOptions );
     sim.start();
   } );
 } );
