@@ -13,24 +13,57 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var ScreenView = require( 'JOIST/ScreenView' );
   var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
+  var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
+  var Vector2 = require( 'DOT/Vector2' );
+  var Dimension2 = require( 'DOT/Dimension2' );
+  var Node = require( 'SCENERY/nodes/Node' );
+  var ParticleCountDisplay = require( 'BUILD_AN_ATOM/common/view/ParticleCountDisplay' );
+
+  // class data
+  var STAGE_SIZE = new Dimension2( 1008, 679 );
 
   /**
    * @param {MakeIsotopesModel} makeIsotopesModel
    * @constructor
    */
   function MakeIsotopesScreenView( makeIsotopesModel ) {
+    // supertype constructor
+    ScreenView.call( this, {renderer: 'svg'} );
 
-    ScreenView.call( this );
+    // Set up the model-canvas transform.  IMPORTANT NOTES: The multiplier factors for the point in the view can be
+    // adjusted to shift the center right or left, and the scale factor can be adjusted to zoom in or out (smaller
+    // numbers zoom out, larger ones zoom in).
+    this.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
+      Vector2.ZERO,
+      new Vector2( Math.round( STAGE_SIZE.width * 0.32 ), Math.round( STAGE_SIZE.height * 0.49 ) ),
+      2.0 ); // "Zoom factor" - smaller zooms out, larger zooms in.
+
+//    this.symbolWindow = new MaximizeControlNode(); TODO: Figure out what these are.
+//    this.abundanceWindow = new abundanceWindow();
+//    this.scaleNode = new AtomScaleNode();
+
+    // Layers upon which the various display elements are placed.  This allows us to created the desired layering
+    // effects.
+    var indicatorLayer = new Node();
+    this.addChild( indicatorLayer );
+    var atomLayer = new Node();
+    this.addChild( atomLayer );
 
     // Create and add the Reset All Button in the bottom right, which resets the model
     var resetAllButton = new ResetAllButton( {
       listener: function() {
-        isotopesAndAtomicMassModel.reset();
+        makeIsotopesModel.reset();
       },
       right: this.layoutBounds.maxX - 10,
       bottom: this.layoutBounds.maxY - 10
     } );
     this.addChild( resetAllButton );
+
+    // Add the legend/particle count indicator.
+    var particleCountLegend = new ParticleCountDisplay( makeIsotopesModel.getNumberAtom(), 13, 250 );
+    particleCountLegend.scale( 1.1 );
+    particleCountLegend.setLeftTop( new Vector2( 20, 10 ) );
+    indicatorLayer.addChild( particleCountLegend );
   }
 
   return inherit( ScreenView, MakeIsotopesScreenView, {
@@ -42,62 +75,19 @@ define( function( require ) {
   } );
 } );
 
-
-//  //----------------------------------------------------------------------------
-//  // Instance Data
-//  //----------------------------------------------------------------------------
-//
-//  // Model
-//  private final MakeIsotopesModel model;
-//
-//  // View
-//  private final PNode rootNode;
-//
-//  // Transform.
-//  private final ModelViewTransform mvt;
-//
-//  private final MaximizeControlNode symbolWindow;
-//  private final MaximizeControlNode abundanceWindow;
-//
-//  private final AtomScaleNode scaleNode;
 //
 //  //----------------------------------------------------------------------------
 //  // Constructor(s)
 //  //----------------------------------------------------------------------------
 //
-//  public MakeIsotopesCanvas( final MakeIsotopesModel model ) {
-//    this.model = model;
+
 //
-//    // Set up the canvas-screen transform.
-//    setWorldTransformStrategy( new PhetPCanvas.CenteredStage( this, STAGE_SIZE ) );
+
 //
-//    // Set up the model-canvas transform.  IMPORTANT NOTES: The multiplier
-//    // factors for the point in the view can be adjusted to shift the
-//    // center right or left, and the scale factor can be adjusted to zoom
-//    // in or out (smaller numbers zoom out, larger ones zoom in).
-//    mvt = ModelViewTransform.createSinglePointScaleInvertedYMapping(
-//      new Point2D.Double( 0, 0 ),
-//      new Point( (int) Math.round( STAGE_SIZE.width * 0.32 ), (int) Math.round( STAGE_SIZE.height * 0.49 ) ),
-//    2.0 ); // "Zoom factor" - smaller zooms out, larger zooms in.
 //
-//    setBackground( BACKGROUND_COLOR );
+
 //
-//    // Root of our scene graph
-//    rootNode = new PNode();
-//    addWorldChild( rootNode );
-//
-//    // Layers upon which the various display elements are placed.  This
-//    // allows us to created the desired layering effects.
-//    PNode indicatorLayer = new PNode();
-//    rootNode.addChild( indicatorLayer );
-//    PNode atomLayer = new PNode();
-//    rootNode.addChild( atomLayer );
-//
-//    // Add the legend/particle count indicator.
-//    final ParticleCountLegend particleCountLegend = new ParticleCountLegend( model.getAtom(), BACKGROUND_COLOR );
-//    particleCountLegend.setScale( 1.1 );
-//    particleCountLegend.setOffset( 20, 10 );
-//    indicatorLayer.addChild( particleCountLegend );
+
 //
 //    // Create the node that represents the scale upon which the atom sits.
 //    scaleNode = new AtomScaleNode( model.getAtom() ) {{

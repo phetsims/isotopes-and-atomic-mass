@@ -149,10 +149,11 @@ define( function( require ) {
     },
 
     /**
-     * Get the current atom of this model.
-     * @returns {Atom}
+     * Get the current atom of this model, in its number representation
+     *
+     * @returns {NumberAtom}
      */
-    getAtom: function() {
+    getNumberAtom: function() {
       return this.numberAtom;
     },
 

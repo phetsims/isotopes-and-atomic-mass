@@ -11,7 +11,7 @@ define( function( require ) {
 
   // modules
   var MakeIsotopesModel = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/model/MakeIsotopesModel' );
-  var IsotopesAndAtomicMassScreenView = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/MakeIsotopesScreenView' );
+  var MakeIsotopesScreenView = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/MakeIsotopesScreenView' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Screen = require( 'JOIST/Screen' );
 
@@ -29,7 +29,7 @@ define( function( require ) {
 
     Screen.call( this, isotopesAndAtomicMassSimString, icon,
       function() { return new MakeIsotopesModel(); },
-      function( model ) { return new IsotopesAndAtomicMassScreenView( model ); },
+      function( model ) { return new MakeIsotopesScreenView( model ); },
       { backgroundColor: '#FFFF99' }
     );
   }
