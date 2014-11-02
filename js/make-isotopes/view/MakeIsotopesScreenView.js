@@ -42,14 +42,7 @@ define( function( require ) {
   } );
 } );
 
-//public class MakeIsotopesCanvas extends PhetPCanvas implements Resettable {
-//
-//  //----------------------------------------------------------------------------
-//  // Class Data
-//  //----------------------------------------------------------------------------
-//
-//  private static final Color BACKGROUND_COLOR = BuildAnAtomConstants.CANVAS_BACKGROUND;
-//
+
 //  //----------------------------------------------------------------------------
 //  // Instance Data
 //  //----------------------------------------------------------------------------

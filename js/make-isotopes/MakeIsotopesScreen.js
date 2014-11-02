@@ -30,7 +30,7 @@ define( function( require ) {
     Screen.call( this, isotopesAndAtomicMassSimString, icon,
       function() { return new MakeIsotopesModel(); },
       function( model ) { return new IsotopesAndAtomicMassScreenView( model ); },
-      { backgroundColor: 'white' }
+      { backgroundColor: '#FFFF99' }
     );
   }
 
