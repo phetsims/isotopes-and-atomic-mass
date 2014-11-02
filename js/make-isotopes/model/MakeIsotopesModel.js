@@ -153,7 +153,7 @@ define( function( require ) {
       if ( !this.toNumberAtom( this.atom ).equals( numberAtom ) ) {
 
         // Clear the atom.
-        this.clearAtom();
+        this.atom.clear();
 
         // Add the particles.
         for ( var i = 0; i < numberAtom.electronCount; i++ ) {
@@ -175,15 +175,6 @@ define( function( require ) {
         // Whenever the atom configuration is set, the neutron bucket is set to contain its default number of neutrons.
         this.setNeutronBucketCount( DEFAULT_NUM_NEUTRONS_IN_BUCKET );
       }
-    },
-
-    /**
-     * Remove all particles that are currently contained in the atom from both the atom and from the model.  Note that
-     * there may still be particles left in the model after doing this, since they could be in the bucket.
-     * TODO: This is actually fully implemented in ParticleAtom.  Calling that function directly will probably be better.
-     */
-    clearAtom: function() {
-      this.atom.clear();
     },
 
     /**
