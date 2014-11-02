@@ -56,10 +56,25 @@ define( function( require ) {
     // Supertype constructor
     PropertySet.call( this, {} );
 
+    var thisModel = this; // Carry this through scope
+
     this.clock = clock; // TODO: Clock seems to be the JAVA way to step in time, might be unnecessary now.
 
     // Create the atom.
     this.atom = new ParticleAtom( {position: Vector2.ZERO } ); // TODO: Java file passed clock into atom.
+
+    // Make available a 'number atom' that tracks the state of the particle atom.
+    this.numberAtom = new NumberAtom();
+    var updateNumberAtom = function() {
+      thisModel.numberAtom.protonCount = thisModel.particleAtom.protons.length;
+      thisModel.numberAtom.neutronCount = thisModel.particleAtom.neutrons.length;
+      thisModel.numberAtom.electronCount = thisModel.particleAtom.electrons.length;
+    };
+
+    // Update the number atom when the particle atom changes.
+    thisModel.particleAtom.protons.lengthProperty.link( updateNumberAtom );
+    thisModel.particleAtom.electrons.lengthProperty.link( updateNumberAtom );
+    thisModel.particleAtom.neutrons.lengthProperty.link( updateNumberAtom );
 
     // Arrays that contain the subatomic particles, whether they are in the  bucket or in the atom.  This is part of a
     // basic assumption about how the model works, which is that the model contains all the particles, and the particles
@@ -150,7 +165,7 @@ define( function( require ) {
      * @param {NumberAtom} numberAtom - New configuration of atomic properties to which the atom should be set.
      */
     setAtomConfiguration: function( numberAtom ) {
-      if ( !this.toNumberAtom( this.atom ).equals( numberAtom ) ) {
+      if ( !this.numberAtom.equals( numberAtom ) ) {
 
         // Clear the atom.
         this.atom.clear();
@@ -223,22 +238,6 @@ define( function( require ) {
      */
     getNeutronBucket: function() {
       return this.neutronBucket;
-    },
-
-    /**
-     * Convert a ParticleAtom object to its equivalent NumberAtom object. This will allow comparing of two atoms
-     * which may be modeled with different representations.
-     *
-     * TODO: perhaps this should be moved to ParticleAtom.js?  Or maybe there is a better way to compare different representations of atoms.
-     * @param {ParticleAtom} particleAtom - Atom represented by particle atom model to be converted to number atom model
-     * @returns {NumberAtom}
-     */
-    toNumberAtom: function( particleAtom ) {
-      return new NumberAtom( {
-        protonCount: particleAtom.protons.length,
-        electronCount: particleAtom.electrons.length,
-        neutronCount: particleAtom.neutrons.length
-      } )
     }
 
   } );
