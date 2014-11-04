@@ -4,6 +4,9 @@
  * This is the primary model class for the Make Isotopes module.  This class acts as the main interface for model
  * actions, and contains the constituent model elements.  It watches all neutrons and, based on where they are placed by
  * the user, moves them between the neutron bucket and the atom. In this model, units are picometers (1E-12).
+ *
+ * @author John Blanco
+ * @author Jesse Greenberg
  */
 
 define( function( require ) {
