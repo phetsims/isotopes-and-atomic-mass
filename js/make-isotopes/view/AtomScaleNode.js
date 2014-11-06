@@ -19,41 +19,96 @@ define( function( require ) {
   var Node = require( 'SCENERY/nodes/Node' );
   var Color = require( 'SCENERY/util/Color' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
+  var Text = require( 'SCENERY/nodes/Text' );
+  var Property = require( 'AXON/Property' );
 
   // class data
-  //  private enum DisplayMode {MASS_NUMBER, ATOMIC_MASS}
+  var DISPLAY_MODE = { MASS_NUMBER:"mass number", ATOMIC_MASS: "atomic mass" };
   var COLOR = new Color( 228, 194, 167 );
   var SIZE = new Dimension2( 320, 125 );
-  var WEIGH_PLATE_WIDTH = SIZE.getWidth() * 0.70;
-  var STROKE = new BasicStroke( 2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND );
+  var WEIGH_PLATE_WIDTH = SIZE.width * 0.70;
+//  var STROKE = new BasicStroke( 2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND );
   var STROKE_PAINT = Color.BLACK;
 
   /**
    * Constructor for an AtomScaleNode.
    *
+   * @param {atom} atom -
    * @constructor
    */
   function AtomScaleNode( atom ) {
 
-    Node.call( this )
+    Node.call( this );
+
+    var displayModeProperty = new Property( DISPLAY_MODE.MASS_NUMBER );
 
     // Set up some helper variables.
     var centerX = SIZE.width / 2;
-
     // NOTE: The scale shapes are generated from the bottom up, since adding them in this order creates the correct
     // layering effect.
-
     // Add the front of the scale base.
-    var frontOfBaseShape = new Rectangle( 0, SIZE.height * 0.55, SIZE.width, SIZE.height * 0.5 );
-//    var frontOfBaseNode = new PhetPPath( frontOfBaseShape, COLOR, STROKE, STROKE_PAINT );
-//    this.addChild( frontOfBaseNode );
+    var frontOfBaseShape = new Rectangle( 0, SIZE.height * 0.55, SIZE.width, SIZE.height * 0.5, {
+      fill: COLOR,
+      lineWidth: 2,
+      stroke: STROKE_PAINT
+    } );
+    this.addChild( frontOfBaseShape );
 
-    // Add the readout to the scale base. TODO: Requires port of ScaleReadoutNode.js
+    var scaleReadoutNode = new ScaleReadoutNode( atom, displayModeProperty );
+    scaleReadoutNode.setCenter( frontOfBaseShape.center );
+    this.addChild( scaleReadoutNode );
+
+    // Add the readout to the scale base.
 //    final PNode scaleReadoutNode = new ScaleReadoutNode( atom, displayModeProperty ) {{
 //      setOffset( SIZE.getWidth() * 0.05, frontOfBaseNode.getFullBoundsReference().getCenterY() - getFullBoundsReference().height / 2 );
 //    }};
 //    addChild( scaleReadoutNode );
 
+  }
+
+  /**
+   * Class that defines the readout on the front of the scale.  This readout can display an atom's mass as either the
+   * mass number, which is an integer number representing the total number of nucleons, or as the atomic mass, which is
+   * the relative actual mass of the atom.
+   *
+   * @param {NumberAtom} atom
+   * @param {Property} displayModProperty
+   *
+   * @author John Blanco
+   * @author Jesse Greenberg
+   */
+
+  function ScaleReadoutNode( atom, displayModeProperty ) {
+
+    this.atom = atom;
+    this.displayModeProperty = displayModeProperty;
+
+    var readoutBackground = new Rectangle( 0, 0, SIZE.width * 0.4, SIZE.height * 0.33, 5, 5, {
+      fill: Color.WHITE,
+      lineWidth: 2,
+      stroke: Color.BLACK
+    } );
+
+//
+//      // Add the text that will appear in the readout.
+//      addChild( readoutText );
+//
+//      // Watch the property that represents the display mode and update
+//      // the readout when it changes.
+//      displayModeProperty.addObserver( new SimpleObserver() {
+//        public void update() {
+//          updateReadout();
+//        }
+//      } );
+//
+//      // Watch the atom and update the readout whenever it changes.
+//      atom.addAtomListener( new AtomListener.Adapter() {
+//        @Override
+//        public void configurationChanged() {
+//          updateReadout();
+//        }
+//      } );
+    return readoutBackground;
   }
 
   return inherit( Node, AtomScaleNode, {
@@ -160,59 +215,7 @@ define( function( require ) {
 //    return weighPlateTop.getFullBoundsReference().getHeight();
 //  }
 //
-//  // ------------------------------------------------------------------------
-//  // Inner Classes and Interfaces
-//  //------------------------------------------------------------------------
 //
-//  /**
-//   * Class that defines the readout on the front of the scale.  This readout
-//   * can display an atom's mass as either the mass number, which is an
-//   * integer number representing the total number of nucleons, or as the
-//   * atomic mass, which is the relative actual mass of the atom.
-//   *
-//   * @author John Blanco
-//   */
-//  private static class ScaleReadoutNode extends PNode {
-//
-//    private static final DecimalFormat atomicMassNumberFormatter = new DecimalFormat( "#0.00000" );
-//    PText readoutText = new PText() {{
-//      setFont( new PhetFont( 24 ) );
-//    }};
-//    Property<DisplayMode> displayModeProperty;
-//    IDynamicAtom atom;
-//    private final PPath readoutBackground;
-//
-//    public ScaleReadoutNode( IDynamicAtom atom, Property<DisplayMode> displayModeProperty ) {
-//
-//      this.atom = atom;
-//      this.displayModeProperty = displayModeProperty;
-//
-//      readoutBackground = new PhetPPath(
-//        new RoundRectangle2D.Double( 0, 0, SIZE.getWidth() * 0.4, SIZE.getHeight() * 0.33, 5, 5 ),
-//        Color.WHITE,
-//        new BasicStroke( 2 ),
-//        Color.BLACK );
-//      addChild( readoutBackground );
-//
-//      // Add the text that will appear in the readout.
-//      addChild( readoutText );
-//
-//      // Watch the property that represents the display mode and update
-//      // the readout when it changes.
-//      displayModeProperty.addObserver( new SimpleObserver() {
-//        public void update() {
-//          updateReadout();
-//        }
-//      } );
-//
-//      // Watch the atom and update the readout whenever it changes.
-//      atom.addAtomListener( new AtomListener.Adapter() {
-//        @Override
-//        public void configurationChanged() {
-//          updateReadout();
-//        }
-//      } );
-//    }
 //
 //    private void updateReadout() {
 //      if ( displayModeProperty.get() == DisplayMode.MASS_NUMBER ) {

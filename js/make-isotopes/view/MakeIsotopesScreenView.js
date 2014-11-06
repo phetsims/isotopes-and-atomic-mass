@@ -18,6 +18,7 @@ define( function( require ) {
   var Dimension2 = require( 'DOT/Dimension2' );
   var Node = require( 'SCENERY/nodes/Node' );
   var ParticleCountDisplay = require( 'BUILD_AN_ATOM/common/view/ParticleCountDisplay' );
+  var AtomScaleNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/AtomScaleNode' );
 
   // class data
   var STAGE_SIZE = new Dimension2( 1008, 679 );
@@ -66,9 +67,10 @@ define( function( require ) {
     indicatorLayer.addChild( particleCountLegend );
 
     // Create the node that represents the scale upon which the atom sits.
-//    var scaleNode = new AtomScaleNode( model.getAtom() ); TODO: Requires the AtomScaleNode file to be ported.
+    var scaleNode = new AtomScaleNode( makeIsotopesModel.getNumberAtom() );
     // The scale needs to sit just below the atom, and there are some "tweak factors" needed to get it looking right.
-//    setOffset( this.mvt.modelToViewX( 0 ) - this.getFullBoundsReference().width / 2, 530 );
+    scaleNode.setCenterBottom( new Vector2( this.mvt.modelToViewX( 0 ), this.bottom ) );
+    this.addChild( scaleNode );
   }
 
   return inherit( ScreenView, MakeIsotopesScreenView, {
