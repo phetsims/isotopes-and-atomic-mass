@@ -21,9 +21,10 @@ define( function( require ) {
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var Text = require( 'SCENERY/nodes/Text' );
   var Property = require( 'AXON/Property' );
+  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
 
   // class data
-  var DISPLAY_MODE = { MASS_NUMBER:"mass number", ATOMIC_MASS: "atomic mass" };
+  var DISPLAY_MODE = { MASS_NUMBER: "mass number", ATOMIC_MASS: "atomic mass" };
   var COLOR = new Color( 228, 194, 167 );
   var SIZE = new Dimension2( 320, 125 );
   var WEIGH_PLATE_WIDTH = SIZE.width * 0.70;
@@ -66,6 +67,11 @@ define( function( require ) {
 
   }
 
+  return inherit( Node, AtomScaleNode, {
+
+  } );
+
+
   /**
    * Class that defines the readout on the front of the scale.  This readout can display an atom's mass as either the
    * mass number, which is an integer number representing the total number of nucleons, or as the atomic mass, which is
@@ -89,18 +95,17 @@ define( function( require ) {
       stroke: Color.BLACK
     } );
 
-//
-//      // Add the text that will appear in the readout.
-//      addChild( readoutText );
-//
-//      // Watch the property that represents the display mode and update
-//      // the readout when it changes.
-//      displayModeProperty.addObserver( new SimpleObserver() {
-//        public void update() {
-//          updateReadout();
-//        }
-//      } );
-//
+    var readoutText = new Text( '', { font: new PhetFont( 24 ) } );
+    readoutText.setCenter( readoutBackground.getCenter() );
+
+    // Add the text that will appear in the readout.
+    readoutBackground.addChild( readoutText );
+
+    // Watch the property that represents the display mode and update the readout when it changes.
+    this.displayModeProperty.link( function() {
+      updateReadout();
+    } );
+
 //      // Watch the atom and update the readout whenever it changes.
 //      atom.addAtomListener( new AtomListener.Adapter() {
 //        @Override
@@ -108,13 +113,31 @@ define( function( require ) {
 //          updateReadout();
 //        }
 //      } );
+
+    function updateReadout() {
+
+      if ( displayModeProperty.get() === DISPLAY_MODE.MASS_NUMBER ) {
+        readoutText.setText( atom.massNumber.toString() );
+      }
+      else {
+        var atomicMass = atom.getAtomicMass();
+        readoutText.setText( atomicMass > 0 ? atomicMass.toFixed( 5 ) : "--" );
+      }
+
+      // Make sure that the text fits in the display.
+      readoutText.scale( 1 );
+      if ( readoutText.width > readoutBackground.rectWidth || readoutText.height > readoutBackground.rectHeight ) {
+        var scaleFactor = Math.min( readoutBackground.rectWidth / readoutText.width, readoutBackground.rectHeight / readoutText.height );
+        readoutText.scale( scaleFactor );
+      }
+
+      // Center the text in the display.
+      readoutText.setCenter( new Vector2( readoutBackground.rectWidth / 2, readoutBackground.rectHeight / 2 ) );
+
+    }
+
     return readoutBackground;
   }
-
-  return inherit( Node, AtomScaleNode, {
-
-
-  } );
 
 } );
 //
@@ -217,28 +240,7 @@ define( function( require ) {
 //
 //
 //
-//    private void updateReadout() {
-//      if ( displayModeProperty.get() == DisplayMode.MASS_NUMBER ) {
-//        readoutText.setText( Integer.toString( atom.getMassNumber() ) );
-//      }
-//      else {
-//        double atomicMass = atom.getAtomicMass();
-//        readoutText.setText( atomicMass > 0 ? atomicMassNumberFormatter.format( atomicMass ) : "--" );
-//      }
-//      // Make sure that the text fits in the display.
-//      readoutText.setScale( 1 );
-//      if ( readoutText.getFullBoundsReference().width > readoutBackground.getFullBoundsReference().width ||
-//           readoutText.getFullBoundsReference().height > readoutBackground.getFullBoundsReference().height ) {
-//        double scaleFactor = Math.min(
-//            readoutBackground.getFullBoundsReference().width / readoutText.getFullBoundsReference().width,
-//            readoutBackground.getFullBoundsReference().height / readoutText.getFullBoundsReference().height );
-//        readoutText.setScale( scaleFactor );
-//      }
-//      // Center the text in the display.
-//      readoutText.centerFullBoundsOnPoint( readoutBackground.getFullBoundsReference().getCenterX(),
-//        readoutBackground.getFullBoundsReference().getCenterY() );
-//    }
-//  }
+
 //
 //  /**
 //   * This class represents a Piccolo node that contains the radio buttons
