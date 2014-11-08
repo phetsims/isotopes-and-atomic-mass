@@ -18,12 +18,12 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
   var ObservableArray = require( 'AXON/ObservableArray' );
   var SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
-  var Particle = require( 'BUILD_AN_ATOM/common/model/Particle' );
-  var ParticleAtom = require( 'BUILD_AN_ATOM/common/model/ParticleAtom' );
+  var Particle = require( 'SHRED/model/Particle' );
+  var ParticleAtom = require( 'SHRED/model/ParticleAtom' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var Color = require( 'SCENERY/util/Color' );
-  var SharedConstants = require( 'BUILD_AN_ATOM/common/SharedConstants' );
-  var NumberAtom = require( 'BUILD_AN_ATOM/common/model/NumberAtom' );
+  var SharedConstants = require( 'SHRED/SharedConstants' );
+  var NumberAtom = require( 'SHRED/model/NumberAtom' );
 
   // Strings
   var neutronsNameString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons.name' );

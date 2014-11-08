@@ -36,12 +36,10 @@ require.config(
       SCENERY: '../../scenery/js',
       SCENERY_PHET: '../../scenery-phet/js',
       SUN: '../../sun/js',
+      SHRED: '../../shred/js',
 
       // this sim
-      ISOTOPES_AND_ATOMIC_MASS: '.',
-
-      // sim with many shared files.
-      BUILD_AN_ATOM: '../../build-an-atom/js'
+      ISOTOPES_AND_ATOMIC_MASS: '.'
 
     },
 
