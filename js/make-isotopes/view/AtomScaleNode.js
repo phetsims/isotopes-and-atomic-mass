@@ -39,7 +39,7 @@ define( function( require ) {
   /**
    * Constructor for an AtomScaleNode.
    *
-   * @param {atom} atom -
+   * @param {atom} atom
    * @constructor
    */
   function AtomScaleNode( atom ) {
@@ -122,12 +122,12 @@ define( function( require ) {
     // Create the color gradient for the weigh plate top.
     var weighPlateTopPaint = new LinearGradient( 0, weighPlateTopShape.bounds.minY, 0, weighPlateTopShape.bounds.maxY );
     weighPlateTopPaint.addColorStop( 0, '#BBA28D' ).addColorStop( 0.5, COLOR ).addColorStop( 1, '#EBD9CB' );
-    var weighPlateTop = new Path( weighPlateTopShape, {
+    this.weighPlateTop = new Path( weighPlateTopShape, {
       lineWidth: 2,
       stroke: Color.BLACK,
       fill: weighPlateTopPaint
     } );
-    this.addChild( weighPlateTop );
+    this.addChild( this.weighPlateTop );
 
     // Add the front of the weigh plate.
     var frontOfWeighPlateShape = new Rectangle( centerX - WEIGH_PLATE_WIDTH / 2, SIZE.height * 0.125, WEIGH_PLATE_WIDTH, SIZE.height * 0.15, {
@@ -140,13 +140,22 @@ define( function( require ) {
 
   return inherit( Node, AtomScaleNode, {
 
+    /**
+     * Reset the atom scale node to its initial state by resetting the display mode property.
+     */
     reset: function() {
       this.displayModeProperty.reset();
+    },
+
+    /**
+     * Get the height of the weigh plate top.  This should be the very top of this node.
+     * TODO: See if you can just use the top of this node to make weighPlate a private variable.
+     *
+     * @returns {number}
+     */
+    getWeighPlateTopProjectedHeight: function() {
+      return this.weighPlateTop.getHeight();
     }
-//
-//  public double getWeighPlateTopProjectedHeight() {
-//    return weighPlateTop.getFullBoundsReference().getHeight();
-//  }
 
   } );
 
@@ -157,12 +166,12 @@ define( function( require ) {
    * the relative actual mass of the atom.
    *
    * @param {NumberAtom} atom
-   * @param {Property} displayModProperty
+   * @param {Property} displayModeProperty
+   * @constructor
    *
    * @author John Blanco
    * @author Jesse Greenberg
    */
-
   function ScaleReadoutNode( atom, displayModeProperty ) {
 
     this.atom = atom;
@@ -217,6 +226,7 @@ define( function( require ) {
   /**
    * This object contains the radio buttons that allow the user to select the display mode for the scale.
    *
+   * @constructor
    * @author John Blanco
    * @author Jesse Greenberg
    */
@@ -245,13 +255,3 @@ define( function( require ) {
   }
 
 } );
-
-//
-//  // ------------------------------------------------------------------------
-//  // Methods
-//  // ------------------------------------------------------------------------
-//
-
-//
-//
-//
