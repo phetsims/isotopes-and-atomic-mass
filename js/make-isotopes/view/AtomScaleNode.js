@@ -22,6 +22,8 @@ define( function( require ) {
   var Text = require( 'SCENERY/nodes/Text' );
   var Property = require( 'AXON/Property' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  var RadioButtonGroup = require( 'SUN/buttons/RadioButtonGroup' );
+  var Panel = require( 'SUN/Panel' );
 
   // class data
   var DISPLAY_MODE = { MASS_NUMBER: "mass number", ATOMIC_MASS: "atomic mass" };
@@ -47,6 +49,7 @@ define( function( require ) {
     var centerX = SIZE.width / 2;
     // NOTE: The scale shapes are generated from the bottom up, since adding them in this order creates the correct
     // layering effect.
+
     // Add the front of the scale base.
     var frontOfBaseNode = new Rectangle( 0, SIZE.height * 0.55, SIZE.width, SIZE.height * 0.5, {
       fill: COLOR,
@@ -54,10 +57,16 @@ define( function( require ) {
       stroke: STROKE_PAINT
     } );
     this.addChild( frontOfBaseNode );
-
+    // Add the scale readout node which displays either atomic mass or number.
     var scaleReadoutNode = new ScaleReadoutNode( atom, displayModeProperty );
     scaleReadoutNode.setLeftCenter( new Vector2( SIZE.width * 0.05, frontOfBaseNode.centerY ) );
     this.addChild( scaleReadoutNode );
+
+    // Add the display mode selector to the scale base.
+    var displayModeSelectionNode = new DisplayModeSelectionNode( displayModeProperty );
+    // Position the selector next to the readout.
+    displayModeSelectionNode.setLeftCenter( new Vector2( scaleReadoutNode.getRight() + 5, frontOfBaseNode.centerY ) );
+    this.addChild( displayModeSelectionNode );
 
   }
 
@@ -81,7 +90,7 @@ define( function( require ) {
   function ScaleReadoutNode( atom, displayModeProperty ) {
 
     this.atom = atom;
-    this.displayModeProperty = displayModeProperty;
+    var displayModeProperty = displayModeProperty;
 
     var readoutBackground = new Rectangle( 0, 0, SIZE.width * 0.4, SIZE.height * 0.33, 5, 5, {
       fill: Color.WHITE,
@@ -96,7 +105,7 @@ define( function( require ) {
     readoutBackground.addChild( readoutText );
 
     // Watch the property that represents the display mode and update the readout when it changes.
-    this.displayModeProperty.link( function() {
+    displayModeProperty.link( function() {
       updateReadout();
     } );
 
@@ -133,6 +142,37 @@ define( function( require ) {
     return readoutBackground;
   }
 
+
+  /**
+   * This object contains the radio buttons that allow the user to select the display mode for the scale.
+   *
+   * @author John Blanco
+   * @author Jesse Greenberg
+   */
+  function DisplayModeSelectionNode( displayModeProperty ) {
+
+    var LABEL_FONT = new PhetFont( 16 );
+
+    var radioButtonContent = [
+      { value: DISPLAY_MODE.MASS_NUMBER, node: new Text( 'Mass Number', { font: LABEL_FONT } ) },
+      { value: DISPLAY_MODE.ATOMIC_MASS, node: new Text( 'Atomic Mass (amu)', { font: LABEL_FONT } ) }
+    ];
+
+    var radioButtonGroup = new RadioButtonGroup( displayModeProperty, radioButtonContent, {
+      orientation: 'vertical',
+      selectedLineWidth: 2,
+      deselectedLineWidth: 0,
+      spacing: 1
+    } );
+
+    return new Panel( radioButtonGroup, {
+      lineWidth: 0,
+      fill: COLOR,
+      yMargin: 0
+    } );
+
+  }
+
 } );
 //
 //  // ------------------------------------------------------------------------
@@ -141,18 +181,7 @@ define( function( require ) {
 //
 
 //
-//    // Add the display mode selector to the scale base.
-//    addChild( new DisplayModeSelectionNode( displayModeProperty ) {{
-//      // Scale the selector if necessary.  This is here primarily in
-//      // support of translation.
-//      double maxAllowableWidth = frontOfBaseNode.getFullBoundsReference().getMaxX() - scaleReadoutNode.getFullBoundsReference().getMaxX() - 10;
-//      if ( getFullBoundsReference().getWidth() > maxAllowableWidth ) {
-//        setScale( maxAllowableWidth / getFullBoundsReference().width );
-//      }
-//      // Position the selector next to the readout.
-//      setOffset( scaleReadoutNode.getFullBoundsReference().getMaxX() + 5,
-//          frontOfBaseNode.getFullBoundsReference().getCenterY() - getFullBoundsReference().height / 2 );
-//    }} );
+
 //
 //    // Add the top portion of the scale base.  This is meant to look like
 //    // a tilted rectangle.  Because, hey, it's all a matter of
@@ -234,33 +263,3 @@ define( function( require ) {
 //
 //
 //
-
-//
-//  /**
-//   * This class represents a Piccolo node that contains the radio buttons
-//   * that allows the user to select the display mode for the scale.
-//   *
-//   * @author John Blanco
-//   */
-//  public static class DisplayModeSelectionNode extends PNode {
-//
-//    private static final Font LABEL_FONT = new PhetFont( 16 );
-//
-//    public DisplayModeSelectionNode( Property<DisplayMode> displayModeProperty ) {
-//      JPanel buttonPanel = new JPanel( new GridLayout( 2, 1 ) ) {{
-//        setBackground( COLOR );
-//      }};
-//      PropertyRadioButton<DisplayMode> massNumberButton = new PropertyRadioButton<DisplayMode>( BuildAnAtomStrings.MASS_NUMBER, displayModeProperty, DisplayMode.MASS_NUMBER ) {{
-//        setBackground( COLOR );
-//        setFont( LABEL_FONT );
-//      }};
-//      buttonPanel.add( massNumberButton );
-//      PropertyRadioButton<DisplayMode> atomicMassButton = new PropertyRadioButton<DisplayMode>( BuildAnAtomStrings.ATOMIC_MASS, displayModeProperty, DisplayMode.ATOMIC_MASS ) {{
-//        setBackground( COLOR );
-//        setFont( LABEL_FONT );
-//      }};
-//      buttonPanel.add( atomicMassButton );
-//      addChild( new PSwing( buttonPanel ) );
-//    }
-//  }
-//}
