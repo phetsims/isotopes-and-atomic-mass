@@ -88,19 +88,27 @@ define( function( require ) {
       stroke: Color.BLACK,
       fill: scaleBaseTopPaint
     } );
-
     this.addChild( scaleBaseTop );
 
-//    GradientPaint scaleBaseTopPaint = new GradientPaint(
-//      (float) scaleBaseTopShapeBounds.getCenterX(),
-//      (float) scaleBaseTopShapeBounds.getMaxY(),
-//      ColorUtils.brighterColor( COLOR, 0.5 ),
-//      (float) scaleBaseTopShapeBounds.getCenterX(),
-//      (float) scaleBaseTopShapeBounds.getMinY(),
-//      ColorUtils.darkerColor( COLOR, 0.5 )
-//  );
-//    PNode scaleBaseTop = new PhetPPath( scaleBaseTopShape.getGeneralPath(), scaleBaseTopPaint, STROKE, STROKE_PAINT );
-//    addChild( scaleBaseTop );
+    // Add the shaft that connects the base to the weigh plate.
+    var connectingShaftShape = new Shape();
+    var connectingShaftDistanceFromTop = SIZE.height * 0.15;
+    var connectingShaftWidth = SIZE.width * 0.1;
+    var connectingShaftHeight = SIZE.height * 0.30;
+    connectingShaftShape.moveTo( centerX - connectingShaftWidth / 2, connectingShaftDistanceFromTop );
+    connectingShaftShape.lineTo( centerX - connectingShaftWidth / 2, connectingShaftDistanceFromTop + connectingShaftHeight );
+    connectingShaftShape.quadraticCurveTo( centerX, connectingShaftDistanceFromTop + connectingShaftHeight * 1.2, SIZE.width / 2 + connectingShaftWidth / 2, connectingShaftDistanceFromTop + connectingShaftHeight );
+    connectingShaftShape.lineTo( centerX + connectingShaftWidth / 2, connectingShaftDistanceFromTop );
+
+    // Create the color gradient for the shaft fill.
+    var connectingShaftPaint = new LinearGradient( connectingShaftShape.bounds.minX, 0, connectingShaftShape.bounds.maxX, 0);
+    connectingShaftPaint.addColorStop( 0, '#EBD9CB' ).addColorStop( 0.5, COLOR ).addColorStop( 1, '#BBA28D' );
+    var connectingShaft = new Path( connectingShaftShape, {
+      lineWidth: 2,
+      stroke: Color.BLACK,
+      fill: connectingShaftPaint
+    } );
+    this.addChild( connectingShaft );
 
   }
 
@@ -218,25 +226,7 @@ define( function( require ) {
 
 
 //
-//    // Add the shaft that connects the base to the weigh plate.
-//    DoubleGeneralPath connectingShaftShape = new DoubleGeneralPath();
-//    double connectingShaftDistanceFromTop = SIZE.getHeight() * 0.15;
-//    double connectingShaftWidth = SIZE.getWidth() * 0.1;
-//    double connectingShaftHeight = SIZE.getHeight() * 0.30;
-//    connectingShaftShape.moveTo( centerX - connectingShaftWidth / 2, connectingShaftDistanceFromTop );
-//    connectingShaftShape.lineTo( centerX - connectingShaftWidth / 2, connectingShaftDistanceFromTop + connectingShaftHeight );
-//    connectingShaftShape.quadTo( centerX, connectingShaftDistanceFromTop + connectingShaftHeight * 1.2, SIZE.getWidth() / 2 + connectingShaftWidth / 2, connectingShaftDistanceFromTop + connectingShaftHeight );
-//    connectingShaftShape.lineTo( centerX + connectingShaftWidth / 2, connectingShaftDistanceFromTop );
-//    Rectangle2D connectingShaftShapeBounds = connectingShaftShape.getGeneralPath().getBounds2D();
-//    GradientPaint connectingShaftPaint = new GradientPaint(
-//      (float) connectingShaftShapeBounds.getMinX(),
-//      (float) connectingShaftShapeBounds.getCenterY(),
-//      ColorUtils.brighterColor( COLOR, 0.5 ),
-//      (float) connectingShaftShapeBounds.getMaxX(),
-//      (float) connectingShaftShapeBounds.getCenterY(),
-//      ColorUtils.darkerColor( COLOR, 0.5 ) );
-//    PNode connectingShaft = new PhetPPath( connectingShaftShape.getGeneralPath(), connectingShaftPaint, STROKE, STROKE_PAINT );
-//    addChild( connectingShaft );
+
 //
 //    // Draw the top of the weigh plate.  This is meant to look like a
 //    // tilted rectangle.
