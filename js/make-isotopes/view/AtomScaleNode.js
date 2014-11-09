@@ -24,6 +24,9 @@ define( function( require ) {
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var RadioButtonGroup = require( 'SUN/buttons/RadioButtonGroup' );
   var Panel = require( 'SUN/Panel' );
+  var Path = require( 'SCENERY/nodes/Path' );
+  var Shape = require( 'KITE/Shape' );
+  var LinearGradient = require( 'SCENERY/util/LinearGradient' );
 
   // class data
   var DISPLAY_MODE = { MASS_NUMBER: "mass number", ATOMIC_MASS: "atomic mass" };
@@ -67,6 +70,37 @@ define( function( require ) {
     // Position the selector next to the readout.
     displayModeSelectionNode.setLeftCenter( new Vector2( scaleReadoutNode.getRight() + 5, frontOfBaseNode.centerY ) );
     this.addChild( displayModeSelectionNode );
+
+    // Add the top portion of the scale base.  This is meant to look like a tilted rectangle.  Because, hey, it's all a
+    // matter of perspective.
+    var scaleBaseTopShape = new Shape();
+    scaleBaseTopShape.moveTo( SIZE.width * 0.15, SIZE.height * 0.375 );
+    scaleBaseTopShape.lineTo( SIZE.width * 0.85, SIZE.height * 0.375 );
+    scaleBaseTopShape.lineTo( SIZE.width, SIZE.height * 0.55 );
+    scaleBaseTopShape.lineTo( 0, SIZE.height * 0.55 );
+    scaleBaseTopShape.close();
+
+    // Create the color gradient for the top of the base.
+    var scaleBaseTopPaint = new LinearGradient( 0, scaleBaseTopShape.bounds.minY, 0, scaleBaseTopShape.bounds.maxY );
+    scaleBaseTopPaint.addColorStop( 0, '#BBA28D' ).addColorStop( 0.5, COLOR ).addColorStop( 1, '#EBD9CB' );
+    var scaleBaseTop = new Path( scaleBaseTopShape, {
+      lineWidth: 2,
+      stroke: Color.BLACK,
+      fill: scaleBaseTopPaint
+    } );
+
+    this.addChild( scaleBaseTop );
+
+//    GradientPaint scaleBaseTopPaint = new GradientPaint(
+//      (float) scaleBaseTopShapeBounds.getCenterX(),
+//      (float) scaleBaseTopShapeBounds.getMaxY(),
+//      ColorUtils.brighterColor( COLOR, 0.5 ),
+//      (float) scaleBaseTopShapeBounds.getCenterX(),
+//      (float) scaleBaseTopShapeBounds.getMinY(),
+//      ColorUtils.darkerColor( COLOR, 0.5 )
+//  );
+//    PNode scaleBaseTop = new PhetPPath( scaleBaseTopShape.getGeneralPath(), scaleBaseTopPaint, STROKE, STROKE_PAINT );
+//    addChild( scaleBaseTop );
 
   }
 
@@ -182,27 +216,7 @@ define( function( require ) {
 
 //
 
-//
-//    // Add the top portion of the scale base.  This is meant to look like
-//    // a tilted rectangle.  Because, hey, it's all a matter of
-//    // perspective.
-//    DoubleGeneralPath scaleBaseTopShape = new DoubleGeneralPath();
-//    scaleBaseTopShape.moveTo( SIZE.getWidth() * 0.15, SIZE.getHeight() * 0.375 );
-//    scaleBaseTopShape.lineTo( SIZE.getWidth() * 0.85, SIZE.getHeight() * 0.375 );
-//    scaleBaseTopShape.lineTo( SIZE.getWidth(), SIZE.getHeight() * 0.55 );
-//    scaleBaseTopShape.lineTo( 0, SIZE.getHeight() * 0.55 );
-//    scaleBaseTopShape.closePath();
-//    Rectangle2D scaleBaseTopShapeBounds = scaleBaseTopShape.getGeneralPath().getBounds2D();
-//    GradientPaint scaleBaseTopPaint = new GradientPaint(
-//      (float) scaleBaseTopShapeBounds.getCenterX(),
-//      (float) scaleBaseTopShapeBounds.getMaxY(),
-//      ColorUtils.brighterColor( COLOR, 0.5 ),
-//      (float) scaleBaseTopShapeBounds.getCenterX(),
-//      (float) scaleBaseTopShapeBounds.getMinY(),
-//      ColorUtils.darkerColor( COLOR, 0.5 )
-//  );
-//    PNode scaleBaseTop = new PhetPPath( scaleBaseTopShape.getGeneralPath(), scaleBaseTopPaint, STROKE, STROKE_PAINT );
-//    addChild( scaleBaseTop );
+
 //
 //    // Add the shaft that connects the base to the weigh plate.
 //    DoubleGeneralPath connectingShaftShape = new DoubleGeneralPath();
