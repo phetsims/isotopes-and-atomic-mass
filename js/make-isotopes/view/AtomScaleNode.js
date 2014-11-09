@@ -48,22 +48,16 @@ define( function( require ) {
     // NOTE: The scale shapes are generated from the bottom up, since adding them in this order creates the correct
     // layering effect.
     // Add the front of the scale base.
-    var frontOfBaseShape = new Rectangle( 0, SIZE.height * 0.55, SIZE.width, SIZE.height * 0.5, {
+    var frontOfBaseNode = new Rectangle( 0, SIZE.height * 0.55, SIZE.width, SIZE.height * 0.5, {
       fill: COLOR,
       lineWidth: 2,
       stroke: STROKE_PAINT
     } );
-    this.addChild( frontOfBaseShape );
+    this.addChild( frontOfBaseNode );
 
     var scaleReadoutNode = new ScaleReadoutNode( atom, displayModeProperty );
-    scaleReadoutNode.setCenter( frontOfBaseShape.center );
+    scaleReadoutNode.setLeftCenter( new Vector2( SIZE.width * 0.05, frontOfBaseNode.centerY ) );
     this.addChild( scaleReadoutNode );
-
-    // Add the readout to the scale base.
-//    final PNode scaleReadoutNode = new ScaleReadoutNode( atom, displayModeProperty ) {{
-//      setOffset( SIZE.getWidth() * 0.05, frontOfBaseNode.getFullBoundsReference().getCenterY() - getFullBoundsReference().height / 2 );
-//    }};
-//    addChild( scaleReadoutNode );
 
   }
 
