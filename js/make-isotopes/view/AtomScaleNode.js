@@ -46,7 +46,7 @@ define( function( require ) {
 
     Node.call( this );
 
-    var displayModeProperty = new Property( DISPLAY_MODE.MASS_NUMBER );
+    this.displayModeProperty = new Property( DISPLAY_MODE.MASS_NUMBER );
 
     // Set up some helper variables.
     var centerX = SIZE.width / 2;
@@ -61,12 +61,12 @@ define( function( require ) {
     } );
     this.addChild( frontOfBaseNode );
     // Add the scale readout node which displays either atomic mass or number.
-    var scaleReadoutNode = new ScaleReadoutNode( atom, displayModeProperty );
+    var scaleReadoutNode = new ScaleReadoutNode( atom, this.displayModeProperty );
     scaleReadoutNode.setLeftCenter( new Vector2( SIZE.width * 0.05, frontOfBaseNode.centerY ) );
     this.addChild( scaleReadoutNode );
 
     // Add the display mode selector to the scale base.
-    var displayModeSelectionNode = new DisplayModeSelectionNode( displayModeProperty );
+    var displayModeSelectionNode = new DisplayModeSelectionNode( this.displayModeProperty );
     // Position the selector next to the readout.
     displayModeSelectionNode.setLeftCenter( new Vector2( scaleReadoutNode.getRight() + 5, frontOfBaseNode.centerY ) );
     this.addChild( displayModeSelectionNode );
@@ -140,6 +140,14 @@ define( function( require ) {
 
   return inherit( Node, AtomScaleNode, {
 
+    reset: function() {
+      this.displayModeProperty.reset();
+    }
+//
+//  public double getWeighPlateTopProjectedHeight() {
+//    return weighPlateTop.getFullBoundsReference().getHeight();
+//  }
+
   } );
 
 
@@ -158,7 +166,6 @@ define( function( require ) {
   function ScaleReadoutNode( atom, displayModeProperty ) {
 
     this.atom = atom;
-    var displayModeProperty = displayModeProperty;
 
     var readoutBackground = new Rectangle( 0, 0, SIZE.width * 0.4, SIZE.height * 0.33, 5, 5, {
       fill: Color.WHITE,
@@ -177,13 +184,10 @@ define( function( require ) {
       updateReadout();
     } );
 
-//      // Watch the atom and update the readout whenever it changes.
-//      atom.addAtomListener( new AtomListener.Adapter() {
-//        @Override
-//        public void configurationChanged() {
-//          updateReadout();
-//        }
-//      } );
+    // Watch the atom and update the readout whenever it changes.
+    atom.massNumberProperty.link( function() {
+      updateReadout()
+    } );
 
     function updateReadout() {
 
@@ -241,34 +245,13 @@ define( function( require ) {
   }
 
 } );
-//
-//  // ------------------------------------------------------------------------
-//  // Constructor(s)
-//  // ------------------------------------------------------------------------
-//
 
-//
-
-
-//
-
-//
-
-//
-
-//  }
 //
 //  // ------------------------------------------------------------------------
 //  // Methods
 //  // ------------------------------------------------------------------------
 //
-//  public void reset() {
-//    displayModeProperty.reset();
-//  }
-//
-//  public double getWeighPlateTopProjectedHeight() {
-//    return weighPlateTop.getFullBoundsReference().getHeight();
-//  }
+
 //
 //
 //
