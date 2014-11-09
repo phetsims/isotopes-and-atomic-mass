@@ -82,7 +82,7 @@ define( function( require ) {
 
     // Create the color gradient for the top of the base.
     var scaleBaseTopPaint = new LinearGradient( 0, scaleBaseTopShape.bounds.minY, 0, scaleBaseTopShape.bounds.maxY );
-    scaleBaseTopPaint.addColorStop( 0, '#BBA28D' ).addColorStop( 0.5, COLOR ).addColorStop( 1, '#EBD9CB' );
+    scaleBaseTopPaint.addColorStop( 0, '#78675A' ).addColorStop( 0.5, COLOR ).addColorStop( 1, '#E8D7CA' );
     var scaleBaseTop = new Path( scaleBaseTopShape, {
       lineWidth: 2,
       stroke: Color.BLACK,
@@ -99,10 +99,11 @@ define( function( require ) {
     connectingShaftShape.lineTo( centerX - connectingShaftWidth / 2, connectingShaftDistanceFromTop + connectingShaftHeight );
     connectingShaftShape.quadraticCurveTo( centerX, connectingShaftDistanceFromTop + connectingShaftHeight * 1.2, SIZE.width / 2 + connectingShaftWidth / 2, connectingShaftDistanceFromTop + connectingShaftHeight );
     connectingShaftShape.lineTo( centerX + connectingShaftWidth / 2, connectingShaftDistanceFromTop );
+    connectingShaftShape.close();
 
     // Create the color gradient for the shaft fill.
-    var connectingShaftPaint = new LinearGradient( connectingShaftShape.bounds.minX, 0, connectingShaftShape.bounds.maxX, 0);
-    connectingShaftPaint.addColorStop( 0, '#EBD9CB' ).addColorStop( 0.5, COLOR ).addColorStop( 1, '#BBA28D' );
+    var connectingShaftPaint = new LinearGradient( connectingShaftShape.bounds.minX, 0, connectingShaftShape.bounds.maxX, 0 );
+    connectingShaftPaint.addColorStop( 0, '#EBDACD' ).addColorStop( 0.5, COLOR ).addColorStop( 1, '#78685B' );
     var connectingShaft = new Path( connectingShaftShape, {
       lineWidth: 2,
       stroke: Color.BLACK,
@@ -110,6 +111,31 @@ define( function( require ) {
     } );
     this.addChild( connectingShaft );
 
+    // Draw the top of the weigh plate.  This is meant to look like a tilted rectangle.
+    var weighPlateTopShape = new Shape();
+    weighPlateTopShape.moveTo( centerX - WEIGH_PLATE_WIDTH * 0.35, 0 );
+    weighPlateTopShape.lineTo( centerX + WEIGH_PLATE_WIDTH * 0.35, 0 );
+    weighPlateTopShape.lineTo( centerX + WEIGH_PLATE_WIDTH / 2, SIZE.height * 0.125 );
+    weighPlateTopShape.lineTo( centerX - WEIGH_PLATE_WIDTH / 2, SIZE.height * 0.125 );
+    weighPlateTopShape.close();
+
+    // Create the color gradient for the weigh plate top.
+    var weighPlateTopPaint = new LinearGradient( 0, weighPlateTopShape.bounds.minY, 0, weighPlateTopShape.bounds.maxY );
+    weighPlateTopPaint.addColorStop( 0, '#BBA28D' ).addColorStop( 0.5, COLOR ).addColorStop( 1, '#EBD9CB' );
+    var weighPlateTop = new Path( weighPlateTopShape, {
+      lineWidth: 2,
+      stroke: Color.BLACK,
+      fill: weighPlateTopPaint
+    } );
+    this.addChild( weighPlateTop );
+
+    // Add the front of the weigh plate.
+    var frontOfWeighPlateShape = new Rectangle( centerX - WEIGH_PLATE_WIDTH / 2, SIZE.height * 0.125, WEIGH_PLATE_WIDTH, SIZE.height * 0.15, {
+      lineWidth: 2,
+      fill: COLOR,
+      stroke: Color.BLACK
+    } );
+    this.addChild( frontOfWeighPlateShape );
   }
 
   return inherit( Node, AtomScaleNode, {
@@ -184,7 +210,6 @@ define( function( require ) {
     return readoutBackground;
   }
 
-
   /**
    * This object contains the radio buttons that allow the user to select the display mode for the scale.
    *
@@ -228,29 +253,9 @@ define( function( require ) {
 //
 
 //
-//    // Draw the top of the weigh plate.  This is meant to look like a
-//    // tilted rectangle.
-//    DoubleGeneralPath weighPlateTopShape = new DoubleGeneralPath();
-//    weighPlateTopShape.moveTo( centerX - WEIGH_PLATE_WIDTH * 0.35, 0 );
-//    weighPlateTopShape.lineTo( centerX + WEIGH_PLATE_WIDTH * 0.35, 0 );
-//    weighPlateTopShape.lineTo( centerX + WEIGH_PLATE_WIDTH / 2, SIZE.getHeight() * 0.125 );
-//    weighPlateTopShape.lineTo( centerX - WEIGH_PLATE_WIDTH / 2, SIZE.getHeight() * 0.125 );
-//    weighPlateTopShape.closePath();
-//    Rectangle2D weighPlateTopShapeBounds = weighPlateTopShape.getGeneralPath().getBounds2D();
-//    GradientPaint weighPlateTopPaint = new GradientPaint(
-//      (float) weighPlateTopShapeBounds.getCenterX(),
-//      (float) weighPlateTopShapeBounds.getMaxY(),
-//      ColorUtils.brighterColor( COLOR, 0.5 ),
-//      (float) weighPlateTopShapeBounds.getCenterX(),
-//      (float) weighPlateTopShapeBounds.getMinY(),
-//      ColorUtils.darkerColor( COLOR, 0.2 ) );
-//    weighPlateTop = new PhetPPath( weighPlateTopShape.getGeneralPath(), weighPlateTopPaint, STROKE, STROKE_PAINT );
-//    addChild( weighPlateTop );
+
 //
-//    // Add the front of the weigh plate.
-//    Rectangle2D frontOfWeighPlateShape = new Rectangle2D.Double( centerX - WEIGH_PLATE_WIDTH / 2,
-//        SIZE.getHeight() * 0.125, WEIGH_PLATE_WIDTH, SIZE.getHeight() * 0.15 );
-//    addChild( new PhetPPath( frontOfWeighPlateShape, COLOR, STROKE, STROKE_PAINT ) );
+
 //  }
 //
 //  // ------------------------------------------------------------------------
