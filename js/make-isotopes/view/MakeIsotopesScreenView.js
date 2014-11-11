@@ -71,6 +71,10 @@ define( function( require ) {
     // The scale needs to sit just below the atom, and there are some "tweak factors" needed to get it looking right.
     scaleNode.setCenterBottom( new Vector2( this.mvt.modelToViewX( 0 ), this.bottom ) );
     this.addChild( scaleNode );
+
+    // Create the node that contains both the atom and the neutron bucket.
+    var topCenterOfScale = scaleNode.getCenterTop();
+    var atomAndBucketNode = new InteractiveIsotopeNode( model, mvt, topCenterOfScale );
   }
 
   return inherit( ScreenView, MakeIsotopesScreenView, {
@@ -90,10 +94,6 @@ define( function( require ) {
 //
 //
 //
-//    // Create the node that contains both the atom and the neutron bucket.
-//    Point2D topCenterOfScale = new Point2D.Double( scaleNode.getFullBoundsReference().getCenterX(),
-//        scaleNode.getFullBoundsReference().getMinY() + scaleNode.getWeighPlateTopProjectedHeight() / 2 );
-//    final InteractiveIsotopeNode atomAndBucketNode = new InteractiveIsotopeNode( model, mvt, topCenterOfScale );
 //
 //    // Add the "My Isotope" label.
 //    final PText myIsotopeLabel = new PText( BuildAnAtomStrings.MY_ISOTOPE ) {{
