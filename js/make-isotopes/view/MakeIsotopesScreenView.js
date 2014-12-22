@@ -19,6 +19,9 @@ define( function( require ) {
   var Node = require( 'SCENERY/nodes/Node' );
   var ParticleCountDisplay = require( 'SHRED/view/ParticleCountDisplay' );
   var AtomScaleNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/AtomScaleNode' );
+  var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
+  var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
+  var InteractiveIsotopeNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/InteractiveIsotopeNode' );
 
   // class data
   var STAGE_SIZE = new Dimension2( 1008, 679 );
@@ -68,13 +71,17 @@ define( function( require ) {
 
     // Create the node that represents the scale upon which the atom sits.
     var scaleNode = new AtomScaleNode( makeIsotopesModel.getNumberAtom() );
+
     // The scale needs to sit just below the atom, and there are some "tweak factors" needed to get it looking right.
     scaleNode.setCenterBottom( new Vector2( this.mvt.modelToViewX( 0 ), this.bottom ) );
     this.addChild( scaleNode );
 
     // Create the node that contains both the atom and the neutron bucket.
-    var topCenterOfScale = scaleNode.getCenterTop();
-    var atomAndBucketNode = new InteractiveIsotopeNode( model, mvt, topCenterOfScale );
+    var topCenterOfScale = new Vector2( scaleNode.centerX,
+        scaleNode.minY + scaleNode.getWeighPlateTopProjectedHeight() / 2 );
+
+    var atomAndBucketNode = new InteractiveIsotopeNode( makeIsotopesModel, this.mvt, topCenterOfScale );
+    this.addChild( atomAndBucketNode );
   }
 
   return inherit( ScreenView, MakeIsotopesScreenView, {

@@ -29,7 +29,7 @@ define( function( require ) {
   var neutronsNameString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons.name' );
 
   //----------------------------------------------------------------------------
-  // Class Data
+  // Class DataZ
   //----------------------------------------------------------------------------
   // Constant that defines the default number of neutrons in the bucket.
   var DEFAULT_NUM_NEUTRONS_IN_BUCKET = 4;
