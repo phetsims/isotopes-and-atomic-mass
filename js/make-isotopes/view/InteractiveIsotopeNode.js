@@ -111,10 +111,6 @@ define( function( require ) {
     // Move the front of the Neutron Bucket to the front for proper layering with neutrons.
     this.addChild( neutronBucketFront );
 
-    var centerCheck = new Circle( 5, {fill: 'red' } );
-    centerCheck.center = this.center;
-    this.addChild( centerCheck );
-
   }
 
   return inherit( Node, InteractiveIsotopeNode, {
