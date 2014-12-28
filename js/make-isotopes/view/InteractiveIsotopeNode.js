@@ -63,7 +63,13 @@ define( function( require ) {
     // Create array of nucleons which contains both protons and neutrons.
     var nucleons = makeIsotopesModel.protons.concat( makeIsotopesModel.neutrons );
     nucleons.forEach( function( nucleon ) {
-      nucleonLayers[nucleon.zLayer].addChild( new ParticleView( nucleon, thisView.modelViewTransform ) );
+      var particleView = new ParticleView( nucleon, thisView.modelViewTransform );
+      // If the particle is a proton, the user should not be able to interact with it.
+      if( nucleon.type === 'proton' ){
+        particleView.pickable = false;
+      }
+
+      nucleonLayers[nucleon.zLayer].addChild( particleView );
 
       // Add a listener that adjusts a nucleon's z-order layering.
       nucleon.zLayerProperty.link( function( zLayer ) {
