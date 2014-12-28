@@ -41,7 +41,7 @@ define( function( require ) {
     this.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       Vector2.ZERO,
       new Vector2( Math.round( STAGE_SIZE.width * 0.32 ), Math.round( STAGE_SIZE.height * 0.49 ) ),
-      2.0 ); // "Zoom factor" - smaller zooms out, larger zooms in.
+      1.0 ); // "Zoom factor" - smaller zooms out, larger zooms in.
 
 //    this.symbolWindow = new MaximizeControlNode(); TODO: Figure out what these are.
 //    this.abundanceWindow = new abundanceWindow();

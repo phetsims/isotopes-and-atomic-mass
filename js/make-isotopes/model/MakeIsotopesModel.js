@@ -24,6 +24,7 @@ define( function( require ) {
   var Color = require( 'SCENERY/util/Color' );
   var NumberAtom = require( 'SHRED/model/NumberAtom' );
   var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
+  var SharedConstants = require( 'SHRED/SharedConstants' );
 
 
   // Strings
@@ -36,7 +37,7 @@ define( function( require ) {
   var DEFAULT_NUM_NEUTRONS_IN_BUCKET = 4;
 
   // Radius of the nucleons, in screen coordinates, which are roughly pixels.
-  var NUCLEON_RADIUS = 5;
+//  var NUCLEON_RADIUS = 5;
 
   var NUCLEUS_JUMP_PERIOD = 0.1; // In seconds
 
@@ -44,8 +45,8 @@ define( function( require ) {
   var NUCLEON_CAPTURE_RADIUS = 100;
 
   // Constants that define the size, position, and appearance of the neutron bucket.
-  var BUCKET_SIZE = new Dimension2( 65, 30 );
-  var NEUTRON_BUCKET_POSITION = new Vector2( -120 , -55 );
+  var BUCKET_SIZE = new Dimension2( 130, 60 );
+  var NEUTRON_BUCKET_POSITION = new Vector2( -250 , -110 );
 
   // Speed at which neutrons move back to the bucket when released.  This value is empirically determined, adjust as
   // needed for desired look.
@@ -114,7 +115,7 @@ define( function( require ) {
       size: BUCKET_SIZE,
       baseColor: Color.gray,
       caption: neutronsNameString,
-      sphereRadius: NUCLEON_RADIUS
+      sphereRadius: SharedConstants.NUCLEON_RADIUS
     } );
 
     // Define a function that will decide where to put nucleons.
