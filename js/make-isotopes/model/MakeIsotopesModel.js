@@ -22,21 +22,30 @@ define( function( require ) {
   var ParticleAtom = require( 'SHRED/model/ParticleAtom' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var Color = require( 'SCENERY/util/Color' );
-  var SharedConstants = require( 'SHRED/SharedConstants' );
   var NumberAtom = require( 'SHRED/model/NumberAtom' );
+  var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
+
 
   // Strings
   var neutronsNameString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons.name' );
 
   //----------------------------------------------------------------------------
-  // Class DataZ
+  // Class Data
   //----------------------------------------------------------------------------
   // Constant that defines the default number of neutrons in the bucket.
   var DEFAULT_NUM_NEUTRONS_IN_BUCKET = 4;
 
+  // Radius of the nucleons, in screen coordinates, which are roughly pixels.
+  var NUCLEON_RADIUS = 5;
+
+  var NUCLEUS_JUMP_PERIOD = 0.1; // In seconds
+
+  // maximum drop distance for a nucleon to be considered part of the particle.
+  var NUCLEON_CAPTURE_RADIUS = 100;
+
   // Constants that define the size, position, and appearance of the neutron bucket.
   var BUCKET_SIZE = new Dimension2( 65, 30 );
-  var NEUTRON_BUCKET_POSITION = new Vector2( -120, -140 );
+  var NEUTRON_BUCKET_POSITION = new Vector2( -120 , -55 );
 
   // Speed at which neutrons move back to the bucket when released.  This value is empirically determined, adjust as
   // needed for desired look.
@@ -51,20 +60,17 @@ define( function( require ) {
   /**
    * Constructor for a make isotopes model.  This will construct the model with atoms initially in the bucket.
    *
-   * @param {BuildAndAtomClock} clock
    * @constructor
    */
-  function MakeIsotopesModel( clock ) {
+  function MakeIsotopesModel() {
 
     // Supertype constructor
     PropertySet.call( this, {} );
 
     var thisModel = this; // Carry this through scope
 
-    this.clock = clock; // TODO: Clock seems to be the JAVA way to step in time, might be unnecessary now.
-
     // Create the atom.
-    this.particleAtom = new ParticleAtom( {position: Vector2.ZERO } ); // TODO: Java file passed clock into atom.
+    this.particleAtom = new ParticleAtom( {position: Vector2.ZERO } );
 
     // Make available a 'number atom' that tracks the state of the particle atom.
     this.numberAtom = new NumberAtom();
@@ -79,6 +85,22 @@ define( function( require ) {
     thisModel.particleAtom.electrons.lengthProperty.link( updateNumberAtom );
     thisModel.particleAtom.neutrons.lengthProperty.link( updateNumberAtom );
 
+    // Update the stability state and counter on changes.
+    thisModel.nucleusStable = true;
+    thisModel.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
+    thisModel.nucleusOffset = Vector2.ZERO;
+    thisModel.numberAtom.massNumberProperty.link( function( massNumber ) {
+      var stable = massNumber > 0 ? AtomIdentifier.isStable( thisModel.numberAtom.protonCount, thisModel.numberAtom.neutronCount ) : true;
+      if ( thisModel.nucleusStable !== stable ) {
+        // Stability has changed.
+        thisModel.nucleusStable = stable;
+        if ( stable ) {
+          thisModel.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
+          thisModel.particleAtom.nucleusOffset = Vector2.ZERO;
+        }
+      }
+    } );
+
     // Arrays that contain the subatomic particles, whether they are in the  bucket or in the atom.  This is part of a
     // basic assumption about how the model works, which is that the model contains all the particles, and the particles
     // move back and forth from being in the bucket or in in the atom.
@@ -92,63 +114,45 @@ define( function( require ) {
       size: BUCKET_SIZE,
       baseColor: Color.gray,
       caption: neutronsNameString,
-      sphereRadius: SharedConstants.NUCLEON_RADIUS
+      sphereRadius: NUCLEON_RADIUS
     } );
 
-    // Add the neutrons to the bucket.
-    for ( var i = 0; i < DEFAULT_NUM_NEUTRONS_IN_BUCKET; i++ ) {
+    // Define a function that will decide where to put nucleons.
+    var placeNucleon = function( particle, bucket, atom ) {
+      if ( particle.position.distance( atom.position ) < NUCLEON_CAPTURE_RADIUS ) {
+        atom.addParticle( particle );
+      }
+      else {
+        bucket.addParticleNearestOpen( particle, true );
+      }
+    };
+
+    // Add the neutrons to the neutron bucket.
+    _.times( DEFAULT_NUM_NEUTRONS_IN_BUCKET, function() {
       var neutron = new Particle( 'neutron' );
-      this.neutrons.push( neutron );
-//      neutron.addListener( new SphericalParticle.Adapter() {
-//        @Override
-//        public void droppedByUser( SphericalParticle particle ) {
-//          // The user just released this neutron.  If it is close
-//          // enough to the nucleus, send it there, otherwise
-//          // send it to its bucket.
-//          if ( neutron.getPosition().distance( atom.getPosition() ) < NUCLEUS_CAPTURE_DISTANCE ) {
-//            atom.addNeutron( neutron, false );
-//          }
-//          else {
-//            neutronBucket.addParticleNearestOpen( neutron, false );
-//          }
-//        }
-//      } );
-    }
+      thisModel.neutrons.push( neutron );
+      thisModel.neutronBucket.addParticleFirstOpen( neutron, false );
+      neutron.userControlledProperty.link( function( userControlled ) {
+        if ( !userControlled && !thisModel.neutronBucket.containsParticle( neutron ) ) {
+          placeNucleon( neutron, thisModel.neutronBucket, thisModel.particleAtom );
+        }
+      } );
+    } );
 
     // Set the initial atom configuration.
     this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
-//  // Listener support
-//  private final ArrayList<Listener> listeners = new ArrayList<Listener>();
-//
-//  // An event listener that watches for when the user releases a neutron and
-//  // decides whether it should go in the bucket or the atom's nucleus.
-//  private final SphericalParticle.Adapter neutronDropListener = new SphericalParticle.Adapter() {
-//    @Override
-//    public void droppedByUser( SphericalParticle particle ) {
-//      assert particle instanceof Neutron; // Should always be a neutron.
-//      assert neutrons.contains( particle ); // Particle should always be contained by model.
-//      // The user just released this neutron.  If it is close
-//      // enough to the nucleus, send it there, otherwise
-//      // send it to its bucket.
-//      if ( particle.getPosition().distance( atom.getPosition() ) < NUCLEUS_CAPTURE_DISTANCE ) {
-//        atom.addNeutron( (Neutron) particle, false );
-//      }
-//      else {
-//        neutronBucket.addParticleNearestOpen( particle, false );
-//      }
-//    }
-//  };
 
   }
 
   return inherit( PropertySet, MakeIsotopesModel, {
-    /**
-     * Get the clock of this MakeIsotopesModel.
-     *
-     * @return {Clock}
-     */
-    getClock: function() {
-      return this.clock;
+
+    // Main model step function, called by the framework.
+    step: function( dt ) {
+
+      // Update particle positions.
+      this.neutrons.forEach( function( neutron ) {
+        neutron.step( dt );
+      } );
     },
 
     /**
@@ -192,35 +196,37 @@ define( function( require ) {
         }
 
         // Whenever the atom configuration is set, the neutron bucket is set to contain its default number of neutrons.
-        this.setNeutronBucketCount( DEFAULT_NUM_NEUTRONS_IN_BUCKET );
+//        this.setNeutronBucketCount( DEFAULT_NUM_NEUTRONS_IN_BUCKET );
       }
     },
 
     /**
      * Configure the neutron bucket to have the specified number of particles in it.
+     * TODO: Finish this function, it will be critical when more than one atom type is possible.
      *
      * @param targetNumNeutrons
      */
     setNeutronBucketCount: function( targetNumNeutrons ) {
+
       this.clearBucket();
 
-      // Add the target number of neutrons, sending notifications of
-      // the additions.
+      // Add the target number of neutrons, sending notifications the additions.
       for ( var i = 0; i < targetNumNeutrons; i++ ) {
         var newNeutron = new Particle( 'neutron', { velocity: NEUTRON_MOTION_VELOCITY } );
-        this.neutronBucket.addParticleFirstOpen( newNeutron, true ); // TODO: I do not understand what the value of this boolean should be yet.
+        this.neutronBucket.addParticleFirstOpen( newNeutron, true );
         this.neutrons.push( newNeutron );
       }
     },
 
     /**
      * Remove all particles that are currently contained in the bucket from both the bucket and from the model.  Note
-     * that this does NOT remove the particles from the atom.
+     * that this does NOT remove the particles from the atom. Note that this function should only be called when the
+     * neutron bucket is getting reset.
      */
     clearBucket: function() {
       var thisModel = this;
-      this.neutronBucket.getParticleList().forEach( function( neutron ) {
-        this.neutrons.remove( neutron );
+      this.neutronBucket.getParticleList().forEach( function( neutron, index ) {
+        thisModel.neutrons.splice( index, 1 );
         thisModel.neutronBucket.removeParticle( neutron );
       } );
     },

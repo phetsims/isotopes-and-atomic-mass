@@ -248,7 +248,7 @@ define( function( require ) {
 //    private static final int PIE_CHART_DIAMETER = 100; // In screen coords, which is close to pixels.
 //    private static final int CONNECTING_LINE_LEGNTH = 40; // In screen coords, which is close to pixels.
 //    private static final Stroke CONNECTING_LINE_STROKE = new BasicStroke( 2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[] { 5, 3 }, 0 );
-//    private final int RECTANGLE_INSET_X = 6;
+//    private final int RECTANGLE_INSET_X = 6;x`
 //
 //    public AbundanceIndicatorNode( final IDynamicAtom atom ) {
 //

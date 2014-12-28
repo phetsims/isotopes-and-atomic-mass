@@ -24,6 +24,9 @@ define( function( require ) {
   var Circle = require( 'SCENERY/nodes/Circle' );
   var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
 
+  var NUM_NUCLEON_LAYERS = 5; // This is based on max number of particles, may need adjustment if that changes.
+
+
 
   /**
    * Constructor for an InteractiveIsotopeNode
@@ -36,20 +39,68 @@ define( function( require ) {
 
     // supetype constructor
     Node.call( this );
-    var thisNode = this;
-    this.modelViewTransform = modelViewTransform;
+    var thisView = this;
+    this.modelViewTransform = modelViewTransform; // extend scope of modelViewTransform.
 
-    // Add the bucket that holds the neutrons.  Bucket hole gets added first for proper layering.
+    // Add the bucket components that hold the neutrons.
     var neutronBucketHole = new BucketHole( makeIsotopesModel.neutronBucket, modelViewTransform );
     var neutronBucketFront = new BucketFront( makeIsotopesModel.neutronBucket, modelViewTransform );
     neutronBucketFront.addInputListener( new BucketDragHandler( makeIsotopesModel.neutronBucket, modelViewTransform) );
 
+    // Bucket hole is first item added to view for proper layering.
     this.addChild( neutronBucketHole );
 
-    // Iterate through the neutrons and add to the view.
-    _.each( makeIsotopesModel.neutronBucket.getParticleList(), function( neutron ) {
-      thisNode.addNeutronNode( neutron );
+    // Add the layers where the nucleons will be maintained.
+    var nucleonLayers = [];
+    _.times( NUM_NUCLEON_LAYERS, function() {
+      var nucleonLayer = new Node();
+      nucleonLayers.push( nucleonLayer );
+      thisView.addChild( nucleonLayer );
     } );
+    nucleonLayers.reverse(); // Set up the nucleon layers so that layer 0 is in front.
+
+    // Add the nucleon particle views.
+    // Create array of nucleons which contains both protons and neutrons.
+    var nucleons = makeIsotopesModel.protons.concat( makeIsotopesModel.neutrons );
+    nucleons.forEach( function( nucleon ) {
+      nucleonLayers[nucleon.zLayer].addChild( new ParticleView( nucleon, thisView.modelViewTransform ) );
+
+      // Add a listener that adjusts a nucleon's z-order layering.
+      nucleon.zLayerProperty.link( function( zLayer ) {
+        assert && assert( nucleonLayers.length > zLayer, "zLayer for nucleon exceeds number of layers, max number may need increasing." );
+        // Determine whether nucleon view is on the correct layer.
+        var onCorrectLayer = false;
+        nucleonLayers[zLayer].children.forEach( function( particleView ) {
+          if ( particleView.particle === nucleon ) {
+            onCorrectLayer = true;
+          }
+        } );
+
+        if ( !onCorrectLayer ) {
+
+          // Remove particle view from its current layer.
+          var particleView = null;
+          for ( var layerIndex = 0; layerIndex < nucleonLayers.length && particleView === null; layerIndex++ ) {
+            for ( var childIndex = 0; childIndex < nucleonLayers[layerIndex].children.length; childIndex++ ) {
+              if ( nucleonLayers[layerIndex].children[childIndex].particle === nucleon ) {
+                particleView = nucleonLayers[layerIndex].children[childIndex];
+                nucleonLayers[layerIndex].removeChildAt( childIndex );
+                break;
+              }
+            }
+          }
+
+          // Add the particle view to its new layer.
+          assert && assert( particleView !== null, "Particle view not found during relayering" );
+          nucleonLayers[ zLayer ].addChild( particleView );
+        }
+      } );
+    } );
+
+//    // Iterate through the neutrons and add to the view.
+//    _.each( makeIsotopesModel.neutronBucket.getParticleList(), function( neutron ) {
+//      thisNode.addNeutronNode( neutron );
+//    } );
 
     // Move the front of the Neutron Bucket to the front for proper layering with neutrons.
     this.addChild( neutronBucketFront );
@@ -57,7 +108,6 @@ define( function( require ) {
     var centerCheck = new Circle( 5, {fill: 'red' } );
     centerCheck.center = this.center;
     this.addChild( centerCheck );
-
 
   }
 
@@ -81,24 +131,24 @@ define( function( require ) {
      *
      * @param {ParticleNode} neutron
      */
-    addNeutronNode: function( neutron ) {
-      // Create the node to represent this particle.
-      var neutronNode = new ParticleView( neutron, this.modelViewTransform );
-
-      // Set up the removal of this particle's representation when the
-      // particle itself is removed.
-//    neutron.addListener( new SphericalParticle.Adapter() {
-//      @Override
-//      public void removedFromModel( SphericalParticle particle ) {
-//        removeNucleonNodeFromLayers( neutronNode );
-//        neutron.removeListener( this );
-//      }
-//    } );
-
-      // TODO: add removal listener
-      this.addChild( neutronNode );
-
-    }
+//    addNeutronNode: function( neutron ) {
+//      // Create the node to represent this particle.
+//      var neutronNode = new ParticleView( neutron, this.modelViewTransform );
+//
+//      // Set up the removal of this particle's representation when the
+//      // particle itself is removed.
+////    neutron.addListener( new SphericalParticle.Adapter() {
+////      @Override
+////      public void removedFromModel( SphericalParticle particle ) {
+////        removeNucleonNodeFromLayers( neutronNode );
+////        neutron.removeListener( this );
+////      }
+////    } );
+//
+//      // TODO: add removal listener
+//      this.addChild( neutronNode );
+//
+//    }
   } );
 
 } );
