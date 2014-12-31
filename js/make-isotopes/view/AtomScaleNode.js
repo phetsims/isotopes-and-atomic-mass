@@ -60,6 +60,7 @@ define( function( require ) {
       stroke: STROKE_PAINT
     } );
     this.addChild( frontOfBaseNode );
+
     // Add the scale readout node which displays either atomic mass or number.
     var scaleReadoutNode = new ScaleReadoutNode( atom, this.displayModeProperty );
     scaleReadoutNode.setLeftCenter( new Vector2( SIZE.width * 0.05, frontOfBaseNode.centerY ) );
@@ -203,9 +204,10 @@ define( function( require ) {
       if ( displayModeProperty.get() === DISPLAY_MODE.MASS_NUMBER ) {
         readoutText.setText( atom.massNumber.toString() );
       }
+
       else {
-        var atomicMass = atom.getAtomicMass();
-        readoutText.setText( atomicMass > 0 ? atomicMass.toFixed( 5 ) : "--" );
+        var isotopeAtomicMass = atom.getIsotopeAtomicMass();
+        readoutText.setText( isotopeAtomicMass > 0 ? isotopeAtomicMass.toFixed( 5 ) : "--" );
       }
 
       // Make sure that the text fits in the display.
