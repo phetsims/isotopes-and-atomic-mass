@@ -1,9 +1,8 @@
 // Copyright 2002-2014, University of Colorado Boulder
 
 /**
- * This class defines a Piccolo Node that represents an atom in "schematic"
- * (i.e. Bohr) form and allows users to add or remove neutrons from/to a
- * bucket in order to create different isotopes of a particular atom.
+ * This class defines a Node that represents an atom in "schematic" (i.e. Bohr) form and allows users to add or remove
+ * neutrons from/to a bucket in order to create different isotopes of a particular atom.
  *
  * @author John Blanco
  * @author Jesse Greenberg
@@ -23,10 +22,9 @@ define( function( require ) {
   var ParticleView = require( 'SHRED/view/ParticleView' );
   var Circle = require( 'SCENERY/nodes/Circle' );
   var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
+  var IsotopeElectronCloudNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/IsotopeElectronCloudNode' );
 
   var NUM_NUCLEON_LAYERS = 5; // This is based on max number of particles, may need adjustment if that changes.
-
-
 
   /**
    * Constructor for an InteractiveIsotopeNode
@@ -103,13 +101,12 @@ define( function( require ) {
       } );
     } );
 
-//    // Iterate through the neutrons and add to the view.
-//    _.each( makeIsotopesModel.neutronBucket.getParticleList(), function( neutron ) {
-//      thisNode.addNeutronNode( neutron );
-//    } );
-
-    // Move the front of the Neutron Bucket to the front for proper layering with neutrons.
+    // Add the neutron bucket child here for proper layering with neutrons.
     this.addChild( neutronBucketFront );
+
+    // Add the isotope electron cloud.
+    var isotopeElectronCloudNode = new IsotopeElectronCloudNode( makeIsotopesModel.particleAtom, modelViewTransform );
+    this.addChild( isotopeElectronCloudNode );
 
   }
 
