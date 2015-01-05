@@ -45,7 +45,6 @@ define( function( require ) {
 
 //    this.symbolWindow = new MaximizeControlNode(); TODO: Figure out what these are.
 //    this.abundanceWindow = new abundanceWindow();
-//    this.scaleNode = new AtomScaleNode();
 
     // Layers upon which the various display elements are placed.  This allows us to created the desired layering
     // effects.
@@ -78,8 +77,7 @@ define( function( require ) {
     this.addChild( scaleNode );
 
     // Create the node that contains both the atom and the neutron bucket.
-    var topCenterOfScale = new Vector2( scaleNode.centerX,
-        scaleNode.minY + scaleNode.getWeighPlateTopProjectedHeight() / 2 );
+    var topCenterOfScale = new Vector2( this.mvt.modelToViewX(0), 0 );
 
     var atomAndBucketNode = new InteractiveIsotopeNode( makeIsotopesModel, this.mvt, topCenterOfScale );
     this.addChild( atomAndBucketNode );

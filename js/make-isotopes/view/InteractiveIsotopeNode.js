@@ -22,15 +22,16 @@ define( function( require ) {
   var ParticleView = require( 'SHRED/view/ParticleView' );
   var Circle = require( 'SCENERY/nodes/Circle' );
   var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
-  var IsotopeElectronCloudNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/IsotopeElectronCloudNode' );
+  var AtomNode = require( 'SHRED/view/AtomNode' );
+  var Property = require( 'AXON/Property' );
 
   var NUM_NUCLEON_LAYERS = 5; // This is based on max number of particles, may need adjustment if that changes.
 
   /**
    * Constructor for an InteractiveIsotopeNode
-   * @param makeIsotopesModel
-   * @param modelViewTransform
-   * @param bottomPoint
+   * @param {MakeIsotopesModel} makeIsotopesModel
+   * @param {ModelViewTransform2} modelViewTransform
+   * @param {Vector2} bottomPoint
    * @constructor
    */
   function InteractiveIsotopeNode( makeIsotopesModel, modelViewTransform, bottomPoint ) {
@@ -40,10 +41,20 @@ define( function( require ) {
     var thisView = this;
     this.modelViewTransform = modelViewTransform; // extend scope of modelViewTransform.
 
+    // Add the node that shows the textual labels, the electron shells, and the center X marker.
+    var atomNode = new AtomNode( makeIsotopesModel.particleAtom, modelViewTransform,
+      { showCenterX: false,
+        showElementNameProperty: new Property( false ),
+        showNeutralOrIonProperty: new Property( false ),
+        showStableOrUnstableProperty: new Property( false ) ,
+        electronShellDepictionProperty: new Property( 'isotopeCloud' )
+      } );
+    this.addChild( atomNode );
+
     // Add the bucket components that hold the neutrons.
     var neutronBucketHole = new BucketHole( makeIsotopesModel.neutronBucket, modelViewTransform );
     var neutronBucketFront = new BucketFront( makeIsotopesModel.neutronBucket, modelViewTransform );
-    neutronBucketFront.addInputListener( new BucketDragHandler( makeIsotopesModel.neutronBucket, modelViewTransform) );
+    neutronBucketFront.addInputListener( new BucketDragHandler( makeIsotopesModel.neutronBucket, modelViewTransform ) );
 
     // Bucket hole is first item added to view for proper layering.
     this.addChild( neutronBucketHole );
@@ -62,8 +73,9 @@ define( function( require ) {
     var nucleons = makeIsotopesModel.protons.concat( makeIsotopesModel.neutrons );
     nucleons.forEach( function( nucleon ) {
       var particleView = new ParticleView( nucleon, thisView.modelViewTransform );
+
       // If the particle is a proton, the user should not be able to interact with it.
-      if( nucleon.type === 'proton' ){
+      if ( nucleon.type === 'proton' ) {
         particleView.pickable = false;
       }
 
@@ -104,9 +116,12 @@ define( function( require ) {
     // Add the neutron bucket child here for proper layering with neutrons.
     this.addChild( neutronBucketFront );
 
-    // Add the isotope electron cloud.
-    var isotopeElectronCloudNode = new IsotopeElectronCloudNode( makeIsotopesModel.particleAtom, modelViewTransform );
-    this.addChild( isotopeElectronCloudNode );
+//    getIsotopeElectronCloudNode().addPropertyChangeListener( PROPERTY_FULL_BOUNDS, new PropertyChangeListener() {
+//      public void propertyChange( PropertyChangeEvent evt ) {
+//        model.getAtom().setPosition( mvt.viewToModel( bottomPoint.getX(),
+//            bottomPoint.getY() - getIsotopeElectronCloudNode().getFullBoundsReference().height / 2 ) );
+//      }
+//    } );
 
   }
 
