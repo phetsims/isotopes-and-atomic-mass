@@ -22,8 +22,7 @@ define( function( require ) {
   var ParticleView = require( 'SHRED/view/ParticleView' );
   var Circle = require( 'SCENERY/nodes/Circle' );
   var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
-  var AtomNode = require( 'SHRED/view/AtomNode' );
-  var Property = require( 'AXON/Property' );
+  var IsotopeAtomNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/IsotopeAtomNode' );
 
   var NUM_NUCLEON_LAYERS = 5; // This is based on max number of particles, may need adjustment if that changes.
 
@@ -41,15 +40,10 @@ define( function( require ) {
     var thisView = this;
     this.modelViewTransform = modelViewTransform; // extend scope of modelViewTransform.
 
-    // Add the node that shows the textual labels, the electron shells, and the center X marker.
-    var atomNode = new AtomNode( makeIsotopesModel.particleAtom, modelViewTransform,
-      { showCenterX: false,
-        showElementNameProperty: new Property( false ),
-        showNeutralOrIonProperty: new Property( false ),
-        showStableOrUnstableProperty: new Property( false ) ,
-        electronShellDepictionProperty: new Property( 'isotopeCloud' )
-      } );
-    this.addChild( atomNode );
+    // Add the node that shows the textual labels and electron cloud.
+    // TODO: bottomPoint should not be passed in this way.  Refactor soon.
+    var isotopeAtomNode = new IsotopeAtomNode( makeIsotopesModel.particleAtom,  bottomPoint, modelViewTransform);
+    this.addChild( isotopeAtomNode );
 
     // Add the bucket components that hold the neutrons.
     var neutronBucketHole = new BucketHole( makeIsotopesModel.neutronBucket, modelViewTransform );
@@ -115,13 +109,6 @@ define( function( require ) {
 
     // Add the neutron bucket child here for proper layering with neutrons.
     this.addChild( neutronBucketFront );
-
-//    getIsotopeElectronCloudNode().addPropertyChangeListener( PROPERTY_FULL_BOUNDS, new PropertyChangeListener() {
-//      public void propertyChange( PropertyChangeEvent evt ) {
-//        model.getAtom().setPosition( mvt.viewToModel( bottomPoint.getX(),
-//            bottomPoint.getY() - getIsotopeElectronCloudNode().getFullBoundsReference().height / 2 ) );
-//      }
-//    } );
 
   }
 

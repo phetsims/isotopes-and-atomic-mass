@@ -23,6 +23,7 @@ define( function( require ) {
   var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
   var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
   var InteractiveIsotopeNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/InteractiveIsotopeNode' );
+  var Circle = require( 'SCENERY/nodes/Circle' );
 
   // class data
   var STAGE_SIZE = new Dimension2( 1008, 679 );
@@ -76,8 +77,13 @@ define( function( require ) {
     scaleNode.setCenterBottom( new Vector2( this.mvt.modelToViewX( 0 ), this.bottom ) );
     this.addChild( scaleNode );
 
+//    Create the node that contains both the atom and the neutron bucket.
+//    Point2D topCenterOfScale = new Point2D.Double( scaleNode.getFullBoundsReference().getCenterX(),
+//        scaleNode.getFullBoundsReference().getMinY() + scaleNode.getWeighPlateTopProjectedHeight() / 2 );
+
     // Create the node that contains both the atom and the neutron bucket.
-    var topCenterOfScale = new Vector2( this.mvt.modelToViewX(0), 0 );
+    // TODO: find a way to calculate the scale node top ( scaleNode.top + 7 ).
+    var topCenterOfScale = new Vector2( scaleNode.centerX, scaleNode.top + 7 );
 
     var atomAndBucketNode = new InteractiveIsotopeNode( makeIsotopesModel, this.mvt, topCenterOfScale );
     this.addChild( atomAndBucketNode );
