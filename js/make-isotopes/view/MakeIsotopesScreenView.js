@@ -24,6 +24,7 @@ define( function( require ) {
   var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
   var InteractiveIsotopeNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/InteractiveIsotopeNode' );
   var Circle = require( 'SCENERY/nodes/Circle' );
+  var PeriodicTableNode = require( 'SHRED/view/PeriodicTableNode' );
 
   // class data
   var STAGE_SIZE = new Dimension2( 1008, 679 );
@@ -87,6 +88,14 @@ define( function( require ) {
 
     var atomAndBucketNode = new InteractiveIsotopeNode( makeIsotopesModel, this.mvt, topCenterOfScale );
     this.addChild( atomAndBucketNode );
+
+    // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
+    // element is Neon for this sim.
+    var periodicTableNode = new PeriodicTableNode( makeIsotopesModel.numberAtom, 10 );
+    periodicTableNode.scale( 0.65 );
+    periodicTableNode.rightTop = new Vector2( this.layoutBounds.right - 20, 20 );
+    this.addChild( periodicTableNode );
+
   }
 
   return inherit( ScreenView, MakeIsotopesScreenView, {
@@ -126,22 +135,6 @@ define( function( require ) {
 //      }
 //    } );
 //
-//    // Add the scale followed by the atom so that the layering effect is
-//    // correct.
-//    atomLayer.addChild( scaleNode );
-//    atomLayer.addChild( atomAndBucketNode );
-//
-//    // Add indicator that shows the name of the element.
-//    final ElementNameIndicator elementNameIndicator = new ElementNameIndicator( model.getAtom(), new BooleanProperty( true ), true ) {{
-//      setFont( new PhetFont( 20, true ) );
-//      setColor( Color.BLACK );
-//      setOffset( mvt.modelToViewX( 0 ), myIsotopeLabel.getFullBoundsReference().getMaxY() + getFullBoundsReference().height );
-//    }};
-//    indicatorLayer.addChild( elementNameIndicator );
-//
-//    // Add indicator that shows whether the nucleus is stable.
-//    final StabilityIndicator stabilityIndicator = new StabilityIndicator( model.getAtom(), new BooleanProperty( true ) );
-//    indicatorLayer.addChild( stabilityIndicator );
 //
 //    // Add functionality to position the labels based on the location of
 //    // the nucleus.
