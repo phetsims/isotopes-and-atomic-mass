@@ -46,7 +46,7 @@ define( function( require ) {
 
   // Constants that define the size, position, and appearance of the neutron bucket.
   var BUCKET_SIZE = new Dimension2( 130, 60 );
-  var NEUTRON_BUCKET_POSITION = new Vector2( -250 , -110 );
+  var NEUTRON_BUCKET_POSITION = new Vector2( -250, -110 );
 
   // Speed at which neutrons move back to the bucket when released.  This value is empirically determined, adjust as
   // needed for desired look.
@@ -71,7 +71,7 @@ define( function( require ) {
     var thisModel = this; // Carry this through scope
 
     // Create the atom.
-    this.particleAtom = new ParticleAtom( {position: Vector2.ZERO } );
+    this.particleAtom = new ParticleAtom( { position: Vector2.ZERO } );
 
     // Make available a 'number atom' that tracks the state of the particle atom.
     this.numberAtom = new NumberAtom();

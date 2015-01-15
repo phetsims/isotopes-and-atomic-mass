@@ -42,7 +42,7 @@ define( function( require ) {
 
     // Add the node that shows the textual labels and electron cloud.
     // TODO: bottomPoint should not be passed in this way.  Refactor soon.
-    var isotopeAtomNode = new IsotopeAtomNode( makeIsotopesModel.particleAtom,  bottomPoint, modelViewTransform);
+    var isotopeAtomNode = new IsotopeAtomNode( makeIsotopesModel.particleAtom, bottomPoint, modelViewTransform );
     this.addChild( isotopeAtomNode );
 
     // Add the bucket components that hold the neutrons.
@@ -73,14 +73,14 @@ define( function( require ) {
         particleView.pickable = false;
       }
 
-      nucleonLayers[nucleon.zLayer].addChild( particleView );
+      nucleonLayers[ nucleon.zLayer ].addChild( particleView );
 
       // Add a listener that adjusts a nucleon's z-order layering.
       nucleon.zLayerProperty.link( function( zLayer ) {
         assert && assert( nucleonLayers.length > zLayer, "zLayer for nucleon exceeds number of layers, max number may need increasing." );
         // Determine whether nucleon view is on the correct layer.
         var onCorrectLayer = false;
-        nucleonLayers[zLayer].children.forEach( function( particleView ) {
+        nucleonLayers[ zLayer ].children.forEach( function( particleView ) {
           if ( particleView.particle === nucleon ) {
             onCorrectLayer = true;
           }
@@ -91,10 +91,10 @@ define( function( require ) {
           // Remove particle view from its current layer.
           var particleView = null;
           for ( var layerIndex = 0; layerIndex < nucleonLayers.length && particleView === null; layerIndex++ ) {
-            for ( var childIndex = 0; childIndex < nucleonLayers[layerIndex].children.length; childIndex++ ) {
-              if ( nucleonLayers[layerIndex].children[childIndex].particle === nucleon ) {
-                particleView = nucleonLayers[layerIndex].children[childIndex];
-                nucleonLayers[layerIndex].removeChildAt( childIndex );
+            for ( var childIndex = 0; childIndex < nucleonLayers[ layerIndex ].children.length; childIndex++ ) {
+              if ( nucleonLayers[ layerIndex ].children[ childIndex ].particle === nucleon ) {
+                particleView = nucleonLayers[ layerIndex ].children[ childIndex ];
+                nucleonLayers[ layerIndex ].removeChildAt( childIndex );
                 break;
               }
             }
@@ -113,7 +113,6 @@ define( function( require ) {
   }
 
   return inherit( Node, InteractiveIsotopeNode, {
-
 
 
 //    protected void addNeutronNode( final Neutron neutron ) {

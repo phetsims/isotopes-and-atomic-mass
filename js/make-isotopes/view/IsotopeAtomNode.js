@@ -74,7 +74,7 @@ define( function( require ) {
     } );
 
     // Create the textual readout for the stability indicator.
-    this.stabilityIndicator = new Text( '', { font: new PhetFont( {size: 12, weight: 'bold' } ) } );
+    this.stabilityIndicator = new Text( '', { font: new PhetFont( { size: 12, weight: 'bold' } ) } );
     this.addChild( this.stabilityIndicator );
 
     // Define the update function for the stability indicator.
