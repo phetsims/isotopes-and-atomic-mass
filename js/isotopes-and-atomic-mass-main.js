@@ -10,10 +10,10 @@ define( function( require ) {
 
   // modules
   var MakeIsotopesScreen = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/MakeIsotopesScreen' );
-  // TODO: Getting the MakeIsotopesScreen to work first for simplicity
-//  var MixIsotopesScreen = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopes-and-atomic-mass/IsotopesAndAtomicMassScreen' );
+  var MixIsotopesScreen = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/MixIsotopesScreen' );
   var Sim = require( 'JOIST/Sim' );
   var SimLauncher = require( 'JOIST/SimLauncher' );
+
 
   // strings
   var simTitle = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopes-and-atomic-mass.name' );
@@ -31,6 +31,7 @@ define( function( require ) {
   };
 
   // Appending '?dev' to the URL will enable developer-only features.
+  debugger;
   if ( phet.chipper.getQueryParameter( 'dev' ) ) {
     simOptions = _.extend( {
       // add dev-specific options here
@@ -38,7 +39,7 @@ define( function( require ) {
   }
 
   SimLauncher.launch( function() {
-    var sim = new Sim( simTitle, [ new MakeIsotopesScreen() ], simOptions );
+    var sim = new Sim( simTitle, [ new MakeIsotopesScreen(), new MixIsotopesScreen() ], simOptions );
     sim.start();
   } );
 } );

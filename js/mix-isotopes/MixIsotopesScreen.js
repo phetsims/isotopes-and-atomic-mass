@@ -1,17 +1,18 @@
 //  Copyright 2002-2014, University of Colorado Boulder
 
 /**
- * The "Make Isotopes" screen
+ * The "Mix Isotopes" screen
  *
  * @author John Blanco
  * @author Jesse Greenberg
+ * @author James Smith
  */
 define( function( require ) {
   'use strict';
 
   // modules
-  var MakeIsotopesModel = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/model/MakeIsotopesModel' );
-  var MakeIsotopesScreenView = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/MakeIsotopesScreenView' );
+  var MixIsotopesModel = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MixIsotopesModel' );
+  var MixIsotopesScreenView = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/MixIsotopesScreenView' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Screen = require( 'JOIST/Screen' );
   var Image  = require('SCENERY/nodes/Image');
@@ -25,18 +26,18 @@ define( function( require ) {
   /**
    * @constructor
    */
-  function IsotopesAndAtomicMassScreen() {
+  function MixIsotopesScreen() {
 
     //If this is a single-screen sim, then no icon is necessary.
     //If there are multiple screens, then the icon must be provided here.
-    var icon = new Image(blackBoxImage);
+    var icon = new Image(blackBoxImage);;
 
     Screen.call( this, isotopesAndAtomicMassSimString, icon,
-      function() { return new MakeIsotopesModel(); },
-      function( model ) { return new MakeIsotopesScreenView( model ); },
+      function() { return new MixIsotopesModel(); },
+      function( model ) { return new MixIsotopesScreenView( model ); },
       { backgroundColor: '#FFFF99' }
     );
   }
 
-  return inherit( Screen, IsotopesAndAtomicMassScreen );
+  return inherit( Screen, MixIsotopesScreen );
 } );

@@ -63,7 +63,7 @@ define( function( require ) {
    *
    * @constructor
    */
-  function MakeIsotopesModel() {
+  function MixIsotopesModel() {
 
     // Supertype constructor
     PropertySet.call( this, {} );
@@ -151,7 +151,7 @@ define( function( require ) {
 
   }
 
-  return inherit( PropertySet, MakeIsotopesModel, {
+  return inherit( PropertySet, MixIsotopesModel, {
 
     // Main model step function, called by the framework.
     step: function( dt ) {
