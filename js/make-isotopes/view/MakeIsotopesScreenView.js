@@ -91,7 +91,7 @@ define( function( require ) {
 
     // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
     // element is Neon for this sim.
-    var periodicTableNode = new PeriodicTableNode( makeIsotopesModel.numberAtom, 10 );
+    var periodicTableNode = new PeriodicTableNode( makeIsotopesModel.numberAtom, makeIsotopesModel.particleAtom, 10 );
     periodicTableNode.scale( 0.65 );
     periodicTableNode.rightTop = new Vector2( this.layoutBounds.right - 20, 20 );
     this.addChild( periodicTableNode );

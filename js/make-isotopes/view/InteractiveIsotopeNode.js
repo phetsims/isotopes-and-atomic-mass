@@ -10,109 +10,166 @@
 
 
 define( function( require ) {
-  'use strict';
+    'use strict';
 
-  // modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var Node = require( 'SCENERY/nodes/Node' );
-  var BucketHole = require( 'SCENERY_PHET/bucket/BucketHole' );
-  var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
-  var ParticleNode = require( 'SHRED/view/ParticleNode' );
-  var Vector2 = require( 'DOT/Vector2' );
-  var ParticleView = require( 'SHRED/view/ParticleView' );
-  var Circle = require( 'SCENERY/nodes/Circle' );
-  var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
-  var IsotopeAtomNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/IsotopeAtomNode' );
+    // modules
+    var inherit = require( 'PHET_CORE/inherit' );
+    var Node = require( 'SCENERY/nodes/Node' );
+    var BucketHole = require( 'SCENERY_PHET/bucket/BucketHole' );
+    var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
+    var ParticleNode = require( 'SHRED/view/ParticleNode' );
+    var Vector2 = require( 'DOT/Vector2' );
+    var ParticleView = require( 'SHRED/view/ParticleView' );
+    var Circle = require( 'SCENERY/nodes/Circle' );
+    var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
+    var IsotopeAtomNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/IsotopeAtomNode' );
 
-  var NUM_NUCLEON_LAYERS = 5; // This is based on max number of particles, may need adjustment if that changes.
+    var NUM_NUCLEON_LAYERS = 5; // This is based on max number of particles, may need adjustment if that changes.
 
-  /**
-   * Constructor for an InteractiveIsotopeNode
-   * @param {MakeIsotopesModel} makeIsotopesModel
-   * @param {ModelViewTransform2} modelViewTransform
-   * @param {Vector2} bottomPoint
-   * @constructor
-   */
-  function InteractiveIsotopeNode( makeIsotopesModel, modelViewTransform, bottomPoint ) {
+    /**
+     * Constructor for an InteractiveIsotopeNode
+     * @param {MakeIsotopesModel} makeIsotopesModel
+     * @param {ModelViewTransform2} modelViewTransform
+     * @param {Vector2} bottomPoint
+     * @constructor
+     */
+    function InteractiveIsotopeNode( makeIsotopesModel, modelViewTransform, bottomPoint ) {
 
-    // supetype constructor
-    Node.call( this );
-    var thisView = this;
-    this.modelViewTransform = modelViewTransform; // extend scope of modelViewTransform.
+      // supetype constructor
+      Node.call( this );
+      var thisNode = this;
+      this.modelViewTransform = modelViewTransform; // extend scope of modelViewTransform.
 
-    // Add the node that shows the textual labels and electron cloud.
-    // TODO: bottomPoint should not be passed in this way.  Refactor soon.
-    var isotopeAtomNode = new IsotopeAtomNode( makeIsotopesModel.particleAtom, bottomPoint, modelViewTransform );
-    this.addChild( isotopeAtomNode );
+      // Add the node that shows the textual labels and electron cloud.
+      // TODO: bottomPoint should not be passed in this way.  Refactor soon.
+      var isotopeAtomNode = new IsotopeAtomNode( makeIsotopesModel.particleAtom, makeIsotopesModel.numberAtom, bottomPoint, modelViewTransform );
+      this.addChild( isotopeAtomNode );
 
-    // Add the bucket components that hold the neutrons.
-    var neutronBucketHole = new BucketHole( makeIsotopesModel.neutronBucket, modelViewTransform );
-    var neutronBucketFront = new BucketFront( makeIsotopesModel.neutronBucket, modelViewTransform );
-    neutronBucketFront.addInputListener( new BucketDragHandler( makeIsotopesModel.neutronBucket, modelViewTransform ) );
+      // Add the bucket components that hold the neutrons.
+      var neutronBucketHole = new BucketHole( makeIsotopesModel.neutronBucket, modelViewTransform );
+      var neutronBucketFront = new BucketFront( makeIsotopesModel.neutronBucket, modelViewTransform );
+      neutronBucketFront.addInputListener( new BucketDragHandler( makeIsotopesModel.neutronBucket, modelViewTransform ) );
 
-    // Bucket hole is first item added to view for proper layering.
-    this.addChild( neutronBucketHole );
+      // Bucket hole is first item added to view for proper layering.
+      this.addChild( neutronBucketHole );
 
-    // Add the layers where the nucleons will be maintained.
-    var nucleonLayers = [];
-    _.times( NUM_NUCLEON_LAYERS, function() {
-      var nucleonLayer = new Node();
-      nucleonLayers.push( nucleonLayer );
-      thisView.addChild( nucleonLayer );
-    } );
-    nucleonLayers.reverse(); // Set up the nucleon layers so that layer 0 is in front.
+      // Add the layers where the nucleons will be maintained.
+      var nucleonLayers = [];
+      _.times( NUM_NUCLEON_LAYERS, function() {
+        var nucleonLayer = new Node();
+        nucleonLayers.push( nucleonLayer );
+        thisNode.addChild( nucleonLayer );
+      } );
+      nucleonLayers.reverse(); // Set up the nucleon layers so that layer 0 is in front.
 
-    // Add the nucleon particle views.
-    // Create array of nucleons which contains both protons and neutrons.
-    var nucleons = makeIsotopesModel.protons.concat( makeIsotopesModel.neutrons );
-    nucleons.forEach( function( nucleon ) {
-      var particleView = new ParticleView( nucleon, thisView.modelViewTransform );
+      // Add the nucleon particle views.
+      // Create array of nucleons which contains both protons and neutrons.
+      //var nucleons = makeIsotopesModel.protons.concat( makeIsotopesModel.neutrons );
 
-      // If the particle is a proton, the user should not be able to interact with it.
-      if ( nucleon.type === 'proton' ) {
-        particleView.pickable = false;
-      }
-
-      nucleonLayers[ nucleon.zLayer ].addChild( particleView );
-
-      // Add a listener that adjusts a nucleon's z-order layering.
-      nucleon.zLayerProperty.link( function( zLayer ) {
-        assert && assert( nucleonLayers.length > zLayer, "zLayer for nucleon exceeds number of layers, max number may need increasing." );
-        // Determine whether nucleon view is on the correct layer.
+      // Function to adjust z-layer ordering for a particle. This is to be linked to the particle's zLayer property.
+      var adjustZLayer = function( addedAtom, zLayer ) {
+        assert && assert( nucleonLayers.length > zLayer, "zLayer for proton exceeds number of layers, max number may need increasing." );
+        // Determine whether proton view is on the correct layer.
         var onCorrectLayer = false;
         nucleonLayers[ zLayer ].children.forEach( function( particleView ) {
-          if ( particleView.particle === nucleon ) {
+          if ( particleView.particle === addedAtom ) {
             onCorrectLayer = true;
           }
         } );
-
         if ( !onCorrectLayer ) {
-
           // Remove particle view from its current layer.
           var particleView = null;
           for ( var layerIndex = 0; layerIndex < nucleonLayers.length && particleView === null; layerIndex++ ) {
             for ( var childIndex = 0; childIndex < nucleonLayers[ layerIndex ].children.length; childIndex++ ) {
-              if ( nucleonLayers[ layerIndex ].children[ childIndex ].particle === nucleon ) {
-                particleView = nucleonLayers[ layerIndex ].children[ childIndex ];
-                nucleonLayers[ layerIndex ].removeChildAt( childIndex );
+              if ( nucleonLayers[ layerIndex ].children[ childIndex ].particle === addedAtom ) {
+                particleView = nucleonLayers[ layerIndex ].children[childIndex ];
+                nucleonLayers[layerIndex].removeChildAt( childIndex );
                 break;
               }
             }
           }
-
           // Add the particle view to its new layer.
           assert && assert( particleView !== null, "Particle view not found during relayering" );
           nucleonLayers[ zLayer ].addChild( particleView );
         }
+      };
+
+      // add the item added listeners for particles of this isotope
+      makeIsotopesModel.particleAtom.protons.addItemAddedListener( function( addedAtom ) {
+        // create the particle node - user cannot interact with protons
+        var particleView = new Circle( 10, { fill: 'red' } );
+        particleView.center = thisNode.modelViewTransform.modelToViewPosition( addedAtom.position );
+//        var particleView = new ParticleView( addedAtom, thisNode.modelViewTransform );
+        particleView.pickable = false;
+
+//        // add particle view to correct z layer.
+//        nucleonLayers[ addedAtom.zLayer ].addChild( particleView );
+//        // Add a listener that adjusts a nucleon's z-order layering.
+//        addedAtom.zLayerProperty.link( function( zLayer ) {
+//          adjustZLayer(addedAtom, zLayer);
+//        } );
+
+        thisNode.addChild( particleView );
+
+        // Add the item removed listener.
+        makeIsotopesModel.particleAtom.protons.addItemRemovedListener( function removalListener( removedAtom ) {
+          if ( removedAtom === addedAtom ) {
+            thisNode.removeChild( particleView );
+//            nucleonLayers[ addedAtom.zLayer ].removeChild( particleView );
+            makeIsotopesModel.particleAtom.protons.removeItemRemovedListener( removalListener );
+          }
+        } )
       } );
-    } );
 
-    // Add the neutron bucket child here for proper layering with neutrons.
-    this.addChild( neutronBucketFront );
 
-  }
+//      nucleons.forEach( function( nucleon ) {
+//        var particleView = new ParticleView( nucleon, thisNode.modelViewTransform );
+//
+//        // If the particle is a proton, the user should not be able to interact with it.
+//        if ( nucleon.type === 'proton' ) {
+//          particleView.pickable = false;
+//        }
+//
+//        nucleonLayers[ nucleon.zLayer ].addChild( particleView );
+//
+//        // Add a listener that adjusts a nucleon's z-order layering.
+//        nucleon.zLayerProperty.link( function( zLayer ) {
+//          assert && assert( nucleonLayers.length > zLayer, "zLayer for nucleon exceeds number of layers, max number may need increasing." );
+//          // Determine whether nucleon view is on the correct layer.
+//          var onCorrectLayer = false;
+//          nucleonLayers[ zLayer ].children.forEach( function( particleView ) {
+//            if ( particleView.particle === nucleon ) {
+//              onCorrectLayer = true;
+//            }
+//          } );
+//
+//          if ( !onCorrectLayer ) {
+//
+//            // Remove particle view from its current layer.
+//            var particleView = null;
+//            for ( var layerIndex = 0; layerIndex < nucleonLayers.length && particleView === null; layerIndex++ ) {
+//              for ( var childIndex = 0; childIndex < nucleonLayers[ layerIndex ].children.length; childIndex++ ) {
+//                if ( nucleonLayers[ layerIndex ].children[ childIndex ].particle === nucleon ) {
+//                  particleView = nucleonLayers[ layerIndex ].children[ childIndex ];
+//                  nucleonLayers[ layerIndex ].removeChildAt( childIndex );
+//                  break;
+//                }
+//              }
+//            }
+//
+//            // Add the particle view to its new layer.
+//            assert && assert( particleView !== null, "Particle view not found during relayering" );
+//            nucleonLayers[ zLayer ].addChild( particleView );
+//          }
+//        } );
+//      } );
 
-  return inherit( Node, InteractiveIsotopeNode, {
+      // Add the neutron bucket child here for proper layering with neutrons.
+      this.addChild( neutronBucketFront );
+
+    }
+
+    return inherit( Node, InteractiveIsotopeNode, {
 
 
 //    protected void addNeutronNode( final Neutron neutron ) {
@@ -125,12 +182,12 @@ define( function( require ) {
 //    nucleusLayers.get( mapNucleonToLayerNumber( neutron ) ).addChild( neutronNode );
 //  }
 
-    /**
-     * Add a neutron to this atom representation.  Note that this method is sometimes used to add a particle that is
-     * actually external to the atom but that may, over the course of its life, be moved into the atom.
-     *
-     * @param {ParticleNode} neutron
-     */
+      /**
+       * Add a neutron to this atom representation.  Note that this method is sometimes used to add a particle that is
+       * actually external to the atom but that may, over the course of its life, be moved into the atom.
+       *
+       * @param {ParticleNode} neutron
+       */
 //    addNeutronNode: function( neutron ) {
 //      // Create the node to represent this particle.
 //      var neutronNode = new ParticleView( neutron, this.modelViewTransform );
@@ -145,13 +202,14 @@ define( function( require ) {
 ////      }
 ////    } );
 //
-//      // TODO: add removal listener
 //      this.addChild( neutronNode );
 //
 //    }
-  } );
+    } );
 
-} );
+  }
+)
+;
 //public class InteractiveIsotopeNode extends SchematicAtomNode {
 //
 //  /**

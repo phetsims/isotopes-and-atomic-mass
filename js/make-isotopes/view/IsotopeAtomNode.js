@@ -34,11 +34,12 @@ define( function( require ) {
    * Constructor for an IsotopeAtomNode.
    *
    * @param {ParticleAtom} particleAtom Model that represents the atom, including particle positions
+   * @param {NumberAtom} numberAtom Model that representa the atom as a collection of numbers
    * @param {Vector2} bottomPoint desired bottom point of the atom which holds the atom in position as the size changes.
    * @param {ModelViewTransform2} mvt Model-View transform
    * @constructor
    */
-  function IsotopeAtomNode( particleAtom, bottomPoint, mvt ) {
+  function IsotopeAtomNode( particleAtom, numberAtom, bottomPoint, mvt ) {
 
     Node.call( this ); // Call super constructor.
     var thisAtomView = this;
@@ -47,7 +48,7 @@ define( function( require ) {
     this.mvt = mvt;
 
     // Add the electron cloud.
-    var isotopeElectronCloud = new IsotopeElectronCloudView( particleAtom, mvt );
+    var isotopeElectronCloud = new IsotopeElectronCloudView( numberAtom, mvt );
     this.addChild( isotopeElectronCloud );
 
     // Create the textual readout for the element name.
@@ -68,7 +69,7 @@ define( function( require ) {
     };
     updateElementName(); // Do the initial update.
 
-    // Hook up update listeners.
+    // Install update listeners.
     particleAtom.protons.lengthProperty.link( function() {
       updateElementName();
     } );

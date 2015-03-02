@@ -68,23 +68,24 @@ define( function( require ) {
     // Supertype constructor
     PropertySet.call( this, {} );
 
-    var thisModel = this; // Carry this through scope
+    // carry through scope
+    var thisModel = this;
 
-    // Create the atom.
-    this.particleAtom = new ParticleAtom( { position: Vector2.ZERO } );
+    // create the atom.
+    this.particleAtom = new ParticleAtom();
 
     // Make available a 'number atom' that tracks the state of the particle atom.
-    this.numberAtom = new NumberAtom();
+    this.numberAtom = DEFAULT_ATOM_CONFIG;
     var updateNumberAtom = function() {
       thisModel.numberAtom.protonCount = thisModel.particleAtom.protons.length;
       thisModel.numberAtom.neutronCount = thisModel.particleAtom.neutrons.length;
       thisModel.numberAtom.electronCount = thisModel.particleAtom.electrons.length;
     };
 
-    // Update the number atom when the particle atom changes.
-    thisModel.particleAtom.protons.lengthProperty.link( updateNumberAtom );
-    thisModel.particleAtom.electrons.lengthProperty.link( updateNumberAtom );
-    thisModel.particleAtom.neutrons.lengthProperty.link( updateNumberAtom );
+    // Update the number atom when the particle atom changes. TODO: This may not be needed for this sim.
+//    thisModel.particleAtom.protons.lengthProperty.link( updateNumberAtom );
+//    thisModel.particleAtom.electrons.lengthProperty.link( updateNumberAtom );
+//    thisModel.particleAtom.neutrons.lengthProperty.link( updateNumberAtom );
 
     // Update the stability state and counter on changes.
     thisModel.nucleusStable = true;
@@ -140,8 +141,13 @@ define( function( require ) {
       } );
     } );
 
+//    Link particle atom to number atom
+//    this.numberAtom.protonCountProperty.link( function() {
+//      thisModel.setAtomConfiguration( thisModel.numberAtom );
+//    });
+
     // Set the initial atom configuration.
-    this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
+//    this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
 
   }
 
@@ -166,17 +172,15 @@ define( function( require ) {
     },
 
     /**
-     * Set the configuration of the atom that the user interacts with.  This
-     * is done here rather than by directly accessing the atom so that the
+     * Set the configuration of the atom that the user interacts with.  Specifically, this sets the particle atom equal
+     * to the current number atom.  This is done here rather than by directly accessing the atom so that the
      * appropriate notifications can be sent and the bucket can be
      * reinitialized.
      *
      * @param {NumberAtom} numberAtom - New configuration of atomic properties to which the atom should be set.
      */
     setAtomConfiguration: function( numberAtom ) {
-      if ( !this.numberAtom.equals( numberAtom ) ) {
 
-        // Clear the atom.
         this.particleAtom.clear();
 
         // Add the particles.
@@ -196,14 +200,12 @@ define( function( require ) {
           this.neutrons.push( neutron );
         }
 
-        // Whenever the atom configuration is set, the neutron bucket is set to contain its default number of neutrons.
-//        this.setNeutronBucketCount( DEFAULT_NUM_NEUTRONS_IN_BUCKET );
-      }
+      this.particleAtom.moveAllParticlesToDestination();
+
     },
 
     /**
      * Configure the neutron bucket to have the specified number of particles in it.
-     * TODO: Finish this function, it will be critical when more than one atom type is possible.
      *
      * @param targetNumNeutrons
      */

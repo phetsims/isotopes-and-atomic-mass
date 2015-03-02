@@ -80,12 +80,12 @@ define( function( require ) {
     scaleBaseTopShape.lineTo( SIZE.width, SIZE.height * 0.55 );
     scaleBaseTopShape.lineTo( 0, SIZE.height * 0.55 );
     scaleBaseTopShape.close();
-
     // Create the color gradient for the top of the base.
     var scaleBaseTopPaint = new LinearGradient( 0, scaleBaseTopShape.bounds.minY, 0, scaleBaseTopShape.bounds.maxY );
     scaleBaseTopPaint.addColorStop( 0, '#78675A' ).addColorStop( 0.5, COLOR ).addColorStop( 1, '#E8D7CA' );
     var scaleBaseTop = new Path( scaleBaseTopShape, {
       lineWidth: 2,
+      lineJoin: 'bevel',
       stroke: Color.BLACK,
       fill: scaleBaseTopPaint
     } );
@@ -107,6 +107,7 @@ define( function( require ) {
     connectingShaftPaint.addColorStop( 0, '#EBDACD' ).addColorStop( 0.5, COLOR ).addColorStop( 1, '#78685B' );
     var connectingShaft = new Path( connectingShaftShape, {
       lineWidth: 2,
+      lineJoin: 'bevel',
       stroke: Color.BLACK,
       fill: connectingShaftPaint
     } );
@@ -119,12 +120,12 @@ define( function( require ) {
     weighPlateTopShape.lineTo( centerX + WEIGH_PLATE_WIDTH / 2, SIZE.height * 0.125 );
     weighPlateTopShape.lineTo( centerX - WEIGH_PLATE_WIDTH / 2, SIZE.height * 0.125 );
     weighPlateTopShape.close();
-
     // Create the color gradient for the weigh plate top.
     var weighPlateTopPaint = new LinearGradient( 0, weighPlateTopShape.bounds.minY, 0, weighPlateTopShape.bounds.maxY );
     weighPlateTopPaint.addColorStop( 0, '#BBA28D' ).addColorStop( 0.5, COLOR ).addColorStop( 1, '#EBD9CB' );
     this.weighPlateTop = new Path( weighPlateTopShape, {
       lineWidth: 2,
+      lineJoin: 'bevel',
       stroke: Color.BLACK,
       fill: weighPlateTopPaint
     } );
