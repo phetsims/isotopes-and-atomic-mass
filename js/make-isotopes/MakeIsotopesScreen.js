@@ -17,7 +17,7 @@ define( function( require ) {
   var Image  = require('SCENERY/nodes/Image');
 
   // strings
-  var isotopesAndAtomicMassSimString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopes-and-atomic-mass.name' );
+  var makeIsotopesString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/make-isotopes-module.title' );
 
   // images
   var blackBoxImage = require('image!ISOTOPES_AND_ATOMIC_MASS/BlackBox.png');
@@ -31,7 +31,7 @@ define( function( require ) {
     //If there are multiple screens, then the icon must be provided here.
     var icon = new Image(blackBoxImage);
 
-    Screen.call( this, isotopesAndAtomicMassSimString, icon,
+    Screen.call( this, makeIsotopesString, icon,
       function() { return new MakeIsotopesModel(); },
       function( model ) { return new MakeIsotopesScreenView( model ); },
       { backgroundColor: '#FFFF99' }
