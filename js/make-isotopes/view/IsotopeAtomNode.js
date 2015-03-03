@@ -2,8 +2,8 @@
 
 /**
  * View representation of the atom.  Mostly, this is responsible for displaying and updating the labels, since the atom
- * itself is represented by particles, which take care of themselves in the view.  This is essentially identical to
- * AtomNode of 'Build an Atom' with some reduced functionality.
+ * itself is represented by particles, which take care of themselves in the view.  This view element also maintains
+ * the electron cloud.  This is essentially identical to AtomNode of 'Build an Atom' with some reduced functionality.
  *
  * TODO: Perhaps IsotopeAtomNode and AtomNode should inherit from some other base class to be located in shred.
  *
@@ -98,20 +98,25 @@ define( function( require ) {
 
     // Add the handler that keeps the bottom of the atom in one place.  This was added due to a request to make the
     // atom get larger and smaller but to stay on the scale.
-    var updateAtomPosition = function() {
-      var newCenter = new Vector2( bottomPoint.x, bottomPoint.y - isotopeElectronCloud.height / 2 );
-      particleAtom.position = mvt.viewToModelPosition( newCenter );
-      isotopeElectronCloud.center = newCenter; // view element does not need model view transform.
+
+    var updateAtomPosition = function( numProtons ) {
+//      var newCenter = new Vector2( bottomPoint.x, bottomPoint.y - isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2 );
+//      particleAtom.position = mvt.viewToModelPosition( newCenter );
+      isotopeElectronCloud.center = new Vector2( bottomPoint.x, bottomPoint.y - isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2 );
     };
     updateAtomPosition(); // Do initial update.
 
     // Add the listeners that control the atom position and label content.
-    particleAtom.protons.lengthProperty.link( function() {
-      updateAtomPosition();
+    particleAtom.protons.lengthProperty.link( function( numProtons ) {
+      updateAtomPosition( numProtons );
       updateElementName();
       updateStabilityIndicator();
     } );
     particleAtom.neutrons.lengthProperty.link( updateStabilityIndicator );
+
+    numberAtom.protonCountProperty.link( function( numProtons ) {
+      updateAtomPosition( numProtons );
+    });
 
   }
 
