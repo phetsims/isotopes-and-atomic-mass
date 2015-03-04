@@ -35,7 +35,7 @@ define( function( require ) {
    */
   function MakeIsotopesScreenView( makeIsotopesModel ) {
     // supertype constructor
-    ScreenView.call( this, { renderer: 'svg', layoutBounds: new Bounds2( 0, 0, 768, 504 ) } );
+    ScreenView.call( this, { layoutBounds: new Bounds2( 0, 0, 768, 504 ) } );
 
     // Set up the model-canvas transform.  IMPORTANT NOTES: The multiplier factors for the point in the view can be
     // adjusted to shift the center right or left, and the scale factor can be adjusted to zoom in or out (smaller
