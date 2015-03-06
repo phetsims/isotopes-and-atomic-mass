@@ -20,6 +20,7 @@ define( function( require ) {
   var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
   var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
   var PeriodicTableNode = require( 'SHRED/view/PeriodicTableNode' );
+  var Bounds2 = require( 'DOT/Bounds2' );
 
   // class data
 
@@ -27,10 +28,10 @@ define( function( require ) {
    * @param {MakeIsotopesModel} makeIsotopesModel
    * @constructor
    */
-  function IsotopeElectronCloudView( makeIsotopesModel ) {
+  function MixIsotopesScreenView( makeIsotopesModel ) {
     // supertype constructor
     ScreenView.call( this, { layoutBounds: new Bounds2( 0, 0, 768, 504 ) } );
-
+  }
 
   return inherit( ScreenView, MixIsotopesScreenView, {
 
