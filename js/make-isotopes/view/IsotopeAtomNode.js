@@ -44,7 +44,7 @@ define( function( require ) {
     Node.call( this ); // Call super constructor.
     var thisAtomView = this;
 
-    this.atom = particleAtom;
+    this.atom = numberAtom;
     this.mvt = mvt;
 
     // Add the electron cloud.
@@ -57,7 +57,8 @@ define( function( require ) {
 
     // Define the update function for the element name.
     var updateElementName = function( numProtons ) {
-      var name = AtomIdentifier.getName( numProtons );
+      // get element name and append mass number to identify isotope
+      var name = AtomIdentifier.getName( thisAtomView.atom.protonCount ) + '-' + thisAtomView.atom.massNumber;
       if ( name.length === 0 ) {
         name = '';
       }
@@ -65,7 +66,7 @@ define( function( require ) {
       thisAtomView.elementName.setScaleMagnitude( 1 );
       var maxLabelWidth = mvt.modelToViewDeltaX( particleAtom.innerElectronShellRadius * 1.4 );
       thisAtomView.elementName.setScaleMagnitude( Math.min( maxLabelWidth / thisAtomView.elementName.width, 1 ) );
-      thisAtomView.elementName.center = mvt.modelToViewPosition( particleAtom.position.plus( new Vector2( 0, particleAtom.innerElectronShellRadius * 0.33 ) ) );
+      thisAtomView.elementName.center = mvt.modelToViewPosition( particleAtom.position.plus( new Vector2( 0, isotopeElectronCloud.radius * 0.60) ) );
     };
 
     // Create the textual readout for the stability indicator.
@@ -74,9 +75,9 @@ define( function( require ) {
 
     // Define the update function for the stability indicator.
     var updateStabilityIndicator = function() {
-      var stabilityIndicatorCenterPos = mvt.modelToViewPosition( particleAtom.position.plus( new Vector2( 0, -particleAtom.innerElectronShellRadius * 0.33 ) ) );
-      if ( thisAtomView.atom.protons.length > 0 ) {
-        if ( AtomIdentifier.isStable( thisAtomView.atom.protons.length, thisAtomView.atom.neutrons.length ) ) {
+      var stabilityIndicatorCenterPos = mvt.modelToViewPosition( particleAtom.position.plus( new Vector2( 0, -isotopeElectronCloud.radius * 0.60 ) ) );
+      if ( thisAtomView.atom.protonCount > 0 ) {
+        if ( AtomIdentifier.isStable( thisAtomView.atom.protonCount, thisAtomView.atom.neutronCount ) ) {
           thisAtomView.stabilityIndicator.text = stableString;
         }
         else {
@@ -100,9 +101,13 @@ define( function( require ) {
 
     numberAtom.protonCountProperty.link( function( numProtons ) {
       updateAtomPosition( numProtons );
-      updateElementName( numProtons );
-      updateStabilityIndicator();
+      updateElementName();
     });
+
+    numberAtom.neutronCountProperty.link( function( numNeutrons ) {
+      updateElementName();
+      updateStabilityIndicator();
+    } );
 
   }
 

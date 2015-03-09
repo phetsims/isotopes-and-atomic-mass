@@ -141,10 +141,9 @@ define( function( require ) {
       } );
     } );
 
-//    Link particle atom to number atom
-//    this.numberAtom.protonCountProperty.link( function() {
-//      thisModel.setAtomConfiguration( thisModel.numberAtom );
-//    });
+    this.numberAtom.massNumberProperty.link( function() {
+      thisModel.setAtomConfiguration( thisModel.numberAtom )
+    });
 
     // Set the initial atom configuration.
     this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
@@ -180,7 +179,6 @@ define( function( require ) {
      * @param {NumberAtom} numberAtom - New configuration of atomic properties to which the atom should be set.
      */
     setAtomConfiguration: function( numberAtom ) {
-
         this.particleAtom.clear();
 
         // Add the particles.

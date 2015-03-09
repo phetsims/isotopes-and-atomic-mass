@@ -64,7 +64,7 @@ define( function( require ) {
 
       // Add the nucleon particle views.
       // Create array of nucleons which contains both protons and neutrons.
-      //var nucleons = makeIsotopesModel.protons.concat( makeIsotopesModel.neutrons );
+      var nucleons = makeIsotopesModel.protons.concat( makeIsotopesModel.neutrons );
 
       // Function to adjust z-layer ordering for a particle. This is to be linked to the particle's zLayer property.
       var adjustZLayer = function( addedAtom, zLayer ) {
@@ -97,17 +97,16 @@ define( function( require ) {
       // add the item added listeners for particles of this isotope
       makeIsotopesModel.particleAtom.protons.addItemAddedListener( function( addedAtom ) {
         // create the particle node - user cannot interact with protons
-        var particleView = new Circle( 10, { fill: 'red' } );
+        var particleView = new ParticleView( addedAtom, thisNode.modelViewTransform );
         particleView.center = thisNode.modelViewTransform.modelToViewPosition( addedAtom.position );
-//        var particleView = new ParticleView( addedAtom, thisNode.modelViewTransform );
         particleView.pickable = false;
 
-//        // add particle view to correct z layer.
-//        nucleonLayers[ addedAtom.zLayer ].addChild( particleView );
-//        // Add a listener that adjusts a nucleon's z-order layering.
-//        addedAtom.zLayerProperty.link( function( zLayer ) {
-//          adjustZLayer(addedAtom, zLayer);
-//        } );
+        // add particle view to correct z layer.
+        nucleonLayers[ addedAtom.zLayer ].addChild( particleView );
+        // Add a listener that adjusts a nucleon's z-order layering.
+        addedAtom.zLayerProperty.link( function( zLayer ) {
+          adjustZLayer(addedAtom, zLayer);
+        } );
 
         thisNode.addChild( particleView );
 
@@ -115,8 +114,34 @@ define( function( require ) {
         makeIsotopesModel.particleAtom.protons.addItemRemovedListener( function removalListener( removedAtom ) {
           if ( removedAtom === addedAtom ) {
             thisNode.removeChild( particleView );
-//            nucleonLayers[ addedAtom.zLayer ].removeChild( particleView );
+            nucleonLayers[ addedAtom.zLayer ].removeChild( particleView );
             makeIsotopesModel.particleAtom.protons.removeItemRemovedListener( removalListener );
+          }
+        } )
+      } );
+
+      // add the item added listeners for particles of this isotope
+      makeIsotopesModel.particleAtom.neutrons.addItemAddedListener( function( addedAtom ) {
+        // create the particle node - user cannot interact with protons
+        var particleView = new ParticleView( addedAtom, thisNode.modelViewTransform );
+        particleView.center = thisNode.modelViewTransform.modelToViewPosition( addedAtom.position );
+        particleView.pickable = false;
+
+        // add particle view to correct z layer.
+        nucleonLayers[ addedAtom.zLayer ].addChild( particleView );
+        // Add a listener that adjusts a nucleon's z-order layering.
+        addedAtom.zLayerProperty.link( function( zLayer ) {
+          adjustZLayer(addedAtom, zLayer);
+        } );
+
+        thisNode.addChild( particleView );
+
+        // Add the item removed listener.
+        makeIsotopesModel.particleAtom.neutrons.addItemRemovedListener( function removalListener( removedAtom ) {
+          if ( removedAtom === addedAtom ) {
+            thisNode.removeChild( particleView );
+            nucleonLayers[ addedAtom.zLayer ].removeChild( particleView );
+            makeIsotopesModel.particleAtom.neutrons.removeItemRemovedListener( removalListener );
           }
         } )
       } );
