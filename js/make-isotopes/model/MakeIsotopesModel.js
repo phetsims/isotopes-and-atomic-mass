@@ -15,7 +15,6 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var Vector2 = require( 'DOT/Vector2' );
-  var ObservableArray = require( 'AXON/ObservableArray' );
   var SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
   var Particle = require( 'SHRED/model/Particle' );
   var ParticleAtom = require( 'SHRED/model/ParticleAtom' );
@@ -76,16 +75,6 @@ define( function( require ) {
 
     // Make available a 'number atom' that tracks the state of the particle atom.
     this.numberAtom = DEFAULT_ATOM_CONFIG;
-    var updateNumberAtom = function() {
-      thisModel.numberAtom.protonCount = thisModel.particleAtom.protons.length;
-      thisModel.numberAtom.neutronCount = thisModel.particleAtom.neutrons.length;
-      thisModel.numberAtom.electronCount = thisModel.particleAtom.electrons.length;
-    };
-
-    // Update the number atom when the particle atom changes. TODO: This may not be needed for this sim.
-//    thisModel.particleAtom.protons.lengthProperty.link( updateNumberAtom );
-//    thisModel.particleAtom.electrons.lengthProperty.link( updateNumberAtom );
-//    thisModel.particleAtom.neutrons.lengthProperty.link( updateNumberAtom );
 
     // Update the stability state and counter on changes.
     thisModel.nucleusStable = true;
@@ -142,7 +131,7 @@ define( function( require ) {
     } );
 
     this.numberAtom.massNumberProperty.link( function() {
-      thisModel.setAtomConfiguration( thisModel.numberAtom )
+      thisModel.setAtomConfiguration( thisModel.numberAtom );
     });
 
     // Set the initial atom configuration.

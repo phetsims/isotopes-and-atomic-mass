@@ -17,10 +17,7 @@ define( function( require ) {
     var Node = require( 'SCENERY/nodes/Node' );
     var BucketHole = require( 'SCENERY_PHET/bucket/BucketHole' );
     var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
-    var ParticleNode = require( 'SHRED/view/ParticleNode' );
-    var Vector2 = require( 'DOT/Vector2' );
     var ParticleView = require( 'SHRED/view/ParticleView' );
-    var Circle = require( 'SCENERY/nodes/Circle' );
     var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
     var IsotopeAtomNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/IsotopeAtomNode' );
 
@@ -64,7 +61,7 @@ define( function( require ) {
 
       // Add the nucleon particle views.
       // Create array of nucleons which contains both protons and neutrons.
-      var nucleons = makeIsotopesModel.protons.concat( makeIsotopesModel.neutrons );
+//      var nucleons = makeIsotopesModel.protons.concat( makeIsotopesModel.neutrons );
 
       // Function to adjust z-layer ordering for a particle. This is to be linked to the particle's zLayer property.
       var adjustZLayer = function( addedAtom, zLayer ) {
@@ -117,7 +114,7 @@ define( function( require ) {
             nucleonLayers[ addedAtom.zLayer ].removeChild( particleView );
             makeIsotopesModel.particleAtom.protons.removeItemRemovedListener( removalListener );
           }
-        } )
+        } );
       } );
 
       // add the item added listeners for particles of this isotope
@@ -143,7 +140,7 @@ define( function( require ) {
             nucleonLayers[ addedAtom.zLayer ].removeChild( particleView );
             makeIsotopesModel.particleAtom.neutrons.removeItemRemovedListener( removalListener );
           }
-        } )
+        } );
       } );
 
 

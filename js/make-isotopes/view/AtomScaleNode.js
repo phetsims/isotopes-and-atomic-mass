@@ -13,7 +13,6 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
-  var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var Vector2 = require( 'DOT/Vector2' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var Node = require( 'SCENERY/nodes/Node' );
@@ -35,6 +34,101 @@ define( function( require ) {
   var WEIGH_PLATE_WIDTH = SIZE.width * 0.70;
 //  var STROKE = new BasicStroke( 2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND );
   var STROKE_PAINT = Color.BLACK;
+
+  /**
+   * Class that defines the readout on the front of the scale.  This readout can display an atom's mass as either the
+   * mass number, which is an integer number representing the total number of nucleons, or as the atomic mass, which is
+   * the relative actual mass of the atom.
+   *
+   * @param {NumberAtom} atom
+   * @param {Property} displayModeProperty
+   * @constructor
+   *
+   * @author John Blanco
+   * @author Jesse Greenberg
+   */
+  function ScaleReadoutNode( atom, displayModeProperty ) {
+
+    this.atom = atom;
+
+    var readoutBackground = new Rectangle( 0, 0, SIZE.width * 0.4, SIZE.height * 0.33, 5, 5, {
+      fill: Color.WHITE,
+      lineWidth: 2,
+      stroke: Color.BLACK
+    } );
+
+    var readoutText = new Text( '', { font: new PhetFont( 24 ) } );
+    readoutText.setCenter( readoutBackground.getCenter() );
+
+    // Add the text that will appear in the readout.
+    readoutBackground.addChild( readoutText );
+
+    // Watch the property that represents the display mode and update the readout when it changes.
+    displayModeProperty.link( function() {
+      updateReadout();
+    } );
+
+    // Watch the atom and update the readout whenever it changes.
+    atom.massNumberProperty.link( function() {
+      updateReadout();
+    } );
+
+    function updateReadout() {
+
+      if ( displayModeProperty.get() === DISPLAY_MODE.MASS_NUMBER ) {
+        readoutText.setText( atom.massNumber.toString() );
+      }
+
+      else {
+        var isotopeAtomicMass = atom.getIsotopeAtomicMass();
+        readoutText.setText( isotopeAtomicMass > 0 ? isotopeAtomicMass.toFixed( 5 ) : "--" );
+      }
+
+      // Make sure that the text fits in the display.
+      readoutText.scale( 1 );
+      if ( readoutText.width > readoutBackground.rectWidth || readoutText.height > readoutBackground.rectHeight ) {
+        var scaleFactor = Math.min( readoutBackground.rectWidth / readoutText.width, readoutBackground.rectHeight / readoutText.height );
+        readoutText.scale( scaleFactor );
+      }
+
+      // Center the text in the display.
+      readoutText.setCenter( new Vector2( readoutBackground.rectWidth / 2, readoutBackground.rectHeight / 2 ) );
+
+    }
+
+    return readoutBackground;
+  }
+
+  /**
+   * This object contains the radio buttons that allow the user to select the display mode for the scale.
+   *
+   * @constructor
+   * @author John Blanco
+   * @author Jesse Greenberg
+   */
+  function DisplayModeSelectionNode( displayModeProperty ) {
+
+    var LABEL_FONT = new PhetFont( 16 );
+
+    var radioButtonContent = [
+      { value: DISPLAY_MODE.MASS_NUMBER, node: new Text( 'Mass Number', { font: LABEL_FONT } ) },
+      { value: DISPLAY_MODE.ATOMIC_MASS, node: new Text( 'Atomic Mass (amu)', { font: LABEL_FONT } ) }
+    ];
+
+    var radioButtonGroup = new RadioButtonGroup( displayModeProperty, radioButtonContent, {
+      orientation: 'vertical',
+      selectedLineWidth: 2,
+      deselectedLineWidth: 0,
+      spacing: 1
+    } );
+
+    return new Panel( radioButtonGroup, {
+      lineWidth: 0,
+      fill: COLOR,
+      yMargin: 0
+    } );
+
+  }
 
   /**
    * Constructor for an AtomScaleNode.
@@ -160,101 +254,5 @@ define( function( require ) {
     }
 
   } );
-
-
-  /**
-   * Class that defines the readout on the front of the scale.  This readout can display an atom's mass as either the
-   * mass number, which is an integer number representing the total number of nucleons, or as the atomic mass, which is
-   * the relative actual mass of the atom.
-   *
-   * @param {NumberAtom} atom
-   * @param {Property} displayModeProperty
-   * @constructor
-   *
-   * @author John Blanco
-   * @author Jesse Greenberg
-   */
-  function ScaleReadoutNode( atom, displayModeProperty ) {
-
-    this.atom = atom;
-
-    var readoutBackground = new Rectangle( 0, 0, SIZE.width * 0.4, SIZE.height * 0.33, 5, 5, {
-      fill: Color.WHITE,
-      lineWidth: 2,
-      stroke: Color.BLACK
-    } );
-
-    var readoutText = new Text( '', { font: new PhetFont( 24 ) } );
-    readoutText.setCenter( readoutBackground.getCenter() );
-
-    // Add the text that will appear in the readout.
-    readoutBackground.addChild( readoutText );
-
-    // Watch the property that represents the display mode and update the readout when it changes.
-    displayModeProperty.link( function() {
-      updateReadout();
-    } );
-
-    // Watch the atom and update the readout whenever it changes.
-    atom.massNumberProperty.link( function() {
-      updateReadout()
-    } );
-
-    function updateReadout() {
-
-      if ( displayModeProperty.get() === DISPLAY_MODE.MASS_NUMBER ) {
-        readoutText.setText( atom.massNumber.toString() );
-      }
-
-      else {
-        var isotopeAtomicMass = atom.getIsotopeAtomicMass();
-        readoutText.setText( isotopeAtomicMass > 0 ? isotopeAtomicMass.toFixed( 5 ) : "--" );
-      }
-
-      // Make sure that the text fits in the display.
-      readoutText.scale( 1 );
-      if ( readoutText.width > readoutBackground.rectWidth || readoutText.height > readoutBackground.rectHeight ) {
-        var scaleFactor = Math.min( readoutBackground.rectWidth / readoutText.width, readoutBackground.rectHeight / readoutText.height );
-        readoutText.scale( scaleFactor );
-      }
-
-      // Center the text in the display.
-      readoutText.setCenter( new Vector2( readoutBackground.rectWidth / 2, readoutBackground.rectHeight / 2 ) );
-
-    }
-
-    return readoutBackground;
-  }
-
-  /**
-   * This object contains the radio buttons that allow the user to select the display mode for the scale.
-   *
-   * @constructor
-   * @author John Blanco
-   * @author Jesse Greenberg
-   */
-  function DisplayModeSelectionNode( displayModeProperty ) {
-
-    var LABEL_FONT = new PhetFont( 16 );
-
-    var radioButtonContent = [
-      { value: DISPLAY_MODE.MASS_NUMBER, node: new Text( 'Mass Number', { font: LABEL_FONT } ) },
-      { value: DISPLAY_MODE.ATOMIC_MASS, node: new Text( 'Atomic Mass (amu)', { font: LABEL_FONT } ) }
-    ];
-
-    var radioButtonGroup = new RadioButtonGroup( displayModeProperty, radioButtonContent, {
-      orientation: 'vertical',
-      selectedLineWidth: 2,
-      deselectedLineWidth: 0,
-      spacing: 1
-    } );
-
-    return new Panel( radioButtonGroup, {
-      lineWidth: 0,
-      fill: COLOR,
-      yMargin: 0
-    } );
-
-  }
 
 } );

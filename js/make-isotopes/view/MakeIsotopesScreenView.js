@@ -20,10 +20,7 @@ define( function( require ) {
   var Node = require( 'SCENERY/nodes/Node' );
   var ParticleCountDisplay = require( 'SHRED/view/ParticleCountDisplay' );
   var AtomScaleNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/AtomScaleNode' );
-  var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
-  var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
   var InteractiveIsotopeNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/InteractiveIsotopeNode' );
-  var Circle = require( 'SCENERY/nodes/Circle' );
   var PeriodicTableNode = require( 'SHRED/view/PeriodicTableNode' );
 
   // class data
