@@ -56,8 +56,8 @@ define( function( require ) {
     this.addChild( this.elementName );
 
     // Define the update function for the element name.
-    var updateElementName = function() {
-      var name = AtomIdentifier.getName( thisAtomView.atom.protons.length );
+    var updateElementName = function( numProtons ) {
+      var name = AtomIdentifier.getName( numProtons );
       if ( name.length === 0 ) {
         name = '';
       }
@@ -67,12 +67,6 @@ define( function( require ) {
       thisAtomView.elementName.setScaleMagnitude( Math.min( maxLabelWidth / thisAtomView.elementName.width, 1 ) );
       thisAtomView.elementName.center = mvt.modelToViewPosition( particleAtom.position.plus( new Vector2( 0, particleAtom.innerElectronShellRadius * 0.33 ) ) );
     };
-    updateElementName(); // Do the initial update.
-
-    // Install update listeners.
-    particleAtom.protons.lengthProperty.link( function() {
-      updateElementName();
-    } );
 
     // Create the textual readout for the stability indicator.
     this.stabilityIndicator = new Text( '', { font: new PhetFont( { size: 12, weight: 'bold' } ) } );
@@ -98,24 +92,16 @@ define( function( require ) {
 
     // Add the handler that keeps the bottom of the atom in one place.  This was added due to a request to make the
     // atom get larger and smaller but to stay on the scale.
-
     var updateAtomPosition = function( numProtons ) {
-//      var newCenter = new Vector2( bottomPoint.x, bottomPoint.y - isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2 );
-//      particleAtom.position = mvt.viewToModelPosition( newCenter );
+      var newCenter = new Vector2( bottomPoint.x, bottomPoint.y - isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2 );
+      particleAtom.position = mvt.viewToModelPosition( newCenter );
       isotopeElectronCloud.center = new Vector2( bottomPoint.x, bottomPoint.y - isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2 );
     };
-    updateAtomPosition(); // Do initial update.
-
-    // Add the listeners that control the atom position and label content.
-    particleAtom.protons.lengthProperty.link( function( numProtons ) {
-      updateAtomPosition( numProtons );
-      updateElementName();
-      updateStabilityIndicator();
-    } );
-    particleAtom.neutrons.lengthProperty.link( updateStabilityIndicator );
 
     numberAtom.protonCountProperty.link( function( numProtons ) {
       updateAtomPosition( numProtons );
+      updateElementName( numProtons );
+      updateStabilityIndicator();
     });
 
   }

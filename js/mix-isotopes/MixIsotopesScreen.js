@@ -30,7 +30,7 @@ define( function( require ) {
 
     //If this is a single-screen sim, then no icon is necessary.
     //If there are multiple screens, then the icon must be provided here.
-    var icon = new Image(blackBoxImage);;
+    var icon = new Image(blackBoxImage);
 
     Screen.call( this, mixIsotopesString, icon,
       function() { return new MixIsotopesModel(); },

@@ -147,7 +147,7 @@ define( function( require ) {
 //    });
 
     // Set the initial atom configuration.
-//    this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
+    this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
 
   }
 
