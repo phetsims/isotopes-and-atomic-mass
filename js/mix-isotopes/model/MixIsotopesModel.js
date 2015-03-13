@@ -10,6 +10,7 @@
  * @author Jesse Greenberg
  * @author James Smith
  */
+// TODO Remove semicolons after soft brackets where applicable
 
 define( function( require ) {
   'use strict';
@@ -25,6 +26,9 @@ define( function( require ) {
   var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
   var SharedConstants = require( 'SHRED/SharedConstants' );
   var PropertySet = require('AXON/PropertySet');
+
+  //TODO Remove after debugging
+  var NumericalIsotopeQuantityControl = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/NumericalIsotopeQuantityControl');
 
 
     // -----------------------------------------------------------------------
@@ -110,8 +114,8 @@ define( function( require ) {
           // of the currently configured isotope.  There should be only one of each
           // possible isotope.
 
-          var possibleIsotopesProperty = AtomIdentifier.isotopeList;
-          console.log(AtomIdentifier.getStableIsotopesOfElement(1));
+//          var possibleIsotopesProperty = AtomIdentifier.isotopeList;
+//          console.log(AtomIdentifier.getStableIsotopesOfElement(1));
 
           // List of the isotope buckets.
           var bucketList = [];
