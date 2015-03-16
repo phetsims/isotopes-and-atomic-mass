@@ -26,6 +26,7 @@ define( function( require ) {
   var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
   var SharedConstants = require( 'SHRED/SharedConstants' );
   var PropertySet = require( 'AXON/PropertySet' );
+  var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
 
   //TODO Remove after debugging
   var NumericalIsotopeQuantityControl = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/NumericalIsotopeQuantityControl' );
@@ -93,8 +94,11 @@ define( function( require ) {
    * Constructor for the Mix Isotopes Model
    **/
   function MixIsotopesModel() {
+    // Property that determines the type of user interactivity that is set.
+    // See the enum definition for more information about the modes.
 
-//    -----------------------------------------------------------------------
+    PropertySet.call( this, { interactivityMode: InteractivityMode.BUCKETS_AND_LARGE_ATOMS } );
+
 //     Instance Data
 //      TODO Port over variables and start with functions.
 //    -----------------------------------------------------------------------
@@ -106,7 +110,7 @@ define( function( require ) {
     // This atom is the "prototype isotope", meaning that it is set in order
     // to set the atomic weight of the family of isotopes that are currently
     // in use.
-    var prototypeIsotope = new NumberAtom( 0, 0, 0 );
+    this.prototypeIsotope = new NumberAtom( 0, 0, 0 );
 
     // This property contains the list of isotopes that exist in nature as
     // variations of the current "prototype isotope".  In other words, this
@@ -118,16 +122,13 @@ define( function( require ) {
 //          console.log(AtomIdentifier.getStableIsotopesOfElement(1));
 
     // List of the isotope buckets.
-    var bucketList = [];
+    this.bucketList = [];
 
+    this.testIsotope = this.createAndAddIsotope( new NumberAtom( 0, 0, 0 ), true );
     // List of the numerical controls that, when present, can be used to add
     // or remove isotopes to/from the test chamber.
     // TODO Debug NumericalIsotopeQuantityControl
-    var numericalControllerList = [];
 
-    // Property that determines the type of user interactivity that is set.
-    // See the enum definition for more information about the modes.
-    var interactivityModeProperty = InteractivityMode.BUCKETS_AND_LARGE_ATOMS;
 
     // Map of elements to user mixes.  These are restored when switching
     // between elements.  The integer represents the atomic number.
@@ -167,35 +168,66 @@ define( function( require ) {
     /**
      * Create and add an isotope of the specified configuration.  Where the
      * isotope is initially placed depends upon the current interactivity mode.
+     * @param {NumberAtom} isotopeConfig
+     * @param {boolean} moveImmediately
+     *
      * TODO Prototype isotope should be made an instance variable in constructor.
-     * TODO Port MovableAtom Object
+     * TODO Port setMotionVelocity
      */
     createAndAddIsotope: function( isotopeConfig, moveImmediately ) {
-      assert && assert( isotopeConfig.getNumProtons() === prototypeIsotope.getNumProtons() );
-      assert && assert( isotopeConfig.getNumProtons() === isotopeConfig.getNumElectrons() );
+      assert && assert( isotopeConfig.protonCount === this.prototypeIsotope.protonCount, "179" );
+      assert && assert( isotopeConfig.electronCount === isotopeConfig.electronCount );
       var newIsotope;
 
-      if ( interactivityModeProperty.get() === InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
+      if ( this.interactivityModeProperty === this.InteractivityModeProperty ) {
         // Create the specified isotope and add it to the appropriate bucket.
         newIsotope = new MovableAtom( isotopeConfig.getNumProtons(), isotopeConfig.getNumNeutrons(),
-          LARGE_ISOTOPE_RADIUS, new Point2D.Double(), getClock() );
-        newIsotope.setMotionVelocity( ATOM_MOTION_SPEED );
+          LARGE_ISOTOPE_RADIUS, new Vector2( 0, 0 ) );
+
+        // TODO Make sure this velocity looks good
+        newIsotope.velocity = ATOM_MOTION_SPEED;
+
+        // newIsotope.setMotionVelocity( ATOM_MOTION_SPEED );
         // newIsotope.addListener( isotopeGrabbedListener );
-        this.getBucketForIsotope( isotopeConfig ).addIsotopeInstanceFirstOpen( newIsotope, moveImmediately );
+
+        // TODO Port getBucketForIsotope
+        // this.getBucketForIsotope( isotopeConfig ).addIsotopeInstanceFirstOpen( newIsotope, moveImmediately );
       }
 
       else {
         // Create the specified isotope and add it directly to the test chamber.
-        var randomIsotopeLocation = testChamber.generateRandomLocation();
-        newIsotope = new MovableAtom( isotopeConfig.getNumProtons(), isotopeConfig.getNumNeutrons(),
-          SMALL_ISOTOPE_RADIUS, randomIsotopeLocation, getClock() );
-        testChamber.addIsotopeToChamber( newIsotope );
+        // TODO Port testChamber
+        // var randomIsotopeLocation = testChamber.generateRandomLocation();
+        newIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount,
+          SMALL_ISOTOPE_RADIUS, new Vector2( 0, 0 ) );
+
+        // testChamber.addIsotopeToChamber( newIsotope );
       }
 
 
       // notifyIsotopeInstanceAdded( newIsotope );
       return newIsotope;
 
+    },
+
+    /**
+     * Get the bucket where the given isotope can be placed.
+     * TODO Port MonoIsotopeParticleBucket
+     * @param {NumberAtom} isotope
+     * @return {MonoIsotopeBucket} A bucket that can hold the isotope if one exists, null if not.
+     */
+    getBucketForIsotope: function( isotope ) {
+      var isotopeBucket = null;
+      for (var bucket in this.bucketList) {
+        if ( this.bucketList.hasOwnProperty( bucket ) ) {
+          if ( this.bucketList[ bucket ].isIsotopeAllowed( isotope ) ) {
+            // Found it.
+            isotopeBucket = bucket;
+            break;
+          }
+        }
+      }
+      return isotopeBucket;
     }
 
 //
@@ -441,23 +473,7 @@ define( function( require ) {
 //            }
 //        }
 //
-//        /**
-//         * Get the bucket where the given isotope can be placed.
-//         *
-//         * @param isotope
-//         * @return A bucket that can hold the isotope if one exists, null if not.
-//         */
-//        private MonoIsotopeParticleBucket getBucketForIsotope( ImmutableAtom isotope ) {
-//            MonoIsotopeParticleBucket isotopeBucket = null;
-//            for ( MonoIsotopeParticleBucket bucket : bucketList ) {
-//                if ( bucket.isIsotopeAllowed( isotope ) ) {
-//                    // Found it.
-//                    isotopeBucket = bucket;
-//                    break;
-//                }
-//            }
-//            return isotopeBucket;
-//        }
+
 //
 //        private NumericalIsotopeQuantityControl getNumericalControllerForIsotope( ImmutableAtom isotope ) {
 //            NumericalIsotopeQuantityControl isotopeController = null;
@@ -622,9 +638,10 @@ define( function( require ) {
 //        }
 //
 //  } );
-  } );
-
 } );
+
+} )
+;
 
 
 ///**

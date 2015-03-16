@@ -21,9 +21,11 @@ define( function( require ) {
 
     //modules
     var inherit = require( 'PHET_CORE/inherit' );
+    var Particle = require( 'SHRED/model/Particle' );
+    var NumberAtom = require( 'SHRED/model/NumberAtom' );
 
     function MovableAtom( numProtons, numNeutrons, radius, initialPosition ) {
-        this.atomConfiguration = new NumberAtom( 0, 0, 0 );
+        this.atomConfiguration = new NumberAtom( { protonCount: numProtons, neutronCount: numNeutrons, electronCount: numProtons } );
         this.radius = radius;
 
 

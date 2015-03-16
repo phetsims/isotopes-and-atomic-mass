@@ -78,7 +78,7 @@ define( function( require ) {
 
         else if ( changeAmount < 0 ) {
           for ( var i = 0; i < -changeAmount; i++ ) {
-            isotope = this.model.getIsotopeTestChamber().removeIsotopeMatchingConfig( isotopeConfig );
+            var isotope = this.model.getIsotopeTestChamber().removeIsotopeMatchingConfig( isotopeConfig );
             if ( isotope !== null ) {
               isotope.removedFromModel();
             }
@@ -107,8 +107,7 @@ define( function( require ) {
 
       getQuantity: function() {
         // Verify that the internal property matches that of the test chamber.
-        assert && assert
-        quantityProperty.get() === this.model.getIsotopeTestChamber().getIsotopeCount( getIsotopeConfig() );
+        assert && assert (quantityProperty.get() === this.model.getIsotopeTestChamber().getIsotopeCount( getIsotopeConfig() ) );
         // Return the value.
         return quantityProperty.get();
       }
