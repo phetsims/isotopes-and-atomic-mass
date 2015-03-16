@@ -12,8 +12,8 @@
  * other controls to be handled consistently between the model and view.
  */
 
- // TODO Fix indentation
-define( function ( require ) {
+
+define( function( require ) {
   'use strict';
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
@@ -23,8 +23,8 @@ define( function ( require ) {
   var BooleanProperty = require( 'AXON/BooleanProperty' );
 
 
-  function NumericalIsotopeQuantityControl ( model, atomConfig, position) {
-    debugger;
+  function NumericalIsotopeQuantityControl( model, atomConfig, position ) {
+
     var CAPACITY = 100;
 
     this.quantityProperty = new Property( 0 );
@@ -38,81 +38,86 @@ define( function ( require ) {
     var partOfModelProperty = new BooleanProperty( true );
 
 
-    return inherit( Object , NumericalIsotopeQuantityControl, {
+    return inherit( Object, NumericalIsotopeQuantityControl, {
 
-     getCapacity: function() {
-      return CAPACITY;
-     },
+      getCapacity: function() {
+        return CAPACITY;
+      },
 
-    /**
-     * Notify this model element that it has been removed from the model.
-     * This will result in notifications being sent that should cause view
-     * elements to be removed from the view.
-     */
-     removedFromModel: function() {
-      this.partOfModelProperty =  false;
-     },
+      /**
+       * Notify this model element that it has been removed from the model.
+       * This will result in notifications being sent that should cause view
+       * elements to be removed from the view.
+       */
+      removedFromModel: function() {
+        this.partOfModelProperty = false;
+      },
 
-    /**
-     * Set the quantity of the isotope associated with this control to the
-     * specified value.
-     *
-     * @param targetQuantity
-     * @return
-     */
-     setIsotopeQuantity: function ( targetQuantity ) {
-      assert && assert( targetQuantity <=  CAPACITY );
-      var chanceAmount = targetQuantity - this.model.getIsotopeTestChamber().getIsotopeCount( isotopeConfig );
+      /**
+       * Set the quantity of the isotope associated with this control to the
+       * specified value.
+       *
+       * @param targetQuantity
+       * @return
+       */
+      setIsotopeQuantity: function( targetQuantity ) {
+        assert && assert( targetQuantity <= CAPACITY );
+        var chanceAmount = targetQuantity - this.model.getIsotopeTestChamber().getIsotopeCount( isotopeConfig );
 
-      if ( changeAmount > 0 ) {
-       for ( var i = 0; i < changeAmount; i++ ) {
-        var newIsotope = new MovableAtom(isotopeConfig.getNumProtons(),isotopeConfig.getNumNeutrons(),
-            MixIsotopesModel.SMALL_ISOTOPE_RADIUS, model.getIsotopeTestChamber().generateRandomLocation() );
+        if ( changeAmount > 0 ) {
+          for ( var i = 0; i < changeAmount; i++ ) {
+            var newIsotope = new MovableAtom( isotopeConfig.getNumProtons(), isotopeConfig.getNumNeutrons(),
+              MixIsotopesModel.SMALL_ISOTOPE_RADIUS, model.getIsotopeTestChamber().generateRandomLocation() );
 
-        this.model.getIsotopeTestChamber().addIsotopeToChamber( newIsotope );
-        this.model.notifyIsotopeInstanceAdded( newIsotope );
+            this.model.getIsotopeTestChamber().addIsotopeToChamber( newIsotope );
+            this.model.notifyIsotopeInstanceAdded( newIsotope );
 
-       }
+          }
 
-      }
-
-      else if ( changeAmount < 0 ) {
-        for ( var i = 0; i < -changeAmount; i++) {
-            isotope = this.model.getIsotopeTestChamber().removeIsotopeMatchingConfig( isotopeConfig );
-            if ( isotope != null ) {
-                isotope.removedFromModel();
-            }
         }
 
-      }
+        else if ( changeAmount < 0 ) {
+          for ( var i = 0; i < -changeAmount; i++ ) {
+            isotope = this.model.getIsotopeTestChamber().removeIsotopeMatchingConfig( isotopeConfig );
+            if ( isotope !== null ) {
+              isotope.removedFromModel();
+            }
+          }
 
-      this.quantityProperty = targetQuantity;
+        }
 
-     },
+        this.quantityProperty = targetQuantity;
 
-    /**
-     * Force the quantity property to sync up with the test chamber.
-     * TODO Make sure that this method is not accessible to user (was listed as protected in old version)
-     */
-     syncToTestChamber() {
+      },
+
+      /**
+       * Force the quantity property to sync up with the test chamber.
+       * TODO Make sure that this method is not accessible to user (was listed as protected in old version)
+       */
+      syncToTestChamber: function() {
         this.quantityProperty = this.model.getIsotopeTestChamber().getIsotopeCount( isotopeConfig );
-     },
+      },
 
-    /**
-     * @return
-     */
-     getBaseColor: function() {
+      /**
+       * @return
+       */
+      getBaseColor: function() {
         return this.model.getColorForIsotope( isotopeConfig );
-     },
+      },
 
-     getQuantity: function() {
+      getQuantity: function() {
         // Verify that the internal property matches that of the test chamber.
-        assert && assert quantityProperty.get() == this.model.getIsotopeTestChamber().getIsotopeCount( getIsotopeConfig() );
+        assert && assert
+        quantityProperty.get() === this.model.getIsotopeTestChamber().getIsotopeCount( getIsotopeConfig() );
         // Return the value.
         return quantityProperty.get();
-     }
+      }
 
-  };
+    } );
 
+
+  }
 
 } );
+
+

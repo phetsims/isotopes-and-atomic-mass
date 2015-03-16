@@ -27,7 +27,7 @@ define( function( require ) {
         this.radius = radius;
 
 
-    };
+    }
 
     return inherit( Particle, MovableAtom, {
 

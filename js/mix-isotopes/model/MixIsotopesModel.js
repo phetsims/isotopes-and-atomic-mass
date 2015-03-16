@@ -25,74 +25,74 @@ define( function( require ) {
   var NumberAtom = require( 'SHRED/model/NumberAtom' );
   var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
   var SharedConstants = require( 'SHRED/SharedConstants' );
-  var PropertySet = require('AXON/PropertySet');
+  var PropertySet = require( 'AXON/PropertySet' );
 
   //TODO Remove after debugging
-  var NumericalIsotopeQuantityControl = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/NumericalIsotopeQuantityControl');
+  var NumericalIsotopeQuantityControl = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/NumericalIsotopeQuantityControl' );
 
 
-    // -----------------------------------------------------------------------
-    // Class Data
-    // -----------------------------------------------------------------------
+  // -----------------------------------------------------------------------
+  // Class Data
+  // -----------------------------------------------------------------------
 
-    // Default initial atom configuration.
-    var DEFAULT_ATOMIC_NUMBER = 1;
+  // Default initial atom configuration.
+  var DEFAULT_ATOMIC_NUMBER = 1;
 
-    // Immutable atom
-    // var DEFAULT_PROTOTYPE_ISOTOPE_CONFIG = AtomIdentifier.getMostCommonIsotope( DEFAULT_ATOMIC_NUMBER );
+  // Immutable atom
+  // var DEFAULT_PROTOTYPE_ISOTOPE_CONFIG = AtomIdentifier.getMostCommonIsotope( DEFAULT_ATOMIC_NUMBER );
 
-    // Size of the buckets that will hold the isotopes.
-    var BUCKET_SIZE = new Dimension2( 1000, 400 ); // In picometers.
+  // Size of the buckets that will hold the isotopes.
+  var BUCKET_SIZE = new Dimension2( 1000, 400 ); // In picometers.
 
-    // Speed with which atoms move when animated.  Empirically determined,
-    // adjust as needed for the desired look.
-    var ATOM_MOTION_SPEED = 2500; // In picometers per sec of sim time.
+  // Speed with which atoms move when animated.  Empirically determined,
+  // adjust as needed for the desired look.
+  var ATOM_MOTION_SPEED = 2500; // In picometers per sec of sim time.
 
-    // Within this model, the isotopes come in two sizes, small and large, and
-    // atoms are either one size or another, and all atoms that are shown at
-    // a given time are all the same size.  The larger size is based somewhat
-    // on reality.  The smaller size is used when we want to show a lot of
-    // atoms at once.
-    var LARGE_ISOTOPE_RADIUS = 83; // in picometers.
-    var SMALL_ISOTOPE_RADIUS = 30; // in picometers.
+  // Within this model, the isotopes come in two sizes, small and large, and
+  // atoms are either one size or another, and all atoms that are shown at
+  // a given time are all the same size.  The larger size is based somewhat
+  // on reality.  The smaller size is used when we want to show a lot of
+  // atoms at once.
+  var LARGE_ISOTOPE_RADIUS = 83; // in picometers.
+  var SMALL_ISOTOPE_RADIUS = 30; // in picometers.
 
-    // Numbers of isotopes that are placed into the buckets when a new atomic
-    // number is selected.
-    var NUM_LARGE_ISOTOPES_PER_BUCKET = 10;
+  // Numbers of isotopes that are placed into the buckets when a new atomic
+  // number is selected.
+  var NUM_LARGE_ISOTOPES_PER_BUCKET = 10;
 
-    // List of colors which will be used to represent the various isotopes.
-    var ISOTOPE_COLORS = {
-        purple: new Color( 180, 82, 205 ),
-        green: Color.green,
-        red: new Color( 255, 69, 0 ),
-        brown: new Color( 139, 90, 43 )
+  // List of colors which will be used to represent the various isotopes.
+  var ISOTOPE_COLORS = {
+    purple: new Color( 180, 82, 205 ),
+    green: Color.green,
+    red: new Color( 255, 69, 0 ),
+    brown: new Color( 139, 90, 43 )
 
-    };
-
-
-    /*
-    * Enum of the possible interactivity types.
-    * The user is dragging large isotopes between the test chamber and a set of buckets.
-    * The user is adding and removing small isotopes to/from the chamber using sliders.
-    */
-    var InteractivityMode = {
-        BUCKETS_AND_LARGE_ATOMS: 'BUCKETS_AND_LARGE_ATOMS',
-        SLIDERS_AND_SMALL_ATOMS: 'SLIDERS_AND_SMALL_ATOMS'
-    };
+  };
 
 
-    // Total number of atoms placed in the chamber when depicting nature's mix.
-    var NUM_NATURES_MIX_ATOMS = 1000;
+  /*
+   * Enum of the possible interactivity types.
+   * The user is dragging large isotopes between the test chamber and a set of buckets.
+   * The user is adding and removing small isotopes to/from the chamber using sliders.
+   */
+  var InteractivityMode = {
+    BUCKETS_AND_LARGE_ATOMS: 'BUCKETS_AND_LARGE_ATOMS',
+    SLIDERS_AND_SMALL_ATOMS: 'SLIDERS_AND_SMALL_ATOMS'
+  };
+
+
+  // Total number of atoms placed in the chamber when depicting nature's mix.
+  var NUM_NATURES_MIX_ATOMS = 1000;
 
 
   // Strings
   var neutronsNameString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons.name' );
 
 
- /**
-  * Constructor for the Mix Isotopes Model
-  **/
-  function MixIsotopesModel(){
+  /**
+   * Constructor for the Mix Isotopes Model
+   **/
+  function MixIsotopesModel() {
 
 //    -----------------------------------------------------------------------
 //     Instance Data
@@ -100,37 +100,37 @@ define( function( require ) {
 //    -----------------------------------------------------------------------
 
 
-          // The test chamber into and out of which the isotopes can be moved.
-          //var testChamber = new IsotopeTestChamber( this );
+    // The test chamber into and out of which the isotopes can be moved.
+    //var testChamber = new IsotopeTestChamber( this );
 
-          // This atom is the "prototype isotope", meaning that it is set in order
-          // to set the atomic weight of the family of isotopes that are currently
-          // in use.
-          var prototypeIsotope = new NumberAtom( 0, 0, 0 );
+    // This atom is the "prototype isotope", meaning that it is set in order
+    // to set the atomic weight of the family of isotopes that are currently
+    // in use.
+    var prototypeIsotope = new NumberAtom( 0, 0, 0 );
 
-          // This property contains the list of isotopes that exist in nature as
-          // variations of the current "prototype isotope".  In other words, this
-          // contains a list of all stable isotopes that match the atomic weight
-          // of the currently configured isotope.  There should be only one of each
-          // possible isotope.
+    // This property contains the list of isotopes that exist in nature as
+    // variations of the current "prototype isotope".  In other words, this
+    // contains a list of all stable isotopes that match the atomic weight
+    // of the currently configured isotope.  There should be only one of each
+    // possible isotope.
 
 //          var possibleIsotopesProperty = AtomIdentifier.isotopeList;
 //          console.log(AtomIdentifier.getStableIsotopesOfElement(1));
 
-          // List of the isotope buckets.
-          var bucketList = [];
+    // List of the isotope buckets.
+    var bucketList = [];
 
-          // List of the numerical controls that, when present, can be used to add
-          // or remove isotopes to/from the test chamber.
-          // TODO Port over or find equivalent of NumericalIsotopeQuantityControl
-          var numericalControllerList = [];
+    // List of the numerical controls that, when present, can be used to add
+    // or remove isotopes to/from the test chamber.
+    // TODO Debug NumericalIsotopeQuantityControl
+    var numericalControllerList = [];
 
-          // Property that determines the type of user interactivity that is set.
-          // See the enum definition for more information about the modes.
-          var interactivityModeProperty = InteractivityMode.BUCKETS_AND_LARGE_ATOMS;
+    // Property that determines the type of user interactivity that is set.
+    // See the enum definition for more information about the modes.
+    var interactivityModeProperty = InteractivityMode.BUCKETS_AND_LARGE_ATOMS;
 
-          // Map of elements to user mixes.  These are restored when switching
-          // between elements.  The integer represents the atomic number.
+    // Map of elements to user mixes.  These are restored when switching
+    // between elements.  The integer represents the atomic number.
 //          private final Map<Integer, State> mapIsotopeConfigToUserMixState = new HashMap<Integer, State>();
 //
 //          // Property that determines whether the user's mix or nature's mix is
@@ -157,46 +157,46 @@ define( function( require ) {
 //          };
 
 
-
-  };
+  }
 
   return inherit( PropertySet, MixIsotopesModel, {
-        // -----------------------------------------------------------------------
-        // Methods
-        // -----------------------------------------------------------------------
+    // -----------------------------------------------------------------------
+    // Methods
+    // -----------------------------------------------------------------------
 
-        /**
-         * Create and add an isotope of the specified configuration.  Where the
-         * isotope is initially placed depends upon the current interactivity mode.
-         * TODO Prototype isotope should be made an instance variable in constructor.
-         * TODO Port MovableAtom Object
-         */
-         createAndAddIsotope: function( isotopeConfig, moveImmediately) {
-            assert && assert( isotopeConfig.getNumProtons() == prototypeIsotope.getNumProtons() );
-            assert && assert( isotopeConfig.getNumProtons() == isotopeConfig.getNumElectrons() );
-            var newIsotope;
+    /**
+     * Create and add an isotope of the specified configuration.  Where the
+     * isotope is initially placed depends upon the current interactivity mode.
+     * TODO Prototype isotope should be made an instance variable in constructor.
+     * TODO Port MovableAtom Object
+     */
+    createAndAddIsotope: function( isotopeConfig, moveImmediately ) {
+      assert && assert( isotopeConfig.getNumProtons() === prototypeIsotope.getNumProtons() );
+      assert && assert( isotopeConfig.getNumProtons() === isotopeConfig.getNumElectrons() );
+      var newIsotope;
 
-            if( interactivityModeProperty.get() == InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
-                // Create the specified isotope and add it to the appropriate bucket.
-                newIsotope = new MovableAtom( isotopeConfig.getNumProtons(), isotopeConfig.getNumNeutrons(),
-                                                                         LARGE_ISOTOPE_RADIUS, new Point2D.Double(), getClock() );
-                newIsotope.setMotionVelocity( ATOM_MOTION_SPEED );
-                // newIsotope.addListener( isotopeGrabbedListener );
-                this.getBucketForIsotope( isotopeConfig ).addIsotopeInstanceFirstOpen( newIsotope, moveImmediately );
-            }
+      if ( interactivityModeProperty.get() === InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
+        // Create the specified isotope and add it to the appropriate bucket.
+        newIsotope = new MovableAtom( isotopeConfig.getNumProtons(), isotopeConfig.getNumNeutrons(),
+          LARGE_ISOTOPE_RADIUS, new Point2D.Double(), getClock() );
+        newIsotope.setMotionVelocity( ATOM_MOTION_SPEED );
+        // newIsotope.addListener( isotopeGrabbedListener );
+        this.getBucketForIsotope( isotopeConfig ).addIsotopeInstanceFirstOpen( newIsotope, moveImmediately );
+      }
 
-            else {
-               // Create the specified isotope and add it directly to the test chamber.
-               var randomIsotopeLocation = testChamber.generateRandomLocation();
-               newIsotope = new MovableAtom( isotopeConfig.getNumProtons(), isotopeConfig.getNumNeutrons(),
-                                                             SMALL_ISOTOPE_RADIUS, randomIsotopeLocation, getClock() );
-               testChamber.addIsotopeToChamber( newIsotope );
-            };
+      else {
+        // Create the specified isotope and add it directly to the test chamber.
+        var randomIsotopeLocation = testChamber.generateRandomLocation();
+        newIsotope = new MovableAtom( isotopeConfig.getNumProtons(), isotopeConfig.getNumNeutrons(),
+          SMALL_ISOTOPE_RADIUS, randomIsotopeLocation, getClock() );
+        testChamber.addIsotopeToChamber( newIsotope );
+      }
 
-            // notifyIsotopeInstanceAdded( newIsotope );
-            return newIsotope;
 
-         },
+      // notifyIsotopeInstanceAdded( newIsotope );
+      return newIsotope;
+
+    }
 
 //
 //        /**
@@ -622,10 +622,9 @@ define( function( require ) {
 //        }
 //
 //  } );
-} );
+  } );
 
 } );
-
 
 
 ///**
