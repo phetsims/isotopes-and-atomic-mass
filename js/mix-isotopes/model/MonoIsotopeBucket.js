@@ -4,6 +4,8 @@
  * though it may contain multiple instances of that isotope.
  *
  * @author John Blanco
+ * @author Jesse Greenberg
+ * @author James Smith
  */
 
 define( function( require ) {
@@ -12,6 +14,11 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var Vector2 = require( 'DOT/Vector2' );
   var SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
+
+  //TODO Check and see if we actually need these
+  // TODO Should I be using numberAtom instead of movable atom?
+  var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom');
+  var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
 
 
   //public
@@ -43,7 +50,7 @@ define( function( require ) {
       sphereRadius: particleRadius
     } );
 
-    this.numProtonsInIsotope = numNeutronsInIsotope;
+    this.numProtonsInIsotope = numProtonsInIsotope;
     this.numNeutronsInIsotope = numNeutronsInIsotope;
 
   }
@@ -56,17 +63,19 @@ define( function( require ) {
      * @param moveImmediately
      */
     addIsotopeInstanceFirstOpen: function( isotope, moveImmediately ) {
-      if ( isIsotopeAllowed( isotope.atomConfiguration ) ) {
+      if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount) ) {
         this.addParticleFirstOpen( isotope, moveImmediately );
       }
     },
 
     /**
+     * Tests to see if an isotope matches the MonoIsotopeBucket.
      *
      * @param {number} numProtons
      * @param {number} numNeutrons
      * @returns {boolean}
      * TODO pick which of the following two functions to keep
+     * TODO Is there a more compact way to get protonCount and neutronCount?
      */
 
     isIsotopeAllowed: function( numProtons, numNeutrons ) {
@@ -79,74 +88,56 @@ define( function( require ) {
      * @returns {*}
      */
     isIsotopeAllowedNumberAtom: function( isotopeConfig ) {
-      return this.isIsotopeAllowed( isotopeConfig.protonCount, isotopeConfig.neutronCount );
+      return this.isIsotopeAllowed( isotopeConfig.atomConfiguration.protonCount, isotopeConfig.atomConfiguration.neutronCount );
+    },
+
+    /**
+     * Add an isotope to the nearest open location in the bucket.
+     *
+     * @param {MovableAtom} isotope
+     * @param {boolean} moveImmediately
+     */
+    addIsotopeInstanceNearestOpen: function( isotope, moveImmediately ) {
+      if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount ) ) {
+        this.addParticleNearestOpen( isotope, moveImmediately );
+      }
+    },
+
+    /**
+     * Remove an isotope
+     *
+     * return {MovableAtom} isotopeToRemove
+     */
+    removeArbitraryIsotope: function() {
+      var isotopeToRemove = null;
+
+      if ( this.getParticleList().size() > 0 ) {
+        isotopeToRemove = this.getParticleList().get( this.getParticleList().size() - 1 );
+        this.removeParticle( isotopeToRemove );
+      }
+
+      else {
+        // TODO is this the proper way to throw error?
+        throw AtomIdentifier.getName(isotopeToRemove.atomConfiguration.protonCount) + " - Warning: Ignoring attempt to remove particle from empty bucket." ;
+      }
+      return isotopeToRemove;
+    },
+
+    /**
+     * Get a list of all isotopes contained within this bucket.
+     * @return {MovableAtom[]} contained isotopes
+     */
+    getContainedIsotopes: function() {
+      var containedIsotopes = [];
+      for ( var isotope in this.getParticleList() ) {
+        assert && assert( isotope instanceof MovableAtom );
+        containedIsotopes.add( isotope );
+      }
+      return containedIsotopes;
     }
 
-});
-
-});
-
-//
 
 
-//  /**
-//   * Add an isotope to the nearest open location in the bucket.
-//   *
-//   * @param isotope
-//   * @param moveImmediately
-//   */
-//  public
-//  void addIsotopeInstanceNearestOpen( MovableAtom
-//  isotope, boolean
-//  moveImmediately
-//  )
-//  {
-//    if ( isIsotopeAllowed( isotope.getAtomConfiguration() ) ) {
-//      addParticleNearestOpen( isotope, moveImmediately );
-//    }
-//  }
-//
+  } );
 
-//
-
-//
-//  public
-//  MovableAtom
-//  removeArbitraryIsotope()
-//  {
-//    MovableAtom
-//    isotopeToRemove = null;
-//    if ( getParticleList().size() > 0 ) {
-//      isotopeToRemove = (MovableAtom)
-//      getParticleList().get( getParticleList().size() - 1 );
-//      removeParticle( isotopeToRemove );
-//    }
-//    else {
-//      System.err.println( getClass().getName() + " - Warning: Ignoring attempt to remove particle from empty bucket." );
-//    }
-//    return isotopeToRemove;
-//  }
-//
-//  /**
-//   * Get a list of all isotopes contained within this bucket.
-//   */
-//  public
-//  List < MovableAtom > getContainedIsotopes()
-//  {
-//    List < MovableAtom > containedIsotopes = new ArrayList < MovableAtom > ();
-//    for ( SphericalParticle isotope : getParticleList()
-//  )
-//    {
-//      assert
-//      isotope instanceof MovableAtom;
-//      containedIsotopes.add( (MovableAtom)
-//      isotope
-//    )
-//      ;
-//    }
-//    return containedIsotopes;
-//  }
-//}
-//}
-//)
-;
+} );

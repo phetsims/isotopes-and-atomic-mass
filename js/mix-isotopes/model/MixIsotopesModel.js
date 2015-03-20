@@ -220,7 +220,8 @@ define( function( require ) {
       var isotopeBucket = null;
       for (var bucket in this.bucketList) {
         if ( this.bucketList.hasOwnProperty( bucket ) ) {
-          if ( this.bucketList[ bucket ].isIsotopeAllowed( isotope ) ) {
+          // TODO Why isn't protonCount and Neutron count working?
+          if ( this.bucketList[ bucket ].isIsotopeAllowed( isotope.protonCount, isotope.options.neutronCount ) ) {
             // Found it.
             isotopeBucket = bucket;
             break;

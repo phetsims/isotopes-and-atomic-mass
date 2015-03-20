@@ -62,12 +62,12 @@ define( function( require ) {
        */
       setIsotopeQuantity: function( targetQuantity ) {
         assert && assert( targetQuantity <= CAPACITY );
-        var chanceAmount = targetQuantity - this.model.getIsotopeTestChamber().getIsotopeCount( isotopeConfig );
+        var chanceAmount = targetQuantity - this.model.getIsotopeTestChamber().getIsotopeCount( this.isotopeConfig );
 
         if ( changeAmount > 0 ) {
           for ( var i = 0; i < changeAmount; i++ ) {
-            var newIsotope = new MovableAtom( isotopeConfig.getNumProtons(), isotopeConfig.getNumNeutrons(),
-              MixIsotopesModel.SMALL_ISOTOPE_RADIUS, model.getIsotopeTestChamber().generateRandomLocation() );
+            var newIsotope = new MovableAtom( this.isotopeConfig.getNumProtons(), this.isotopeConfig.getNumNeutrons(),
+              MixIsotopesModel.SMALL_ISOTOPE_RADIUS, this.model.getIsotopeTestChamber().generateRandomLocation() );
 
             this.model.getIsotopeTestChamber().addIsotopeToChamber( newIsotope );
             this.model.notifyIsotopeInstanceAdded( newIsotope );
