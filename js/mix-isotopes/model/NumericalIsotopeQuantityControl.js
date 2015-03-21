@@ -10,6 +10,9 @@
  * have a presence in the model so that the isotopes that are outside of
  * the chamber have somewhere to go, so this class allows buckets and
  * other controls to be handled consistently between the model and view.
+ *
+ * @author James Smith
+ * @author Jesse Greenberg
  */
 
 
@@ -62,7 +65,7 @@ define( function( require ) {
        */
       setIsotopeQuantity: function( targetQuantity ) {
         assert && assert( targetQuantity <= CAPACITY );
-        var chanceAmount = targetQuantity - this.model.getIsotopeTestChamber().getIsotopeCount( this.isotopeConfig );
+        var changeAmount = targetQuantity - this.model.getIsotopeTestChamber().getIsotopeCount( this.isotopeConfig );
 
         if ( changeAmount > 0 ) {
           for ( var i = 0; i < changeAmount; i++ ) {

@@ -24,9 +24,10 @@ define( function( require ) {
     var Particle = require( 'SHRED/model/Particle' );
     var NumberAtom = require( 'SHRED/model/NumberAtom' );
 
-    function MovableAtom( numProtons, numNeutrons, radius, initialPosition ) {
+    function MovableAtom( numProtons, numNeutrons, initialPosition ) {
+      Particle.call( this, 'Isotope')
+
         this.atomConfiguration = new NumberAtom( { protonCount: numProtons, neutronCount: numNeutrons, electronCount: numProtons } );
-        this.radius = radius;
 
 
     }

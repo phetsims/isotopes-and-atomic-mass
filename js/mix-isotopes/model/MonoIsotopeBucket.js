@@ -42,7 +42,7 @@ define( function( require ) {
    */
   function MonoIsotopeBucket( position, size, baseColor, caption, particleRadius, numProtonsInIsotope, numNeutronsInIsotope ) {
     // call the supertype
-    SphereBucket.call( {
+    SphereBucket.call( this, {
       position: position,
       size: size,
       baseColor: baseColor,
@@ -59,7 +59,7 @@ define( function( require ) {
     /**
      * Add an isotope to the first open location in the bucket.
      *
-     * @param isotope
+     * @param {MovableAtom} isotope
      * @param moveImmediately
      */
     addIsotopeInstanceFirstOpen: function( isotope, moveImmediately ) {
@@ -74,7 +74,7 @@ define( function( require ) {
      * @param {number} numProtons
      * @param {number} numNeutrons
      * @returns {boolean}
-     * TODO pick which of the following two functions to keep
+     * TODO pick which of the following two functions to keep/ make sure in all instances of the second call switched to first version.
      * TODO Is there a more compact way to get protonCount and neutronCount?
      */
 
@@ -129,10 +129,12 @@ define( function( require ) {
      */
     getContainedIsotopes: function() {
       var containedIsotopes = [];
-      for ( var isotope in this.getParticleList() ) {
-        assert && assert( isotope instanceof MovableAtom );
-        containedIsotopes.add( isotope );
-      }
+      this.getParticleList().forEach( function( isotope ) {
+        assert && assert (isotope instanceof MovableAtom);
+        containedIsotopes.push( isotope );
+
+      });
+
       return containedIsotopes;
     }
 

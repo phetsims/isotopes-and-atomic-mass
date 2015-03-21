@@ -10,7 +10,6 @@
  * @author Jesse Greenberg
  * @author James Smith
  */
-// TODO Remove semicolons after soft brackets where applicable
 
 define( function( require ) {
   'use strict';
@@ -30,6 +29,7 @@ define( function( require ) {
 
   //TODO Remove after debugging
   var NumericalIsotopeQuantityControl = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/NumericalIsotopeQuantityControl' );
+  var MonoIsotopeBucket = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MonoIsotopeBucket');
 
 
   // -----------------------------------------------------------------------
@@ -100,7 +100,6 @@ define( function( require ) {
     PropertySet.call( this, { interactivityMode: InteractivityMode.BUCKETS_AND_LARGE_ATOMS } );
 
 //     Instance Data
-//      TODO Port over variables and start with functions.
 //    -----------------------------------------------------------------------
 
 
@@ -122,9 +121,9 @@ define( function( require ) {
 //          console.log(AtomIdentifier.getStableIsotopesOfElement(1));
 
     // List of the isotope buckets.
+    // TODO make observable array
     this.bucketList = [];
 
-    this.testIsotope = this.createAndAddIsotope( new NumberAtom( 0, 0, 0 ), true );
     // List of the numerical controls that, when present, can be used to add
     // or remove isotopes to/from the test chamber.
     // TODO Debug NumericalIsotopeQuantityControl
@@ -190,8 +189,7 @@ define( function( require ) {
         // newIsotope.setMotionVelocity( ATOM_MOTION_SPEED );
         // newIsotope.addListener( isotopeGrabbedListener );
 
-        // TODO Port getBucketForIsotope
-        // this.getBucketForIsotope( isotopeConfig ).addIsotopeInstanceFirstOpen( newIsotope, moveImmediately );
+        this.getBucketForIsotope( isotopeConfig ).addIsotopeInstanceFirstOpen( newIsotope, moveImmediately );
       }
 
       else {
@@ -212,23 +210,32 @@ define( function( require ) {
 
     /**
      * Get the bucket where the given isotope can be placed.
-     * TODO Port MonoIsotopeParticleBucket
      * @param {NumberAtom} isotope
      * @return {MonoIsotopeBucket} A bucket that can hold the isotope if one exists, null if not.
      */
     getBucketForIsotope: function( isotope ) {
       var isotopeBucket = null;
-      for (var bucket in this.bucketList) {
+      for ( var bucket in this.bucketList ) {
         if ( this.bucketList.hasOwnProperty( bucket ) ) {
-          // TODO Why isn't protonCount and Neutron count working?
-          if ( this.bucketList[ bucket ].isIsotopeAllowed( isotope.protonCount, isotope.options.neutronCount ) ) {
+          if ( this.bucketList[ bucket ].isIsotopeAllowed( isotope.protonCount, isotope.neutronCount ) ) {
             // Found it.
-            isotopeBucket = bucket;
+            isotopeBucket = this.bucketList[ bucket ];
             break;
           }
         }
       }
       return isotopeBucket;
+    },
+
+    /**
+     * Add newBucket to bucketList.
+     *
+     * @param {MonoIsotopeParticleBucket} newBucket
+     */
+
+    addBucket: function( newBucket ) {
+      this.bucketList.push( newBucket );
+      // notifyBucketAdded( newBucket );
     }
 
 //
@@ -461,10 +468,7 @@ define( function( require ) {
 //            }
 //        }
 //
-//        private void addBucket( MonoIsotopeParticleBucket newBucket ) {
-//            bucketList.add( newBucket );
-//            notifyBucketAdded( newBucket );
-//        }
+
 //
 //        private void removeNumericalControllers() {
 //            ArrayList<NumericalIsotopeQuantityControl> oldControllers = new ArrayList<NumericalIsotopeQuantityControl>( numericalControllerList );
@@ -639,7 +643,7 @@ define( function( require ) {
 //        }
 //
 //  } );
-} );
+  } );
 
 } )
 ;
