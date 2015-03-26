@@ -140,6 +140,6 @@ define( function( require ) {
 
 
 
-  } );
+  } )
 
 } );

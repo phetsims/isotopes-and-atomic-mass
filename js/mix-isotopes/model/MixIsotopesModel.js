@@ -30,6 +30,7 @@ define( function( require ) {
   //TODO Remove after debugging
   var NumericalIsotopeQuantityControl = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/NumericalIsotopeQuantityControl' );
   var MonoIsotopeBucket = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MonoIsotopeBucket');
+  var IsotopeTestChamber = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/IsotopeTestChamber');
 
 
   // -----------------------------------------------------------------------
@@ -128,18 +129,8 @@ define( function( require ) {
     // or remove isotopes to/from the test chamber.
     // TODO Debug NumericalIsotopeQuantityControl
 
+    //var testChamber =  new IsotopeTestChamber( );
 
-    // Map of elements to user mixes.  These are restored when switching
-    // between elements.  The integer represents the atomic number.
-//          private final Map<Integer, State> mapIsotopeConfigToUserMixState = new HashMap<Integer, State>();
-//
-//          // Property that determines whether the user's mix or nature's mix is
-//          // being displayed.  When this is set to true, indicating that nature's
-//          // mix should be displayed, the isotope size property is ignored.
-//          var showingNaturesMixProperty = new BooleanProperty( false );
-//
-//          // Listener support.
-//          var listeners = [];
 
 //          // This is an observer that watches our own interactivity mode setting.
 //          // It is declared as a member variable so that it can be "unhooked" in
