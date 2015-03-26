@@ -14,13 +14,13 @@ define( function( require ) {
   var MakeIsotopesScreenView = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/MakeIsotopesScreenView' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Screen = require( 'JOIST/Screen' );
-  var Image  = require('SCENERY/nodes/Image');
+  var Image = require( 'SCENERY/nodes/Image' );
 
   // strings
   var makeIsotopesString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/make-isotopes-module.title' );
 
   // images
-  var blackBoxImage = require('image!ISOTOPES_AND_ATOMIC_MASS/BlackBox.png');
+  var blackBoxImage = require( 'image!ISOTOPES_AND_ATOMIC_MASS/BlackBox.png' );
 
   /**
    * @constructor
@@ -29,7 +29,7 @@ define( function( require ) {
 
     //If this is a single-screen sim, then no icon is necessary.
     //If there are multiple screens, then the icon must be provided here.
-    var icon = new Image(blackBoxImage);
+    var icon = new Image( blackBoxImage );
 
     Screen.call( this, makeIsotopesString, icon,
       function() { return new MakeIsotopesModel(); },
