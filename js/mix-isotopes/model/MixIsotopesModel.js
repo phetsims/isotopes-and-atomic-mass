@@ -129,8 +129,7 @@ define( function( require ) {
     // or remove isotopes to/from the test chamber.
     // TODO Debug NumericalIsotopeQuantityControl
 
-    //var testChamber =  new IsotopeTestChamber( );
-
+    var testChamber =  new IsotopeTestChamber( this );
 
 //          // This is an observer that watches our own interactivity mode setting.
 //          // It is declared as a member variable so that it can be "unhooked" in

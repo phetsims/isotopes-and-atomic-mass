@@ -21,6 +21,7 @@ define( function( require ) {
   var ObservableArray = require( 'AXON/ObservableArray' );
   var PropertySet = require( 'AXON/PropertySet' );
   var NumberAtom = require( 'SHRED/model/NumberAtom' );
+  var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
 
 
   // ------------------------------------------------------------------------
@@ -48,6 +49,7 @@ define( function( require ) {
    *
    */
   var test = null;
+
   function IsotopeTestChamber( model ) {
 
     // Isotope Mixtures Model that contains this test chamber.
@@ -58,16 +60,14 @@ define( function( require ) {
     // @public
     this.containedIsotopes = new ObservableArray();
 
-    PropertySet.call( IsotopeTestChamber, {
+    PropertySet.call( this, {
       isotopeCountProperty: 0,
       averageAtomicMassProperty: 0
-
     } );
-
 
   }
 
-  return inherit( IsotopeTestChamber, {
+  return inherit( PropertySet, IsotopeTestChamber, {
     /**
      * Get the number of isotopes currently in the chamber that match the
      * specified configuration.
@@ -78,11 +78,11 @@ define( function( require ) {
     getIsotopeCount: function( isotopeConfig ) {
       assert && assert( isotopeConfig.protonCount === isotopeConfig.electronCount ); // Should always be neutral atom.
       var isotopeCount = 0;
-      for ( var isotope in this.containedIsotopes ) {
+      this.containedIsotopes.forEach( function( isotope ) {
         if ( isotope.atomConfiguration.equals( isotopeConfig ) ) {
           isotopeCount++;
         }
-      }
+      } );
       return isotopeCount;
     },
 
@@ -105,7 +105,6 @@ define( function( require ) {
     isIsotopePositionedOverChamber: function( isotope ) {
       return TEST_CHAMBER_RECT.contains( isotope.getPosition().toPoint2D() );
     }
-
 
   } );
 } );
