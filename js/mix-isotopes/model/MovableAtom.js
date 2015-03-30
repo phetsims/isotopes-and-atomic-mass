@@ -19,10 +19,10 @@ define( function( require ) {
     var inherit = require( 'PHET_CORE/inherit' );
     var Particle = require( 'SHRED/model/Particle' );
     var NumberAtom = require( 'SHRED/model/NumberAtom' );
-// TODO Should we be including initialPosition in parameters if we are never going to use it?
-    function MovableAtom( numProtons, numNeutrons, initialPosition ) {
-      Particle.call( this, 'Isotope')
 
+    function MovableAtom( numProtons, numNeutrons, initialPosition ) {
+      Particle.call( this, 'Isotope' )
+        this.position = initialPosition;
         this.atomConfiguration = new NumberAtom( { protonCount: numProtons, neutronCount: numNeutrons, electronCount: numProtons } );
 
 

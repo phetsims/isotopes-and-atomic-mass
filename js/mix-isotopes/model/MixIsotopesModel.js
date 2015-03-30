@@ -130,7 +130,9 @@ define( function( require ) {
     // TODO Debug NumericalIsotopeQuantityControl
 
     var testChamber =  new IsotopeTestChamber( this );
-    var testMovable = new MovableAtom( 5, 5, new Vector2( 400, 400 ) );
+    var testMovable = new MovableAtom( 5, 5, new Vector2( 0, 0 ) );
+    testChamber.addIsotopeToChamber( testMovable, true);
+    testChamber.removeIsotopeFromChamber( testMovable );
     debugger;
 
 //          // This is an observer that watches our own interactivity mode setting.

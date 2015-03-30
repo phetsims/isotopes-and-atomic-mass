@@ -17,7 +17,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var Vector2 = require( 'DOT/Vector2' );
   var Dimension2 = require( 'DOT/Dimension2' );
-  var Rectangle = require( 'DOT/Rectangle' );
+  var Rectangle = require( 'SCENERY/NODES/Rectangle' );
   var ObservableArray = require( 'AXON/ObservableArray' );
   var PropertySet = require( 'AXON/PropertySet' );
   var NumberAtom = require( 'SHRED/model/NumberAtom' );
@@ -61,8 +61,8 @@ define( function( require ) {
     this.containedIsotopes = new ObservableArray();
 
     PropertySet.call( this, {
-      isotopeCountProperty: 0,
-      averageAtomicMassProperty: 0
+      isotopeCount: 0,
+      averageAtomicMass: 0
     } );
 
   }
@@ -103,7 +103,7 @@ define( function( require ) {
      * @return {boolean}
      */
     isIsotopePositionedOverChamber: function( isotope ) {
-      return TEST_CHAMBER_RECT.contains( isotope.position );
+      return TEST_CHAMBER_RECT.containsPointSelf( isotope.position );
     },
 
     /**
@@ -145,46 +145,41 @@ define( function( require ) {
      *                       number of isotopes at once.
      */
     addIsotopeToChamber: function( isotope, performUpdates ) {
-      if ( isIsotopePositionedOverChamber( isotope ) ) {
-        containedIsotopes.push( isotope );
+      if ( this.isIsotopePositionedOverChamber( isotope ) ) {
+        this.containedIsotopes.push( isotope );
         // If the edges of the isotope are outside of the container,
         // move it to be fully inside.
-        var protrusion = isotope.position.x + isotope.getRadius() - TEST_CHAMBER_RECT.getMaxX();
+        var protrusion = isotope.position.x + isotope.radius - TEST_CHAMBER_RECT.bounds.maxX;
         if ( protrusion >= 0 ) {
-          isotope.setPositionAndDestination( isotope.getPosition().getX() - protrusion,
-            isotope.getPosition().getY() );
+          isotope.setPositionAndDestination( new Vector2( isotope.position.x - protrusion, isotope.position.y ) );
         }
         else {
-          protrusion = TEST_CHAMBER_RECT.getMinX() - ( isotope.getPosition().getX() - isotope.getRadius() );
+          protrusion = TEST_CHAMBER_RECT.bounds.minX - ( isotope.position.x - isotope.radius );
           if ( protrusion >= 0 ) {
-            isotope.setPositionAndDestination( isotope.getPosition().getX() + protrusion,
-              isotope.getPosition().getY() );
+            isotope.setPositionAndDestination( new Vector2( isotope.position.x + protrusion, isotope.position.y ) );
           }
         }
-        protrusion = isotope.getPosition().getY() + isotope.getRadius() - TEST_CHAMBER_RECT.getMaxY();
+        protrusion = isotope.position.y + isotope.radius - TEST_CHAMBER_RECT.bounds.maxY;
         if ( protrusion >= 0 ) {
-          isotope.setPositionAndDestination( isotope.getPosition().getX(),
-            isotope.getPosition().getY() - protrusion );
+          isotope.setPositionAndDestination( new Vector2( isotope.position.x, isotope.position.y - protrusion ) );
         }
         else {
-          protrusion = TEST_CHAMBER_RECT.getMinY() - ( isotope.getPosition().getY() - isotope.getRadius() );
+          protrusion = TEST_CHAMBER_RECT.bounds.minY - ( isotope.position.y - isotope.radius );
           if ( protrusion >= 0 ) {
-            isotope.setPositionAndDestination( isotope.getPosition().getX(),
-              isotope.getPosition().getY() + protrusion );
+            isotope.setPositionAndDestination( isotope.position.x, isotope.position.y + protrusion );
           }
         }
         if ( performUpdates ) {
           // Update the isotope count.
-          updateCountProperty();
+          this.updateCountProperty();
           // Update the average atomic mass.
-          averageAtomicMassProperty.set( ( ( averageAtomicMassProperty.get() *
-                                             ( isotopeCountProperty.get() - 1 ) ) + isotope.getAtomConfiguration().getAtomicMass() ) /
-                                         isotopeCountProperty.get() );
+          this.averageAtomicMass = ( ( this.averageAtomicMass * ( this.isotopeCount - 1 ) ) + isotope.atomConfiguration.getIsotopeAtomicMass() ) /
+                                      this.isotopeCount ;
         }
       }
       else {
         // This isotope is not positioned correctly.
-        System.err.println( getClass().getName() + " - Warning: Ignoring attempt to add incorrectly located isotope to test chamber." );
+        console.error( ' - Warning: Ignoring attempt to add incorrectly located isotope to test chamber. ' );
       }
     },
 
@@ -197,29 +192,52 @@ define( function( require ) {
 
     bulkAddIsotopesToChamber: function( isotopeList ) {
       for ( var isotope in isotopeList ) {
-        addIsotopeToChamber( isotope, false );
+        this.addIsotopeToChamber( isotope, false );
       }
-      updateCountProperty();
-      updateAverageAtomicMassProperty();
+      this.updateCountProperty();
+      this.updateAverageAtomicMassProperty();
+    },
+
+    /**
+     * Convenience function to set the isotopeCount property equal to the number of isotopes contained in this test chamber.
+     */
+    updateCountProperty: function() {
+      this.isotopeCount = this.containedIsotopes.length;
+    },
+
+    updateAverageAtomicMassProperty: function() {
+      if ( this.containedIsotopes.length > 0 ) {
+        var totalMass = 0;
+        this.containedIsotopes.forEach( function( isotope ) {
+          totalMass += isotope.atomConfiguration.getIsotopeAtomicMass();
+        } );
+
+        this.averageAtomicMass = totalMass / this.containedIsotopes.length;
+      }
+      else {
+        this.averageAtomicMass = 0;
+      }
+    },
+
+    removeIsotopeFromChamber: function( isotope ) {
+    this.containedIsotopes.remove( isotope );
+    this.updateCountProperty();
+    // Update the average atomic mass.
+    if ( this.isotopeCount > 0 ) {
+      this.averageAtomicMass = ( this.averageAtomicMass * ( this.isotopeCount + 1 )
+                                       - isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCount ;
     }
+    else {
+      this.averageAtomicMass =  0 ;
+    }
+  }
 
 
   } );
 } );
 
 
-//  public void removeIsotopeFromChamber( MovableAtom isotope ) {
-//    containedIsotopes.remove( isotope );
-//    updateCountProperty();
-//    // Update the average atomic mass.
-//    if ( isotopeCountProperty.get() > 0 ) {
-//      averageAtomicMassProperty.set( ( averageAtomicMassProperty.get() * ( isotopeCountProperty.get() + 1 )
-//                                       - isotope.getAtomConfiguration().getAtomicMass() ) / isotopeCountProperty.get() );
-//    }
-//    else {
-//      averageAtomicMassProperty.set( 0.0 );
-//    }
-//  }
+
 //
 //  /**
 //   * Remove an isotope from the chamber that matches the specified atom
@@ -274,31 +292,9 @@ define( function( require ) {
 //    isotopeCountProperty.addObserver( so );
 //  }
 //
-//  private void updateCountProperty() {
-//    isotopeCountProperty.set( containedIsotopes.size() );
-//  }
+
 //
-//  private void updateAverageAtomicMassProperty() {
-//    if ( containedIsotopes.size() > 0 ) {
-//      double totalMass = 0;
-//      for ( MovableAtom isotope : containedIsotopes ) {
-//        totalMass += isotope.getAtomConfiguration().getAtomicMass();
-//      }
-//      averageAtomicMassProperty.set( totalMass / containedIsotopes.size() );
-//    }
-//    else {
-//      averageAtomicMassProperty.set( 0.0 );
-//    }
-//  }
-//
-//  public void addAverageAtomicMassPropertyListener( SimpleObserver so ) {
-//    averageAtomicMassProperty.addObserver( so );
-//  }
-//
-//  public double getAverageAtomicMass() {
-//    return averageAtomicMassProperty.get();
-//  }
-//
+
 //  /**
 //   * Get the proportion of isotopes currently within the chamber that
 //   * match the specified configuration.  Note that electrons are
