@@ -103,111 +103,111 @@ define( function( require ) {
      * @return {boolean}
      */
     isIsotopePositionedOverChamber: function( isotope ) {
-      return TEST_CHAMBER_RECT.contains( isotope.getPosition().toPoint2D() );
+      return TEST_CHAMBER_RECT.contains( isotope.position );
+    },
+
+    /**
+     * Returns true if the specified isotope instance is contained by the
+     * chamber.  Note that it is possible for an isotope to be positioned
+     * within the chamber bounds but not contained by it.
+     *
+     * @param {MovableAtom} isotope
+     * @return {boolean}
+     */
+    isIsotopeContained: function( isotope ) {
+      return this.containedIsotopes.contains( isotope );
+    },
+
+    ///**
+    // * Add the specified isotope to the test chamber.  The isotope must be
+    // * positioned within the 2D bounds of the chamber or the request will be
+    // * ignored.
+    // *
+    // * @param {MovableAtom} isotope
+    // * TODO Decide whether or not we should keep this. It seems redundant.
+    // */
+    //addIsotopeToChamber: function( isotope ) {
+    //  addIsotopeToChamber( isotope, true );
+    //},
+
+    /**
+     * Add the specified isotope to the chamber.  This method requires
+     * that the position of the isotope be within the chamber rectangle,
+     * or the isotope will not be added.
+     *
+     * In cases where an isotope is in a position where the center is
+     * within the chamber but the edges are not, the isotope will be moved
+     * so that it is fully contained within the chamber.
+     *
+     * @param {MovableAtom} isotope        - Isotope to add.
+     * @param {boolean} performUpdates - Flag that can be set be used to suppress updates.
+     *                       This is generally done for performance reasons when adding a large
+     *                       number of isotopes at once.
+     */
+    addIsotopeToChamber: function( isotope, performUpdates ) {
+      if ( isIsotopePositionedOverChamber( isotope ) ) {
+        containedIsotopes.push( isotope );
+        // If the edges of the isotope are outside of the container,
+        // move it to be fully inside.
+        var protrusion = isotope.position.x + isotope.getRadius() - TEST_CHAMBER_RECT.getMaxX();
+        if ( protrusion >= 0 ) {
+          isotope.setPositionAndDestination( isotope.getPosition().getX() - protrusion,
+            isotope.getPosition().getY() );
+        }
+        else {
+          protrusion = TEST_CHAMBER_RECT.getMinX() - ( isotope.getPosition().getX() - isotope.getRadius() );
+          if ( protrusion >= 0 ) {
+            isotope.setPositionAndDestination( isotope.getPosition().getX() + protrusion,
+              isotope.getPosition().getY() );
+          }
+        }
+        protrusion = isotope.getPosition().getY() + isotope.getRadius() - TEST_CHAMBER_RECT.getMaxY();
+        if ( protrusion >= 0 ) {
+          isotope.setPositionAndDestination( isotope.getPosition().getX(),
+            isotope.getPosition().getY() - protrusion );
+        }
+        else {
+          protrusion = TEST_CHAMBER_RECT.getMinY() - ( isotope.getPosition().getY() - isotope.getRadius() );
+          if ( protrusion >= 0 ) {
+            isotope.setPositionAndDestination( isotope.getPosition().getX(),
+              isotope.getPosition().getY() + protrusion );
+          }
+        }
+        if ( performUpdates ) {
+          // Update the isotope count.
+          updateCountProperty();
+          // Update the average atomic mass.
+          averageAtomicMassProperty.set( ( ( averageAtomicMassProperty.get() *
+                                             ( isotopeCountProperty.get() - 1 ) ) + isotope.getAtomConfiguration().getAtomicMass() ) /
+                                         isotopeCountProperty.get() );
+        }
+      }
+      else {
+        // This isotope is not positioned correctly.
+        System.err.println( getClass().getName() + " - Warning: Ignoring attempt to add incorrectly located isotope to test chamber." );
+      }
+    },
+
+
+    /**
+     * Adds a list of isotopes to the test chamber. Same restrictions as above.
+     *
+     * @param {MovableAtom[]} isotopeList
+     */
+
+    bulkAddIsotopesToChamber: function( isotopeList ) {
+      for ( var isotope in isotopeList ) {
+        addIsotopeToChamber( isotope, false );
+      }
+      updateCountProperty();
+      updateAverageAtomicMassProperty();
     }
+
 
   } );
 } );
 
 
-//  // ------------------------------------------------------------------------
-//  // Methods
-//  // ------------------------------------------------------------------------
-//
-
-//
-
-//
-
-//  /**
-//   * Returns true if the specified isotope instance is contained by the
-//   * chamber.  Note that it is possible for an isotope to be positioned
-//   * within the chamber bounds but not contained by it.
-//   *
-//   * @param isotope
-//   * @return
-//   */
-//  public boolean isIsotopeContained( MovableAtom isotope ) {
-//    return containedIsotopes.contains( isotope );
-//  }
-//
-//  /**
-//   * Add the specified isotope to the test chamber.  The isotope must be
-//   * positioned within the 2D bounds of the chamber or the request will be
-//   * ignored.
-//   *
-//   * @param isotope
-//   */
-//  public void addIsotopeToChamber( MovableAtom isotope ) {
-//    addIsotopeToChamber( isotope, true );
-//  }
-//
-//  public void bulkAddIsotopesToChamber( List<MovableAtom> isotopeList ) {
-//    for ( MovableAtom isotope : isotopeList ) {
-//      addIsotopeToChamber( isotope, false );
-//    }
-//    updateCountProperty();
-//    updateAverageAtomicMassProperty();
-//  }
-//
-//  /**
-//   * Add the specified isotope to the chamber.  This method requires
-//   * that the position of the isotope be within the chamber rectangle,
-//   * or the isotope will not be added.
-//   * <p/>
-//   * In cases where an isotope is in a position where the center is
-//   * within the chamber but the edges are not, the isotope will be moved
-//   * so that it is fully contained within the chamber.
-//   *
-//   * @param isotope        - Isotope to add.
-//   * @param performUpdates - Flag that can be set be used to suppress updates.
-//   *                       This is generally done for performance reasons when adding a large
-//   *                       number of isotopes at once.
-//   */
-//  private void addIsotopeToChamber( MovableAtom isotope, boolean performUpdates ) {
-//    if ( isIsotopePositionedOverChamber( isotope ) ) {
-//      containedIsotopes.add( isotope );
-//      // If the edges of the isotope are outside of the container,
-//      // move it to be fully inside.
-//      double protrusion = isotope.getPosition().getX() + isotope.getRadius() - TEST_CHAMBER_RECT.getMaxX();
-//      if ( protrusion >= 0 ) {
-//        isotope.setPositionAndDestination( isotope.getPosition().getX() - protrusion,
-//          isotope.getPosition().getY() );
-//      }
-//      else {
-//        protrusion = TEST_CHAMBER_RECT.getMinX() - ( isotope.getPosition().getX() - isotope.getRadius() );
-//        if ( protrusion >= 0 ) {
-//          isotope.setPositionAndDestination( isotope.getPosition().getX() + protrusion,
-//            isotope.getPosition().getY() );
-//        }
-//      }
-//      protrusion = isotope.getPosition().getY() + isotope.getRadius() - TEST_CHAMBER_RECT.getMaxY();
-//      if ( protrusion >= 0 ) {
-//        isotope.setPositionAndDestination( isotope.getPosition().getX(),
-//          isotope.getPosition().getY() - protrusion );
-//      }
-//      else {
-//        protrusion = TEST_CHAMBER_RECT.getMinY() - ( isotope.getPosition().getY() - isotope.getRadius() );
-//        if ( protrusion >= 0 ) {
-//          isotope.setPositionAndDestination( isotope.getPosition().getX(),
-//            isotope.getPosition().getY() + protrusion );
-//        }
-//      }
-//      if ( performUpdates ) {
-//        // Update the isotope count.
-//        updateCountProperty();
-//        // Update the average atomic mass.
-//        averageAtomicMassProperty.set( ( ( averageAtomicMassProperty.get() *
-//                                           ( isotopeCountProperty.get() - 1 ) ) + isotope.getAtomConfiguration().getAtomicMass() ) /
-//                                       isotopeCountProperty.get() );
-//      }
-//    }
-//    else {
-//      // This isotope is not positioned correctly.
-//      System.err.println( getClass().getName() + " - Warning: Ignoring attempt to add incorrectly located isotope to test chamber." );
-//    }
-//  }
-//
 //  public void removeIsotopeFromChamber( MovableAtom isotope ) {
 //    containedIsotopes.remove( isotope );
 //    updateCountProperty();

@@ -130,6 +130,8 @@ define( function( require ) {
     // TODO Debug NumericalIsotopeQuantityControl
 
     var testChamber =  new IsotopeTestChamber( this );
+    var testMovable = new MovableAtom( 5, 5, new Vector2( 400, 400 ) );
+    debugger;
 
 //          // This is an observer that watches our own interactivity mode setting.
 //          // It is declared as a member variable so that it can be "unhooked" in

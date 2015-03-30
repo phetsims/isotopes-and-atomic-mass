@@ -1,5 +1,3 @@
-/* Copyright 2002-2015, University of Colorado */
-
 /**
  * This class represents an atom that can move around but is otherwise
  * immutable.  It was created due to a need to represent atoms as single
@@ -13,8 +11,6 @@
  * @author James Smith
  */
 
- //TODO fix indentation
- // TODO port SphericalParticle
 
 define( function( require ) {
     'use strict';
@@ -23,7 +19,7 @@ define( function( require ) {
     var inherit = require( 'PHET_CORE/inherit' );
     var Particle = require( 'SHRED/model/Particle' );
     var NumberAtom = require( 'SHRED/model/NumberAtom' );
-
+// TODO Should we be including initialPosition in parameters if we are never going to use it?
     function MovableAtom( numProtons, numNeutrons, initialPosition ) {
       Particle.call( this, 'Isotope')
 
