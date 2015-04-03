@@ -131,9 +131,11 @@ define( function( require ) {
 
     var testChamber =  new IsotopeTestChamber( this );
     var testMovable = new MovableAtom( 5, 5, new Vector2( 0, 0 ) );
+    var testMovable1 = new MovableAtom( 12 , 5, new Vector2( 20, 0 ) );
     testChamber.addIsotopeToChamber( testMovable, true);
-    testChamber.removeIsotopeFromChamber( testMovable );
+    testChamber.addIsotopeToChamber( testMovable1, true);
     debugger;
+    testChamber.removeAllIsotopes( true );
 
 //          // This is an observer that watches our own interactivity mode setting.
 //          // It is declared as a member variable so that it can be "unhooked" in
