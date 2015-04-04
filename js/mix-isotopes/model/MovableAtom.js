@@ -20,10 +20,15 @@ define( function( require ) {
     var Particle = require( 'SHRED/model/Particle' );
     var NumberAtom = require( 'SHRED/model/NumberAtom' );
 
+    // class variables
+  var instanceCount = 0;
+
     function MovableAtom( numProtons, numNeutrons, initialPosition ) {
       Particle.call( this, 'Isotope' )
         this.position = initialPosition;
         this.atomConfiguration = new NumberAtom( { protonCount: numProtons, neutronCount: numNeutrons, electronCount: numProtons } );
+
+      this.instanceCount = instanceCount ++;
 
 
     }

@@ -38,10 +38,6 @@ define( function( require ) {
   // space.
   var TEST_CHAMBER_RECT = new Rectangle( -SIZE.width / 2, -SIZE.height / 2, SIZE.width, SIZE.height );
 
-  // Random number generator for generating positions.
-  // TODO Is there an equivalent in JS? Should I just use Math.random()?
-  // private static final Random RAND = new Random();
-
 
   /**
    * @constructor
@@ -344,90 +340,96 @@ define( function( require ) {
      * could take a very long time.
      */
     adjustForOverlap: function() {
-    // Bounds checking.  The threshold is pretty much arbitrary.
-    if ( this.getTotalIsotopeCount() > 100 ) {
-      console.error( " - Warning: Ignoring request to adjust for overlap - too many particles in the chamber for that." );
-      return;
-    }
-
-    // Check for overlap and adjust particle positions until none exists.
-    var maxIterations = 10000;
-    for ( var i = 0; this.checkForParticleOverlap() && i < maxIterations; i++ ) {
-      // Adjustment factors for the repositioning algorithm.
-      var interParticleForceConst = 2000;
-      var wallForceConst = interParticleForceConst * 10;
-      var minInterParticleDistance = 0.0001;
-      Map<MovableAtom, MutableVector2D> mapIsotopesToForces = new HashMap<MovableAtom, MutableVector2D>();
-      this.containedIsotopes.forEach( function( isotope1 ) {
-
-        this.containedIsotopes.forEach( function( isotope2 ) {
-          if ( isotope1 === isotope2 ){
-            continue;
-
-          }
-        })
-      })
-
-      for ( MovableAtom isotope1 : containedIsotopes ) {
-        var totalForce = new Vector2( 0, 0 );
-        // Calculate the forces due to other isotopes.
-        for ( MovableAtom isotope2 : containedIsotopes ) {
-          if ( isotope1 == isotope2 ) {
-            // Same one, so skip it.
-            continue;
-          }
-          MutableVector2D forceFromIsotope = new MutableVector2D( 0, 0 );
-          double distanceBetweenIsotopes = isotope1.getPosition().distance( isotope2.getPosition() );
-          if ( distanceBetweenIsotopes == 0 ) {
-            // These isotopes are sitting right on top of one
-            // another.  Add the max amount of inter-particle
-            // force in a random direction.
-            forceFromIsotope.setMagnitude( interParticleForceConst / ( minInterParticleDistance * minInterParticleDistance ) );
-            forceFromIsotope.setAngle( RAND.nextDouble() * 2 * Math.PI );
-          }
-          else if ( distanceBetweenIsotopes < isotope1.getRadius() + isotope2.getRadius() ) {
-            // Calculate the repulsive force based on the distance.
-            forceFromIsotope.setComponents(
-              isotope1.getPosition().getX() - isotope2.getPosition().getX(),
-              isotope1.getPosition().getY() - isotope2.getPosition().getY() );
-            double distance = Math.max( forceFromIsotope.magnitude(), minInterParticleDistance );
-            forceFromIsotope.normalize();
-            forceFromIsotope.scale( interParticleForceConst / ( distance * distance ) );
-          }
-          totalForce.add( forceFromIsotope );
-        }
-        // Calculate the force due to the walls.  This prevents
-        // particles from being pushed out of the bounds of the
-        // chamber.
-        if ( isotope1.getPosition().getX() + isotope1.getRadius() >= TEST_CHAMBER_RECT.getMaxX() ) {
-          double distanceFromRightWall = TEST_CHAMBER_RECT.getMaxX() - isotope1.getPosition().getX();
-          totalForce.add( new Vector2D( -wallForceConst / ( distanceFromRightWall * distanceFromRightWall ), 0 ) );
-        }
-        else if ( isotope1.getPosition().getX() - isotope1.getRadius() <= TEST_CHAMBER_RECT.getMinX() ) {
-          double distanceFromLeftWall = isotope1.getPosition().getX() - TEST_CHAMBER_RECT.getMinX();
-          totalForce.add( new Vector2D( wallForceConst / ( distanceFromLeftWall * distanceFromLeftWall ), 0 ) );
-        }
-        if ( isotope1.getPosition().getY() + isotope1.getRadius() >= TEST_CHAMBER_RECT.getMaxY() ) {
-          double distanceFromTopWall = TEST_CHAMBER_RECT.getMaxY() - isotope1.getPosition().getY();
-          totalForce.add( new Vector2D( 0, -wallForceConst / ( distanceFromTopWall * distanceFromTopWall ) ) );
-        }
-        else if ( isotope1.getPosition().getY() - isotope1.getRadius() <= TEST_CHAMBER_RECT.getMinY() ) {
-          double distanceFromBottomWall = isotope1.getPosition().getY() - TEST_CHAMBER_RECT.getMinY();
-          totalForce.add( new Vector2D( 0, wallForceConst / ( distanceFromBottomWall * distanceFromBottomWall ) ) );
-        }
-
-        // Put the calculated repulsive force into the map.
-        mapIsotopesToForces.put( isotope1, totalForce );
+      // Bounds checking.  The threshold is pretty much arbitrary.
+      if ( this.getTotalIsotopeCount() > 100 ) {
+        console.error( " - Warning: Ignoring request to adjust for overlap - too many particles in the chamber for that." );
+        return;
       }
-      // Adjust the particle positions based on forces.
-      for ( MovableAtom isotope : mapIsotopesToForces.keySet() ) {
-        isotope.setPositionAndDestination( mapIsotopesToForces.get( isotope ).getDestination( isotope.getPosition().toPoint2D() ) );
+
+      // Check for overlap and adjust particle positions until none exists.
+      var maxIterations = 10000;
+      for ( var i = 0; this.checkForParticleOverlap() && i < maxIterations; i++ ) {
+        // Adjustment factors for the repositioning algorithm.
+        var interParticleForceConst = 2000;
+        var wallForceConst = interParticleForceConst * 10;
+        var minInterParticleDistance = 0.0001;
+        // TODO Decide whether or not we still need this since we are looping through the obs
+        var mapIsotopesToForces = {};
+        var mapIsotopesIDToIsotope = {};
+
+        var thisChamber = this; //Prevents any scope error when using this.
+
+        this.containedIsotopes.forEach( function( isotope1 ) {
+
+          var totalForce = new Vector2( 0, 0 );
+          //Calculate the force due to other isotopes
+          debugger;
+          for ( var j = 0; j < thisChamber.containedIsotopes.length; j++ ) {
+            var isotope2 = thisChamber.containedIsotopes.get( i );
+            if ( isotope1 === isotope2 ) {
+              continue;
+
+            }
+            var forceFromIsotope = new Vector2( 0, 0 );
+            var distanceBetweenIsotopes = isotope1.position.distance( isotope2.position );
+            if ( distanceBetweenIsotopes === 0 ) {
+              // These isotopes are sitting right on top of one
+              // another.  Add the max amount of inter-particle
+              // force in a random direction.
+              forceFromIsotope.setPolar( interParticleForceConst / ( minInterParticleDistance * minInterParticleDistance ), Math.random() * 2 * Math.PI );
+
+            }
+            else if ( distanceBetweenIsotopes < isotope1.radius + isotope2.radius ) {
+              // Calculate the repulsive force based on the distance.
+              forceFromIsotope.setComponents(
+                isotope1.position.x - isotope2.position.x,
+                isotope1.position.y - isotope2.position.y );
+              var distance = Math.max( forceFromIsotope.magnitude(), minInterParticleDistance );
+              forceFromIsotope.normalize();
+              forceFromIsotope.scale( interParticleForceConst / ( distance * distance ) );
+            }
+            totalForce.add( forceFromIsotope );
+          }
+
+          // Calculate the force due to the walls.  This prevents
+          // particles from being pushed out of the bounds of the
+          // chamber.
+          if ( isotope1.position.x + isotope1.radius >= TEST_CHAMBER_RECT.bounds.maxX ) {
+            var distanceFromRightWall = TEST_CHAMBER_RECT.bounds.maxX - isotope1.position.x;
+            totalForce.add( new Vector2( -wallForceConst / ( distanceFromRightWall * distanceFromRightWall ), 0 ) );
+          }
+          else if ( isotope1.getPosition().getX() - isotope1.getRadius() <= TEST_CHAMBER_RECT.getMinX() ) {
+            var distanceFromLeftWall = isotope1.getPosition().getX() - TEST_CHAMBER_RECT.getMinX();
+            totalForce.add( new Vector2( wallForceConst / ( distanceFromLeftWall * distanceFromLeftWall ), 0 ) );
+          }
+          if ( isotope1.position.y + isotope1.radius >= TEST_CHAMBER_RECT.bounds.maxY ) {
+            var distanceFromTopWall = TEST_CHAMBER_RECT.bounds.maxY - isotope1.position.y;
+            totalForce.add( new Vector2( 0, -wallForceConst / ( distanceFromTopWall * distanceFromTopWall ) ) );
+          }
+          else if ( isotope1.position.y - isotope1.radius <= TEST_CHAMBER_RECT.bounds.minY ) {
+            var distanceFromBottomWall = isotope1.position.y - TEST_CHAMBER_RECT.bounds.minY;
+            totalForce.add( new Vector2( 0, wallForceConst / ( distanceFromBottomWall * distanceFromBottomWall ) ) );
+          }
+
+          // Put the calculated repulsive force into the map.
+          mapIsotopesToForces[ isotope1.instanceCount ] = totalForce;
+          mapIsotopesIDToIsotope[ isotope1.instanceCount ] = isotope1;
+
+        } );
+
+        // Adjust the particle positions based on forces.
+        // Adjust the particle positions based on forces.
+        for ( var counts in mapIsotopesToForces ) {
+          if ( mapIsotopesToForces.hasOwnProperty( counts ) ) {
+            mapIsotopesIDToIsotope[ counts ].setPositionAndDestination( mapIsotopesToForces[ counts ].destination );
+          }
+
+        }
+        if ( i === maxIterations - 1 ) {
+          console.error( '- Warning: Hit max iterations of repositioning algorithm.' );
+        }
       }
-      if ( i == maxIterations - 1 ) {
-        System.out.println( getClass().getName() + " - Warning: Hit max iterations of repositioning algorithm." );
-      }
-    }
-  },
+    },
 
     /**
      * Checks to ensure that particles are not overlapped.
@@ -436,31 +438,29 @@ define( function( require ) {
      */
 
     checkForParticleOverlap: function() {
-      this.containedIsotopes.forEach( function( isotope1 ) {
-        this.containedIsotopes.forEach( function( isotope2 ) {
+      var thisChamber = this;
+      var overlapCheck = false ;
+
+      thisChamber.containedIsotopes.forEach( function( isotope1 ) {
+        for ( var i = 0; i < thisChamber.containedIsotopes.length; i++ ) {
+          var isotope2 = thisChamber.containedIsotopes.get( i );
           if ( isotope1 === isotope2 ) {
             // Same isotope so skip it!
-            ;
+            continue;
           }
 
           var distance = isotope1.position.distance( isotope2.position );
           if ( distance < isotope1.radius + isotope2.radius ) {
-
-            return true;
+            return overlapCheck = true;
           }
+        }
+      } );
 
-        } )
-
-      } )
-      return false;
+      return overlapCheck;
     }
 
-
+  } );
 } );
-} )
-;
-
-
 
 
 //

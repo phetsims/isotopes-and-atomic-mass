@@ -131,10 +131,10 @@ define( function( require ) {
 
     var testChamber =  new IsotopeTestChamber( this );
     var testMovable = new MovableAtom( 5, 5, new Vector2( 0, 0 ) );
-    var testMovable1 = new MovableAtom( 12 , 5, new Vector2( 20, 0 ) );
+    var testMovable1 = new MovableAtom( 12 , 5, new Vector2( 0, 0 ) );
     testChamber.addIsotopeToChamber( testMovable, true);
     testChamber.addIsotopeToChamber( testMovable1, true);
-    debugger;
+    testChamber.adjustForOverlap();
     testChamber.removeAllIsotopes( true );
 
 //          // This is an observer that watches our own interactivity mode setting.
