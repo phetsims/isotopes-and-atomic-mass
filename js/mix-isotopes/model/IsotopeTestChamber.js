@@ -398,8 +398,8 @@ define( function( require ) {
             var distanceFromRightWall = TEST_CHAMBER_RECT.bounds.maxX - isotope1.position.x;
             totalForce.add( new Vector2( -wallForceConst / ( distanceFromRightWall * distanceFromRightWall ), 0 ) );
           }
-          else if ( isotope1.getPosition().getX() - isotope1.getRadius() <= TEST_CHAMBER_RECT.getMinX() ) {
-            var distanceFromLeftWall = isotope1.getPosition().getX() - TEST_CHAMBER_RECT.getMinX();
+          else if ( isotope1.position.x - isotope1.radius <= TEST_CHAMBER_RECT.bounds.minX ) {
+            var distanceFromLeftWall = isotope1.position.x - TEST_CHAMBER_RECT.bounds.minX;
             totalForce.add( new Vector2( wallForceConst / ( distanceFromLeftWall * distanceFromLeftWall ), 0 ) );
           }
           if ( isotope1.position.y + isotope1.radius >= TEST_CHAMBER_RECT.bounds.maxY ) {
@@ -421,7 +421,8 @@ define( function( require ) {
         // Adjust the particle positions based on forces.
         for ( var counts in mapIsotopesToForces ) {
           if ( mapIsotopesToForces.hasOwnProperty( counts ) ) {
-            mapIsotopesIDToIsotope[ counts ].setPositionAndDestination( mapIsotopesToForces[ counts ].destination );
+            // TODO This is setting the new position to the force vector
+            mapIsotopesIDToIsotope[ counts ].setPositionAndDestination( mapIsotopesToForces[ counts ] );
           }
 
         }
