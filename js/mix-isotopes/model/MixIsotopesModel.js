@@ -134,8 +134,7 @@ define( function( require ) {
     var testMovable1 = new MovableAtom( 12 , 5, new Vector2( 0, 0 ) );
     testChamber.addIsotopeToChamber( testMovable, true);
     testChamber.addIsotopeToChamber( testMovable1, true);
-    testChamber.adjustForOverlap();
-    testChamber.removeAllIsotopes( true );
+    testChamber.getIsotopeProportion( testMovable1.atomConfiguration );
 
 //          // This is an observer that watches our own interactivity mode setting.
 //          // It is declared as a member variable so that it can be "unhooked" in
@@ -190,8 +189,7 @@ define( function( require ) {
 
       else {
         // Create the specified isotope and add it directly to the test chamber.
-        // TODO Port testChamber
-        // var randomIsotopeLocation = testChamber.generateRandomLocation();
+         var randomIsotopeLocation = testChamber.generateRandomLocation();
         newIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount,
           SMALL_ISOTOPE_RADIUS, new Vector2( 0, 0 ) );
 
@@ -644,166 +642,6 @@ define( function( require ) {
 } )
 ;
 
-
-///**
-// * Model portion of "Mix Isotopes" module.  This model contains a mixture
-// * of isotopes and allows a user to move various different isotopes in and
-// * out of the "Isotope Test Chamber", and simply keeps track of the average
-// * mass within the chamber.
-// *
-// * @author John Blanco
-// */
-//public class MixIsotopesModel implements Resettable, IConfigurableAtomModel {
-//
-//    // -----------------------------------------------------------------------
-//    // Class Data
-//    // -----------------------------------------------------------------------
-//
-//    // Default initial atom configuration.
-//    private static final int DEFAULT_ATOMIC_NUMBER = 1;
-//    private static final ImmutableAtom DEFAULT_PROTOTYPE_ISOTOPE_CONFIG =
-//            AtomIdentifier.getMostCommonIsotope( DEFAULT_ATOMIC_NUMBER );
-//
-//    // Size of the buckets that will hold the isotopes.
-//    private static final Dimension2D BUCKET_SIZE = new PDimension( 1000, 400 ); // In picometers.
-//
-//    // Speed with which atoms move when animated.  Empirically determined,
-//    // adjust as needed for the desired look.
-//    private static final double ATOM_MOTION_SPEED = 2500; // In picometers per sec of sim time.
-//
-//    // Within this model, the isotopes come in two sizes, small and large, and
-//    // atoms are either one size or another, and all atoms that are shown at
-//    // a given time are all the same size.  The larger size is based somewhat
-//    // on reality.  The smaller size is used when we want to show a lot of
-//    // atoms at once.
-//    private static final double LARGE_ISOTOPE_RADIUS = 83; // in picometers.
-//    static final double SMALL_ISOTOPE_RADIUS = 30; // in picometers.
-//
-//    // Numbers of isotopes that are placed into the buckets when a new atomic
-//    // number is selected.
-//    private static final int NUM_LARGE_ISOTOPES_PER_BUCKET = 10;
-//
-//    // List of colors which will be used to represent the various isotopes.
-//    private static final Color[] ISOTOPE_COLORS = new Color[] {
-//            new Color( 180, 82, 205 ), // Purple
-//            Color.green,
-//            new Color( 255, 69, 0 ),   // Red with a touch of orange
-//            new Color( 139, 90, 43 ) // Brown
-//    };
-//
-//    // Enum of the possible interactivity types.
-//    public enum InteractivityMode {
-//        BUCKETS_AND_LARGE_ATOMS,  // The user is dragging large isotopes between the test chamber and a set of buckets.
-//        SLIDERS_AND_SMALL_ATOMS   // The user is adding and removing small isotopes to/from the chamber using sliders.
-//    }
-//
-//    // Total number of atoms placed in the chamber when depicting nature's mix.
-//    private static final int NUM_NATURES_MIX_ATOMS = 1000;
-//
-//    // -----------------------------------------------------------------------
-//    // Instance Data
-//    // -----------------------------------------------------------------------
-//
-//    private final BuildAnAtomClock clock;
-//
-//    // The test chamber into and out of which the isotopes can be moved.
-//    private final IsotopeTestChamber testChamber = new IsotopeTestChamber( this );
-//
-//    // This atom is the "prototype isotope", meaning that it is set in order
-//    // to set the atomic weight of the family of isotopes that are currently
-//    // in use.
-//    private final SimpleAtom prototypeIsotope = new SimpleAtom( 0, 0, 0 );
-//
-//    // This property contains the list of isotopes that exist in nature as
-//    // variations of the current "prototype isotope".  In other words, this
-//    // contains a list of all stable isotopes that match the atomic weight
-//    // of the currently configured isotope.  There should be only one of each
-//    // possible isotope.
-//    private final Property<List<ImmutableAtom>> possibleIsotopesProperty =
-//            new Property<List<ImmutableAtom>>( new ArrayList<ImmutableAtom>() );
-//
-//    // List of the isotope buckets.
-//    private final List<MonoIsotopeParticleBucket> bucketList = new ArrayList<MonoIsotopeParticleBucket>();
-//
-//    // List of the numerical controls that, when present, can be used to add
-//    // or remove isotopes to/from the test chamber.
-//    private final List<NumericalIsotopeQuantityControl> numericalControllerList =
-//            new ArrayList<NumericalIsotopeQuantityControl>();
-//
-//    // Property that determines the type of user interactivity that is set.
-//    // See the enum definition for more information about the modes.
-//    private final Property<InteractivityMode> interactivityModeProperty =
-//            new Property<InteractivityMode>( InteractivityMode.BUCKETS_AND_LARGE_ATOMS );
-//
-//    // Map of elements to user mixes.  These are restored when switching
-//    // between elements.  The integer represents the atomic number.
-//    private final Map<Integer, State> mapIsotopeConfigToUserMixState = new HashMap<Integer, State>();
-//
-//    // Property that determines whether the user's mix or nature's mix is
-//    // being displayed.  When this is set to true, indicating that nature's
-//    // mix should be displayed, the isotope size property is ignored.
-//    private final BooleanProperty showingNaturesMixProperty = new BooleanProperty( false );
-//
-//    // Listener support.
-//    private final List<Listener> listeners = new ArrayList<Listener>();
-//
-//    // This is an observer that watches our own interactivity mode setting.
-//    // It is declared as a member variable so that it can be "unhooked" in
-//    // circumstances where it is necessary.
-//    private final SimpleObserver interactivityModeObserver = new SimpleObserver() {
-//        public void update() {
-//            assert showingNaturesMixProperty.get() == false; // Interactivity mode shouldn't change when showing nature's mix.
-//            if ( mapIsotopeConfigToUserMixState.containsKey( prototypeIsotope.getNumProtons() ) ) {
-//                // Erase any previous state for this isotope.
-//                mapIsotopeConfigToUserMixState.remove( prototypeIsotope.getNumProtons() );
-//            }
-//            removeAllIsotopesFromTestChamberAndModel();
-//            addIsotopeControllers();
-//        }
-//    };
-//
-//    // -----------------------------------------------------------------------
-//    // Constructor(s)
-//    // -----------------------------------------------------------------------
-//
-//    public MixIsotopesModel( BuildAnAtomClock clock ) {
-//        this.clock = clock;
-//
-//        // Listen to our own interactive mode property so that things can be
-//        // reconfigured when this property changes.
-//        interactivityModeProperty.addObserver( interactivityModeObserver );
-//
-//        // Listen to our own "showing nature's mix" property so that we can
-//        // show and hide the appropriate isotopes when the value changes.
-//        showingNaturesMixProperty.addObserver( new SimpleObserver() {
-//            public void update() {
-//                if ( showingNaturesMixProperty.get() ) {
-//                    // Get the current user's mix state.
-//                    State usersMixState = getState();
-//                    // Tweak the users mix state.  This is necessary since the
-//                    // state is being saved inside a property change observer.
-//                    usersMixState.setShowingNaturesMix( false );
-//                    // Save the user's mix state.
-//                    mapIsotopeConfigToUserMixState.put( prototypeIsotope.getNumProtons(), usersMixState );
-//                    // Display nature's mix.
-//                    showNaturesMix();
-//                }
-//                else {
-//                    if ( mapIsotopeConfigToUserMixState.containsKey( prototypeIsotope.getNumProtons() ) ) {
-//                        setState( mapIsotopeConfigToUserMixState.get( prototypeIsotope.getNumProtons() ) );
-//                    }
-//                    else {
-//                        setUpInitialUsersMix();
-//                    }
-//                }
-//            }
-//        }, false );
-//    }
-//
-//    // -----------------------------------------------------------------------
-//    // Methods
-//    // -----------------------------------------------------------------------
-//
 //    /**
 //     * Create and add an isotope of the specified configuration.  Where the
 //     * isotope is initially placed depends upon the current interactivity mode.

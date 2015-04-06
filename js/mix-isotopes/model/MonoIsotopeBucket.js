@@ -20,16 +20,6 @@ define( function( require ) {
   var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom');
   var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
 
-
-  //public
-  //class
-  //MonoIsotopeParticleBucket
-  //extends
-  //SphereBucket < SphericalParticle > {
-  //
-  //  private final Dimension2D size = new PDimension();
-
-
   /**
    * Constructor.
    * @param {Vector2} position
@@ -118,7 +108,7 @@ define( function( require ) {
 
       else {
         // TODO is this the proper way to throw error?
-        throw AtomIdentifier.getName(isotopeToRemove.atomConfiguration.protonCount) + " - Warning: Ignoring attempt to remove particle from empty bucket." ;
+        throw AtomIdentifier.getName(isotopeToRemove.atomConfiguration.protonCount) + ' - Warning: Ignoring attempt to remove particle from empty bucket.' ;
       }
       return isotopeToRemove;
     },

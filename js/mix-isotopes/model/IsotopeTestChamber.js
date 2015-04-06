@@ -63,6 +63,23 @@ define( function( require ) {
 
   }
 
+  /**
+   * Class that contains the state of the isotope test chamber, and can be
+   * used for saving and later restoring the state.
+   * TODO This class was previously defined in the methods, but due to restrictions about defining classes in the
+   * TODO inherit call it was moved outside of the call.
+   */
+  var thisChamber = this; // Designed to prevent scope errors through the definition of methods. TODO Remove other repetitive definitions.
+
+  function State( isotopeTestChamber ) {
+    this.containedIsotopes = new ObservableArray( isotopeTestChamber.getContainedIsotopes() ) || null;
+
+    this.getContainedIsotopes = function() {
+      return this.containedIsotopes;
+    }
+  }
+
+
   return inherit( PropertySet, IsotopeTestChamber, {
     /**
      * Get the number of isotopes currently in the chamber that match the
@@ -262,7 +279,6 @@ define( function( require ) {
      * Removes all isotopes and their listeners from the model one at a time.
      *
      * @param {boolean} removeFromModel
-     * TODO TEST
      */
 
     removeAllIsotopes: function( removeFromModel ) {
@@ -319,17 +335,16 @@ define( function( require ) {
      * TODO TEST
      */
     getIsotopeProportion: function( isotopeConfig ) {
-      assert && assert( isotopeConfig.getCharge() === 0 );
-      var isotopeProportion = 0;
+      assert && assert( isotopeConfig.protonCount - isotopeConfig.electronCount === 0 );
       var isotopeCount = 0;
+      debugger;
       this.containedIsotopes.forEach( function( isotope ) {
-        if ( isotopeConfig.equals( isotope ) ) {
-          this.isotopeCount++;
+        if ( isotopeConfig.equals( isotope.atomConfiguration ) ) {
+          isotopeCount++;
         }
       } )
 
-      isotopeProportion = this.isotopeCount / this.containedIsotopes.length;
-      return isotopeProportion;
+      return isotopeCount / this.containedIsotopes.length;
     },
 
 
@@ -363,9 +378,8 @@ define( function( require ) {
 
           var totalForce = new Vector2( 0, 0 );
           //Calculate the force due to other isotopes
-          debugger;
           for ( var j = 0; j < thisChamber.containedIsotopes.length; j++ ) {
-            var isotope2 = thisChamber.containedIsotopes.get( i );
+            var isotope2 = thisChamber.containedIsotopes.get( j );
             if ( isotope1 === isotope2 ) {
               continue;
 
@@ -418,11 +432,10 @@ define( function( require ) {
         } );
 
         // Adjust the particle positions based on forces.
-        // Adjust the particle positions based on forces.
-        for ( var counts in mapIsotopesToForces ) {
-          if ( mapIsotopesToForces.hasOwnProperty( counts ) ) {
+        for ( var isotopeID in mapIsotopesToForces ) {
+          if ( mapIsotopesToForces.hasOwnProperty( isotopeID ) ) {
             // TODO This is setting the new position to the force vector
-            mapIsotopesIDToIsotope[ counts ].setPositionAndDestination( mapIsotopesToForces[ counts ] );
+            mapIsotopesIDToIsotope[ isotopeID ].setPositionAndDestination( mapIsotopesToForces[ isotopeID ] );
           }
 
         }
@@ -440,7 +453,7 @@ define( function( require ) {
 
     checkForParticleOverlap: function() {
       var thisChamber = this;
-      var overlapCheck = false ;
+      var overlapCheck = false;
 
       thisChamber.containedIsotopes.forEach( function( isotope1 ) {
         for ( var i = 0; i < thisChamber.containedIsotopes.length; i++ ) {
@@ -458,48 +471,39 @@ define( function( require ) {
       } );
 
       return overlapCheck;
+    },
+
+
+    /**
+     * Generate a random location within the test chamber.
+     *
+     * @return {Vector2}
+     */
+    generateRandomLocation: function() {
+      return new Vector2(
+        TEST_CHAMBER_RECT.bounds.minX + Math.random() * TEST_CHAMBER_RECT.width,
+        TEST_CHAMBER_RECT.bounds.minY + Math.random() * TEST_CHAMBER_RECT.height );
+    },
+
+    getState: function() {
+      return new State( this );
+    },
+
+
+    /**
+     * Restore a previously captured state
+     * @param {State} state
+     */
+    setState: function( state ) {
+      this.removeAllIsotopes( true );
+      this.bulkAddIsotopesToChamber( state.getContainedIsotopes() );
     }
 
+
   } );
-} );
+} )
+;
 
 
-//
-//  /**
-//   * Generate a random location within the test chamber.
-//   *
-//   * @return
-//   */
-//  public Point2D generateRandomLocation() {
-//    return new Point2D.Double(
-//      TEST_CHAMBER_RECT.getMinX() + RAND.nextDouble() * TEST_CHAMBER_RECT.getWidth(),
-//      TEST_CHAMBER_RECT.getMinY() + RAND.nextDouble() * TEST_CHAMBER_RECT.getHeight() );
-//  }
-//
-//  public State getState() {
-//    return new State( this );
-//  }
-//
-//  /**
-//   * Restore a previously captured state.
-//   */
-//  public void setState( State state ) {
-//    removeAllIsotopes( true );
-//    bulkAddIsotopesToChamber( state.getContainedIsotopes() );
-//  }
-//
-//  /**
-//   * Class that contains the state of the isotope test chamber, and can be
-//   * used for saving and later restoring the state.
-//   */
-//  public static class State {
-//    private final List<MovableAtom> containedIsotopes;
-//
-//    public State( IsotopeTestChamber isotopeTestChamber ) {
-//      this.containedIsotopes = new ArrayList<MovableAtom>( isotopeTestChamber.getContainedIsotopes() );
-//    }
-//
-//    protected List<MovableAtom> getContainedIsotopes() {
-//      return containedIsotopes;
-//    }
-//  }
+
+
