@@ -29,8 +29,8 @@ define( function( require ) {
 
   //TODO Remove after debugging
   var NumericalIsotopeQuantityControl = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/NumericalIsotopeQuantityControl' );
-  var MonoIsotopeBucket = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MonoIsotopeBucket');
-  var IsotopeTestChamber = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/IsotopeTestChamber');
+  var MonoIsotopeBucket = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MonoIsotopeBucket' );
+  var IsotopeTestChamber = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/IsotopeTestChamber' );
 
 
   // -----------------------------------------------------------------------
@@ -92,13 +92,56 @@ define( function( require ) {
 
 
   /**
+   * Class that defines the state of the model.  This can be used for saving
+   * and restoring of the state.
+   *
+   * @author John Blanco
+   */
+  function State( model ) {
+
+    this.elementConfig = model.prototypeIsotope;
+    this.isotopeTestChamberState = model.testChamber.getState();
+    this.interactivityMode = model.interactivityMode;
+    this.showingNaturesMix = model.showingNaturesMixProperty;
+
+    // TODO These are here just to help with the port and should be removed after the port is completed.
+    //
+    //
+    //public IAtom getElementConfiguration() {
+    //  return elementConfig;
+    //}
+    //
+    //public IsotopeTestChamber.State getIsotopeTestChamberState() {
+    //  return isotopeTestChamberState;
+    //}
+    //
+    //public InteractivityMode getInteractivityMode() {
+    //  return interactivityMode;
+    //}
+    //
+    //public boolean isShowingNaturesMix() {
+    //  return showingNaturesMix;
+    //}
+    //
+    //public void setShowingNaturesMix( boolean showingNaturesMix ) {
+    //  this.showingNaturesMix = showingNaturesMix;
+  }
+
+  /**
    * Constructor for the Mix Isotopes Model
    **/
   function MixIsotopesModel() {
     // Property that determines the type of user interactivity that is set.
     // See the enum definition for more information about the modes.
 
-    PropertySet.call( this, { interactivityMode: InteractivityMode.BUCKETS_AND_LARGE_ATOMS } );
+    PropertySet.call( this, {
+      interactivityMode: InteractivityMode.BUCKETS_AND_LARGE_ATOMS,
+      potentialIsotopesProperty: []     // This property contains the list of isotopes that exist in nature as
+                                        // variations of the current "prototype isotope".  In other words, this
+                                        // contains a list of all stable isotopes that match the atomic weight
+                                        // of the currently configured isotope.  There should be only one of each
+                                        // possible isotope.
+    } );
 
 //     Instance Data
 //    -----------------------------------------------------------------------
@@ -112,28 +155,23 @@ define( function( require ) {
     // in use.
     this.prototypeIsotope = new NumberAtom( 0, 0, 0 );
 
-    // This property contains the list of isotopes that exist in nature as
-    // variations of the current "prototype isotope".  In other words, this
-    // contains a list of all stable isotopes that match the atomic weight
-    // of the currently configured isotope.  There should be only one of each
-    // possible isotope.
 
-//          var possibleIsotopesProperty = AtomIdentifier.isotopeList;
+    var possibleIsotopesProperty = AtomIdentifier.isotopeList;
 //          console.log(AtomIdentifier.getStableIsotopesOfElement(1));
 
     // List of the isotope buckets.
     // TODO make observable array
-    this.bucketList = [];
+    this.bucketList = new ObservableArray();
 
     // List of the numerical controls that, when present, can be used to add
     // or remove isotopes to/from the test chamber.
     // TODO Debug NumericalIsotopeQuantityControl
 
-    var testChamber =  new IsotopeTestChamber( this );
+    var testChamber = new IsotopeTestChamber( this );
     var testMovable = new MovableAtom( 5, 5, new Vector2( 0, 0 ) );
-    var testMovable1 = new MovableAtom( 12 , 5, new Vector2( 0, 0 ) );
-    testChamber.addIsotopeToChamber( testMovable, true);
-    testChamber.addIsotopeToChamber( testMovable1, true);
+    var testMovable1 = new MovableAtom( 12, 5, new Vector2( 0, 0 ) );
+    testChamber.addIsotopeToChamber( testMovable, true );
+    testChamber.addIsotopeToChamber( testMovable1, true );
     var prop = testChamber.getIsotopeProportion( testMovable1.atomConfiguration );
     debugger;
 
@@ -190,15 +228,15 @@ define( function( require ) {
 
       else {
         // Create the specified isotope and add it directly to the test chamber.
-         var randomIsotopeLocation = testChamber.generateRandomLocation();
+        var randomIsotopeLocation = testChamber.generateRandomLocation();
         newIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount,
           SMALL_ISOTOPE_RADIUS, new Vector2( 0, 0 ) );
 
-        // testChamber.addIsotopeToChamber( newIsotope );
+        testChamber.addIsotopeToChamber( newIsotope );
       }
 
 
-      // notifyIsotopeInstanceAdded( newIsotope );
+      // TODO (Remove or not) notifyIsotopeInstanceAdded( newIsotope );
       return newIsotope;
 
     },
@@ -210,15 +248,13 @@ define( function( require ) {
      */
     getBucketForIsotope: function( isotope ) {
       var isotopeBucket = null;
-      for ( var bucket in this.bucketList ) {
-        if ( this.bucketList.hasOwnProperty( bucket ) ) {
-          if ( this.bucketList[ bucket ].isIsotopeAllowed( isotope.protonCount, isotope.neutronCount ) ) {
-            // Found it.
-            isotopeBucket = this.bucketList[ bucket ];
-            break;
-          }
+      this.bucketList.forEach( function( bucket ) {
+        if ( bucket.isIsotopeAllowed( isotope.protonCount, isotope.neutronCount ) ) {
+          // Found it.
+          isotopeBucket = bucket;
+          return;
         }
-      }
+      } )
       return isotopeBucket;
     },
 
@@ -231,99 +267,111 @@ define( function( require ) {
     addBucket: function( newBucket ) {
       this.bucketList.push( newBucket );
       // notifyBucketAdded( newBucket );
+    },
+
+    /**
+     * Set up the initial user's mix for the currently configured element.
+     * This should set all state variables to be consistent with the display
+     * of the initial users mix.  This is generally called the first time an
+     * element is selected after initialization or reset.
+     */
+    setUpInitialUsersMix: function() {
+      this.removeAllIsotopesFromTestChamberAndModel();
+      this.showingNaturesMixProperty.set( false );
+      this.interactivityModeProperty.set( InteractivityMode.BUCKETS_AND_LARGE_ATOMS );
+      this.mapIsotopeConfigToUserMixState.remove( prototypeIsotope.getNumProtons() );
+      // TODO (remove or not) addIsotopeControllers();
+    },
+
+    /**
+     * Returns the prototypeIsotope
+     * @returns {NumberAtom} prototypeIsotope
+     */
+    getAtom: function() {
+      return prototypeIsotope;
+    },
+
+    /**
+     * Returns the state of the model.
+     * @returns {State}
+     */
+    getState: function() {
+      return new State( this );
+    },
+
+    /**
+     * Set the state of the model based on a previously created state
+     * representation.
+     * @param {State} modelState
+     */
+    setState: function( modelState ) {
+      // Clear out any particles that are currently in the test chamber.
+      this.removeAllIsotopesFromTestChamberAndModel();
+
+      // Restore the prototype isotope.
+      this.prototypeIsotope.setConfiguration( modelState.getElementConfiguration() );
+      this.updatePossibleIsotopesList();
+
+      // Restore the interactivity mode.  We have to unhook our usual
+      // listener in order to avoid undesirable effects.
+      this.interactivityModeProperty.set( modelState.getInteractivityMode() );
+
+
+      // Restore the mix mode.  The assertion here checks that the mix mode
+      // (i.e. nature's or user's mix) matches the value that is being
+      // restored.  This requirement is true as of 3/16/2011.  It is
+      // possible that it could change, but for now, it is good to test.
+      assert && assert( modelState.isShowingNaturesMix() === this.showingNaturesMixProperty.get() );
+      this.showingNaturesMixProperty.set( modelState.isShowingNaturesMix() );
+
+      // Add any particles that were in the test chamber.
+      this.testChamber.setState( modelState.getIsotopeTestChamberState() );
+      this.testChamber.containedIsotopes.forEach( function( isotope ) {
+        // isotope.addListener( isotopeGrabbedListener );
+        isotope.addedToModel();
+        // notifyIsotopeInstanceAdded( isotope );
+      } );
+
+      // Add the appropriate isotope controllers.  This will create the
+      // controllers in their initial states.
+      // addIsotopeControllers();
+
+      // Set up the isotope controllers to match whatever is in the test
+      // chamber.
+      if ( this.interactivityModeProperty.get() === InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
+        // Remove isotopes from buckets based on the number in the test
+        // chamber.  This makes sense because in this mode, any isotopes
+        // in the chamber must have come from the buckets.
+        // @param {NumberAtom} isotopeConfig
+        for ( var isotopeConfig in possibleIsotopesProperty.get() ) {
+          var isotopeCount = this.testChamber.getIsotopeCount( isotopeConfig );
+          var bucket = getBucketForIsotope( isotopeConfig );
+          for ( var i = 0; i < isotopeCount; i++ ) {
+            var removedIsotope = bucket.removeArbitraryIsotope();
+            // removedIsotope.removeListener( isotopeGrabbedListener );
+            removedIsotope.removedFromModel();
+          }
+        }
+      }
+      else {
+        // Assume numerical controllers.
+        assert && assert( interactivityModeProperty.get() == InteractivityMode.SLIDERS_AND_SMALL_ATOMS );
+        // Set each controller to match the number in the chamber.
+        //@param {NumberAtom} isotopeConfig
+        for ( var isotopeConfig in possibleIsotopesProperty.get() ) {
+          var controller = this.getNumericalControllerForIsotope( isotopeConfig );
+          controller.setIsotopeQuantity( this.testChamber.getIsotopeCount( isotopeConfig ) );
+        }
+      }
     }
 
-//
-//        /**
-//         * Set up the initial user's mix for the currently configured element.
-//         * This should set all state variables to be consistent with the display
-//         * of the initial users mix.  This is generally called the first time an
-//         * element is selected after initialization or reset.
-//         */
-//        setUpInitialUsersMix: function () {
-//            removeAllIsotopesFromTestChamberAndModel();
-//            showingNaturesMixProperty.set( false );
-//            interactivityModeProperty.set( InteractivityMode.BUCKETS_AND_LARGE_ATOMS );
-//            mapIsotopeConfigToUserMixState.remove( prototypeIsotope.getNumProtons() );
-//            addIsotopeControllers();
-//        }
-//
-//        public BuildAnAtomClock getClock() {
-//            return clock;
-//        }
-//
-//        public IDynamicAtom getAtom() {
-//            return prototypeIsotope;
-//        }
-//
-//        private State getState() {
-//            return new State( this );
-//        }
-//
-//        /**
-//         * Set the state of the model based on a previously created state
-//         * representation.
-//         */
-//        private void setState( State modelState ) {
-//            // Clear out any particles that are currently in the test chamber.
-//            removeAllIsotopesFromTestChamberAndModel();
-//
-//            // Restore the prototype isotope.
-//            prototypeIsotope.setConfiguration( modelState.getElementConfiguration() );
-//            updatePossibleIsotopesList();
-//
-//            // Restore the interactivity mode.  We have to unhook our usual
-//            // listener in order to avoid undesirable effects.
-//            interactivityModeProperty.removeObserver( interactivityModeObserver );
-//            interactivityModeProperty.set( modelState.getInteractivityMode() );
-//            interactivityModeProperty.addObserver( interactivityModeObserver, false );
-//
-//            // Restore the mix mode.  The assertion here checks that the mix mode
-//            // (i.e. nature's or user's mix) matches the value that is being
-//            // restored.  This requirement is true as of 3/16/2011.  It is
-//            // possible that it could change, but for now, it is good to test.
-//            assert modelState.isShowingNaturesMix() == showingNaturesMixProperty.get();
-//            showingNaturesMixProperty.set( modelState.isShowingNaturesMix() );
-//
-//            // Add any particles that were in the test chamber.
-//            testChamber.setState( modelState.getIsotopeTestChamberState() );
-//            for ( MovableAtom isotope : testChamber.getContainedIsotopes() ) {
-//                isotope.addListener( isotopeGrabbedListener );
-//                isotope.addedToModel();
-//                notifyIsotopeInstanceAdded( isotope );
-//            }
-//
-//            // Add the appropriate isotope controllers.  This will create the
-//            // controllers in their initial states.
-//            addIsotopeControllers();
-//
-//            // Set up the isotope controllers to match whatever is in the test
-//            // chamber.
-//            if ( interactivityModeProperty.get() == InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
-//                // Remove isotopes from buckets based on the number in the test
-//                // chamber.  This makes sense because in this mode, any isotopes
-//                // in the chamber must have come from the buckets.
-//                for ( ImmutableAtom isotopeConfig : possibleIsotopesProperty.get() ) {
-//                    int isotopeCount = testChamber.getIsotopeCount( isotopeConfig );
-//                    MonoIsotopeParticleBucket bucket = getBucketForIsotope( isotopeConfig );
-//                    for ( int i = 0; i < isotopeCount; i++ ) {
-//                        MovableAtom removedIsotope = bucket.removeArbitraryIsotope();
-//                        removedIsotope.removeListener( isotopeGrabbedListener );
-//                        removedIsotope.removedFromModel();
-//                    }
-//                }
-//            }
-//            else {
-//                // Assume numerical controllers.
-//                assert interactivityModeProperty.get() == InteractivityMode.SLIDERS_AND_SMALL_ATOMS;
-//                // Set each controller to match the number in the chamber.
-//                for ( ImmutableAtom isotopeConfig : possibleIsotopesProperty.get() ) {
-//                    NumericalIsotopeQuantityControl controller = getNumericalControllerForIsotope( isotopeConfig );
-//                    controller.setIsotopeQuantity( testChamber.getIsotopeCount( isotopeConfig ) );
-//                }
-//            }
-//        }
-//
+
+  } );
+
+} )
+;
+
+
 //        /**
 //         * Set the element that is currently in use, and for which all stable
 //         * isotopes will be available for movement in and out of the test chamber.
@@ -638,10 +686,7 @@ define( function( require ) {
 //        }
 //
 //  } );
-  } );
 
-} )
-;
 
 //    /**
 //     * Create and add an isotope of the specified configuration.  Where the
@@ -1157,44 +1202,5 @@ define( function( require ) {
 //        }
 //    }
 //
-//    /**
-//     * Class that defines the state of the model.  This can be used for saving
-//     * and restoring of the state.
-//     *
-//     * @author John Blanco
-//     */
-//    private static class State {
-//
-//        private final ImmutableAtom elementConfig;
-//        private final IsotopeTestChamber.State isotopeTestChamberState;
-//        private final InteractivityMode interactivityMode;
-//        private boolean showingNaturesMix;
-//
-//        public State( MixIsotopesModel model ) {
-//            elementConfig = model.getAtom().toImmutableAtom();
-//            isotopeTestChamberState = model.getIsotopeTestChamber().getState();
-//            interactivityMode = model.getInteractivityModeProperty().get();
-//            showingNaturesMix = model.showingNaturesMixProperty.get();
-//        }
-//
-//        public IAtom getElementConfiguration() {
-//            return elementConfig;
-//        }
-//
-//        public IsotopeTestChamber.State getIsotopeTestChamberState() {
-//            return isotopeTestChamberState;
-//        }
-//
-//        public InteractivityMode getInteractivityMode() {
-//            return interactivityMode;
-//        }
-//
-//        public boolean isShowingNaturesMix() {
-//            return showingNaturesMix;
-//        }
-//
-//        public void setShowingNaturesMix( boolean showingNaturesMix ) {
-//            this.showingNaturesMix = showingNaturesMix;
-//        }
-//    }
+
 //}
