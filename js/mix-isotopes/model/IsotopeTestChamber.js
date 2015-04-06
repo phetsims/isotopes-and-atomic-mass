@@ -40,6 +40,22 @@ define( function( require ) {
 
 
   /**
+   * Class that contains the state of the isotope test chamber, and can be
+   * used for saving and later restoring the state.
+   */
+
+  function State( isotopeTestChamber ) {
+    Object.call( this );
+    this.containedIsotopes = new ObservableArray( isotopeTestChamber.getContainedIsotopes() );
+  }
+
+  inherit( Object, State, {
+    getContainedIsotopes: function() {
+      return this.containedIsotopes;
+    }
+  });
+
+  /**
    * @constructor
    * @param {MixIsotopeModel} model
    *
@@ -62,23 +78,6 @@ define( function( require ) {
     } );
 
   }
-
-  /**
-   * Class that contains the state of the isotope test chamber, and can be
-   * used for saving and later restoring the state.
-   * TODO This class was previously defined in the methods, but due to restrictions about defining classes in the
-   * TODO inherit call it was moved outside of the call.
-   */
-  var thisChamber = this; // Designed to prevent scope errors through the definition of methods. TODO Remove other repetitive definitions.
-
-  function State( isotopeTestChamber ) {
-    this.containedIsotopes = new ObservableArray( isotopeTestChamber.getContainedIsotopes() ) || null;
-
-    this.getContainedIsotopes = function() {
-      return this.containedIsotopes;
-    }
-  }
-
 
   return inherit( PropertySet, IsotopeTestChamber, {
     /**
@@ -266,8 +265,7 @@ define( function( require ) {
       this.containedIsotopes.forEach( function( isotope ) {
         if ( isotope.equals( isotopeConfig ) ) {
           removedIsotope = isotope;
-          //TODO What is the proper way to introduce a break here because it seems like javascript isn't viewing our forEach as an actual loop to break out of
-          // break;
+          return;
         }
       } )
 
@@ -286,8 +284,7 @@ define( function( require ) {
       this.containedIsotopes.clear();
       if ( removeFromModel ) {
         this.containedIsotopes.forEach( function( isotope ) {
-          // TODO Couldn't find the isotopeGrabbedListener
-          isotope.removeListener( this.model.isotopeGrabbedListener );
+          //  TODO isotope.removeListener( this.model.isotopeGrabbedListener );
           isotope.removedFromModel();
 
         } )
@@ -300,7 +297,10 @@ define( function( require ) {
       assert && assert( this.averageAtomicMass === 0 ); // Logical consistency check.
     },
 
-    // TODO Originally this would return a protected array in java
+    /**
+     * Returns the containedIsotopes.
+     * @returns {ObservableArray}
+     */
     getContainedIsotopes: function() {
       return this.containedIsotopes;
     },
@@ -308,21 +308,20 @@ define( function( require ) {
 
     /**
      * Get a count of the total number of isotopes in the chamber.
-     *
      * @return {number}
      */
     getTotalIsotopeCount: function() {
       return this.isotopeCount;
     },
 
-    //
+
     ///**
-    // * TODO Look over with Jesse
-    // * @param {SimpleObserver} so
-    // */
+    //* TODO Look over with Jesse
+    //* @param {SimpleObserver} so
+    //*/
     //addTotalCountChangeObserver: function( so ) {
     //  this.isotopeCount.addObserver( so );
-    //}
+    //},
 
     /**
      * Get the proportion of isotopes currently within the chamber that
@@ -332,12 +331,12 @@ define( function( require ) {
      * @param {NumberAtom} isotopeConfig - Atom representing the configuration in
      *                      question, MUST BE NEUTRAL.
      * @return {number} isotopeProportion
-     * TODO TEST
      */
     getIsotopeProportion: function( isotopeConfig ) {
+      // Calculates charge to ensure that isotopes are neutral.
       assert && assert( isotopeConfig.protonCount - isotopeConfig.electronCount === 0 );
       var isotopeCount = 0;
-      debugger;
+
       this.containedIsotopes.forEach( function( isotope ) {
         if ( isotopeConfig.equals( isotope.atomConfiguration ) ) {
           isotopeCount++;
@@ -368,7 +367,6 @@ define( function( require ) {
         var interParticleForceConst = 2000;
         var wallForceConst = interParticleForceConst * 10;
         var minInterParticleDistance = 0.0001;
-        // TODO Decide whether or not we still need this since we are looping through the obs
         var mapIsotopesToForces = {};
         var mapIsotopesIDToIsotope = {};
 
@@ -434,7 +432,7 @@ define( function( require ) {
         // Adjust the particle positions based on forces.
         for ( var isotopeID in mapIsotopesToForces ) {
           if ( mapIsotopesToForces.hasOwnProperty( isotopeID ) ) {
-            // TODO This is setting the new position to the force vector
+            // Sets the position of the isotope to the corresponding Vector2 from mapIsotopesToForces
             mapIsotopesIDToIsotope[ isotopeID ].setPositionAndDestination( mapIsotopesToForces[ isotopeID ] );
           }
 
@@ -484,6 +482,7 @@ define( function( require ) {
         TEST_CHAMBER_RECT.bounds.minX + Math.random() * TEST_CHAMBER_RECT.width,
         TEST_CHAMBER_RECT.bounds.minY + Math.random() * TEST_CHAMBER_RECT.height );
     },
+
 
     getState: function() {
       return new State( this );

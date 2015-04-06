@@ -134,7 +134,8 @@ define( function( require ) {
     var testMovable1 = new MovableAtom( 12 , 5, new Vector2( 0, 0 ) );
     testChamber.addIsotopeToChamber( testMovable, true);
     testChamber.addIsotopeToChamber( testMovable1, true);
-    testChamber.getIsotopeProportion( testMovable1.atomConfiguration );
+    var prop = testChamber.getIsotopeProportion( testMovable1.atomConfiguration );
+    debugger;
 
 //          // This is an observer that watches our own interactivity mode setting.
 //          // It is declared as a member variable so that it can be "unhooked" in
