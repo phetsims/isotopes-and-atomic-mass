@@ -1,4 +1,4 @@
-//  Copyright 2002-2014, University of Colorado Boulder
+// Copyright 2002-2014, University of Colorado Boulder
 
 /**
  * Node that represents a scale on which an atom can be weighed.  This node is intended to have a faux 3D look to it,
