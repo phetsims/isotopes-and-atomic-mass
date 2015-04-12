@@ -14,6 +14,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var Vector2 = require( 'DOT/Vector2' );
   var SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
+  var ObservableArray = require( 'AXON/ObservableArray' );
 
   //TODO Check and see if we actually need these
   // TODO Should I be using numberAtom instead of movable atom?
@@ -115,10 +116,11 @@ define( function( require ) {
 
     /**
      * Get a list of all isotopes contained within this bucket.
-     * @return {MovableAtom[]} contained isotopes
+     * @return {ObservableArray} contained isotopes
      */
     getContainedIsotopes: function() {
-      var containedIsotopes = [];
+      // TODO Should contained Isotopes here be an ObservableArray?
+      var containedIsotopes = new ObservableArray();
       this.getParticleList().forEach( function( isotope ) {
         assert && assert (isotope instanceof MovableAtom);
         containedIsotopes.push( isotope );
