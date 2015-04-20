@@ -88,6 +88,7 @@ define( function( require ) {
    * and restoring of the state.
    *
    * @author John Blanco
+   * @author James Smith
    */
   function State( model ) {
 
@@ -246,8 +247,7 @@ define( function( require ) {
         if ( bucket.isIsotopeAllowed( isotope.protonCount, isotope.neutronCount ) ) {
           // Found it.
           isotopeBucket = bucket;
-          return;
-        }
+          }
       } );
       return isotopeBucket;
     },
@@ -379,7 +379,7 @@ define( function( require ) {
       // routine.  For the sake of efficiency, callers should be careful not
       // to call this when it isn't needed.
 
-      if ( this.showingNaturesMixProperty.get() ) {
+      if ( this.showingNaturesMix ) {
         this.removeAllIsotopesFromTestChamberAndModel();
         this.prototypeIsotope = atom;
         this.updatePossibleIsotopesList();
@@ -495,7 +495,7 @@ define( function( require ) {
         // {MovableAtom}
         var isotopeConfig = this.possibleIsotopes.get( i );
         if ( buckets ) {
-          var bucketCaption = AtomIdentifier.getName( isotopeConfig ) + "-" + isotopeConfig.getMassNumber();
+          var bucketCaption = AtomIdentifier.getName( isotopeConfig ) + "-" + isotopeConfig.getIsotopeAtomicMass();
           var newBucket = new MonoIsotopeBucket( new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffset ),
             BUCKET_SIZE, this.getColorForIsotope( isotopeConfig ), bucketCaption, LARGE_ISOTOPE_RADIUS,
             isotopeConfig.protonCount, isotopeConfig.neutronCount );
@@ -534,7 +534,7 @@ define( function( require ) {
     getNumericalControllerForIsotope: function( isotope ) {
       var isotopeController = null;
       this.numericalControllerList.forEach( function( controller ) {
-        if ( controller.getIsotopeConfig().equals( isotope ) ) {
+        if ( controller.isotopeConfig.equals( isotope ) ) {
           // Found it.
           isotopeController = controller;
           return isotopeController;
