@@ -20,16 +20,16 @@ define( function( require ) {
   'use strict';
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
-  var Vector2 = require( 'DOT/Vector2' );
   var NumberAtom = require( 'SHRED/model/NumberAtom' );
+  var Vector2 = require( 'DOT/Vector2' );
   var Property = require( 'AXON/Property' );
   var BooleanProperty = require( 'AXON/BooleanProperty' );
   var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
 
+  // Global Variables
+  var CAPACITY = 100;
 
-  function NumericalIsotopeQuantityControl( model, isotopeConfig , position ) {
-
-    var CAPACITY = 100;
+  function NumericalIsotopeQuantityControl( model, isotopeConfig, position ) {
 
     this.quantityProperty = new Property( 0 );
     this.model = model;
@@ -40,87 +40,85 @@ define( function( require ) {
     // This property tracks whether this model element is still a part
     // of the active model, such that it should be displayed in the view.
     var partOfModelProperty = new BooleanProperty( true );
-
-
-    return inherit( Object, NumericalIsotopeQuantityControl, {
-
-      getCapacity: function() {
-        return CAPACITY;
-      },
-
-      /**
-       * Notify this model element that it has been removed from the model.
-       * This will result in notifications being sent that should cause view
-       * elements to be removed from the view.
-       */
-      removedFromModel: function() {
-        this.partOfModelProperty = false;
-      },
-
-      /**
-       * Set the quantity of the isotope associated with this control to the
-       * specified value.
-       *
-       * @param targetQuantity
-       * @return
-       */
-      setIsotopeQuantity: function( targetQuantity ) {
-        assert && assert( targetQuantity <= CAPACITY );
-        var changeAmount = targetQuantity - this.model.getIsotopeTestChamber().getIsotopeCount( this.isotopeConfig );
-
-        if ( changeAmount > 0 ) {
-          for ( var i = 0; i < changeAmount; i++ ) {
-            var newIsotope = new MovableAtom( this.isotopeConfig.protonCount, this.isotopeConfig.neutronCount,
-              MixIsotopesModel.SMALL_ISOTOPE_RADIUS, this.model.getIsotopeTestChamber().generateRandomLocation() );
-
-            this.model.getIsotopeTestChamber().addIsotopeToChamber( newIsotope, true );
-            // this.model.notifyIsotopeInstanceAdded( newIsotope );
-
-          }
-
-        }
-
-        else if ( changeAmount < 0 ) {
-          for ( var j = 0; j < -changeAmount; j++ ) {
-            var isotope = this.model.getIsotopeTestChamber().removeIsotopeMatchingConfig( isotopeConfig );
-            if ( isotope !== null ) {
-              isotope.removedFromModel();
-            }
-          }
-
-        }
-
-        this.quantityProperty = targetQuantity;
-
-      },
-
-      /**
-       * Force the quantity property to sync up with the test chamber.
-       * TODO Make sure that this method is not accessible to user (was listed as protected in old version)
-       */
-      syncToTestChamber: function() {
-        this.quantityProperty = this.model.getIsotopeTestChamber().getIsotopeCount( isotopeConfig );
-      },
-
-      /**
-       * @return
-       */
-      getBaseColor: function() {
-        return this.model.getColorForIsotope( isotopeConfig );
-      },
-
-      getQuantity: function() {
-        // Verify that the internal property matches that of the test chamber.
-        assert && assert ( this.quantityProperty === this.model.getIsotopeTestChamber().getIsotopeCount( getIsotopeConfig() ) );
-        // Return the value.
-        return this.quantityProperty;
-      }
-
-    } );
-
-
   }
 
-} );
+  return inherit( Object, NumericalIsotopeQuantityControl, {
+
+    getCapacity: function() {
+      return CAPACITY;
+    },
+
+    /**
+     * Notify this model element that it has been removed from the model.
+     * This will result in notifications being sent that should cause view
+     * elements to be removed from the view.
+     */
+    removedFromModel: function() {
+      this.partOfModelProperty = false;
+    },
+
+    /**
+     * Set the quantity of the isotope associated with this control to the
+     * specified value.
+     *
+     * @param targetQuantity
+     * @return
+     */
+    setIsotopeQuantity: function( targetQuantity ) {
+      assert && assert( targetQuantity <= CAPACITY );
+      var changeAmount = targetQuantity - this.model.getIsotopeTestChamber().getIsotopeCount( this.isotopeConfig );
+
+      if ( changeAmount > 0 ) {
+        for ( var i = 0; i < changeAmount; i++ ) {
+          var newIsotope = new MovableAtom( this.isotopeConfig.protonCount, this.isotopeConfig.neutronCount,
+            this.model.SMALL_ISOTOPE_RADIUS, this.model.getIsotopeTestChamber().generateRandomLocation() );
+
+          this.model.getIsotopeTestChamber().addIsotopeToChamber( newIsotope, true );
+          // this.model.notifyIsotopeInstanceAdded( newIsotope );
+
+        }
+
+      }
+
+      else if ( changeAmount < 0 ) {
+        for ( var j = 0; j < -changeAmount; j++ ) {
+          var isotope = this.model.getIsotopeTestChamber().removeIsotopeMatchingConfig( this.isotopeConfig );
+          if ( isotope !== null ) {
+            isotope.removedFromModel();
+          }
+        }
+
+      }
+
+      this.quantityProperty = targetQuantity;
+
+    },
+
+    /**
+     * Force the quantity property to sync up with the test chamber.
+     * TODO Make sure that this method is not accessible to user (was listed as protected in old version)
+     */
+    syncToTestChamber: function() {
+      this.quantityProperty = this.model.getIsotopeTestChamber().getIsotopeCount( this.isotopeConfig );
+    },
+
+    /**
+     * @return
+     */
+    getBaseColor: function() {
+      return this.model.getColorForIsotope( this.isotopeConfig );
+    },
+
+    getQuantity: function() {
+      // Verify that the internal property matches that of the test chamber.
+      assert && assert( this.quantityProperty === this.model.getIsotopeTestChamber().getIsotopeCount( this.isotopeConfig ) );
+      // Return the value.
+      return this.quantityProperty;
+    }
+
+  } );
+
+} )
+;
 
 

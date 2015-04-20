@@ -12,8 +12,6 @@ define( function( require ) {
   'use strict';
 
   var inherit = require( 'PHET_CORE/inherit' );
-  //TODO Vector2 is never used here should it just be removed?
-  var Vector2 = require( 'DOT/Vector2' );
   var SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
   var ObservableArray = require( 'AXON/ObservableArray' );
 

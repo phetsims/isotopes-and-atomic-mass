@@ -16,14 +16,12 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
-  var Vector2 = require( 'DOT/Vector2' );
   var ObservableArray = require( 'AXON/ObservableArray' );
-  var SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
   var Dimension2 = require( 'DOT/Dimension2' );
+  var Vector2 = require( 'DOT/Vector2' );
   var Color = require( 'SCENERY/util/Color' );
   var NumberAtom = require( 'SHRED/model/NumberAtom' );
   var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
-  var SharedConstants = require( 'SHRED/SharedConstants' );
   var PropertySet = require( 'AXON/PropertySet' );
   var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
 
@@ -95,7 +93,7 @@ define( function( require ) {
     this.elementConfig = model.prototypeIsotope;
     this.isotopeTestChamberState = model.testChamber.getState();
     this.interactivityMode = model.interactivityMode;
-    this.showingNaturesMix = model.showingNaturesMixProperty;
+    this.showingNaturesMix = model.showingNaturesMix;
 
     // TODO These are here just to help with the port and should be removed after the port is completed.
     //
@@ -140,6 +138,9 @@ define( function( require ) {
                                         // mix should be displayed, the isotope size property is ignored.
     } );
 
+    //To prevent any scope issues.
+    var thisModel = this;
+
 //     Instance Data
 //    -----------------------------------------------------------------------
 
@@ -150,42 +151,50 @@ define( function( require ) {
     // This atom is the "prototype isotope", meaning that it is set in order
     // to set the atomic weight of the family of isotopes that are currently
     // in use.
-    this.prototypeIsotope = new NumberAtom( { protonCount: 16, electronCount: 16, neutronCount: 16 } );
+    this.prototypeIsotope = new NumberAtom( { protonCount: 0, electronCount: 0, neutronCount: 0 } );
 
     // console.log(AtomIdentifier.getStableIsotopesOfElement(1));
 
     // List of the isotope buckets.
-    // TODO make observable array
     this.bucketList = new ObservableArray();
 
     // List of the numerical controls that, when present, can be used to add
     // or remove isotopes to/from the test chamber.
-    // TODO Debug NumericalIsotopeQuantityControl
     this.numericalControllerList = new ObservableArray();
 
     // Map of elements to user mixes.  These are restored when switching
     // between elements.  The integer represents the atomic number.
     this.mapIsotopeConfigToUserMixState = {};
-
-
     this.updatePossibleIsotopesList();
 
-//          // This is an observer that watches our own interactivity mode setting.
-//          // It is declared as a member variable so that it can be "unhooked" in
-//          // circumstances where it is necessary.
-//          private final SimpleObserver interactivityModeObserver = new SimpleObserver() {
-//              public void update() {
-//                  assert showingNaturesMixProperty.get() == false; // Interactivity mode shouldn't change when showing nature's mix.
-//                  if ( mapIsotopeConfigToUserMixState.containsKey( prototypeIsotope.getNumProtons() ) ) {
-//                      // Erase any previous state for this isotope.
-//                      mapIsotopeConfigToUserMixState.remove( prototypeIsotope.getNumProtons() );
-//                  }
-//                  removeAllIsotopesFromTestChamberAndModel();
-//                  addIsotopeControllers();
-//              }
-//          };
 
+    this.interactivityModeProperty.link( function() {
+      thisModel.interactivityModeObserver();
+    } );
 
+    // Listen to our own "showing nature's mix" property so that we can
+    // show and hide the appropriate isotopes when the value changes.
+    this.showingNaturesMixProperty.link( function() {
+      if ( thisModel.showingNaturesMix ) {
+        // Get the current user's mix state.
+        var usersMixState = thisModel.getState();
+        // Tweak the users mix state.  This is necessary since the
+        // state is being saved inside a property change observer.
+        usersMixState.showingNaturesMix = false;
+        // Save the user's mix state.
+        thisModel.mapIsotopeConfigToUserMixState[ thisModel.prototypeIsotope.protonCount ] = usersMixState;
+        // Display nature's mix.
+        this.showNaturesMix();
+      }
+      else {
+        if ( thisModel.mapIsotopeConfigToUserMixState.hasOwnProperty( thisModel.prototypeIsotope.protonCount ) ) {
+          this.setState( thisModel.mapIsotopeConfigToUserMixState.get( thisModel.prototypeIsotope.protonCount ) );
+        }
+        else {
+          thisModel.setUpInitialUsersMix();
+        }
+      }
+    } );
   }
 
   return inherit( PropertySet, MixIsotopesModel, {
@@ -247,7 +256,7 @@ define( function( require ) {
         if ( bucket.isIsotopeAllowed( isotope.protonCount, isotope.neutronCount ) ) {
           // Found it.
           isotopeBucket = bucket;
-          }
+        }
       } );
       return isotopeBucket;
     },
@@ -337,28 +346,29 @@ define( function( require ) {
         // chamber.  This makes sense because in this mode, any isotopes
         // in the chamber must have come from the buckets.
         // @param {NumberAtom} isotopeConfig
-        for ( var isotopeConfig in this.possibleIsotopes ) {
-          var isotopeCount = this.testChamber.getIsotopeCount( isotopeConfig );
-          var bucket = this.getBucketForIsotope( isotopeConfig );
+        var thisModel = this;
+
+        this.possibleIsotopes.forEach( function( isotopeConfig ) {
+          var isotopeCount = thisModel.testChamber.getIsotopeCount( isotopeConfig );
+          var bucket = thisModel.getBucketForIsotope( isotopeConfig );
           for ( var i = 0; i < isotopeCount; i++ ) {
             var removedIsotope = bucket.removeArbitraryIsotope();
             // removedIsotope.removeListener( isotopeGrabbedListener );
             // TODO Can I comment out the line below?
             removedIsotope.removedFromModel();
-        }
-        }
+          }
+        } );
       }
       else {
         // Assume numerical controllers.
         assert && assert( this.interactivityMode === InteractivityMode.SLIDERS_AND_SMALL_ATOMS );
         // Set each controller to match the number in the chamber.
-        //@param {NumberAtom} isotopeConfig
-        // TODO Grunt says that isotopeConfig is being declared before this instance.
-        for ( var isotopeConfig in this.possibleIsotopes ) {
-          // TODO Correct this. Currently possibleIsotopesProperty is a two dimensional array not an observable array.
-          var controller = this.getNumericalControllerForIsotope( isotopeConfig );
-          controller.setIsotopeQuantity( this.testChamber.getIsotopeCount( isotopeConfig ) );
-        }
+        //@param {NumberAtom}
+        this.possibleIsotopes.forEach( function ( isotopeConfig ) {
+          var controller = thisModel.getNumericalControllerForIsotope( isotopeConfig );
+          controller.setIsotopeQuantity( thisModel.testChamber.getIsotopeCount( isotopeConfig ) );
+        });
+
       }
     },
 
@@ -428,14 +438,12 @@ define( function( require ) {
           } ) );
         }
       }
-      // Sort from lightest to heaviest.  Do not change this without careful
-      // considerations, since several areas of the code count on this.
-      //TODO This is redundant since the possible isotopes property is populated in order of increasing mass.
-      //Collections.sort( newIsotopeList, new Comparator<IAtom>() {
-      //    public int compare( IAtom atom2, IAtom atom1 ) {
-      //      return new Double( atom2.getAtomicMass() ).compareTo( atom1.getAtomicMass() );
-      //    }
-      //  } );
+      //Sort from lightest to heaviest.  Do not change this without careful
+      //considerations, since several areas of the code count on this.
+      // This is kept in case someone adds another isotope to AtomIdentifier and doesn't add it in order.
+      stableIsotopes.sort( function( atom1, atom2 ) {
+        return atom1.getIsotopeAtomicMass() - atom2.getIsotopeAtomicMass();
+      } );
 
       // Update the list of possible isotopes for this atomic configuration.
       this.possibleIsotopes = newIsotopesList;
@@ -447,9 +455,9 @@ define( function( require ) {
      */
     removeBuckets: function() {
       this.bucketList.forEach( function( bucket ) {
-        bucket.forEach( function ( movableAtom ) {
+        bucket.forEach( function( movableAtom ) {
           bucket.removeParticle( movableAtom );
-        });
+        } );
       } );
 
 
@@ -593,7 +601,7 @@ define( function( require ) {
           var isotopesToAdd = [];
           for ( var i = 0; i < numToCreate; i++ ) {
             var newIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount, SMALL_ISOTOPE_RADIUS,
-              this.testChamber.generateRandomLocation());
+              this.testChamber.generateRandomLocation() );
             isotopesToAdd.push( newIsotope );
             // notifyIsotopeInstanceAdded( newIsotope );
           }
@@ -647,7 +655,7 @@ define( function( require ) {
     clearTestChamber: function() {
       // To prevent any scope issues with forEach loops.
       var thisModel = this;
-      this.testChamber.getContainedIsotopes().forEach( function ( isotope ) {
+      this.testChamber.getContainedIsotopes().forEach( function( isotope ) {
         thisModel.testChamber.removeIsotopeFromChamber( isotope );
         if ( thisModel.interactivityMode === InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
           // Add isotope to bucket.
@@ -657,17 +665,58 @@ define( function( require ) {
           // Remove isotope completely from model.
           isotope.removedFromModel();
         }
-      });
+      } );
 
-    // Force any numerical controllers that exist to update.
-      this.numericalControllerList.forEach( function ( controller ) {
+      // Force any numerical controllers that exist to update.
+      this.numericalControllerList.forEach( function( controller ) {
         controller.syncToTestChamber();
-      });
-  }
+      } );
+    },
+
+    //  isotopeGrabbedListener: function( particle ) {
+    //    assert && assert( particle instanceof MovableAtom );
+    //    var isotope = particle;
+    //    if ( this.testChamber.isIsotopeContained( isotope ) ) {
+    //      // The particle is removed from the test chamber as soon as it is grabbed.
+    //      this.testChamber.removeIsotopeFromChamber( isotope );
+    //    }
+    //    // isotope.addListener ( isotopeDroppedListener );
+    //  },
+    //
+    //
+    //isotopeDroppedListener: function( particle ) {
+    //  assert && assert( particle instanceof MovableAtom );
+    //  var isotope = particle;
+    //  if ( this.testChamber.isIsotopePositionedOverChamber( isotope ) ) {
+    //    // Dropped inside testChamber, so it should be added as long as it's not overlapping.
+    //    this.testChamber.addIsotopeToChamber( isotope );
+    //    this.testChamber.adjustForOverlap();
+    //  }
+    //  else{
+    //    // Particle was dropped outside of the test chamber, so return it to the bucket.
+    //    var bucket = getBucketForIsotope( isotope.atomConfiguration );
+    //    assert && assert( bucket !== null );
+    //    bucket.addIsotopeInstanceNearestOpen( isotope, false );
+    //  }
+    //  // particle.removeListener( isotopeDropperListener);
+    //}
 
 
+    /**
+     * This is an observer that watches our own interactivity mode setting.
+     * It is declared as a member variable so that it can be "unhooked" in
+     * circumstances where it is necessary.
+     */
+    interactivityModeObserver: function() {
+      assert && assert( this.showingNaturesMix === false ); // Interactivity mode shouldn't change when showing nature's mix.
+      if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( this.prototypeIsotope.protonCount ) ) {
+        // Erase any previous state for this isotope.
+        this.mapIsotopeConfigToUserMixState.delete( this.prototypeIsotope.protonCount );
+      }
+      this.removeAllIsotopesFromTestChamberAndModel();
+    }
 
-} );
+  } );
 
 } )
 ;
@@ -678,41 +727,9 @@ define( function( require ) {
 //// Inner Classes and Interfaces
 ////------------------------------------------------------------------------
 //
-//protected final SphericalParticle.Adapter isotopeGrabbedListener = new SphericalParticle.Adapter() {
-//@Override
-//  public void grabbedByUser( SphericalParticle particle ) {
-//    assert particle instanceof MovableAtom;
-//    MovableAtom isotope = (MovableAtom) particle;
-//    if ( testChamber.isIsotopeContained( isotope ) ) {
-//      // The particle is considered removed from the test chamber as
-//      // soon as it is grabbed.
-//      testChamber.removeIsotopeFromChamber( isotope );
-//    }
-//    isotope.addListener( isotopeDroppedListener );
-//  }
-//};
+
 //
-//protected final SphericalParticle.Adapter isotopeDroppedListener = new SphericalParticle.Adapter() {
-//@Override
-//  public void droppedByUser( SphericalParticle particle ) {
-//    assert particle instanceof MovableAtom;
-//    MovableAtom isotope = (MovableAtom) particle;
-//    if ( testChamber.isIsotopePositionedOverChamber( isotope ) ) {
-//      // Dropped inside the test chamber, so add it to the chamber,
-//      // but make sure it isn't overlapping any existing particles.
-//      testChamber.addIsotopeToChamber( isotope );
-//      testChamber.adjustForOverlap();
-//    }
-//    else {
-//      // Particle was dropped outside of the test chamber, so return
-//      // it to the bucket.
-//      MonoIsotopeParticleBucket bucket = getBucketForIsotope( isotope.getAtomConfiguration() );
-//      assert bucket != null; // Should never have an isotope without a home.
-//      bucket.addIsotopeInstanceNearestOpen( isotope, false );
-//    }
-//    particle.removeListener( isotopeDroppedListener );
-//  }
-//};
+
 //
 //public interface Listener {
 //  void isotopeInstanceAdded( MovableAtom atom );

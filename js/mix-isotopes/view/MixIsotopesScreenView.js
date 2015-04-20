@@ -1,10 +1,11 @@
-// Copyright 2002-2014, University of Colorado Boulder
+// Copyright 2002-2015, University of Colorado Boulder
 
 /**
  * Screen view for the tab where the user makes isotopes of a given element by adding and removing neutrons.
  *
  * @author John Blanco
  * @author Jesse Greenberg
+ * @author James Smith
  */
 define( function( require ) {
   'use strict';

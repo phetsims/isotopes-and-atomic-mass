@@ -20,8 +20,6 @@ define( function( require ) {
   var Rectangle = require( 'SCENERY/NODES/Rectangle' );
   var ObservableArray = require( 'AXON/ObservableArray' );
   var PropertySet = require( 'AXON/PropertySet' );
-  var NumberAtom = require( 'SHRED/model/NumberAtom' );
-  var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
 
 
   // ------------------------------------------------------------------------
@@ -280,10 +278,10 @@ define( function( require ) {
      */
 
     removeAllIsotopes: function( removeFromModel ) {
-      var containedIsotopesCopy = this.containedIsotopes;
+      var containedIsotopesCopy = this.containedIsotopes.getArray().slice( 0 );
       this.containedIsotopes.clear();
       if ( removeFromModel ) {
-        this.containedIsotopes.forEach( function( isotope ) {
+        containedIsotopesCopy.forEach( function( isotope ) {
           //  TODO isotope.removeListener( this.model.isotopeGrabbedListener );
           isotope.removedFromModel();
 
