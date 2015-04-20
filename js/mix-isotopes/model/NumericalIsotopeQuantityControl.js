@@ -24,9 +24,10 @@ define( function( require ) {
   var NumberAtom = require( 'SHRED/model/NumberAtom' );
   var Property = require( 'AXON/Property' );
   var BooleanProperty = require( 'AXON/BooleanProperty' );
+  var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
 
 
-  function NumericalIsotopeQuantityControl( model, atomConfig, position ) {
+  function NumericalIsotopeQuantityControl( model, isotopeConfig , position ) {
 
     var CAPACITY = 100;
 
@@ -69,18 +70,18 @@ define( function( require ) {
 
         if ( changeAmount > 0 ) {
           for ( var i = 0; i < changeAmount; i++ ) {
-            var newIsotope = new MovableAtom( this.isotopeConfig.getNumProtons(), this.isotopeConfig.getNumNeutrons(),
+            var newIsotope = new MovableAtom( this.isotopeConfig.protonCount, this.isotopeConfig.neutronCount,
               MixIsotopesModel.SMALL_ISOTOPE_RADIUS, this.model.getIsotopeTestChamber().generateRandomLocation() );
 
-            this.model.getIsotopeTestChamber().addIsotopeToChamber( newIsotope );
-            this.model.notifyIsotopeInstanceAdded( newIsotope );
+            this.model.getIsotopeTestChamber().addIsotopeToChamber( newIsotope, true );
+            // this.model.notifyIsotopeInstanceAdded( newIsotope );
 
           }
 
         }
 
         else if ( changeAmount < 0 ) {
-          for ( var i = 0; i < -changeAmount; i++ ) {
+          for ( var j = 0; j < -changeAmount; j++ ) {
             var isotope = this.model.getIsotopeTestChamber().removeIsotopeMatchingConfig( isotopeConfig );
             if ( isotope !== null ) {
               isotope.removedFromModel();
@@ -110,9 +111,9 @@ define( function( require ) {
 
       getQuantity: function() {
         // Verify that the internal property matches that of the test chamber.
-        assert && assert (quantityProperty.get() === this.model.getIsotopeTestChamber().getIsotopeCount( getIsotopeConfig() ) );
+        assert && assert ( this.quantityProperty === this.model.getIsotopeTestChamber().getIsotopeCount( getIsotopeConfig() ) );
         // Return the value.
-        return quantityProperty.get();
+        return this.quantityProperty;
       }
 
     } );

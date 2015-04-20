@@ -60,7 +60,7 @@ define( function( require ) {
    * @param {MixIsotopeModel} model
    *
    */
-  var test = null;
+  // TODO Remove var test = null;
 
   function IsotopeTestChamber( model ) {
 
@@ -239,8 +239,8 @@ define( function( require ) {
       this.updateCountProperty();
       // Update the average atomic mass.
       if ( this.isotopeCount > 0 ) {
-        this.averageAtomicMass = ( this.averageAtomicMass * ( this.isotopeCount + 1 )
-                                   - isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCount;
+        this.averageAtomicMass = ( this.averageAtomicMass * ( this.isotopeCount + 1 ) -
+                                   isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCount;
       }
       else {
         this.averageAtomicMass = 0;
@@ -257,7 +257,7 @@ define( function( require ) {
      */
     removeIsotopeMatchingConfig: function( isotopeConfig ) {
       // Argument checking.
-      if ( ( isotopeConfig.protonCount - isotopeConfig.electronCount ) != 0 ) {
+      if ( ( isotopeConfig.protonCount - isotopeConfig.electronCount ) !== 0 ) {
         console.error( 'Isotope must be neutral' );
       }
       // Locate and remove a matching isotope.
@@ -267,7 +267,7 @@ define( function( require ) {
           removedIsotope = isotope;
           return;
         }
-      } )
+      } );
 
       this.removeIsotopeFromChamber( removedIsotope );
       return removedIsotope;
@@ -287,7 +287,7 @@ define( function( require ) {
           //  TODO isotope.removeListener( this.model.isotopeGrabbedListener );
           isotope.removedFromModel();
 
-        } )
+        } );
 
       }
       this.updateCountProperty();
@@ -341,7 +341,7 @@ define( function( require ) {
         if ( isotopeConfig.equals( isotope.atomConfiguration ) ) {
           isotopeCount++;
         }
-      } )
+      } );
 
       return isotopeCount / this.containedIsotopes.length;
     },
@@ -463,7 +463,8 @@ define( function( require ) {
 
           var distance = isotope1.position.distance( isotope2.position );
           if ( distance < isotope1.radius + isotope2.radius ) {
-            return overlapCheck = true;
+            overlapCheck = true;
+            return overlapCheck;
           }
         }
       } );
