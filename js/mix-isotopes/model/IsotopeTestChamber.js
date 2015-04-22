@@ -17,7 +17,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var Vector2 = require( 'DOT/Vector2' );
   var Dimension2 = require( 'DOT/Dimension2' );
-  var Rectangle = require( 'SCENERY/NODES/Rectangle' );
+  var Rectangle = require( 'DOT/Rectangle' );
   var ObservableArray = require( 'AXON/ObservableArray' );
   var PropertySet = require( 'AXON/PropertySet' );
 
@@ -51,7 +51,7 @@ define( function( require ) {
     getContainedIsotopes: function() {
       return this.containedIsotopes;
     }
-  });
+  } );
 
   /**
    * @constructor
@@ -109,11 +109,12 @@ define( function( require ) {
      * a 2D test that looks as the isotopes center position and determines
      * if it is within the bounds of the chamber rectangle.
      *
-     * @param {MovableAtome} isotope
+     * @param {MovableAtom} isotope
      * @return {boolean}
      */
     isIsotopePositionedOverChamber: function( isotope ) {
-      return TEST_CHAMBER_RECT.containsPointSelf( isotope.position );
+      debugger;
+      return TEST_CHAMBER_RECT.containsPoint( isotope.position );
     },
 
     /**
@@ -201,12 +202,14 @@ define( function( require ) {
      */
 
     bulkAddIsotopesToChamber: function( isotopeList ) {
-      for ( var isotope in isotopeList ) {
-        this.addIsotopeToChamber( isotope, false );
-      }
+      isotopeList.forEach( function( isotope ) {
+        debugger;
+        this.addIsotopeToChamber( isotopeList.get( isotope ), false );
+      } );
       this.updateCountProperty();
       this.updateAverageAtomicMassProperty();
     },
+
 
     /**
      * Convenience function to set the isotopeCount property equal to the number of isotopes contained in this test chamber.
@@ -227,7 +230,8 @@ define( function( require ) {
       else {
         this.averageAtomicMass = 0;
       }
-    },
+    }
+    ,
 
     /**
      * @param {MovableAtom} isotope
@@ -243,7 +247,8 @@ define( function( require ) {
       else {
         this.averageAtomicMass = 0;
       }
-    },
+    }
+    ,
 
 
     /**
@@ -269,7 +274,8 @@ define( function( require ) {
 
       this.removeIsotopeFromChamber( removedIsotope );
       return removedIsotope;
-    },
+    }
+    ,
 
     /**
      * Removes all isotopes and their listeners from the model one at a time.
@@ -293,7 +299,8 @@ define( function( require ) {
 
       assert && assert( this.isotopeCount === 0 );      // Logical consistency check.
       assert && assert( this.averageAtomicMass === 0 ); // Logical consistency check.
-    },
+    }
+    ,
 
     /**
      * Returns the containedIsotopes.
@@ -301,7 +308,8 @@ define( function( require ) {
      */
     getContainedIsotopes: function() {
       return this.containedIsotopes;
-    },
+    }
+    ,
 
 
     /**
@@ -310,7 +318,8 @@ define( function( require ) {
      */
     getTotalIsotopeCount: function() {
       return this.isotopeCount;
-    },
+    }
+    ,
 
 
     ///**
@@ -342,7 +351,8 @@ define( function( require ) {
       } );
 
       return isotopeCount / this.containedIsotopes.length;
-    },
+    }
+    ,
 
 
     /**
@@ -439,7 +449,8 @@ define( function( require ) {
           console.error( '- Warning: Hit max iterations of repositioning algorithm.' );
         }
       }
-    },
+    }
+    ,
 
     /**
      * Checks to ensure that particles are not overlapped.
@@ -468,7 +479,8 @@ define( function( require ) {
       } );
 
       return overlapCheck;
-    },
+    }
+    ,
 
 
     /**
@@ -480,12 +492,14 @@ define( function( require ) {
       return new Vector2(
         TEST_CHAMBER_RECT.bounds.minX + Math.random() * TEST_CHAMBER_RECT.width,
         TEST_CHAMBER_RECT.bounds.minY + Math.random() * TEST_CHAMBER_RECT.height );
-    },
+    }
+    ,
 
 
     getState: function() {
       return new State( this );
-    },
+    }
+    ,
 
 
     /**

@@ -151,7 +151,7 @@ define( function( require ) {
     // This atom is the "prototype isotope", meaning that it is set in order
     // to set the atomic weight of the family of isotopes that are currently
     // in use.
-    this.prototypeIsotope = new NumberAtom( { protonCount: 0, electronCount: 0, neutronCount: 0 } );
+    this.prototypeIsotope = new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } );
 
     // console.log(AtomIdentifier.getStableIsotopesOfElement(1));
 
@@ -169,7 +169,7 @@ define( function( require ) {
 
 
     this.interactivityModeProperty.link( function() {
-      thisModel.interactivityModeObserver();
+      thisModel.interactivityModeObserver()
     } );
 
     // Listen to our own "showing nature's mix" property so that we can
@@ -195,6 +195,12 @@ define( function( require ) {
         }
       }
     } );
+
+// Debugging
+    this.bucketList.push( new MonoIsotopeBucket( new Vector2( 0, 0 ), new Dimension2( 10, 10 ), new Color( 1, 1, 1 ),' ', 5, 1, 0 ) );
+    this.createAndAddIsotope( new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } ), true) ;
+    var testState = new State( this );
+    this.setState( testState );
   }
 
   return inherit( PropertySet, MixIsotopesModel, {
@@ -218,8 +224,7 @@ define( function( require ) {
 
       if ( this.interactivityMode === InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
         // Create the specified isotope and add it to the appropriate bucket.
-        newIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount,
-          LARGE_ISOTOPE_RADIUS, new Vector2( 0, 0 ) );
+        newIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount, new Vector2( 0, 0 ) );
 
         // TODO Make sure this velocity looks good
         newIsotope.velocity = ATOM_MOTION_SPEED;
@@ -233,8 +238,7 @@ define( function( require ) {
       else {
         // Create the specified isotope and add it directly to the test chamber.
         var randomIsotopeLocation = this.testChamber.generateRandomLocation();
-        newIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount,
-          SMALL_ISOTOPE_RADIUS, randomIsotopeLocation );
+        newIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount, randomIsotopeLocation );
 
         this.testChamber.addIsotopeToChamber( newIsotope, true );
       }
@@ -316,18 +320,30 @@ define( function( require ) {
 
       // Restore the interactivity mode.  We have to unhook our usual
       // listener in order to avoid undesirable effects.
-      this.interactivityMode.set( modelState.interactivityMode );
+      // TODO Can I just say the interactivityModeObserver for this or do I need to put it inside another function?
+      var thisModel = this;
+
+      // Make sure that the unlinking and re-linking of the interactivityModeObserver is behaving as expected.
+      this.interactivityModeProperty.unlink( function() {
+        thisModel.interactivityModeObserver()
+      } );
+
+      this.interactivityModeProperty.set( modelState.interactivityMode );
+
+      this.interactivityModeProperty.link( function() {
+        thisModel.interactivityModeObserver()
+      } );
 
 
       // Restore the mix mode.  The assertion here checks that the mix mode
       // (i.e. nature's or user's mix) matches the value that is being
       // restored.  This requirement is true as of 3/16/2011.  It is
       // possible that it could change, but for now, it is good to test.
-      assert && assert( modelState.showingNaturesMix === this.showingNaturesMix.get() );
-      this.showingNaturesMix.set( modelState.showingNaturesMix );
+      assert && assert( modelState.showingNaturesMix === this.showingNaturesMix );
+      this.showingNaturesMix =  modelState.showingNaturesMix;
 
       // Add any particles that were in the test chamber.
-      this.testChamber.setState( modelState.getIsotopeTestChamberState() );
+      this.testChamber.setState( modelState.isotopeTestChamberState );
       this.testChamber.containedIsotopes.forEach( function( isotope ) {
         // TODO Since these are all listeners can we scrap it?
         // isotope.addListener( isotopeGrabbedListener );
@@ -341,7 +357,7 @@ define( function( require ) {
 
       // Set up the isotope controllers to match whatever is in the test
       // chamber.
-      if ( this.interactivityMode.get() === InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
+      if ( this.interactivityMode === InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
         // Remove isotopes from buckets based on the number in the test
         // chamber.  This makes sense because in this mode, any isotopes
         // in the chamber must have come from the buckets.
@@ -364,10 +380,10 @@ define( function( require ) {
         assert && assert( this.interactivityMode === InteractivityMode.SLIDERS_AND_SMALL_ATOMS );
         // Set each controller to match the number in the chamber.
         //@param {NumberAtom}
-        this.possibleIsotopes.forEach( function ( isotopeConfig ) {
+        this.possibleIsotopes.forEach( function( isotopeConfig ) {
           var controller = thisModel.getNumericalControllerForIsotope( isotopeConfig );
           controller.setIsotopeQuantity( thisModel.testChamber.getIsotopeCount( isotopeConfig ) );
-        });
+        } );
 
       }
     },
@@ -441,7 +457,7 @@ define( function( require ) {
       //Sort from lightest to heaviest.  Do not change this without careful
       //considerations, since several areas of the code count on this.
       // This is kept in case someone adds another isotope to AtomIdentifier and doesn't add it in order.
-      stableIsotopes.sort( function( atom1, atom2 ) {
+      newIsotopesList.sort( function( atom1, atom2 ) {
         return atom1.getIsotopeAtomicMass() - atom2.getIsotopeAtomicMass();
       } );
 
@@ -600,8 +616,7 @@ define( function( require ) {
           // { MovableAtom[] }
           var isotopesToAdd = [];
           for ( var i = 0; i < numToCreate; i++ ) {
-            var newIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount, SMALL_ISOTOPE_RADIUS,
-              this.testChamber.generateRandomLocation() );
+            var newIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount, this.testChamber.generateRandomLocation() );
             isotopesToAdd.push( newIsotope );
             // notifyIsotopeInstanceAdded( newIsotope );
           }
