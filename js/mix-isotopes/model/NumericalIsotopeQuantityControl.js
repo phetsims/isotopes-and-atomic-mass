@@ -23,7 +23,6 @@ define( function( require ) {
   var NumberAtom = require( 'SHRED/model/NumberAtom' );
   var Vector2 = require( 'DOT/Vector2' );
   var Property = require( 'AXON/Property' );
-  var BooleanProperty = require( 'AXON/BooleanProperty' );
   var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
 
   // Global Variables
@@ -39,7 +38,7 @@ define( function( require ) {
 
     // This property tracks whether this model element is still a part
     // of the active model, such that it should be displayed in the view.
-    var partOfModelProperty = new BooleanProperty( true );
+    var partOfModelProperty = new Property( true );
   }
 
   return inherit( Object, NumericalIsotopeQuantityControl, {
