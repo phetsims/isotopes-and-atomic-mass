@@ -52,7 +52,7 @@ define( function( require ) {
   // on reality.  The smaller size is used when we want to show a lot of
   // atoms at once.
   var LARGE_ISOTOPE_RADIUS = 83; // in picometers.
-  var SMALL_ISOTOPE_RADIUS = 30; // in picometers.
+  // var SMALL_ISOTOPE_RADIUS = 30; // in picometers. TODO
 
   // Numbers of isotopes that are placed into the buckets when a new atomic
   // number is selected.
@@ -169,7 +169,7 @@ define( function( require ) {
 
 
     this.interactivityModeProperty.link( function() {
-      thisModel.interactivityModeObserver()
+      thisModel.interactivityModeObserver();
     } );
 
     // Listen to our own "showing nature's mix" property so that we can
@@ -201,6 +201,7 @@ define( function( require ) {
     this.createAndAddIsotope( new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } ), true) ;
     var testState = new State( this );
     this.setState( testState );
+
   }
 
   return inherit( PropertySet, MixIsotopesModel, {
@@ -325,13 +326,13 @@ define( function( require ) {
 
       // Make sure that the unlinking and re-linking of the interactivityModeObserver is behaving as expected.
       this.interactivityModeProperty.unlink( function() {
-        thisModel.interactivityModeObserver()
+        thisModel.interactivityModeObserver();
       } );
 
       this.interactivityModeProperty.set( modelState.interactivityMode );
 
       this.interactivityModeProperty.link( function() {
-        thisModel.interactivityModeObserver()
+        thisModel.interactivityModeObserver();
       } );
 
 
@@ -362,8 +363,7 @@ define( function( require ) {
         // chamber.  This makes sense because in this mode, any isotopes
         // in the chamber must have come from the buckets.
         // @param {NumberAtom} isotopeConfig
-        var thisModel = this;
-
+        // var thisModel = this; TODO Check and make sure that this is ok
         this.possibleIsotopes.forEach( function( isotopeConfig ) {
           var isotopeCount = thisModel.testChamber.getIsotopeCount( isotopeConfig );
           var bucket = thisModel.getBucketForIsotope( isotopeConfig );

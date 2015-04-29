@@ -113,7 +113,6 @@ define( function( require ) {
      * @return {boolean}
      */
     isIsotopePositionedOverChamber: function( isotope ) {
-      debugger;
       return TEST_CHAMBER_RECT.containsPoint( isotope.position );
     },
 
@@ -203,7 +202,6 @@ define( function( require ) {
 
     bulkAddIsotopesToChamber: function( isotopeList ) {
       isotopeList.forEach( function( isotope ) {
-        debugger;
         this.addIsotopeToChamber( isotopeList.get( isotope ), false );
       } );
       this.updateCountProperty();
@@ -230,8 +228,7 @@ define( function( require ) {
       else {
         this.averageAtomicMass = 0;
       }
-    }
-    ,
+    },
 
     /**
      * @param {MovableAtom} isotope
@@ -247,8 +244,7 @@ define( function( require ) {
       else {
         this.averageAtomicMass = 0;
       }
-    }
-    ,
+    },
 
 
     /**
@@ -274,8 +270,7 @@ define( function( require ) {
 
       this.removeIsotopeFromChamber( removedIsotope );
       return removedIsotope;
-    }
-    ,
+    },
 
     /**
      * Removes all isotopes and their listeners from the model one at a time.
@@ -299,8 +294,7 @@ define( function( require ) {
 
       assert && assert( this.isotopeCount === 0 );      // Logical consistency check.
       assert && assert( this.averageAtomicMass === 0 ); // Logical consistency check.
-    }
-    ,
+    },
 
     /**
      * Returns the containedIsotopes.
@@ -308,8 +302,7 @@ define( function( require ) {
      */
     getContainedIsotopes: function() {
       return this.containedIsotopes;
-    }
-    ,
+    },
 
 
     /**
@@ -318,8 +311,7 @@ define( function( require ) {
      */
     getTotalIsotopeCount: function() {
       return this.isotopeCount;
-    }
-    ,
+    },
 
 
     ///**
@@ -351,8 +343,7 @@ define( function( require ) {
       } );
 
       return isotopeCount / this.containedIsotopes.length;
-    }
-    ,
+    },
 
 
     /**
@@ -449,8 +440,7 @@ define( function( require ) {
           console.error( '- Warning: Hit max iterations of repositioning algorithm.' );
         }
       }
-    }
-    ,
+    },
 
     /**
      * Checks to ensure that particles are not overlapped.
@@ -479,8 +469,7 @@ define( function( require ) {
       } );
 
       return overlapCheck;
-    }
-    ,
+    },
 
 
     /**
@@ -492,14 +481,12 @@ define( function( require ) {
       return new Vector2(
         TEST_CHAMBER_RECT.bounds.minX + Math.random() * TEST_CHAMBER_RECT.width,
         TEST_CHAMBER_RECT.bounds.minY + Math.random() * TEST_CHAMBER_RECT.height );
-    }
-    ,
+    },
 
 
     getState: function() {
       return new State( this );
-    }
-    ,
+    },
 
 
     /**

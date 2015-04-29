@@ -38,7 +38,8 @@ define( function( require ) {
 
     // This property tracks whether this model element is still a part
     // of the active model, such that it should be displayed in the view.
-    var partOfModelProperty = new Property( true );
+    //TODO Changed to globally accessible variable, make sure this is ok.
+    this.partOfModelProperty = new Property( true );
   }
 
   return inherit( Object, NumericalIsotopeQuantityControl, {
@@ -53,7 +54,7 @@ define( function( require ) {
      * elements to be removed from the view.
      */
     removedFromModel: function() {
-      this.partOfModelProperty = false;
+      this.partOfModelProperty.set( false );
     },
 
     /**

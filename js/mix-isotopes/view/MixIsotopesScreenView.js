@@ -13,21 +13,21 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var ScreenView = require( 'JOIST/ScreenView' );
-  var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
+  // var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var Vector2 = require( 'DOT/Vector2' );
-  var Dimension2 = require( 'DOT/Dimension2' );
+  // var Dimension2 = require( 'DOT/Dimension2' );
   var Node = require( 'SCENERY/nodes/Node' );
-  var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
-  var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
-  var PeriodicTableNode = require( 'SHRED/view/PeriodicTableNode' );
+  // var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
+  // var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
+  // var PeriodicTableNode = require( 'SHRED/view/PeriodicTableNode' );
   var Bounds2 = require( 'DOT/Bounds2' );
-  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  // var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
 
   // class data
-  var DISTANCE_BUTTON_CENTER_FROM_BOTTOM = 30;
-  var BUTTON_FONT = new PhetFont( { weight: 'bold', fontSize: 18 } );
+  // var DISTANCE_BUTTON_CENTER_FROM_BOTTOM = 30;
+  // var BUTTON_FONT = new PhetFont( { weight: 'bold', fontSize: 18 } );
 
   /**
    * @param {MakeIsotopesModel} makeIsotopesModel
