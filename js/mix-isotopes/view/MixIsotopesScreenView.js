@@ -29,6 +29,7 @@ define( function( require ) {
   // var DISTANCE_BUTTON_CENTER_FROM_BOTTOM = 30;
   // var BUTTON_FONT = new PhetFont( { weight: 'bold', fontSize: 18 } );
 
+
   /**
    * @param {MakeIsotopesModel} makeIsotopesModel
    * @constructor
@@ -155,6 +156,17 @@ define( function( require ) {
     //  setScale( 1.1 ); // Empirically determined.
     //}};
     //controlsLayer.addChild( periodicTableNode );
+
+    // Add the average atomic mass indicator to the canvas.
+    //var averageAtomicMassIndicator = new AverageAtomicMassIndicator( model );
+    //var averageAtomicMassWindow = new MaximizeControlNode( BuildAnAtomStrings.AVERAGE_ATOMIC_MASS, new PDimension( 400, 120 ), averageAtomicMassIndicator, true ) {{
+    //  setOffset( indicatorWindowX, testChamberNode.getFullBoundsReference().getMaxY() - getFullBoundsReference().height );
+    //  addChild( averageAtomicMassIndicator );
+    //}}
+    //controlsLayer.addChild( averageAtomicMassWindow );
+    //averageAtomicMassIndicator.setOffset(
+    //  averageAtomicMassWindow.getFullBoundsReference().width / 2 - averageAtomicMassIndicator.getFullBoundsReference().width / 2,
+    //  30 /* Empirically determined, tweak as needed. */ );
 
   }
 
