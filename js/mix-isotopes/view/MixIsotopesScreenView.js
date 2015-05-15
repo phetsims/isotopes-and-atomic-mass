@@ -24,6 +24,7 @@ define( function( require ) {
   var Bounds2 = require( 'DOT/Bounds2' );
   // var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
+  var AverageAtomicMassIndicator = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/AverageAtomicMassIndicator' );
 
   // class data
   // var DISTANCE_BUTTON_CENTER_FROM_BOTTOM = 30;
@@ -158,7 +159,8 @@ define( function( require ) {
     //controlsLayer.addChild( periodicTableNode );
 
     // Add the average atomic mass indicator to the canvas.
-    //var averageAtomicMassIndicator = new AverageAtomicMassIndicator( model );
+    var averageAtomicMassIndicator = new AverageAtomicMassIndicator( this.model );
+    this.addChild( averageAtomicMassIndicator );
     //var averageAtomicMassWindow = new MaximizeControlNode( BuildAnAtomStrings.AVERAGE_ATOMIC_MASS, new PDimension( 400, 120 ), averageAtomicMassIndicator, true ) {{
     //  setOffset( indicatorWindowX, testChamberNode.getFullBoundsReference().getMaxY() - getFullBoundsReference().height );
     //  addChild( averageAtomicMassIndicator );

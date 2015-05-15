@@ -16,23 +16,25 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var Vector2 = require( 'DOT/Vector2' );
   var Shape = require( 'KITE/shape' );
-  var Line = require( 'SCENERY/nodes/line' );
-  var Node = require( 'SCENERY/nodes/node' );
+  var Line = require( 'SCENERY/nodes/Line' );
+  var Node = require( 'SCENERY/nodes/Node' );
   var Color = require( 'SCENERY/util/Color' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var Text = require( 'SCENERY/nodes/Text' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  // var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
-  // var SubSupText = require( 'SCENERY-PHET/js/SubSupText' );
-
+  var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
+  var SubSupText = require( 'SCENERY_PHET/SubSupText' );
+  var Path = require( 'SCENERY/nodes/Path' );
   var INDICATOR_WIDTH = 300; // In screen units, which is close to pixels.
 
   /**
    * Convenience class for creating tick marks.  This includes both the
    * actual mark and the label.
-   * @param
+   * @param (NumberAtom} isotopeConfig
    */
   function IsotopeTickMark( isotopeConfig ) {
+    Node.call( this );
+
 
     // Constants that control overall appearance, tweak as needed.
     // var OVERALL_HEIGHT = 40;
@@ -50,14 +52,16 @@ define( function( require ) {
     this.addChild( shape );
     //TODO
     // Create the label that goes above the tick mark.
-    //var label = new HTMLNode( "<html><sup>" + isotopeConfig.getMassNumber() + "</sup>" + isotopeConfig.getSymbol() + "</html>" ); {{
+    var label = new SubSupText( ' <sup>' + isotopeConfig.getIsotopeAtomicMass() + '</sup>' + AtomIdentifier.getSymbol( isotopeConfig.protonCount ) );
     //  setFont( new PhetFont( 14 ) );
     //  setScale( TICK_MARK_LABEL_HEIGHT / getFullBoundsReference().height );
     //  setOffset( -getFullBoundsReference().width / 2, -getFullBoundsReference().height - TICK_MARK_LINE_HEIGHT / 2 );
     //}}
-    //addChild( label );
+    this.addChild( label );
 
   }
+
+  inherit( Node, IsotopeTickMark );
 
   /**
    * This class define the "readout pointer", which is an indicator
@@ -74,6 +78,7 @@ define( function( require ) {
    * @ param {MixIsotopeModel} model
    */
   function ReadoutPointer( model ) {
+    Node.call( this );
 
     var SIZE = new Dimension2( 120, 25 );
     var TRIANGULAR_POINTER_HEIGHT = 15;
@@ -96,65 +101,65 @@ define( function( require ) {
       new Vector2( TRIANGULAR_POINTER_WIDTH / 2, TRIANGULAR_POINTER_HEIGHT ),
       new Vector2( 0, 0 ) ];
 
-    this.model.addChild( new Shape.polygon( vertices ), {
+    this.addChild( new Path( Shape.polygon( vertices ), {
       stroke: new Color( 0, 143, 212 )
-    } );
+    } ) );
 
     //TODO Can't figure out how to get the a black line to wrap around the white box. Also what are the 5,5 for?
     //readoutBackgroundNode = new PhetPPath( new RoundRectangle2D.Double( -SIZE.getWidth() / 2,
     //  TRIANGULAR_POINTER_HEIGHT, SIZE.getWidth(), SIZE.getHeight(), 5, 5 ), Color.WHITE, new BasicStroke( 1 ), Color.BLACK );
 
     // Adds the readout background node.
-    this.model.addChild( new Shape.roundRect( -SIZE.width / 2, TRIANGULAR_POINTER_HEIGHT, SIZE.width, SIZE.height ), {
+    this.addChild( new Path( Shape.roundRect( -SIZE.width / 2, TRIANGULAR_POINTER_HEIGHT, SIZE.width, SIZE.height, 5, 5 ), {
       stroke: 'white',
       lineWidth: 1
-    } );
+    } ) );
 
     var textualReadout = new Text( "", { font: new PhetFont( 18 ) } );
 
-    this.model.addChild( textualReadout );
+    this.addChild( textualReadout );
 
     // Observe the average atomic weight property in the model and
     // update the textual readout whenever it changes.
-    model.testChamber.averageAtomicMass.link( function() {
+    model.testChamber.averageAtomicMassProperty.link( function() {
      // this.updateReadout();
     } );
 
     // Observe whether the user's mix or nature's mix is being
     // portrayed and update the readout when this changes.
-    model.showingNaturesMix.link( function() {
+    model.showingNaturesMixProperty.link( function() {
       // this.updateReadout();
     } );
   }
 
-  //return inherit( ReadoutPointer, {
-  //
-  //  updateReadout: function() {
-  //    TODO Finish porting
-  //    var weight;
-  //    var numDecimalPlacesToDisplay;
-  //    if ( this.model.showingNaturesMix ) {
-  //      weight = AtomIdentifier.getStandardAtomicMassPrecisionDecimal( this.model.getAtom().protonCount ).getPreciseValue();
-  //      numDecimalPlacesToDisplay = Math.min(
-  //        AtomIdentifier.getStandardAtomicMassPrecisionDecimal( model.getAtom().getNumProtons() ).getNumberOfDecimalPlaces(),
-  //        5 ); // Max of 5 decimal places of resolution.
-  //    }
-  //    else {
-  //      weight = model.getIsotopeTestChamber().getAverageAtomicMass();
-  //      numDecimalPlacesToDisplay = DECIMAL_PLACES_FOR_USERS_MIX;
-  //    }
-  //    textualReadout.setText( VariablePrecisionNumberFormat.format( weight, numDecimalPlacesToDisplay ) + BuildAnAtomStrings.UNITS_AMU );
-  //    textualReadout.setScale( 1 );
-  //    if ( textualReadout.getFullBoundsReference().width >= readoutBackgroundNode.getFullBoundsReference().getWidth() * 0.95 ) {
-  //      textualReadout.setScale( readoutBackgroundNode.getFullBoundsReference().width / textualReadout.getFullBoundsReference().width * 0.95 );
-  //    }
-  //    textualReadout.centerFullBoundsOnPoint(
-  //      readoutBackgroundNode.getFullBoundsReference().getCenterX(),
-  //      readoutBackgroundNode.getFullBounds().getCenterY() );
-  //
-  //  }
-  //
-  //} );
+  inherit( Node, ReadoutPointer, {
+
+    updateReadout: function() {
+      //TODO Finish porting
+      //var weight;
+      //var numDecimalPlacesToDisplay;
+      //if ( this.model.showingNaturesMix ) {
+      //  weight = AtomIdentifier.getStandardAtomicMassPrecisionDecimal( this.model.getAtom().protonCount ).getPreciseValue();
+      //  numDecimalPlacesToDisplay = Math.min(
+      //    AtomIdentifier.getStandardAtomicMassPrecisionDecimal( model.getAtom().getNumProtons() ).getNumberOfDecimalPlaces(),
+      //    5 ); // Max of 5 decimal places of resolution.
+      //}
+      //else {
+      //  weight = model.getIsotopeTestChamber().getAverageAtomicMass();
+      //  numDecimalPlacesToDisplay = DECIMAL_PLACES_FOR_USERS_MIX;
+      //}
+      //textualReadout.setText( VariablePrecisionNumberFormat.format( weight, numDecimalPlacesToDisplay ) + BuildAnAtomStrings.UNITS_AMU );
+      //textualReadout.setScale( 1 );
+      //if ( textualReadout.getFullBoundsReference().width >= readoutBackgroundNode.getFullBoundsReference().getWidth() * 0.95 ) {
+      //  textualReadout.setScale( readoutBackgroundNode.getFullBoundsReference().width / textualReadout.getFullBoundsReference().width * 0.95 );
+      //}
+      //textualReadout.centerFullBoundsOnPoint(
+      //  readoutBackgroundNode.getFullBoundsReference().getCenterX(),
+      //  readoutBackgroundNode.getFullBounds().getCenterY() );
+
+    }
+
+  } );
 
 
   /**
@@ -163,6 +168,8 @@ define( function( require ) {
    * @constructor
    */
   function AverageAtomicMassIndicator( model ) {
+    Node.call( this );
+    var thisNode = this;
 
     // var massSpan = 3; // In amu.
     // var minMass = 0; // In amu.
@@ -186,13 +193,13 @@ define( function( require ) {
 
     // Listen for changes to the list of possible isotopes and update the
     // tick marks when changes occur.
-    model.possibleIsotopes.link( function() {
+    model.possibleIsotopesProperty.link( function() {
 
       tickMarkLayer.removeAllChildren();
       var possibleIsotopesList = model.possibleIsotopes;
       var lightestIsotopeMass = Number.POSITIVE_INFINITY;
       var heaviestIsotopeMass = 0;
-      this.minMass = Number.POSITIVE_INFINITY;
+      thisNode.minMass = Number.POSITIVE_INFINITY;
       possibleIsotopesList.forEach( function( isotope ) {
         if ( isotope.getIsotopeAtomicMass() > heaviestIsotopeMass ) {
           heaviestIsotopeMass = isotope.getIsotopeAtomicMass();
@@ -202,14 +209,14 @@ define( function( require ) {
         }
       } );
 
-      this.massSpan = heaviestIsotopeMass - lightestIsotopeMass;
-      if ( this.massSpan < 2 ) {
-        this.massSpan = 2; // Mass span must be at least 2 or the spacing doesn't look good.
+      thisNode.massSpan = heaviestIsotopeMass - lightestIsotopeMass;
+      if ( thisNode.massSpan < 2 ) {
+        thisNode.massSpan = 2; // Mass spa n must be at least 2 or the spacing doesn't look good.
       }
       // Adjust the span so that there is some space at the ends of the line.
-      this.massSpan *= 1.2;
+      thisNode.massSpan *= 1.2;
       // Set the low end of the mass range, needed for positioning on line.
-      this.minMass = ( heaviestIsotopeMass + lightestIsotopeMass ) / 2 - this.massSpan / 2;
+      thisNode.minMass = ( heaviestIsotopeMass + lightestIsotopeMass ) / 2 - thisNode.massSpan / 2;
 
       // Add the new tick marks.
       model.possibleIsotopes.forEach( function( isotope ) {
@@ -222,7 +229,7 @@ define( function( require ) {
 
     // Add the moving readout.
     var readoutPointer = new ReadoutPointer( model );
-    readoutPointer.leftTop( barNode.bounds.centerX, barOffsetY + 20 ) ;
+    readoutPointer.leftTop = new Vector2( barNode.bounds.centerX, barOffsetY + 20 );
     this.addChild( readoutPointer );
 
     // Add a listener to position the moving readout in a location that
