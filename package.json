@@ -5,21 +5,7 @@
   "simTitleStringKey": "ISOTOPES_AND_ATOMIC_MASS/isotopes-and-atomic-mass.name",
   "phetLibs": [
     "isotopes-and-atomic-mass",
-    "assert",
-    "axon",
-    "babel",
-    "brand",
-    "chipper",
-    "dot",
-    "joist",
-    "kite",
-    "phet-core",
-    "phetcommon",
-    "scenery",
-    "scenery-phet",
-    "sherpa",
-    "shred",
-    "sun"
+    "shred"
   ],
   "repository": {
     "type": "git",
