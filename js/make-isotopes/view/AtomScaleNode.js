@@ -26,6 +26,7 @@ define( function( require ) {
   var Path = require( 'SCENERY/nodes/Path' );
   var Shape = require( 'KITE/Shape' );
   var LinearGradient = require( 'SCENERY/util/LinearGradient' );
+  var Util = require( 'DOT/Util' );
 
   // class data
   var DISPLAY_MODE = { MASS_NUMBER: "mass number", ATOMIC_MASS: "atomic mass" };
@@ -81,7 +82,7 @@ define( function( require ) {
 
       else {
         var isotopeAtomicMass = atom.getIsotopeAtomicMass();
-        readoutText.setText( isotopeAtomicMass > 0 ? isotopeAtomicMass.toFixed( 5 ) : "--" );
+        readoutText.setText( isotopeAtomicMass > 0 ? Util.toFixed( isotopeAtomicMass, 5 ) : "--" );
       }
 
       // Make sure that the text fits in the display.
