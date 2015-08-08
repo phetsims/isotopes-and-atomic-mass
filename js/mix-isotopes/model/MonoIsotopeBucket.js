@@ -17,7 +17,7 @@ define( function( require ) {
 
   //TODO Check and see if we actually need these
   // TODO Should I be using numberAtom instead of movable atom?
-  var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom');
+  var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
   var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
 
   /**
@@ -53,7 +53,7 @@ define( function( require ) {
      * @param moveImmediately
      */
     addIsotopeInstanceFirstOpen: function( isotope, moveImmediately ) {
-      if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount) ) {
+      if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount ) ) {
         this.addParticleFirstOpen( isotope, moveImmediately );
       }
     },
@@ -108,7 +108,7 @@ define( function( require ) {
 
       else {
         // TODO is this the proper way to throw error?
-        throw AtomIdentifier.getName(isotopeToRemove.atomConfiguration.protonCount) + ' - Warning: Ignoring attempt to remove particle from empty bucket.' ;
+        throw AtomIdentifier.getName( isotopeToRemove.atomConfiguration.protonCount ) + ' - Warning: Ignoring attempt to remove particle from empty bucket.';
       }
       return isotopeToRemove;
     },
@@ -121,14 +121,13 @@ define( function( require ) {
       // TODO Should contained Isotopes here be an ObservableArray?
       var containedIsotopes = new ObservableArray();
       this.getParticleList().forEach( function( isotope ) {
-        assert && assert (isotope instanceof MovableAtom);
+        assert && assert( isotope instanceof MovableAtom );
         containedIsotopes.push( isotope );
 
-      });
+      } );
 
       return containedIsotopes;
     }
-
 
 
   } );
