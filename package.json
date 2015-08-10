@@ -2,6 +2,7 @@
   "name": "isotopes-and-atomic-mass",
   "version": "1.0.0-dev.1",
   "license": "GPLv3",
+  "requirejsNamespace": "ISOTOPES_AND_ATOMIC_MASS",
   "simTitleStringKey": "ISOTOPES_AND_ATOMIC_MASS/isotopes-and-atomic-mass.name",
   "phetLibs": [
     "isotopes-and-atomic-mass",
