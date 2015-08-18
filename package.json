@@ -17,7 +17,6 @@
     "requirejsNamespace": "ISOTOPES_AND_ATOMIC_MASS",
     "simTitleStringKey": "ISOTOPES_AND_ATOMIC_MASS/isotopes-and-atomic-mass.name",
     "phetLibs": [
-      "isotopes-and-atomic-mass",
       "shred"
     ]
   }
