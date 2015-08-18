@@ -35,19 +35,19 @@ define( function( require ) {
    * @param {ParticleAtom} particleAtom Model that represents the atom, including particle positions
    * @param {NumberAtom} numberAtom Model that representa the atom as a collection of numbers
    * @param {Vector2} bottomPoint desired bottom point of the atom which holds the atom in position as the size changes.
-   * @param {ModelViewTransform2} mvt Model-View transform
+   * @param {ModelViewTransform2} modelViewTransform Model-View transform
    * @constructor
    */
-  function IsotopeAtomNode( particleAtom, numberAtom, bottomPoint, mvt ) {
+  function IsotopeAtomNode( particleAtom, numberAtom, bottomPoint, modelViewTransform ) {
 
     Node.call( this ); // Call super constructor.
     var thisAtomView = this;
 
     this.atom = numberAtom;
-    this.mvt = mvt;
+    this.modelViewTransform = modelViewTransform;
 
     // Add the electron cloud.
-    var isotopeElectronCloud = new IsotopeElectronCloudView( numberAtom, mvt );
+    var isotopeElectronCloud = new IsotopeElectronCloudView( numberAtom, modelViewTransform );
     this.addChild( isotopeElectronCloud );
 
     // Create the textual readout for the element name.
@@ -63,9 +63,9 @@ define( function( require ) {
       }
       thisAtomView.elementName.text = name;
       thisAtomView.elementName.setScaleMagnitude( 1 );
-      var maxLabelWidth = mvt.modelToViewDeltaX( particleAtom.innerElectronShellRadius * 1.4 );
+      var maxLabelWidth = modelViewTransform.modelToViewDeltaX( particleAtom.innerElectronShellRadius * 1.4 );
       thisAtomView.elementName.setScaleMagnitude( Math.min( maxLabelWidth / thisAtomView.elementName.width, 1 ) );
-      thisAtomView.elementName.center = mvt.modelToViewPosition( particleAtom.position.plus( new Vector2( 0, isotopeElectronCloud.radius * 0.60) ) );
+      thisAtomView.elementName.center = modelViewTransform.modelToViewPosition( particleAtom.position.plus( new Vector2( 0, isotopeElectronCloud.radius * 0.60) ) );
     };
 
     // Create the textual readout for the stability indicator.
@@ -74,7 +74,7 @@ define( function( require ) {
 
     // Define the update function for the stability indicator.
     var updateStabilityIndicator = function() {
-      var stabilityIndicatorCenterPos = mvt.modelToViewPosition( particleAtom.position.plus( new Vector2( 0, -isotopeElectronCloud.radius * 0.60 ) ) );
+      var stabilityIndicatorCenterPos = modelViewTransform.modelToViewPosition( particleAtom.position.plus( new Vector2( 0, -isotopeElectronCloud.radius * 0.60 ) ) );
       if ( thisAtomView.atom.protonCount > 0 ) {
         if ( AtomIdentifier.isStable( thisAtomView.atom.protonCount, thisAtomView.atom.neutronCount ) ) {
           thisAtomView.stabilityIndicator.text = stableString;
@@ -94,7 +94,7 @@ define( function( require ) {
     // atom get larger and smaller but to stay on the scale.
     var updateAtomPosition = function( numProtons ) {
       var newCenter = new Vector2( bottomPoint.x, bottomPoint.y - isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2 );
-      particleAtom.position = mvt.viewToModelPosition( newCenter );
+      particleAtom.position = modelViewTransform.viewToModelPosition( newCenter );
       isotopeElectronCloud.center = new Vector2( bottomPoint.x, bottomPoint.y - isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2 );
     };
 

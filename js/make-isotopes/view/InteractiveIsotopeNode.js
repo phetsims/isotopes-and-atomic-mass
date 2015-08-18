@@ -45,7 +45,7 @@ define( function( require ) {
       // Add the bucket components that hold the neutrons.
       var neutronBucketHole = new BucketHole( makeIsotopesModel.neutronBucket, modelViewTransform );
       var neutronBucketFront = new BucketFront( makeIsotopesModel.neutronBucket, modelViewTransform );
-      neutronBucketFront.addInputListener( new BucketDragHandler( makeIsotopesModel.neutronBucket, modelViewTransform ) );
+      neutronBucketFront.addInputListener( new BucketDragHandler( makeIsotopesModel.neutronBucket, neutronBucketFront, modelViewTransform ) );
 
       // Bucket hole is first item added to view for proper layering.
       this.addChild( neutronBucketHole );
@@ -79,8 +79,8 @@ define( function( require ) {
           for ( var layerIndex = 0; layerIndex < nucleonLayers.length && particleView === null; layerIndex++ ) {
             for ( var childIndex = 0; childIndex < nucleonLayers[ layerIndex ].children.length; childIndex++ ) {
               if ( nucleonLayers[ layerIndex ].children[ childIndex ].particle === addedAtom ) {
-                particleView = nucleonLayers[ layerIndex ].children[childIndex ];
-                nucleonLayers[layerIndex].removeChildAt( childIndex );
+                particleView = nucleonLayers[ layerIndex ].children[ childIndex ];
+                nucleonLayers[ layerIndex ].removeChildAt( childIndex );
                 break;
               }
             }
@@ -102,7 +102,7 @@ define( function( require ) {
         nucleonLayers[ addedAtom.zLayer ].addChild( particleView );
         // Add a listener that adjusts a nucleon's z-order layering.
         addedAtom.zLayerProperty.link( function( zLayer ) {
-          adjustZLayer(addedAtom, zLayer);
+          adjustZLayer( addedAtom, zLayer );
         } );
 
         thisNode.addChild( particleView );
@@ -128,7 +128,7 @@ define( function( require ) {
         nucleonLayers[ addedAtom.zLayer ].addChild( particleView );
         // Add a listener that adjusts a nucleon's z-order layering.
         addedAtom.zLayerProperty.link( function( zLayer ) {
-          adjustZLayer(addedAtom, zLayer);
+          adjustZLayer( addedAtom, zLayer );
         } );
 
         thisNode.addChild( particleView );
