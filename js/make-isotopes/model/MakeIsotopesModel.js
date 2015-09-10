@@ -27,7 +27,7 @@ define( function( require ) {
 
 
   // Strings
-  var neutronsNameString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons.name' );
+  var neutronsNameString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons.title' );
 
   //----------------------------------------------------------------------------
   // Class Data

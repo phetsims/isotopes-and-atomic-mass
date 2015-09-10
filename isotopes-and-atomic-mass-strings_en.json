@@ -1,5 +1,5 @@
 {
-  "isotopes-and-atomic-mass.name": {
+  "isotopes-and-atomic-mass.title": {
     "value": "Isotopes And Atomic Mass"
   },
   "make-isotopes-module.title": {
@@ -8,7 +8,7 @@
   "mix-isotopes-module.title": {
     "value": "Mix Isotopes"
   },
-  "neutrons.name": {
+  "neutrons.title": {
     "value": "Neutrons"
   }
 }

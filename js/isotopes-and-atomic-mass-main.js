@@ -16,7 +16,7 @@ define( function( require ) {
 
 
   // strings
-  var simTitle = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopes-and-atomic-mass.name' );
+  var simTitle = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopes-and-atomic-mass.title' );
 
   var simOptions = {
     credits: {

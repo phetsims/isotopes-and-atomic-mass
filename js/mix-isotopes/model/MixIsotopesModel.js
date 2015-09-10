@@ -78,7 +78,7 @@ define( function( require ) {
 
 
   // Strings
-  // TODO Should this be removed? var neutronsNameString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons.name' );
+  // TODO Should this be removed? var neutronsNameString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons.title' );
 
 
   /**
