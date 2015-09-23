@@ -26,7 +26,7 @@ define( function( require ) {
   var stableString = require( 'string!SHRED/stable' );
   var unstableString = require( 'string!SHRED/unstable' );
 
-  // Constants
+  // constants
   var ELEMENT_NAME_FONT_SIZE = 16;
 
   /**

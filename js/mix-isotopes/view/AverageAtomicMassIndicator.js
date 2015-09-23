@@ -36,7 +36,7 @@ define( function( require ) {
     Node.call( this );
 
 
-    // Constants that control overall appearance, tweak as needed.
+    // constants that control overall appearance, tweak as needed.
     // var OVERALL_HEIGHT = 40;
     var TICK_MARK_LINE_HEIGHT = 10;
     // var TICK_MARK_LABEL_HEIGHT = OVERALL_HEIGHT - TICK_MARK_LINE_HEIGHT;

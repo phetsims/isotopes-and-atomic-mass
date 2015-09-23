@@ -43,7 +43,7 @@ define( function( require ) {
   // maximum drop distance for a nucleon to be considered part of the particle.
   var NUCLEON_CAPTURE_RADIUS = 100;
 
-  // Constants that define the size, position, and appearance of the neutron bucket.
+  // constants that define the size, position, and appearance of the neutron bucket.
   var BUCKET_SIZE = new Dimension2( 130, 60 );
   var NEUTRON_BUCKET_POSITION = new Vector2( -250, -110 );
 
