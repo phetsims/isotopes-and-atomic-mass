@@ -13,7 +13,7 @@
 define( function( require ) {
   'use strict';
 
-  // Imports
+  // modules
   var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
   var IsotopeElectronCloudView = require( 'SHRED/view/IsotopeElectronCloudView' );
   var inherit = require( 'PHET_CORE/inherit' );
