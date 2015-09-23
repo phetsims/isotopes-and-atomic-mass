@@ -22,7 +22,7 @@ define( function( require ) {
   var Text = require( 'SCENERY/nodes/Text' );
   var Vector2 = require( 'DOT/Vector2' );
 
-  // Strings
+  // strings
   var stableString = require( 'string!SHRED/stable' );
   var unstableString = require( 'string!SHRED/unstable' );
 

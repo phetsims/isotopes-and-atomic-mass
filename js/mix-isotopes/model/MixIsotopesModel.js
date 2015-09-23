@@ -77,7 +77,7 @@ define( function( require ) {
   var NUM_NATURES_MIX_ATOMS = 1000;
 
 
-  // Strings
+  // strings
   // TODO Should this be removed? var neutronsNameString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons.title' );
 
 

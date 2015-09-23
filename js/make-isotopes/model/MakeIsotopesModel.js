@@ -26,7 +26,7 @@ define( function( require ) {
   var PropertySet = require('AXON/PropertySet');
 
 
-  // Strings
+  // strings
   var neutronsNameString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons.title' );
 
   //----------------------------------------------------------------------------
