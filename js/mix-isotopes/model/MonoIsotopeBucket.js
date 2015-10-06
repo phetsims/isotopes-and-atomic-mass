@@ -1,4 +1,6 @@
-/** Copyright 2002-2015, University of Colorado
+// Copyright 2002-2015, University of Colorado Boulder
+
+/**
  *
  * A particle bucket that can only contain one configuration of isotope,
  * though it may contain multiple instances of that isotope.

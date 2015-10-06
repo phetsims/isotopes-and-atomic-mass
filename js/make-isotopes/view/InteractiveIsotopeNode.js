@@ -65,7 +65,7 @@ define( function( require ) {
 
       // Function to adjust z-layer ordering for a particle. This is to be linked to the particle's zLayer property.
       var adjustZLayer = function( addedAtom, zLayer ) {
-        assert && assert( nucleonLayers.length > zLayer, "zLayer for proton exceeds number of layers, max number may need increasing." );
+        assert && assert( nucleonLayers.length > zLayer, 'zLayer for proton exceeds number of layers, max number may need increasing.' );
         // Determine whether proton view is on the correct layer.
         var onCorrectLayer = false;
         nucleonLayers[ zLayer ].children.forEach( function( particleView ) {
@@ -86,7 +86,7 @@ define( function( require ) {
             }
           }
           // Add the particle view to its new layer.
-          assert && assert( particleView !== null, "Particle view not found during relayering" );
+          assert && assert( particleView !== null, 'Particle view not found during relayering' );
           nucleonLayers[ zLayer ].addChild( particleView );
         }
       };

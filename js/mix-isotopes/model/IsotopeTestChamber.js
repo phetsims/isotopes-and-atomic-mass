@@ -1,6 +1,6 @@
+// Copyright 2002-2015, University of Colorado Boulder
+
 /**
- * Copyright 2002-2015, University of Colorado
- *
  * Class that represents a "test chamber" where multiple isotopes can be
  * placed.  The test chamber calculates the average atomic mass and the
  * proportions of the various isotopes.  It is intended to be contained in
@@ -355,7 +355,7 @@ define( function( require ) {
     adjustForOverlap: function() {
       // Bounds checking.  The threshold is pretty much arbitrary.
       if ( this.getTotalIsotopeCount() > 100 ) {
-        console.error( " - Warning: Ignoring request to adjust for overlap - too many particles in the chamber for that." );
+        console.error( ' - Warning: Ignoring request to adjust for overlap - too many particles in the chamber for that.' );
         return;
       }
 

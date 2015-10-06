@@ -219,7 +219,7 @@ define( function( require ) {
      * TODO Port setMotionVelocity
      */
     createAndAddIsotope: function( isotopeConfig, moveImmediately ) {
-      assert && assert( isotopeConfig.protonCount === this.prototypeIsotope.protonCount, "179" );
+      assert && assert( isotopeConfig.protonCount === this.prototypeIsotope.protonCount, '179' );
       assert && assert( isotopeConfig.electronCount === isotopeConfig.electronCount );
       var newIsotope;
 
@@ -519,7 +519,7 @@ define( function( require ) {
         // {MovableAtom}
         var isotopeConfig = this.possibleIsotopes.get( i );
         if ( buckets ) {
-          var bucketCaption = AtomIdentifier.getName( isotopeConfig ) + "-" + isotopeConfig.getIsotopeAtomicMass();
+          var bucketCaption = AtomIdentifier.getName( isotopeConfig ) + '-' + isotopeConfig.getIsotopeAtomicMass();
           var newBucket = new MonoIsotopeBucket( new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffset ),
             BUCKET_SIZE, this.getColorForIsotope( isotopeConfig ), bucketCaption, LARGE_ISOTOPE_RADIUS,
             isotopeConfig.protonCount, isotopeConfig.neutronCount );

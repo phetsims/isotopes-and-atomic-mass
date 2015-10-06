@@ -29,7 +29,7 @@ define( function( require ) {
   var Util = require( 'DOT/Util' );
 
   // class data
-  var DISPLAY_MODE = { MASS_NUMBER: "mass number", ATOMIC_MASS: "atomic mass" };
+  var DISPLAY_MODE = { MASS_NUMBER: 'mass number', ATOMIC_MASS: 'atomic mass' };
   var COLOR = new Color( 228, 194, 167 );
   var SIZE = new Dimension2( 320, 125 );
   var WEIGH_PLATE_WIDTH = SIZE.width * 0.70;
@@ -82,7 +82,7 @@ define( function( require ) {
 
       else {
         var isotopeAtomicMass = atom.getIsotopeAtomicMass();
-        readoutText.setText( isotopeAtomicMass > 0 ? Util.toFixed( isotopeAtomicMass, 5 ) : "--" );
+        readoutText.setText( isotopeAtomicMass > 0 ? Util.toFixed( isotopeAtomicMass, 5 ) : '--' );
       }
 
       // Make sure that the text fits in the display.

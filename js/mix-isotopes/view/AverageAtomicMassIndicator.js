@@ -1,5 +1,4 @@
-/* Copyright 2002-2015, University of Colorado */
-
+// Copyright 2002-2015, University of Colorado Boulder
 
 /**
  * A Piccolo2D node that monitors that average atomic mass of a set of
@@ -115,7 +114,7 @@ define( function( require ) {
       lineWidth: 1
     } ) );
 
-    var textualReadout = new Text( "", { font: new PhetFont( 18 ) } );
+    var textualReadout = new Text( '', { font: new PhetFont( 18 ) } );
 
     this.addChild( textualReadout );
 
