@@ -124,13 +124,13 @@ define( function( require ) {
         } );
       }
 
-      makeIsotopesModel.particleAtom.protons.forEach( function( proton ) { addParticleView( proton ) } );
+      makeIsotopesModel.particleAtom.protons.forEach( function( proton ) { addParticleView( proton ); } );
 
       // add the item added listeners for particles of this isotope
-      makeIsotopesModel.particleAtom.protons.addItemAddedListener( function( addedAtom ) { addParticleView( addedAtom )} );
+      makeIsotopesModel.particleAtom.protons.addItemAddedListener( function( addedAtom ) { addParticleView( addedAtom );} );
 
       // add the item added listeners for particles of this isotope
-      makeIsotopesModel.particleAtom.neutrons.addItemAddedListener( function( addedAtom ) { addParticleView( addedAtom )} );
+      makeIsotopesModel.particleAtom.neutrons.addItemAddedListener( function( addedAtom ) { addParticleView( addedAtom );} );
 
 
 //      nucleons.forEach( function( nucleon ) {
