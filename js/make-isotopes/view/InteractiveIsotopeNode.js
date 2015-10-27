@@ -91,8 +91,10 @@ define( function( require ) {
         }
       };
 
+      // function to add the view for a nucleon, i.e. a proton or neutron
       function addParticleView( addedParticle ) {
-        // create the particle node - user cannot interact with protons
+
+        assert && assert( addedParticle.type === 'proton' || addedParticle.type === 'neutron', 'unrecognized particle type' );
 
         var particleView = new ParticleView( addedParticle, thisNode.modelViewTransform );
         particleView.center = thisNode.modelViewTransform.modelToViewPosition( addedParticle.position );
@@ -112,9 +114,10 @@ define( function( require ) {
         if ( addedParticle.type === 'proton' ) {
           temp = makeIsotopesModel.particleAtom.protons;
         }
-        if ( addedParticle.type === 'neutron' ) {
+        else if ( addedParticle.type === 'neutron' ) {
           temp = makeIsotopesModel.particleAtom.neutrons;
         }
+
         temp.addItemRemovedListener( function removalListener( removedAtom ) {
           if ( removedAtom === addedParticle ) {
             thisNode.removeChild( particleView );
