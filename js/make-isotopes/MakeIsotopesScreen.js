@@ -30,8 +30,7 @@ define( function( require ) {
 
     Screen.call( this, makeIsotopesString, icon,
       function() { return new MakeIsotopesModel(); },
-      function( model ) { return new MakeIsotopesScreenView( model ); },
-      { backgroundColor: '#FFFF99' }
+      function( model ) { return new MakeIsotopesScreenView( model ); }
     );
   }
 

@@ -93,7 +93,6 @@ define( function( require ) {
 
       // function to add the view for a nucleon, i.e. a proton or neutron
       function addParticleView( addedParticle ) {
-
         assert && assert( addedParticle.type === 'proton' || addedParticle.type === 'neutron', 'unrecognized particle type' );
 
         var particleView = new ParticleView( addedParticle, thisNode.modelViewTransform );
@@ -122,12 +121,23 @@ define( function( require ) {
           if ( removedAtom === addedParticle ) {
             thisNode.removeChild( particleView );
             nucleonLayers[ addedParticle.zLayer ].removeChild( particleView );
-            makeIsotopesModel.particleAtom.protons.removeItemRemovedListener( removalListener );
+            temp.removeItemRemovedListener( removalListener );
           }
         } );
       }
 
       makeIsotopesModel.particleAtom.protons.forEach( function( proton ) { addParticleView( proton ); } );
+
+      makeIsotopesModel.neutrons.forEach( function( neutron ) {
+        var particleView = new ParticleView( neutron, thisNode.modelViewTransform );
+        particleView.center = thisNode.modelViewTransform.modelToViewPosition( neutron.position );
+        thisNode.addChild( particleView );
+
+        //nucleonLayers[ addedParticle.zLayer ].addChild( particleView );
+        // Add a listener that adjusts a nucleon's z-order layering.
+        //addedParticle.zLayerProperty.link( function( zLayer ) {
+          //adjustZLayer( addedParticle, zLayer );
+        } );
 
       // add the item added listeners for particles of this isotope
       makeIsotopesModel.particleAtom.protons.addItemAddedListener( function( addedAtom ) { addParticleView( addedAtom );} );

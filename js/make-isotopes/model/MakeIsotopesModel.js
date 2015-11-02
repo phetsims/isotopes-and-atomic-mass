@@ -25,7 +25,6 @@ define( function( require ) {
   var SharedConstants = require( 'SHRED/SharedConstants' );
   var PropertySet = require('AXON/PropertySet');
 
-
   // strings
   var neutronsNameString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons.title' );
 
@@ -68,26 +67,27 @@ define( function( require ) {
     PropertySet.call( this, {} );
 
     // carry through scope
-    var thisModel = this;
+    var self = this;
 
     // create the atom.
     this.particleAtom = new ParticleAtom();
 
     // Make available a 'number atom' that tracks the state of the particle atom.
+    // TODO Remove this and put it in particleAtom
     this.numberAtom = DEFAULT_ATOM_CONFIG;
 
     // Update the stability state and counter on changes.
-    thisModel.nucleusStable = true;
-    thisModel.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
-    thisModel.nucleusOffset = Vector2.ZERO;
-    thisModel.numberAtom.massNumberProperty.link( function( massNumber ) {
-      var stable = massNumber > 0 ? AtomIdentifier.isStable( thisModel.numberAtom.protonCount, thisModel.numberAtom.neutronCount ) : true;
-      if ( thisModel.nucleusStable !== stable ) {
+    self.nucleusStable = true;
+    self.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
+    self.nucleusOffset = Vector2.ZERO;
+    self.numberAtom.massNumberProperty.link( function( massNumber ) {
+      var stable = massNumber > 0 ? AtomIdentifier.isStable( self.particleAtom.protonCount, self.particleAtom.neutronCount ) : true;
+      if ( self.nucleusStable !== stable ) {
         // Stability has changed.
-        thisModel.nucleusStable = stable;
+        self.nucleusStable = stable;
         if ( stable ) {
-          thisModel.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
-          thisModel.particleAtom.nucleusOffset = Vector2.ZERO;
+          self.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
+          self.particleAtom.nucleusOffset = Vector2.ZERO;
         }
       }
     } );
@@ -119,19 +119,20 @@ define( function( require ) {
     };
 
     // Add the neutrons to the neutron bucket.
+
     _.times( DEFAULT_NUM_NEUTRONS_IN_BUCKET, function() {
       var neutron = new Particle( 'neutron' );
-      thisModel.neutrons.push( neutron );
-      thisModel.neutronBucket.addParticleFirstOpen( neutron, false );
+      self.neutrons.push( neutron );
+      self.neutronBucket.addParticleFirstOpen( neutron, false );
       neutron.userControlledProperty.link( function( userControlled ) {
-        if ( !userControlled && !thisModel.neutronBucket.containsParticle( neutron ) ) {
-          placeNucleon( neutron, thisModel.neutronBucket, thisModel.particleAtom );
+        if ( !userControlled && !self.neutronBucket.containsParticle( neutron ) ) {
+          placeNucleon( neutron, self.neutronBucket, self.particleAtom );
         }
       } );
     } );
 
     this.numberAtom.massNumberProperty.link( function() {
-      thisModel.setAtomConfiguration( thisModel.numberAtom );
+      self.setAtomConfiguration( self.numberAtom );
     });
 
     // Set the initial atom configuration.
@@ -227,7 +228,13 @@ define( function( require ) {
      */
     reset: function() {
       // Reset the atom.  This also resets the neutron bucket.
+      var that = this;
+      this.neutronBucket.reset();
+      this.neutrons.forEach( function( neutron ) {
+        that.neutronBucket.addParticleNearestOpen( neutron, false );
+      } );
       this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
+
     },
 
     /**

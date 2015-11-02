@@ -63,13 +63,13 @@ define( function( require ) {
     this.addChild( resetAllButton );
 
     // Add the legend/particle count indicator.
-    var particleCountLegend = new ParticleCountDisplay( makeIsotopesModel.getNumberAtom(), 13, 250 );
+    var particleCountLegend = new ParticleCountDisplay( makeIsotopesModel.particleAtom, 13, 250 );
     particleCountLegend.scale( 1.1 );
     particleCountLegend.setLeftTop( new Vector2( 20, 10 ) );
     indicatorLayer.addChild( particleCountLegend );
 
     // Create the node that represents the scale upon which the atom sits.
-    var scaleNode = new AtomScaleNode( makeIsotopesModel.getNumberAtom() );
+    var scaleNode = new AtomScaleNode( makeIsotopesModel.particleAtom );
 
     // The scale needs to sit just below the atom, and there are some "tweak factors" needed to get it looking right.
     scaleNode.setCenterBottom( new Vector2( this.mvt.modelToViewX( 0 ), this.bottom ) );

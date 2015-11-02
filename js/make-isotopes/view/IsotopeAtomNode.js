@@ -43,11 +43,11 @@ define( function( require ) {
     Node.call( this ); // Call super constructor.
     var thisAtomView = this;
 
-    this.atom = numberAtom;
+    this.atom = particleAtom;
     this.modelViewTransform = modelViewTransform;
 
     // Add the electron cloud.
-    var isotopeElectronCloud = new IsotopeElectronCloudView( numberAtom, modelViewTransform );
+    var isotopeElectronCloud = new IsotopeElectronCloudView( particleAtom, modelViewTransform );
     this.addChild( isotopeElectronCloud );
 
     // Create the textual readout for the element name.
@@ -98,12 +98,12 @@ define( function( require ) {
       isotopeElectronCloud.center = new Vector2( bottomPoint.x, bottomPoint.y - isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2 );
     };
 
-    numberAtom.protonCountProperty.link( function( numProtons ) {
+    particleAtom.protonCountProperty.link( function( numProtons ) {
       updateAtomPosition( numProtons );
       updateElementName();
     });
 
-    numberAtom.neutronCountProperty.link( function( numNeutrons ) {
+    particleAtom.neutronCountProperty.link( function( numNeutrons ) {
       updateElementName();
       updateStabilityIndicator();
     } );
