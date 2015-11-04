@@ -13,6 +13,7 @@ define( function( require ) {
 
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
+  var Image = require( 'SCENERY/nodes/Image' );
   var Vector2 = require( 'DOT/Vector2' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var Node = require( 'SCENERY/nodes/Node' );
@@ -22,11 +23,17 @@ define( function( require ) {
   var Property = require( 'AXON/Property' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var RadioButtonGroup = require( 'SUN/buttons/RadioButtonGroup' );
-  var Panel = require( 'SUN/Panel' );
   var Path = require( 'SCENERY/nodes/Path' );
   var Shape = require( 'KITE/Shape' );
   var LinearGradient = require( 'SCENERY/util/LinearGradient' );
   var Util = require( 'DOT/Util' );
+
+  // images
+  var scaleImage = require( 'mipmap!ISOTOPES_AND_ATOMIC_MASS/scale.png' );
+
+  // strings
+  var massNumberNameString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/mass-number.title' );
+  var atomicMassNameString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/atomic-mass.title' );
 
   // class data
   var DISPLAY_MODE = { MASS_NUMBER: 'mass number', ATOMIC_MASS: 'atomic mass' };
@@ -34,7 +41,7 @@ define( function( require ) {
   var SIZE = new Dimension2( 320, 125 );
   var WEIGH_PLATE_WIDTH = SIZE.width * 0.70;
 //  var STROKE = new BasicStroke( 2, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND );
-  var STROKE_PAINT = Color.BLACK;
+//  var STROKE_PAINT = Color.BLACK;
 
   /**
    * Class that defines the readout on the front of the scale.  This readout can display an atom's mass as either the
@@ -52,10 +59,9 @@ define( function( require ) {
 
     this.atom = atom;
 
-    var readoutBackground = new Rectangle( 0, 0, SIZE.width * 0.4, SIZE.height * 0.33, 5, 5, {
-      fill: Color.WHITE,
-      lineWidth: 2,
-      stroke: Color.BLACK
+    var readoutBackground = new Rectangle( 0, 0, SIZE.width * 0.3, SIZE.height * 0.33, 5, 5, {
+      //lineWidth: 2,
+      //stroke: Color.BLACK
     } );
 
     var readoutText = new Text( '', { font: new PhetFont( 24 ) } );
@@ -109,11 +115,11 @@ define( function( require ) {
    */
   function DisplayModeSelectionNode( displayModeProperty ) {
 
-    var LABEL_FONT = new PhetFont( 16 );
+    var LABEL_FONT = new PhetFont( 15 );
 
     var radioButtonContent = [
-      { value: DISPLAY_MODE.MASS_NUMBER, node: new Text( 'Mass Number', { font: LABEL_FONT } ) },
-      { value: DISPLAY_MODE.ATOMIC_MASS, node: new Text( 'Atomic Mass (amu)', { font: LABEL_FONT } ) }
+      { value: DISPLAY_MODE.MASS_NUMBER, node: new Text( massNumberNameString, { font: LABEL_FONT, maxWidth: 125 } ) },
+      { value: DISPLAY_MODE.ATOMIC_MASS, node: new Text( atomicMassNameString, { font: LABEL_FONT, maxWidth: 125 } ) }
     ];
 
     var radioButtonGroup = new RadioButtonGroup( displayModeProperty, radioButtonContent, {
@@ -123,11 +129,7 @@ define( function( require ) {
       spacing: 1
     } );
 
-    return new Panel( radioButtonGroup, {
-      lineWidth: 0,
-      fill: COLOR,
-      yMargin: 0
-    } );
+    return radioButtonGroup;
 
   }
 
@@ -145,31 +147,38 @@ define( function( require ) {
 
     // Set up some helper variables.
     var centerX = SIZE.width / 2;
+
+    var weighScaleImage = new Image( scaleImage, {
+      centerX: centerX,
+      centerY: 0,
+      scale: 1 / 2
+    } );
+    this.addChild( weighScaleImage );
     // NOTE: The scale shapes are generated from the bottom up, since adding them in this order creates the correct
     // layering effect.
 
     // Add the front of the scale base.
-    var frontOfBaseNode = new Rectangle( 0, SIZE.height * 0.55, SIZE.width, SIZE.height * 0.5, {
-      fill: COLOR,
-      lineWidth: 2,
-      stroke: STROKE_PAINT
-    } );
-    this.addChild( frontOfBaseNode );
+    //var frontOfBaseNode = new Rectangle( 0, SIZE.height * 0.55, SIZE.width, SIZE.height * 0.5, {
+    //  fill: COLOR,
+    //  lineWidth: 2,
+    //  stroke: STROKE_PAINT
+    //} );
+    //this.addChild( frontOfBaseNode );
 
     // Add the scale readout node which displays either atomic mass or number.
     var scaleReadoutNode = new ScaleReadoutNode( atom, this.displayModeProperty );
-    scaleReadoutNode.setLeftCenter( new Vector2( SIZE.width * 0.05, frontOfBaseNode.centerY ) );
+    scaleReadoutNode.setLeftCenter( new Vector2( SIZE.width * 0.16, weighScaleImage.centerY + 55 ) );
     this.addChild( scaleReadoutNode );
 
     // Add the display mode selector to the scale base.
     var displayModeSelectionNode = new DisplayModeSelectionNode( this.displayModeProperty );
     // Position the selector next to the readout.
-    displayModeSelectionNode.setLeftCenter( new Vector2( scaleReadoutNode.getRight() + 5, frontOfBaseNode.centerY ) );
+    displayModeSelectionNode.setLeftCenter( new Vector2( scaleReadoutNode.getRight() + 5, weighScaleImage.centerY + 55 ) );
     this.addChild( displayModeSelectionNode );
 
     // Add the top portion of the scale base.  This is meant to look like a tilted rectangle.  Because, hey, it's all a
     // matter of perspective.
-    var scaleBaseTopShape = new Shape();
+    /*var scaleBaseTopShape = new Shape();
     scaleBaseTopShape.moveTo( SIZE.width * 0.15, SIZE.height * 0.375 );
     scaleBaseTopShape.lineTo( SIZE.width * 0.85, SIZE.height * 0.375 );
     scaleBaseTopShape.lineTo( SIZE.width, SIZE.height * 0.55 );
@@ -183,11 +192,11 @@ define( function( require ) {
       lineJoin: 'bevel',
       stroke: Color.BLACK,
       fill: scaleBaseTopPaint
-    } );
-    this.addChild( scaleBaseTop );
+    } );*/
+    //this.addChild( scaleBaseTop );
 
     // Add the shaft that connects the base to the weigh plate.
-    var connectingShaftShape = new Shape();
+    /*var connectingShaftShape = new Shape();
     var connectingShaftDistanceFromTop = SIZE.height * 0.15;
     var connectingShaftWidth = SIZE.width * 0.1;
     var connectingShaftHeight = SIZE.height * 0.30;
@@ -205,8 +214,8 @@ define( function( require ) {
       lineJoin: 'bevel',
       stroke: Color.BLACK,
       fill: connectingShaftPaint
-    } );
-    this.addChild( connectingShaft );
+    } );*/
+    //this.addChild( connectingShaft );
 
     // Draw the top of the weigh plate.  This is meant to look like a tilted rectangle.
     var weighPlateTopShape = new Shape();
@@ -224,15 +233,15 @@ define( function( require ) {
       stroke: Color.BLACK,
       fill: weighPlateTopPaint
     } );
-    this.addChild( this.weighPlateTop );
+    //this.addChild( this.weighPlateTop );
 
     // Add the front of the weigh plate.
-    var frontOfWeighPlateShape = new Rectangle( centerX - WEIGH_PLATE_WIDTH / 2, SIZE.height * 0.125, WEIGH_PLATE_WIDTH, SIZE.height * 0.15, {
+    /*var frontOfWeighPlateShape = new Rectangle( centerX - WEIGH_PLATE_WIDTH / 2, SIZE.height * 0.125, WEIGH_PLATE_WIDTH, SIZE.height * 0.15, {
       lineWidth: 2,
       fill: COLOR,
       stroke: Color.BLACK
-    } );
-    this.addChild( frontOfWeighPlateShape );
+    } );*/
+    //this.addChild( frontOfWeighPlateShape );
   }
 
   return inherit( Node, AtomScaleNode, {

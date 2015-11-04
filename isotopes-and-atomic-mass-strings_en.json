@@ -10,5 +10,11 @@
   },
   "neutrons.title": {
     "value": "Neutrons"
+  },
+  "mass-number.title": {
+    "value": "Mass Number"
+  },
+  "atomic-mass.title": {
+    "value": "Atomic Mass (amu)"
   }
 }

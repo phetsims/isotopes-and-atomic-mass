@@ -97,7 +97,13 @@ define( function( require ) {
 
         var particleView = new ParticleView( addedParticle, thisNode.modelViewTransform );
         particleView.center = thisNode.modelViewTransform.modelToViewPosition( addedParticle.position );
-        particleView.pickable = false;
+        if (addedParticle.type === 'neutron' && !makeIsotopesModel.particleAtom.neutrons.contains(addedParticle)){
+          particleView.pickable = true;
+        }
+        else{
+          particleView.pickable = false;
+        }
+
 
         // add particle view to correct z layer.
         nucleonLayers[ addedParticle.zLayer ].addChild( particleView );
@@ -111,10 +117,10 @@ define( function( require ) {
         // Add the item removed listener.
         var temp;
         if ( addedParticle.type === 'proton' ) {
-          temp = makeIsotopesModel.particleAtom.protons;
+          temp = makeIsotopesModel.protons;
         }
         else if ( addedParticle.type === 'neutron' ) {
-          temp = makeIsotopesModel.particleAtom.neutrons;
+          temp = makeIsotopesModel.neutrons;
         }
 
         temp.addItemRemovedListener( function removalListener( removedAtom ) {
@@ -126,24 +132,15 @@ define( function( require ) {
         } );
       }
 
-      makeIsotopesModel.particleAtom.protons.forEach( function( proton ) { addParticleView( proton ); } );
+      makeIsotopesModel.protons.forEach( function( proton ) { addParticleView( proton ); } );
 
-      makeIsotopesModel.neutrons.forEach( function( neutron ) {
-        var particleView = new ParticleView( neutron, thisNode.modelViewTransform );
-        particleView.center = thisNode.modelViewTransform.modelToViewPosition( neutron.position );
-        thisNode.addChild( particleView );
-
-        //nucleonLayers[ addedParticle.zLayer ].addChild( particleView );
-        // Add a listener that adjusts a nucleon's z-order layering.
-        //addedParticle.zLayerProperty.link( function( zLayer ) {
-          //adjustZLayer( addedParticle, zLayer );
-        } );
+      makeIsotopesModel.neutrons.forEach( function( proton ) { addParticleView( proton ); } );
 
       // add the item added listeners for particles of this isotope
-      makeIsotopesModel.particleAtom.protons.addItemAddedListener( function( addedAtom ) { addParticleView( addedAtom );} );
+      makeIsotopesModel.protons.addItemAddedListener( function( addedAtom ) { addParticleView( addedAtom );} );
 
       // add the item added listeners for particles of this isotope
-      makeIsotopesModel.particleAtom.neutrons.addItemAddedListener( function( addedAtom ) { addParticleView( addedAtom );} );
+      makeIsotopesModel.neutrons.addItemAddedListener( function( addedAtom ) { addParticleView( addedAtom );} );
 
 
 //      nucleons.forEach( function( nucleon ) {

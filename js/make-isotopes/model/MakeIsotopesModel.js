@@ -24,6 +24,7 @@ define( function( require ) {
   var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
   var SharedConstants = require( 'SHRED/SharedConstants' );
   var PropertySet = require('AXON/PropertySet');
+  var ObservableArray = require( 'AXON/ObservableArray' );
 
   // strings
   var neutronsNameString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons.title' );
@@ -74,7 +75,11 @@ define( function( require ) {
 
     // Make available a 'number atom' that tracks the state of the particle atom.
     // TODO Remove this and put it in particleAtom
-    this.numberAtom = DEFAULT_ATOM_CONFIG;
+    this.numberAtom = new NumberAtom( {
+      protonCount: DEFAULT_ATOM_CONFIG.protonCount,
+      neutronCount: DEFAULT_ATOM_CONFIG.neutronCount,
+      electronCount: DEFAULT_ATOM_CONFIG.electronCount
+    } );
 
     // Update the stability state and counter on changes.
     self.nucleusStable = true;
@@ -95,9 +100,9 @@ define( function( require ) {
     // Arrays that contain the subatomic particles, whether they are in the  bucket or in the atom.  This is part of a
     // basic assumption about how the model works, which is that the model contains all the particles, and the particles
     // move back and forth from being in the bucket or in in the atom.
-    this.neutrons = [];
-    this.protons = [];
-    this.electrons = [];
+    this.neutrons = new ObservableArray();
+    this.protons = new ObservableArray();
+    this.electrons = new ObservableArray();
 
     // The bucket that holds the neutrons that are not in the atom.
     this.neutronBucket = new SphereBucket( {
@@ -108,30 +113,7 @@ define( function( require ) {
       sphereRadius: SharedConstants.NUCLEON_RADIUS
     } );
 
-    // Define a function that will decide where to put nucleons.
-    var placeNucleon = function( particle, bucket, atom ) {
-      if ( particle.position.distance( atom.position ) < NUCLEON_CAPTURE_RADIUS ) {
-        atom.addParticle( particle );
-      }
-      else {
-        bucket.addParticleNearestOpen( particle, true );
-      }
-    };
-
-    // Add the neutrons to the neutron bucket.
-
-    _.times( DEFAULT_NUM_NEUTRONS_IN_BUCKET, function() {
-      var neutron = new Particle( 'neutron' );
-      self.neutrons.push( neutron );
-      self.neutronBucket.addParticleFirstOpen( neutron, false );
-      neutron.userControlledProperty.link( function( userControlled ) {
-        if ( !userControlled && !self.neutronBucket.containsParticle( neutron ) ) {
-          placeNucleon( neutron, self.neutronBucket, self.particleAtom );
-        }
-      } );
-    } );
-
-    this.numberAtom.massNumberProperty.link( function() {
+    this.numberAtom.particleCountProperty.link( function() {
       self.setAtomConfiguration( self.numberAtom );
     });
 
@@ -168,27 +150,56 @@ define( function( require ) {
      *
      * @param {NumberAtom} numberAtom - New configuration of atomic properties to which the atom should be set.
      */
+    setNeutronBucketConfiguration: function () {
+        var that=this;
+        this.neutronBucket.reset();
+        // Define a function that will decide where to put nucleons.
+        var placeNucleon = function( particle, bucket, atom ) {
+          if ( particle.position.distance( atom.position ) < NUCLEON_CAPTURE_RADIUS ) {
+            atom.addParticle( particle );
+          }
+          else {
+            bucket.addParticleNearestOpen( particle, true );
+          }
+        };
+
+        // Add the neutrons to the neutron bucket.
+        _.times( DEFAULT_NUM_NEUTRONS_IN_BUCKET, function() {
+          var neutron = new Particle( 'neutron' );
+          that.neutrons.add( neutron );
+          that.neutronBucket.addParticleFirstOpen( neutron, false );
+          neutron.userControlledProperty.link( function( userControlled ) {
+            if ( !userControlled && !that.neutronBucket.containsParticle( neutron ) ) {
+              placeNucleon( neutron, that.neutronBucket, that.particleAtom );
+            }
+          } );
+        } );
+    },
+
     setAtomConfiguration: function( numberAtom ) {
         this.particleAtom.clear();
+        this.protons.clear();
+        this.electrons.clear();
+        this.neutrons.clear();
 
         // Add the particles.
         for ( var i = 0; i < numberAtom.electronCount; i++ ) {
           var electron = new Particle( 'electron' );
           this.particleAtom.addParticle( electron );
-          this.electrons.push( electron );
+          this.electrons.add( electron );
         }
         for ( var j = 0; j < numberAtom.protonCount; j++ ) {
           var proton = new Particle( 'proton' );
           this.particleAtom.addParticle( proton );
-          this.protons.push( proton );
+          this.protons.add( proton );
         }
         for ( var k = 0; k < numberAtom.neutronCount; k++ ) {
           var neutron = new Particle( 'neutron', { velocity: NEUTRON_MOTION_VELOCITY } );
           this.particleAtom.addParticle( neutron );
-          this.neutrons.push( neutron );
+          this.neutrons.add( neutron );
         }
-
       this.particleAtom.moveAllParticlesToDestination();
+      this.setNeutronBucketConfiguration();
 
     },
 
@@ -228,13 +239,7 @@ define( function( require ) {
      */
     reset: function() {
       // Reset the atom.  This also resets the neutron bucket.
-      var that = this;
-      this.neutronBucket.reset();
-      this.neutrons.forEach( function( neutron ) {
-        that.neutronBucket.addParticleNearestOpen( neutron, false );
-      } );
       this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
-
     },
 
     /**
