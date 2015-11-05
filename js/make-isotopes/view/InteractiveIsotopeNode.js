@@ -112,8 +112,6 @@ define( function( require ) {
           adjustZLayer( addedParticle, zLayer );
         } );
 
-        thisNode.addChild( particleView );
-
         // Add the item removed listener.
         var temp;
         if ( addedParticle.type === 'proton' ) {
@@ -125,7 +123,7 @@ define( function( require ) {
 
         temp.addItemRemovedListener( function removalListener( removedAtom ) {
           if ( removedAtom === addedParticle ) {
-            thisNode.removeChild( particleView );
+            //thisNode.removeChild( particleView );
             nucleonLayers[ addedParticle.zLayer ].removeChild( particleView );
             temp.removeItemRemovedListener( removalListener );
           }

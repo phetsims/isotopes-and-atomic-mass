@@ -39,6 +39,9 @@ define( function( require ) {
 //  var NUCLEON_RADIUS = 5;
 
   var NUCLEUS_JUMP_PERIOD = 0.1; // In seconds
+  var MAX_NUCLEUS_JUMP = SharedConstants.NUCLEON_RADIUS * 0.5;
+  var JUMP_ANGLES = [ Math.PI * 0.1, Math.PI * 1.6, Math.PI * 0.7, Math.PI * 1.1, Math.PI * 0.3 ];
+  var JUMP_DISTANCES = [ MAX_NUCLEUS_JUMP * 0.4, MAX_NUCLEUS_JUMP * 0.8, MAX_NUCLEUS_JUMP * 0.2, MAX_NUCLEUS_JUMP * 0.9 ];
 
   // maximum drop distance for a nucleon to be considered part of the particle.
   var NUCLEON_CAPTURE_RADIUS = 100;
@@ -50,9 +53,6 @@ define( function( require ) {
   // Speed at which neutrons move back to the bucket when released.  This value is empirically determined, adjust as
   // needed for desired look.
   var NEUTRON_MOTION_VELOCITY = 200; // In picometers per second of sim time.
-
-  // Distance at which nucleons are captured by the nucleus.
-//  var NUCLEUS_CAPTURE_DISTANCE = Atom.ELECTRON_SHELL_1_RADIUS;
 
   // Default atom configuration.
   var DEFAULT_ATOM_CONFIG = new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } ); // Hydrogen.
@@ -85,7 +85,7 @@ define( function( require ) {
     self.nucleusStable = true;
     self.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
     self.nucleusOffset = Vector2.ZERO;
-    self.numberAtom.massNumberProperty.link( function( massNumber ) {
+    self.particleAtom.massNumberProperty.link( function( massNumber ) {
       var stable = massNumber > 0 ? AtomIdentifier.isStable( self.particleAtom.protonCount, self.particleAtom.neutronCount ) : true;
       if ( self.nucleusStable !== stable ) {
         // Stability has changed.
@@ -123,14 +123,33 @@ define( function( require ) {
   }
 
   return inherit( PropertySet, MakeIsotopesModel, {
-
+    _nucleusJumpCount: 0,
     // Main model step function, called by the framework.
     step: function( dt ) {
-
       // Update particle positions.
       this.neutrons.forEach( function( neutron ) {
         neutron.step( dt );
       } );
+
+      this.protons.forEach( function( neutron ) {
+        neutron.step( dt );
+      } );
+
+      if ( this.nucleusStable === false ) {
+        this.nucleusJumpCountdown -= dt;
+        if ( this.nucleusJumpCountdown <= 0 ) {
+          this.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
+          if ( this.particleAtom.nucleusOffset === Vector2.ZERO ) {
+            this._nucleusJumpCount++;
+            var angle = JUMP_ANGLES[ this._nucleusJumpCount % JUMP_ANGLES.length ];
+            var distance = JUMP_DISTANCES[ this._nucleusJumpCount % JUMP_DISTANCES.length ];
+            this.particleAtom.nucleusOffset = new Vector2( Math.cos( angle ) * distance, Math.sin( angle ) * distance );
+          }
+          else {
+            this.particleAtom.nucleusOffset = Vector2.ZERO;
+          }
+        }
+      }
     },
 
     /**
@@ -166,13 +185,14 @@ define( function( require ) {
         // Add the neutrons to the neutron bucket.
         _.times( DEFAULT_NUM_NEUTRONS_IN_BUCKET, function() {
           var neutron = new Particle( 'neutron' );
-          that.neutrons.add( neutron );
+
           that.neutronBucket.addParticleFirstOpen( neutron, false );
           neutron.userControlledProperty.link( function( userControlled ) {
             if ( !userControlled && !that.neutronBucket.containsParticle( neutron ) ) {
               placeNucleon( neutron, that.neutronBucket, that.particleAtom );
             }
           } );
+          that.neutrons.add( neutron );
         } );
     },
 
