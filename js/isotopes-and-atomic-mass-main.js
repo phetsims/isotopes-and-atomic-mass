@@ -14,9 +14,8 @@ define( function( require ) {
   var Sim = require( 'JOIST/Sim' );
   var SimLauncher = require( 'JOIST/SimLauncher' );
 
-
   // strings
-  var simTitle = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopes-and-atomic-mass.title' );
+  var isotopesAndAtomicMassTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopes-and-atomic-mass.title' );
 
   var simOptions = {
     credits: {
@@ -38,7 +37,7 @@ define( function( require ) {
   }
 
   SimLauncher.launch( function() {
-    var sim = new Sim( simTitle, [ new MakeIsotopesScreen(), new MixIsotopesScreen() ], simOptions );
+    var sim = new Sim( isotopesAndAtomicMassTitleString, [ new MakeIsotopesScreen(), new MixIsotopesScreen() ], simOptions );
     sim.start();
   } );
 } );
