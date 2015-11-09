@@ -1,2 +1,9 @@
 {
+  "scale.png": {
+    "text": [
+      "Copyright 2015 University of Colorado Boulder"
+    ],
+    "projectURL": "http://phet.colorado.edu",
+    "license": "contact phethelp@colorado.edu"
+  }
 }
