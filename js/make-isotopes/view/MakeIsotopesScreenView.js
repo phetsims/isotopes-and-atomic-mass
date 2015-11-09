@@ -10,6 +10,9 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var Rectangle = require( 'SCENERY/nodes/Rectangle' );
+  var Circle = require( 'SCENERY/nodes/Circle' );
+  var AccordionBox = require( 'SUN/AccordionBox' );
   var Bounds2 = require( 'DOT/Bounds2' );
   var inherit = require( 'PHET_CORE/inherit' );
   var ScreenView = require( 'JOIST/ScreenView' );
@@ -22,9 +25,23 @@ define( function( require ) {
   var AtomScaleNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/AtomScaleNode' );
   var InteractiveIsotopeNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/InteractiveIsotopeNode' );
   var PeriodicTableNode = require( 'SHRED/view/PeriodicTableNode' );
+  var Text = require( 'SCENERY/nodes/Text' );
+  var SharedConstants = require( 'SHRED/SharedConstants' );
+  var Property = require( 'AXON/Property' );
+  var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
+  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  var Shape = require('KITE/Shape');
 
   // class data
   var STAGE_SIZE = new Dimension2( 1008, 679 );
+  var NUMBER_FONT = new PhetFont( 56 );
+  var NUMBER_INSET = 20; // In screen coords, which are roughly pixels.
+  var SYMBOL_BOX_WIDTH = 275; // In screen coords, which are roughly pixels.
+  var SYMBOL_BOX_HEIGHT = 300; // In screen coords, which are roughly pixels.
+
+  // strings
+  var symbolString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/symbol.title' );
+  var abundanceString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/abundance.title' );
 
   /**
    * @param {MakeIsotopesModel} makeIsotopesModel
@@ -42,7 +59,6 @@ define( function( require ) {
       new Vector2( Math.round( STAGE_SIZE.width * 0.32 ), Math.round( STAGE_SIZE.height * 0.49 ) ),
       1.0 ); // "Zoom factor" - smaller zooms out, larger zooms in.
 
-//    this.symbolWindow = new MaximizeControlNode(); TODO: Figure out what these are.
 //    this.abundanceWindow = new abundanceWindow();
 
     // Layers upon which the various display elements are placed.  This allows us to created the desired layering
@@ -75,10 +91,6 @@ define( function( require ) {
     scaleNode.setCenterBottom( new Vector2( this.mvt.modelToViewX( 0 ), this.bottom ) );
     this.addChild( scaleNode );
 
-//    Create the node that contains both the atom and the neutron bucket.
-//    Point2D topCenterOfScale = new Point2D.Double( scaleNode.getFullBoundsReference().getCenterX(),
-//        scaleNode.getFullBoundsReference().getMinY() + scaleNode.getWeighPlateTopProjectedHeight() / 2 );
-
     // Create the node that contains both the atom and the neutron bucket.
     // TODO: find a way to calculate the scale node top ( scaleNode.top + 7 ).
     var topCenterOfScale = new Vector2( scaleNode.centerX, scaleNode.centerY - 75 );
@@ -89,138 +101,102 @@ define( function( require ) {
     // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
     // element is Neon for this sim.
     var periodicTableNode = new PeriodicTableNode( makeIsotopesModel.numberAtom, makeIsotopesModel.particleAtom, 10 );
-    periodicTableNode.scale( 0.65 );
-    periodicTableNode.rightTop = new Vector2( this.layoutBounds.right - 20, 20 );
+    periodicTableNode.scale( 0.55 );
+    periodicTableNode.top = 10;
+    periodicTableNode.right = this.layoutBounds.width - 10;
     this.addChild( periodicTableNode );
 
+    var symbolRectangle = new Rectangle( 0, 0, SYMBOL_BOX_WIDTH, SYMBOL_BOX_HEIGHT, 0, 0,
+      {
+        fill: 'white',
+        stroke: 'black',
+        lineWidth: 2
+      } );
+
+    // Add the symbol text.
+    var symbolText = new Text( '',
+      {
+        font: new PhetFont( 150 ),
+        fill: 'black',
+        center: new Vector2( symbolRectangle.width / 2, symbolRectangle.height / 2 )
+      } );
+
+    // Add the listener to update the symbol text.
+    var textCenter = new Vector2( symbolRectangle.width / 2, symbolRectangle.height / 2 )
+    makeIsotopesModel.particleAtom.protonCountProperty.link( function( protonCount ) {
+      var symbol = AtomIdentifier.getSymbol( protonCount );
+      symbolText.text = protonCount > 0 ? symbol : '';
+      symbolText.center = textCenter;
+    } );
+    symbolRectangle.addChild( symbolText );
+
+    // Add the proton count display.
+    var protonCountDisplay = new Text( '0',
+      {
+        font: NUMBER_FONT,
+        fill: 'red'
+      } );
+    symbolRectangle.addChild( protonCountDisplay );
+    // Add the listener to update the proton count.
+    makeIsotopesModel.particleAtom.protonCountProperty.link( function( protonCount ) {
+      protonCountDisplay.text = protonCount;
+      protonCountDisplay.left = NUMBER_INSET;
+      protonCountDisplay.bottom = SYMBOL_BOX_HEIGHT - NUMBER_INSET;
+    } );
+
+
+    // Add the mass number display.
+    var massNumberDisplay = new Text( '0',
+      {
+        font: NUMBER_FONT,
+        fill: 'black'
+      } );
+    symbolRectangle.addChild( massNumberDisplay );
+
+    // Add the listener to update the mass number.
+    makeIsotopesModel.particleAtom.massNumberProperty.link( function( massNumber ) {
+      massNumberDisplay.text = massNumber;
+      massNumberDisplay.left = NUMBER_INSET;
+      massNumberDisplay.top = NUMBER_INSET;
+    } );
+
+    symbolRectangle.scale( 0.40 );
+    var symbolBox = new AccordionBox(symbolRectangle, {
+        titleNode: new Text( symbolString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
+        fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
+        expandedProperty: new Property( false ),
+        minWidth: periodicTableNode.width,
+        maxWidth: periodicTableNode.width,
+        contentAlign: 'center',
+        titleAlignX: 'left',
+        buttonAlign: 'right'
+      });
+    symbolBox.leftTop = periodicTableNode.leftBottom;
+    symbolBox.top = periodicTableNode.bottom + 5;
+
+    this.addChild( symbolBox );
+    var circle = new Circle(20, {fill: "black"});
+    var abundanceBox = new AccordionBox( new Circle(20, {stroke: 'black', lineWidth: 2}),
+      {
+        titleNode: new Text( abundanceString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
+        fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
+        expandedProperty: new Property( false ),
+        minWidth: periodicTableNode.width,
+        maxWidth: periodicTableNode.width,
+        contentAlign: 'center',
+        titleAlignX: 'left',
+        buttonAlign: 'right'
+      }
+    );
+    abundanceBox.leftTop = symbolBox.leftBottom;
+    abundanceBox.top = symbolBox.bottom + 5;
+
+    this.addChild( abundanceBox );
   }
 
   return inherit( ScreenView, MakeIsotopesScreenView );
 } );
 
-//
-//  //----------------------------------------------------------------------------
-//  // Constructor(s)
-//  //----------------------------------------------------------------------------
-
-//
-//
-//
-//
-//    // Add the "My Isotope" label.
-//    final PText myIsotopeLabel = new PText( BuildAnAtomStrings.MY_ISOTOPE ) {{
-//      setFont( new PhetFont( 24, true ) );
-//      setTextPaint( Color.DARK_GRAY );
-//      setOffset(
-//          mvt.modelToViewX( 0 ) - getFullBoundsReference().width / 2,
-//          particleCountLegend.getFullBoundsReference().getMaxY() + 30 );
-//    }};
-//    rootNode.addChild( myIsotopeLabel );
-//    atomAndBucketNode.addElectronCloudBoundsChangeListener( new PropertyChangeListener() {
-//      public void propertyChange( PropertyChangeEvent evt ) {
-//        // Position the "My Isotope" indicator to be just above the
-//        // electron cloud.
-//        myIsotopeLabel.setOffset(
-//            mvt.modelToViewX( model.getAtom().getPosition().getX() ) - myIsotopeLabel.getFullBoundsReference().width / 2,
-//            mvt.modelToViewY( model.getAtom().getPosition().getY() ) - atomAndBucketNode.getCloudRadius() - myIsotopeLabel.getFullBoundsReference().height - 4 );
-//      }
-//    } );
-//
-//
-//    // Add functionality to position the labels based on the location of
-//    // the nucleus.
-//    model.getAtom().addAtomListener( new AtomListener.Adapter() {
-//      @Override
-//      public void postitionChanged() {
-//        updateLabelPositions();
-//      }
-//
-//      @Override
-//      public void configurationChanged() {
-//        updateLabelPositions();
-//      }
-//
-//      private void updateLabelPositions() {
-//        double centerX = model.getAtom().getPosition().getX();
-//        double centerY = model.getAtom().getPosition().getY();
-//        elementNameIndicator.setOffset(
-//          mvt.modelToViewX( centerX ),
-//            mvt.modelToViewY( centerY ) - elementNameIndicator.getFullBounds().height - 25 );
-//        stabilityIndicator.setOffset(
-//          mvt.modelToViewX( centerX ),
-//            mvt.modelToViewY( centerY ) + elementNameIndicator.getFullBounds().height + 20 );
-//      }
-//    } );
-//
-//    // Add the interactive periodic table that allows the user to select
-//    // the current element.
-//    final PeriodicTableControlNode periodicTableNode = new PeriodicTableControlNode( model, 10, BACKGROUND_COLOR ) {
-//      {
-//        setScale( 1.3 );
-//        setOffset( STAGE_SIZE.width - getFullBoundsReference().width - 20, 20 );
-//      }
-//    };
-//    indicatorLayer.addChild( periodicTableNode );
-//
-//    // Set the x position of the indicators.
-//    int indicatorWindowPosX = 600;
-//
-//    // Add the symbol indicator node that provides more detailed
-//    // information about the currently selected element.
-//    final SymbolIndicatorNode symbolIndicatorNode = new SymbolIndicatorNode( model.getAtom(), false, false );
-//    symbolWindow = new MaximizeControlNode( BuildAnAtomStrings.INDICATOR_SYMBOL, new PDimension( 400, 100 ), symbolIndicatorNode, true );
-//    symbolIndicatorNode.setOffset( 20, symbolWindow.getFullBoundsReference().height / 2 - symbolIndicatorNode.getFullBounds().getHeight() / 2 );
-//    symbolWindow.setOffset( indicatorWindowPosX, 270 );
-//    indicatorLayer.addChild( symbolWindow );
-//
-//    // Add the node that indicates the percentage abundance.
-//    final PDimension abundanceWindowSize = new PDimension( 400, 150 );
-//    final PNode abundanceIndicatorNode = new AbundanceIndicatorNode( model.getAtom() );
-//    abundanceIndicatorNode.setOffset(
-//        abundanceWindowSize.getWidth() / 2 + 40,    // Tweak factor empirically determined.
-//        abundanceWindowSize.getHeight() / 2 + 10 );  // Tweak factor empirically determined.
-//    abundanceWindow = new MaximizeControlNode( BuildAnAtomStrings.ABUNDANCE_IN_NATURE, abundanceWindowSize, abundanceIndicatorNode, true );
-//    abundanceWindow.setOffset( indicatorWindowPosX, symbolWindow.getFullBoundsReference().getMaxY() + 30 );
-//    indicatorLayer.addChild( abundanceWindow );
-//
-//    // Add the "Reset All" button.
-//    ResetAllButtonNode resetButtonNode = new ResetAllButtonNode( this, this, 16, Color.BLACK, new Color( 255, 153, 0 ) ) {{
-//      setConfirmationEnabled( false );
-//    }};
-//    double desiredResetButtonWidth = 100;
-//    resetButtonNode.setScale( desiredResetButtonWidth / resetButtonNode.getFullBoundsReference().width );
-//    indicatorLayer.addChild( resetButtonNode );
-//
-//    resetButtonNode.centerFullBoundsOnPoint(
-//      abundanceWindow.getFullBoundsReference().getCenterX(),
-//        BuildAnAtomDefaults.STAGE_SIZE.height - resetButtonNode.getFullBoundsReference().height );
-//
-//    // Close up the maximizable nodes that contain some of the indicators.
-//    // This is done here rather than when they are constructed because
-//    // they need to be at their full size for initial layout.
-//    symbolWindow.setMaximized( false );
-//    abundanceWindow.setMaximized( false );
-//  }
-//
-//  //----------------------------------------------------------------------------
-//  // Methods
-//  //----------------------------------------------------------------------------
-//
-//  public void reset() {
-//    // Note that this resets the model, so be careful about hooking this
-//    // up to any reset coming from the model or you will end up in
-//    // Nastyrecursionville.
-//    model.reset();
-//
-//    // Reset the view componenets.
-//    symbolWindow.setMaximized( false );
-//    abundanceWindow.setMaximized( false );
-//    scaleNode.reset();
-//  }
-//
-//  // ------------------------------------------------------------------------
-//  // Inner Classes and Interfaces
-//  //------------------------------------------------------------------------
 //
 //  /**
 //   * Shows the abundance readout for a user-selected isotope.  Note that the

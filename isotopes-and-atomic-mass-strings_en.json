@@ -16,5 +16,11 @@
   },
   "atomic-mass.title": {
     "value": "Atomic Mass (amu)"
+  },
+  "symbol.title": {
+    "value": "Symbol"
+  },
+  "abundance.title": {
+    "value": "Abundance in Nature"
   }
 }

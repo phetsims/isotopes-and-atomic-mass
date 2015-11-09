@@ -101,6 +101,7 @@ define( function( require ) {
     particleAtom.protonCountProperty.link( function( numProtons ) {
       updateAtomPosition( numProtons );
       updateElementName();
+      updateStabilityIndicator();
     });
 
     particleAtom.neutronCountProperty.link( function( numNeutrons ) {
