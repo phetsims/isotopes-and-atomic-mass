@@ -18,7 +18,7 @@ define( function( require ) {
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
 
   // strings
-  var mixIsotopesString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/mix-isotopes-module.title' );
+  var mixIsotopesModuleTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/mix-isotopes-module.title' );
 
   /**
    * @constructor
@@ -29,7 +29,7 @@ define( function( require ) {
     //If there are multiple screens, then the icon must be provided here.
     var icon = new Rectangle( 0, 0, 548, 373, { fill: 'blue' } );
 
-    Screen.call( this, mixIsotopesString, icon,
+    Screen.call( this, mixIsotopesModuleTitleString, icon,
       function() { return new MixIsotopesModel(); },
       function( model ) { return new MixIsotopesScreenView( model ); },
       { backgroundColor: '#FFFF99' }

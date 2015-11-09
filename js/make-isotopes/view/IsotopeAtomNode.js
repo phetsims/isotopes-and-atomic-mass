@@ -62,9 +62,9 @@ define( function( require ) {
         name = '';
       }
       thisAtomView.elementName.text = name;
-      thisAtomView.elementName.setScaleMagnitude( 1 );
-      var maxLabelWidth = modelViewTransform.modelToViewDeltaX( particleAtom.innerElectronShellRadius * 1.4 );
-      thisAtomView.elementName.setScaleMagnitude( Math.min( maxLabelWidth / thisAtomView.elementName.width, 1 ) );
+      //thisAtomView.elementName.setScaleMagnitude( 1 );
+      thisAtomView.elementName.maxWidth = modelViewTransform.modelToViewDeltaX( particleAtom.innerElectronShellRadius * 1.4 );
+      //thisAtomView.elementName.setScaleMagnitude( Math.min( maxLabelWidth / thisAtomView.elementName.width, 1 ) );
       thisAtomView.elementName.center = modelViewTransform.modelToViewPosition( particleAtom.position.plus( new Vector2( 0, isotopeElectronCloud.radius * 0.60) ) );
     };
 

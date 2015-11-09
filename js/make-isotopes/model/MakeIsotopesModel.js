@@ -27,7 +27,7 @@ define( function( require ) {
   var ObservableArray = require( 'AXON/ObservableArray' );
 
   // strings
-  var neutronsNameString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons.title' );
+  var neutronsTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons.title' );
 
   //----------------------------------------------------------------------------
   // Class Data
@@ -109,7 +109,7 @@ define( function( require ) {
       position: NEUTRON_BUCKET_POSITION,
       size: BUCKET_SIZE,
       baseColor: Color.gray,
-      caption: neutronsNameString,
+      caption: neutronsTitleString,
       sphereRadius: SharedConstants.NUCLEON_RADIUS
     } );
 

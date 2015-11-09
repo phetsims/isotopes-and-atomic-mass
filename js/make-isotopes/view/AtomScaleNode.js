@@ -29,8 +29,8 @@ define( function( require ) {
   var scaleImage = require( 'mipmap!ISOTOPES_AND_ATOMIC_MASS/scale.png' );
 
   // strings
-  var massNumberNameString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/mass-number.title' );
-  var atomicMassNameString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/atomic-mass.title' );
+  var massNumberTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/mass-number.title' );
+  var atomicMassTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/atomic-mass.title' );
 
   // class data
   var DISPLAY_MODE = { MASS_NUMBER: 'mass number', ATOMIC_MASS: 'atomic mass' };
@@ -102,8 +102,8 @@ define( function( require ) {
     var LABEL_FONT = new PhetFont( 15 );
 
     var radioButtonContent = [
-      { value: DISPLAY_MODE.MASS_NUMBER, node: new Text( massNumberNameString, { font: LABEL_FONT, maxWidth: 125 } ) },
-      { value: DISPLAY_MODE.ATOMIC_MASS, node: new Text( atomicMassNameString, { font: LABEL_FONT, maxWidth: 125 } ) }
+      { value: DISPLAY_MODE.MASS_NUMBER, node: new Text( massNumberTitleString, { font: LABEL_FONT, maxWidth: 125 } ) },
+      { value: DISPLAY_MODE.ATOMIC_MASS, node: new Text( atomicMassTitleString, { font: LABEL_FONT, maxWidth: 125 } ) }
     ];
 
     var radioButtonGroup = new RadioButtonGroup( displayModeProperty, radioButtonContent, {

@@ -30,7 +30,6 @@ define( function( require ) {
   var Property = require( 'AXON/Property' );
   var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var Shape = require('KITE/Shape');
 
   // class data
   var STAGE_SIZE = new Dimension2( 1008, 679 );
@@ -40,8 +39,8 @@ define( function( require ) {
   var SYMBOL_BOX_HEIGHT = 300; // In screen coords, which are roughly pixels.
 
   // strings
-  var symbolString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/symbol.title' );
-  var abundanceString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/abundance.title' );
+  var symbolTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/symbol.title' );
+  var abundanceTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/abundance.title' );
 
   /**
    * @param {MakeIsotopesModel} makeIsotopesModel
@@ -93,9 +92,9 @@ define( function( require ) {
 
     // Create the node that contains both the atom and the neutron bucket.
     // TODO: find a way to calculate the scale node top ( scaleNode.top + 7 ).
-    var topCenterOfScale = new Vector2( scaleNode.centerX, scaleNode.centerY - 75 );
+    var bottomOfAtomPosition = new Vector2( scaleNode.centerX, scaleNode.top + 20 );
 
-    var atomAndBucketNode = new InteractiveIsotopeNode( makeIsotopesModel, this.mvt, topCenterOfScale );
+    var atomAndBucketNode = new InteractiveIsotopeNode( makeIsotopesModel, this.mvt, bottomOfAtomPosition );
     this.addChild( atomAndBucketNode );
 
     // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
@@ -122,7 +121,7 @@ define( function( require ) {
       } );
 
     // Add the listener to update the symbol text.
-    var textCenter = new Vector2( symbolRectangle.width / 2, symbolRectangle.height / 2 )
+    var textCenter = new Vector2( symbolRectangle.width / 2, symbolRectangle.height / 2 );
     makeIsotopesModel.particleAtom.protonCountProperty.link( function( protonCount ) {
       var symbol = AtomIdentifier.getSymbol( protonCount );
       symbolText.text = protonCount > 0 ? symbol : '';
@@ -162,7 +161,7 @@ define( function( require ) {
 
     symbolRectangle.scale( 0.40 );
     var symbolBox = new AccordionBox(symbolRectangle, {
-        titleNode: new Text( symbolString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
+        titleNode: new Text( symbolTitleString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
         fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
         expandedProperty: new Property( false ),
         minWidth: periodicTableNode.width,
@@ -175,10 +174,9 @@ define( function( require ) {
     symbolBox.top = periodicTableNode.bottom + 5;
 
     this.addChild( symbolBox );
-    var circle = new Circle(20, {fill: "black"});
     var abundanceBox = new AccordionBox( new Circle(20, {stroke: 'black', lineWidth: 2}),
       {
-        titleNode: new Text( abundanceString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
+        titleNode: new Text( abundanceTitleString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
         fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
         expandedProperty: new Property( false ),
         minWidth: periodicTableNode.width,

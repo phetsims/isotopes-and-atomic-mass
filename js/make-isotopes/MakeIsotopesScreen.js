@@ -17,7 +17,7 @@ define( function( require ) {
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
 
   // strings
-  var makeIsotopesString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/make-isotopes-module.title' );
+  var makeIsotopesModuleTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/make-isotopes-module.title' );
 
   /**
    * @constructor
@@ -28,7 +28,7 @@ define( function( require ) {
     //If there are multiple screens, then the icon must be provided here.
     var icon = new Rectangle( 0, 0, 548, 373, { fill: 'red' } );
 
-    Screen.call( this, makeIsotopesString, icon,
+    Screen.call( this, makeIsotopesModuleTitleString, icon,
       function() { return new MakeIsotopesModel(); },
       function( model ) { return new MakeIsotopesScreenView( model ); }
     );
