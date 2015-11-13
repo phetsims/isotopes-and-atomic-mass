@@ -5,13 +5,13 @@
  *
  * @author John Blanco
  * @author Jesse Greenberg
+ * @author Aadish Gupta
  */
 define( function( require ) {
   'use strict';
 
   // modules
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
-  var Circle = require( 'SCENERY/nodes/Circle' );
   var AccordionBox = require( 'SUN/AccordionBox' );
   var Bounds2 = require( 'DOT/Bounds2' );
   var inherit = require( 'PHET_CORE/inherit' );
@@ -30,7 +30,7 @@ define( function( require ) {
   var Property = require( 'AXON/Property' );
   var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-
+  var PieChartNode = require( 'ISOTOPES_AND_ATOMIC_MASS/common/PieChartNode' );
   // class data
   var STAGE_SIZE = new Dimension2( 1008, 679 );
   var NUMBER_FONT = new PhetFont( 56 );
@@ -92,7 +92,7 @@ define( function( require ) {
 
     // Create the node that contains both the atom and the neutron bucket.
     // TODO: find a way to calculate the scale node top ( scaleNode.top + 7 ).
-    var bottomOfAtomPosition = new Vector2( scaleNode.centerX, scaleNode.top + 20 );
+    var bottomOfAtomPosition = new Vector2( scaleNode.centerX, scaleNode.top + 25 );
 
     var atomAndBucketNode = new InteractiveIsotopeNode( makeIsotopesModel, this.mvt, bottomOfAtomPosition );
     this.addChild( atomAndBucketNode );
@@ -172,10 +172,11 @@ define( function( require ) {
       });
     symbolBox.leftTop = periodicTableNode.leftBottom;
     symbolBox.top = periodicTableNode.bottom + 5;
-
     this.addChild( symbolBox );
-    var abundanceBox = new AccordionBox( new Circle(20, {stroke: 'black', lineWidth: 2}),
-      {
+
+
+
+    var abundanceBox = new AccordionBox( new PieChartNode() , {
         titleNode: new Text( abundanceTitleString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
         fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
         expandedProperty: new Property( false ),

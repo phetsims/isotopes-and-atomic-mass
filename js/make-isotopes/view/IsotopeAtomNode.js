@@ -63,9 +63,10 @@ define( function( require ) {
       }
       thisAtomView.elementName.text = name;
       //thisAtomView.elementName.setScaleMagnitude( 1 );
-      thisAtomView.elementName.maxWidth = modelViewTransform.modelToViewDeltaX( particleAtom.innerElectronShellRadius * 1.4 );
+      thisAtomView.elementName.maxWidth = 2 * Math.sqrt((isotopeElectronCloud.radius * isotopeElectronCloud.radius) - (isotopeElectronCloud.radius * 0.6
+          *  isotopeElectronCloud.radius * 0.6 )) ;
       //thisAtomView.elementName.setScaleMagnitude( Math.min( maxLabelWidth / thisAtomView.elementName.width, 1 ) );
-      thisAtomView.elementName.center = modelViewTransform.modelToViewPosition( particleAtom.position.plus( new Vector2( 0, isotopeElectronCloud.radius * 0.60) ) );
+      thisAtomView.elementName.center = new Vector2( isotopeElectronCloud.centerX, isotopeElectronCloud.centerY - isotopeElectronCloud.radius * 0.6 );
     };
 
     // Create the textual readout for the stability indicator.
@@ -74,7 +75,7 @@ define( function( require ) {
 
     // Define the update function for the stability indicator.
     var updateStabilityIndicator = function() {
-      var stabilityIndicatorCenterPos = modelViewTransform.modelToViewPosition( particleAtom.position.plus( new Vector2( 0, -isotopeElectronCloud.radius * 0.60 ) ) );
+      var stabilityIndicatorCenterPos = new Vector2( isotopeElectronCloud.centerX, isotopeElectronCloud.centerY + isotopeElectronCloud.radius * 0.53 );
       if ( thisAtomView.atom.protonCount > 0 ) {
         if ( AtomIdentifier.isStable( thisAtomView.atom.protonCount, thisAtomView.atom.neutronCount ) ) {
           thisAtomView.stabilityIndicator.text = stableString;
@@ -93,9 +94,10 @@ define( function( require ) {
     // Add the handler that keeps the bottom of the atom in one place.  This was added due to a request to make the
     // atom get larger and smaller but to stay on the scale.
     var updateAtomPosition = function( numProtons ) {
-      var newCenter = new Vector2( bottomPoint.x, bottomPoint.y - isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2 );
+      //modelViewTransform.modelToViewDeltaX( thisNode.getElectronShellDiameter( numElectrons ) / 2 )
+      var newCenter = new Vector2( bottomPoint.x, bottomPoint.y - modelViewTransform.modelToViewDeltaX( isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2 ) * 1.2);
       particleAtom.position = modelViewTransform.viewToModelPosition( newCenter );
-      isotopeElectronCloud.center = new Vector2( bottomPoint.x, bottomPoint.y - isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2 );
+      isotopeElectronCloud.center = newCenter;
     };
 
     particleAtom.protonCountProperty.link( function( numProtons ) {

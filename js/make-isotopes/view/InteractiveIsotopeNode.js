@@ -97,11 +97,9 @@ define( function( require ) {
 
         var particleView = new ParticleView( addedParticle, thisNode.modelViewTransform );
         particleView.center = thisNode.modelViewTransform.modelToViewPosition( addedParticle.position );
-        if (addedParticle.type === 'neutron' && !makeIsotopesModel.particleAtom.neutrons.contains(addedParticle)){
+        particleView.pickable = false;
+        if ( addedParticle.type === 'neutron' ){
           particleView.pickable = true;
-        }
-        else{
-          particleView.pickable = false;
         }
 
 
@@ -132,7 +130,7 @@ define( function( require ) {
 
       makeIsotopesModel.protons.forEach( function( proton ) { addParticleView( proton ); } );
 
-      makeIsotopesModel.neutrons.forEach( function( proton ) { addParticleView( proton ); } );
+      makeIsotopesModel.neutrons.forEach( function( neutron ) { addParticleView( neutron ); } );
 
       // add the item added listeners for particles of this isotope
       makeIsotopesModel.protons.addItemAddedListener( function( addedAtom ) { addParticleView( addedAtom );} );

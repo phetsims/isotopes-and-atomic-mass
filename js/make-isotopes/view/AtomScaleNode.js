@@ -15,15 +15,14 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var Image = require( 'SCENERY/nodes/Image' );
-  var Vector2 = require( 'DOT/Vector2' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Text = require( 'SCENERY/nodes/Text' );
   var Property = require( 'AXON/Property' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var RadioButtonGroup = require( 'SUN/buttons/RadioButtonGroup' );
   var Util = require( 'DOT/Util' );
   var Panel = require( 'SUN/Panel' );
+  var AquaRadioButton = require( 'SUN/AquaRadioButton' );
 
   // images
   var scaleImage = require( 'mipmap!ISOTOPES_AND_ATOMIC_MASS/scale.png' );
@@ -98,23 +97,16 @@ define( function( require ) {
    * @author Jesse Greenberg
    */
   function DisplayModeSelectionNode( displayModeProperty ) {
-
-    var LABEL_FONT = new PhetFont( 15 );
-
-    var radioButtonContent = [
-      { value: DISPLAY_MODE.MASS_NUMBER, node: new Text( massNumberTitleString, { font: LABEL_FONT, maxWidth: 125 } ) },
-      { value: DISPLAY_MODE.ATOMIC_MASS, node: new Text( atomicMassTitleString, { font: LABEL_FONT, maxWidth: 125 } ) }
-    ];
-
-    var radioButtonGroup = new RadioButtonGroup( displayModeProperty, radioButtonContent, {
-      orientation: 'vertical',
-      selectedLineWidth: 2,
-      deselectedLineWidth: 0,
-      spacing: 1
-    } );
-
-    return radioButtonGroup;
-
+    var radioButtonRadius = 6;
+    var LABEL_FONT = new PhetFont( 14 );
+    var massNumberButton = new AquaRadioButton( displayModeProperty, DISPLAY_MODE.MASS_NUMBER, new Text( massNumberTitleString, { font: LABEL_FONT, maxWidth: 125, fill: 'white' } ), { radius: radioButtonRadius } );
+    var atomicMassButton = new AquaRadioButton( displayModeProperty, DISPLAY_MODE.ATOMIC_MASS, new Text( atomicMassTitleString, { font: LABEL_FONT, maxWidth: 125, fill: 'white' } ), { radius: radioButtonRadius } );
+    var displayButtonGroup = new Node();
+    displayButtonGroup.addChild( massNumberButton );
+    atomicMassButton.top = massNumberButton.bottom + 10;
+    atomicMassButton.left = displayButtonGroup.left;
+    displayButtonGroup.addChild( atomicMassButton );
+    return displayButtonGroup;
   }
 
   /**
@@ -138,14 +130,15 @@ define( function( require ) {
     var scaleReadoutNode = new ScaleReadoutNode( atom, this.displayModeProperty );
     //scaleReadoutNode.setLeftCenter( new Vector2( SIZE.width * 0.16, weighScaleImage.centerY + 55 ) );
     scaleReadoutNode.left = SCALE_WIDTH * 0.1;
-    scaleReadoutNode.centerY = weighScaleImage.height * 0.75;
+    scaleReadoutNode.centerY = weighScaleImage.height * 0.725;
 
     this.addChild( scaleReadoutNode );
 
     // Add the display mode selector to the scale base.
     var displayModeSelectionNode = new DisplayModeSelectionNode( this.displayModeProperty );
     // Position the selector next to the readout.
-    displayModeSelectionNode.center = new Vector2( (scaleReadoutNode.right + weighScaleImage.width - 5) / 2, weighScaleImage.centerY + 55 );
+    displayModeSelectionNode.centerX = (scaleReadoutNode.right + weighScaleImage.width - 5) / 2;
+    displayModeSelectionNode.centerY = weighScaleImage.height * 0.725;
     this.addChild( displayModeSelectionNode );
   }
 

@@ -15,21 +15,20 @@ define( function( require ) {
   var MixIsotopesScreenView = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/MixIsotopesScreenView' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Screen = require( 'JOIST/Screen' );
-  var Rectangle = require( 'SCENERY/nodes/Rectangle' );
+  var Image = require( 'SCENERY/nodes/Image' );
 
   // strings
   var mixIsotopesModuleTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/mix-isotopes-module.title' );
+
+  // images
+  var mixIsotopesIcon = require( 'mipmap!ISOTOPES_AND_ATOMIC_MASS/mix-isotopes-icon.png' );
 
   /**
    * @constructor
    */
   function MixIsotopesScreen() {
 
-    //If this is a single-screen sim, then no icon is necessary.
-    //If there are multiple screens, then the icon must be provided here.
-    var icon = new Rectangle( 0, 0, 548, 373, { fill: 'blue' } );
-
-    Screen.call( this, mixIsotopesModuleTitleString, icon,
+    Screen.call( this, mixIsotopesModuleTitleString, new Image( mixIsotopesIcon ),
       function() { return new MixIsotopesModel(); },
       function( model ) { return new MixIsotopesScreenView( model ); },
       { backgroundColor: '#FFFF99' }

@@ -14,21 +14,20 @@ define( function( require ) {
   var MakeIsotopesScreenView = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/MakeIsotopesScreenView' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Screen = require( 'JOIST/Screen' );
-  var Rectangle = require( 'SCENERY/nodes/Rectangle' );
+  var Image = require( 'SCENERY/nodes/Image' );
 
   // strings
   var makeIsotopesModuleTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/make-isotopes-module.title' );
+
+  // images
+  var makeIsotopesIcon = require( 'mipmap!ISOTOPES_AND_ATOMIC_MASS/make-isotopes-icon.png' );
 
   /**
    * @constructor
    */
   function IsotopesAndAtomicMassScreen() {
 
-    //If this is a single-screen sim, then no icon is necessary.
-    //If there are multiple screens, then the icon must be provided here.
-    var icon = new Rectangle( 0, 0, 548, 373, { fill: 'red' } );
-
-    Screen.call( this, makeIsotopesModuleTitleString, icon,
+    Screen.call( this, makeIsotopesModuleTitleString, new Image( makeIsotopesIcon ),
       function() { return new MakeIsotopesModel(); },
       function( model ) { return new MakeIsotopesScreenView( model ); }
     );
