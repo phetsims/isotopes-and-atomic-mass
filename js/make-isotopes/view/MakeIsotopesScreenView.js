@@ -92,7 +92,7 @@ define( function( require ) {
 
     // Create the node that contains both the atom and the neutron bucket.
     // TODO: find a way to calculate the scale node top ( scaleNode.top + 7 ).
-    var bottomOfAtomPosition = new Vector2( scaleNode.centerX, scaleNode.top + 25 );
+    var bottomOfAtomPosition = new Vector2( scaleNode.centerX, scaleNode.top + 15 );
 
     var atomAndBucketNode = new InteractiveIsotopeNode( makeIsotopesModel, this.mvt, bottomOfAtomPosition );
     this.addChild( atomAndBucketNode );

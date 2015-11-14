@@ -50,10 +50,6 @@ define( function( require ) {
   var BUCKET_SIZE = new Dimension2( 130, 60 );
   var NEUTRON_BUCKET_POSITION = new Vector2( -250, -110 );
 
-  // Speed at which neutrons move back to the bucket when released.  This value is empirically determined, adjust as
-  // needed for desired look.
-  var NEUTRON_MOTION_VELOCITY = 200; // In picometers per second of sim time.
-
   // Default atom configuration.
   var DEFAULT_ATOM_CONFIG = new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } ); // Hydrogen.
 
@@ -169,18 +165,21 @@ define( function( require ) {
      *
      * @param {NumberAtom} numberAtom - New configuration of atomic properties to which the atom should be set.
      */
+
+    placeNucleon: function( particle, bucket, atom ) {
+      if ( particle.position.distance( atom.position ) < NUCLEON_CAPTURE_RADIUS ) {
+        console.log( 'Adding a Neutron Particle' );
+        atom.addParticle( particle );
+      }
+      else {
+        bucket.addParticleNearestOpen( particle, true );
+      }
+    },
+
     setNeutronBucketConfiguration: function () {
-        var that=this;
-        this.neutronBucket.reset();
+        var that = this;
         // Define a function that will decide where to put nucleons.
-        var placeNucleon = function( particle, bucket, atom ) {
-          if ( particle.position.distance( atom.position ) < NUCLEON_CAPTURE_RADIUS ) {
-            atom.addParticle( particle );
-          }
-          else {
-            bucket.addParticleNearestOpen( particle, true );
-          }
-        };
+
 
         // Add the neutrons to the neutron bucket.
         _.times( DEFAULT_NUM_NEUTRONS_IN_BUCKET, function() {
@@ -189,7 +188,7 @@ define( function( require ) {
           that.neutronBucket.addParticleFirstOpen( neutron, false );
           neutron.userControlledProperty.link( function( userControlled ) {
             if ( !userControlled && !that.neutronBucket.containsParticle( neutron ) ) {
-              placeNucleon( neutron, that.neutronBucket, that.particleAtom );
+              that.placeNucleon( neutron, that.neutronBucket, that.particleAtom );
             }
           } );
           that.neutrons.add( neutron );
@@ -197,10 +196,12 @@ define( function( require ) {
     },
 
     setAtomConfiguration: function( numberAtom ) {
+        var that =this;
         this.particleAtom.clear();
         this.protons.clear();
         this.electrons.clear();
         this.neutrons.clear();
+        this.neutronBucket.reset();
 
         // Add the particles.
         for ( var i = 0; i < numberAtom.electronCount; i++ ) {
@@ -213,44 +214,19 @@ define( function( require ) {
           this.particleAtom.addParticle( proton );
           this.protons.add( proton );
         }
-        for ( var k = 0; k < numberAtom.neutronCount; k++ ) {
-          var neutron = new Particle( 'neutron', { velocity: NEUTRON_MOTION_VELOCITY } );
-          this.particleAtom.addParticle( neutron );
-          this.neutrons.add( neutron );
-        }
+        _.times( numberAtom.neutronCount, function() {
+            var neutron = new Particle( 'neutron' );
+            that.particleAtom.addParticle( neutron );
+            that.neutrons.add( neutron );
+            neutron.userControlledProperty.lazyLink( function( userControlled ) {
+              if ( !userControlled && !that.particleAtom.neutrons.contains( neutron ) ) {
+                that.placeNucleon( neutron, that.neutronBucket, that.particleAtom );
+              }
+            } );
+        });
       this.particleAtom.moveAllParticlesToDestination();
       this.setNeutronBucketConfiguration();
 
-    },
-
-    /**
-     * Configure the neutron bucket to have the specified number of particles in it.
-     *
-     * @param targetNumNeutrons
-     */
-    setNeutronBucketCount: function( targetNumNeutrons ) {
-
-      this.clearBucket();
-
-      // Add the target number of neutrons, sending notifications the additions.
-      for ( var i = 0; i < targetNumNeutrons; i++ ) {
-        var newNeutron = new Particle( 'neutron', { velocity: NEUTRON_MOTION_VELOCITY } );
-        this.neutronBucket.addParticleFirstOpen( newNeutron, true );
-        this.neutrons.push( newNeutron );
-      }
-    },
-
-    /**
-     * Remove all particles that are currently contained in the bucket from both the bucket and from the model.  Note
-     * that this does NOT remove the particles from the atom. Note that this function should only be called when the
-     * neutron bucket is getting reset.
-     */
-    clearBucket: function() {
-      var thisModel = this;
-      this.neutronBucket.getParticleList().forEach( function( neutron, index ) {
-        thisModel.neutrons.splice( index, 1 );
-        thisModel.neutronBucket.removeParticle( neutron );
-      } );
     },
 
     /**
