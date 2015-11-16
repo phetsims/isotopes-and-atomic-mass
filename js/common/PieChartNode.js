@@ -7,6 +7,7 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var Circle = require( 'SCENERY/nodes/Circle' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Path = require( 'SCENERY/nodes/Path' );
@@ -21,23 +22,107 @@ define( function( require ) {
    */
   function PieChartNode( slices, radius ) {
     Node.call( this );
+    this.slices = slices;
+    this.radius = radius;
+    this.initialAngle = 0;
 
-    var shape = new Shape();
-    shape.moveTo( 0, 0 );
-    //shape.lineTo( 0, 20 );
-    shape.arc(0, 0, 60, Math.PI/2, Math.PI);
-    shape.close();
-    this.addChild(new Path( shape, { fill: 'black', stroke: 'black', lineWidth: 0.4 } ));
+    // validate the radius
+    assert && assert( this.radius > 0, 'Pie Chart needs a non-negative radius' );
 
-    var shape2 = new Shape();
-    shape2.moveTo( 0, 0 );
-    //shape.lineTo( 0, 20 );
-    shape2.arc(0, 0, 60, Math.PI, Math.PI / 2);
-    shape2.close();
-    this.addChild(new Path( shape2, { fill: 'red', stroke: 'red', lineWidth: 0.4 } ));
+    // validate the slices value
+    for ( var i = 0; i < this.slices.length; i++ ) {
+      assert && assert( this.slices[ i ].value >= 0, 'Pie Chart Slice needs a non-negative value' );
+    }
+
+    this.update();
   }
 
   return inherit( Node, PieChartNode, {
+
+    /**
+     * Set the initial angle for drawing the pie slices.  Zero (the default)
+     * means that the first slice will start at the right middle.  A value
+     * of PI/2 would start at the bottom of the pie.  And so on.
+     *
+     * @param initialAngle - In radians.
+     */
+    setInitialAngle: function( initialAngle ) {
+      this.initialAngle = initialAngle;
+    },
+
+    getTotal: function() {
+      var total = 0;
+      this.slices.forEach( function( slice ) {
+        total += slice.value;
+      } );
+      return total;
+    },
+
+    // @private
+    update: function() {
+      var self = this;
+      this.removeAllChildren();
+      var total = this.getTotal();
+
+      if ( total === 0 ) {
+        // if there are no values then there is no chart
+        return;
+      }
+
+      // if number of slices is 1 then return a circle
+      if ( this.slices.length === 1 ) {
+        this.addChild( new Circle( this.radius, { fill: this.slices[ 0 ].color, stroke: 'black' } ) );
+        return;
+      }
+
+      // Draw each pie slice
+      var curValue = 0.0;
+      this.slices.forEach( function( slice, index ) {
+        // Compute the start and end angles
+        var startAngle = curValue * Math.PI * 2 / total + self.initialAngle;
+        var endAngle = slice.value * Math.PI * 2 / total + startAngle;
+
+        // Ensure that rounding errors do not leave a gap between the first and last slice
+        if ( index === self.slices.length - 1 ) {
+          endAngle = Math.PI * 2 + self.initialAngle;
+        }
+
+        // If the slice has a non-zero value, set the color and draw a filled arc.
+        var shape = new Shape();
+        if ( slice.value > 0 ) {
+          shape.moveTo( 0, 0 );
+          shape.arc( 0, 0, self.radius, startAngle, endAngle );
+          shape.close();
+          self.addChild( new Path( shape, { fill: slice.color, stroke: 'black', lineWidth: 0.4 } ) );
+        }
+        else {
+          shape.moveTo( 0, 0 );
+          shape.arc( 0, 0, self.radius, startAngle, endAngle );
+          shape.close();
+          self.addChild( new Path( shape, { stroke: 'black', lineWidth: 0.4 } ) );
+        }
+        curValue += slice.value;
+      } );
+    },
+
+    /**
+     * @param {Array.<Object>} slices Each slice is described by object literal which looks like { value: x, color: color }
+     */
+    setPieValues: function( slices ) {
+      this.slices = slices;
+      this.update();
+    },
+
+    /**
+     * @param {number} radius
+     */
+    setRadius: function( radius ) {
+      this.radius = radius;
+      this.update();
+    }
+
+
+
     //TODO prototypes
   } );
 } );

@@ -174,9 +174,13 @@ define( function( require ) {
     symbolBox.top = periodicTableNode.bottom + 5;
     this.addChild( symbolBox );
 
+    // TODO test cases for pie chart
+    //var slices = [ { value:25, color:'red' } ];
+    //var slices = [ { value:25, color:'red' }, { value:25, color:'blue' } ];
+    //var slices = [ { value:75, color:'red' }, { value:25, color:'blue' } ];
+    var slices = [ { value:40, color:'red' }, { value:0, color:'blue' }, { value:30, color:'green' } ];
 
-
-    var abundanceBox = new AccordionBox( new PieChartNode() , {
+    var abundanceBox = new AccordionBox( new PieChartNode( slices, 60 ) , {
         titleNode: new Text( abundanceTitleString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
         fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
         expandedProperty: new Property( false ),
