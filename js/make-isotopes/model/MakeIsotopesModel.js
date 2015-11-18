@@ -168,7 +168,6 @@ define( function( require ) {
 
     placeNucleon: function( particle, bucket, atom ) {
       if ( particle.position.distance( atom.position ) < NUCLEON_CAPTURE_RADIUS ) {
-        console.log( 'Adding a Neutron Particle' );
         atom.addParticle( particle );
       }
       else {

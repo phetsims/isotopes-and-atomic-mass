@@ -178,9 +178,27 @@ define( function( require ) {
     //var slices = [ { value:25, color:'red' } ];
     //var slices = [ { value:25, color:'red' }, { value:25, color:'blue' } ];
     //var slices = [ { value:75, color:'red' }, { value:25, color:'blue' } ];
-    var slices = [ { value:40, color:'red' }, { value:0, color:'blue' }, { value:30, color:'green' } ];
+    //var slices = [ { value:40, color:'red' }, { value:0, color:'blue' }, { value:30, color:'green' } ];
 
-    var abundanceBox = new AccordionBox( new PieChartNode( slices, 60 ) , {
+    var abundanceRectangle = new Rectangle( 0, 0, 120, 120, 0, 0 );
+    // default slices and color coding 1 slice is for my isotope and 2 slice is for other isotope
+    var slices = [ { value:0, color:'purple', stroke:'black', lineWidth: 0.5 }, { value:0, color:'white', stroke:'black', lineWidth: 0.5 } ];
+    var pieChart = new PieChartNode( slices, 60 );
+
+    abundanceRectangle.addChild( pieChart );
+    pieChart.setCenter( 60, 60 );
+
+    makeIsotopesModel.particleAtom.massNumberProperty.link( function( massNumber ) {
+      var myIsotopeAbundance = AtomIdentifier.getNaturalAbundance( makeIsotopesModel.particleAtom );
+      var otherIsotopeAbundance = 1 - myIsotopeAbundance;
+      slices[ 0 ].value = myIsotopeAbundance;
+      slices[ 1 ].value = otherIsotopeAbundance;
+      pieChart.setPieValues( slices );
+      pieChart.setInitialAngle(  Math.PI * 2 * slices[ 1 ].value / ( slices[ 0 ].value + slices[ 1 ].value ) / 2 );
+
+    } );
+
+    var abundanceBox = new AccordionBox(abundanceRectangle , {
         titleNode: new Text( abundanceTitleString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
         fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
         expandedProperty: new Property( false ),

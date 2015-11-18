@@ -13,6 +13,10 @@ define( function( require ) {
   var Path = require( 'SCENERY/nodes/Path' );
   var Shape = require( 'KITE/Shape' );
 
+  // constants
+  var INITIAL_ANGLE = 0;
+  var DEFAULT_CENTER_X = 0;
+  var DEFAULT_CENTER_Y = 0;
   /**
    *
    * @param {Array.<Object>} slices Each slice is described by object literal which looks like { value: x, color: color }
@@ -24,7 +28,9 @@ define( function( require ) {
     Node.call( this );
     this.slices = slices;
     this.radius = radius;
-    this.initialAngle = 0;
+    this.centerXCord = DEFAULT_CENTER_X;
+    this.centerYCord = DEFAULT_CENTER_Y;
+    this.initialAngle = INITIAL_ANGLE;
 
     // validate the radius
     assert && assert( this.radius > 0, 'Pie Chart needs a non-negative radius' );
@@ -48,6 +54,19 @@ define( function( require ) {
      */
     setInitialAngle: function( initialAngle ) {
       this.initialAngle = initialAngle;
+      this.update();
+    },
+
+    /**
+     * Set the center for drawing the pie slices. ( 0, 0 ) is the default
+     *
+     * @param {number} centerX
+     * @param {number} centerY
+     */
+    setCenter: function( centerX, centerY ) {
+      this.centerXCord = centerX;
+      this.centerYCord = centerY;
+      this.update();
     },
 
     getTotal: function() {
@@ -71,7 +90,7 @@ define( function( require ) {
 
       // if number of slices is 1 then return a circle
       if ( this.slices.length === 1 ) {
-        this.addChild( new Circle( this.radius, { fill: this.slices[ 0 ].color, stroke: 'black' } ) );
+        this.addChild( new Circle( this.radius, { fill: this.slices[ 0 ].color, stroke: this.slices[ 0 ].stroke } ) );
         return;
       }
 
@@ -90,16 +109,16 @@ define( function( require ) {
         // If the slice has a non-zero value, set the color and draw a filled arc.
         var shape = new Shape();
         if ( slice.value > 0 ) {
-          shape.moveTo( 0, 0 );
-          shape.arc( 0, 0, self.radius, startAngle, endAngle );
+          shape.moveTo( self.centerXCord, self.centerYCord );
+          shape.arc( self.centerXCord, self.centerYCord, self.radius, startAngle, endAngle );
           shape.close();
-          self.addChild( new Path( shape, { fill: slice.color, stroke: 'black', lineWidth: 0.4 } ) );
+          self.addChild( new Path( shape, { fill: slice.color, stroke: slice.stroke, lineWidth: slice.lineWidth } ) );
         }
         else {
-          shape.moveTo( 0, 0 );
-          shape.arc( 0, 0, self.radius, startAngle, endAngle );
+          shape.moveTo( self.centerXCord, self.centerYCord );
+          shape.arc( self.centerXCord, self.centerYCord, self.radius, startAngle, endAngle );
           shape.close();
-          self.addChild( new Path( shape, { stroke: 'black', lineWidth: 0.4 } ) );
+          self.addChild( new Path( shape, { stroke: slice.stroke, lineWidth: slice.lineWidth } ) );
         }
         curValue += slice.value;
       } );
