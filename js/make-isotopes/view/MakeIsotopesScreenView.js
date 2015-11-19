@@ -188,14 +188,20 @@ define( function( require ) {
     abundanceRectangle.addChild( pieChart );
     pieChart.setCenter( 60, 60 );
 
-    makeIsotopesModel.particleAtom.massNumberProperty.link( function( massNumber ) {
+    function updatePieChart(){
       var myIsotopeAbundance = AtomIdentifier.getNaturalAbundance( makeIsotopesModel.particleAtom );
       var otherIsotopeAbundance = 1 - myIsotopeAbundance;
       slices[ 0 ].value = myIsotopeAbundance;
       slices[ 1 ].value = otherIsotopeAbundance;
       pieChart.setPieValues( slices );
       pieChart.setInitialAngle(  Math.PI * 2 * slices[ 1 ].value / ( slices[ 0 ].value + slices[ 1 ].value ) / 2 );
+    };
 
+    // do initial update to the pie chart
+    updatePieChart();
+
+    makeIsotopesModel.on( 'atomReconfigured', function() {
+      updatePieChart();
     } );
 
     var abundanceBox = new AccordionBox(abundanceRectangle , {

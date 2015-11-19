@@ -109,7 +109,7 @@ define( function( require ) {
       sphereRadius: SharedConstants.NUCLEON_RADIUS
     } );
 
-    this.numberAtom.particleCountProperty.link( function() {
+    this.numberAtom.on( 'atomUpdated', function() {
       self.setAtomConfiguration( self.numberAtom );
     });
 
@@ -188,6 +188,7 @@ define( function( require ) {
           neutron.userControlledProperty.link( function( userControlled ) {
             if ( !userControlled && !that.neutronBucket.containsParticle( neutron ) ) {
               that.placeNucleon( neutron, that.neutronBucket, that.particleAtom );
+              that.trigger( 'atomReconfigured' );
             }
           } );
           that.neutrons.add( neutron );
@@ -220,12 +221,13 @@ define( function( require ) {
             neutron.userControlledProperty.lazyLink( function( userControlled ) {
               if ( !userControlled && !that.particleAtom.neutrons.contains( neutron ) ) {
                 that.placeNucleon( neutron, that.neutronBucket, that.particleAtom );
+                that.trigger( 'atomReconfigured' );
               }
             } );
         });
       this.particleAtom.moveAllParticlesToDestination();
       this.setNeutronBucketConfiguration();
-
+      this.trigger( 'atomReconfigured' );
     },
 
     /**
