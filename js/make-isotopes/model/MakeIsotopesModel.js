@@ -186,6 +186,7 @@ define( function( require ) {
 
           that.neutronBucket.addParticleFirstOpen( neutron, false );
           neutron.userControlledProperty.link( function( userControlled ) {
+            that.trigger( 'atomReconfigured' );
             if ( !userControlled && !that.neutronBucket.containsParticle( neutron ) ) {
               that.placeNucleon( neutron, that.neutronBucket, that.particleAtom );
               that.trigger( 'atomReconfigured' );
@@ -219,6 +220,7 @@ define( function( require ) {
             that.particleAtom.addParticle( neutron );
             that.neutrons.add( neutron );
             neutron.userControlledProperty.lazyLink( function( userControlled ) {
+              that.trigger( 'atomReconfigured' );
               if ( !userControlled && !that.particleAtom.neutrons.contains( neutron ) ) {
                 that.placeNucleon( neutron, that.neutronBucket, that.particleAtom );
                 that.trigger( 'atomReconfigured' );
