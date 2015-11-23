@@ -11,27 +11,32 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var AccordionBox = require( 'SUN/AccordionBox' );
-  var Bounds2 = require( 'DOT/Bounds2' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var ScreenView = require( 'JOIST/ScreenView' );
-  var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
-  var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
-  var Vector2 = require( 'DOT/Vector2' );
-  var Dimension2 = require( 'DOT/Dimension2' );
-  var Node = require( 'SCENERY/nodes/Node' );
-  var ParticleCountDisplay = require( 'SHRED/view/ParticleCountDisplay' );
-  var AtomScaleNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/AtomScaleNode' );
-  var InteractiveIsotopeNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/InteractiveIsotopeNode' );
-  var PeriodicTableNode = require( 'SHRED/view/PeriodicTableNode' );
-  var Text = require( 'SCENERY/nodes/Text' );
-  var SharedConstants = require( 'SHRED/SharedConstants' );
-  var Property = require( 'AXON/Property' );
   var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
+  var AtomScaleNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/AtomScaleNode' );
+  var Bounds2 = require( 'DOT/Bounds2' );
+  var Dimension2 = require( 'DOT/Dimension2' );
+  var inherit = require( 'PHET_CORE/inherit' );
+  var InteractiveIsotopeNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/InteractiveIsotopeNode' );
+  var Line = require( 'SCENERY/nodes/Line' );
+  var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
+  var MultiLineText = require( 'SCENERY_PHET/MultiLineText');
+  var Node = require( 'SCENERY/nodes/Node' );
+  var Panel = require( 'SUN/Panel' );
+  var ParticleCountDisplay = require( 'SHRED/view/ParticleCountDisplay' );
+  var PeriodicTableNode = require( 'SHRED/view/PeriodicTableNode' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var PieChartNode = require( 'ISOTOPES_AND_ATOMIC_MASS/common/PieChartNode' );
-  // class data
+  var Property = require( 'AXON/Property' );
+  var Rectangle = require( 'SCENERY/nodes/Rectangle' );
+  var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
+  var ScreenView = require( 'JOIST/ScreenView' );
+  var SharedConstants = require( 'SHRED/SharedConstants' );
+  var Text = require( 'SCENERY/nodes/Text' );
+  var Vector2 = require( 'DOT/Vector2' );
+  var Util = require( 'DOT/Util' );
+
+  // constants
   var STAGE_SIZE = new Dimension2( 1008, 679 );
   var NUMBER_FONT = new PhetFont( 56 );
   var NUMBER_INSET = 20; // In screen coords, which are roughly pixels.
@@ -41,6 +46,10 @@ define( function( require ) {
   // strings
   var symbolTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/symbol.title' );
   var abundanceTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/abundance.title' );
+  var myIsotopeString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/myIsotope' );
+  var thisIsotopeString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/thisIsotope' );
+  var otherString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/other' );
+  var isotopesString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopes' );
 
   /**
    * @param {MakeIsotopesModel} makeIsotopesModel
@@ -53,15 +62,12 @@ define( function( require ) {
     // Set up the model-canvas transform.  IMPORTANT NOTES: The multiplier factors for the point in the view can be
     // adjusted to shift the center right or left, and the scale factor can be adjusted to zoom in or out (smaller
     // numbers zoom out, larger ones zoom in).
-    this.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
-      Vector2.ZERO,
+    this.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping( Vector2.ZERO,
       new Vector2( Math.round( STAGE_SIZE.width * 0.32 ), Math.round( STAGE_SIZE.height * 0.49 ) ),
-      1.0 ); // "Zoom factor" - smaller zooms out, larger zooms in.
+      1.0 // "Zoom factor" - smaller zooms out, larger zooms in.
+    );
 
-//    this.abundanceWindow = new abundanceWindow();
-
-    // Layers upon which the various display elements are placed.  This allows us to created the desired layering
-    // effects.
+    // Layers upon which the various display elements are placed.  This allows us to created the desired layering effects.
     var indicatorLayer = new Node();
     this.addChild( indicatorLayer );
     var atomLayer = new Node();
@@ -91,11 +97,24 @@ define( function( require ) {
     this.addChild( scaleNode );
 
     // Create the node that contains both the atom and the neutron bucket.
-    // TODO: find a way to calculate the scale node top ( scaleNode.top + 7 ).
+    // TODO: find a way to calculate the scale node top ( scaleNode.top + 15 ).
     var bottomOfAtomPosition = new Vector2( scaleNode.centerX, scaleNode.top + 15 );
 
     var atomAndBucketNode = new InteractiveIsotopeNode( makeIsotopesModel, this.mvt, bottomOfAtomPosition );
     this.addChild( atomAndBucketNode );
+
+    var myIsotopeLabel = new Text( myIsotopeString, {
+        font: new PhetFont( { size: 16, weight: 'bold' } ),
+        fill: 'black',
+        centerX: scaleNode.centerX,
+        maxWidth: 100
+      } );
+    this.addChild(myIsotopeLabel);
+
+    // add listener to update position of myIsotopeLabel
+    atomAndBucketNode.addEventListener( 'bounds', function(){
+      myIsotopeLabel.bottom = atomAndBucketNode.top - 5;
+    });
 
     // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
     // element is Neon for this sim.
@@ -179,14 +198,14 @@ define( function( require ) {
     //var slices = [ { value:25, color:'red' }, { value:25, color:'blue' } ];
     //var slices = [ { value:75, color:'red' }, { value:25, color:'blue' } ];
     //var slices = [ { value:40, color:'red' }, { value:0, color:'blue' }, { value:30, color:'green' } ];
-
-    var abundanceRectangle = new Rectangle( 0, 0, 120, 120, 0, 0 );
+    var abundanceNode = new Node();
+    var abundanceRectangle = new Rectangle( 120, 0, 120, 120, 0, 0 );
     // default slices and color coding 1 slice is for my isotope and 2 slice is for other isotope
     var slices = [ { value:0, color:'purple', stroke:'black', lineWidth: 0.5 }, { value:0, color:'white', stroke:'black', lineWidth: 0.5 } ];
     var pieChart = new PieChartNode( slices, 60 );
 
     abundanceRectangle.addChild( pieChart );
-    pieChart.setCenter( 60, 60 );
+    pieChart.setCenter( 60+120, 60 );
 
     function updatePieChart(){
       var myIsotopeAbundance = AtomIdentifier.getNaturalAbundance( makeIsotopesModel.particleAtom );
@@ -195,7 +214,75 @@ define( function( require ) {
       slices[ 1 ].value = otherIsotopeAbundance;
       pieChart.setPieValues( slices );
       pieChart.setInitialAngle(  Math.PI * 2 * slices[ 1 ].value / ( slices[ 0 ].value + slices[ 1 ].value ) / 2 );
-    };
+      updateReadout( myIsotopeAbundance );
+    }
+
+
+
+    abundanceRectangle.scale(0.6);
+    abundanceNode.addChild( abundanceRectangle );
+
+    var readoutAbundanceText = new Text( '', {
+      font: new PhetFont( 18 ),
+      maxWidth: 0.9 * 60,
+      maxHeight: 0.9 * 20
+    } );
+
+    var panel = new Panel( readoutAbundanceText, {
+      minWidth: 60,
+      minHeight: 20,
+      resize: false,
+      cornerRadius: 5,
+      lineWidth: 3,
+      align: 'center',
+      right: abundanceRectangle.left - 20,
+      centerY: abundanceRectangle.centerY
+    } );
+
+    function updateReadout( myIsotopeAbundance ) {
+      readoutAbundanceText.text = ( Util.toFixed( myIsotopeAbundance * 100, 4 ) ).toString() + '%';
+      // Center the text in the display.
+      readoutAbundanceText.centerX = 60 / 2;
+      readoutAbundanceText.centerY = 20 * 0.75;
+    }
+
+    var leftLabel = new Text( thisIsotopeString, {
+     font: new PhetFont( { size: 12 } ),
+     fill: 'black',
+     centerX: panel.centerX,
+     maxWidth: 60
+     } );
+
+    abundanceNode.addChild( panel );
+    leftLabel.bottom = panel.top - 5;
+
+    abundanceNode.addChild(leftLabel);
+
+
+
+    var line = new Line(panel.right, panel.centerY, abundanceRectangle.left, abundanceRectangle.centerY, {
+      stroke: 'black',
+      lineDash: [ 5, 2 ]
+    });
+
+    var rightLabel = new MultiLineText( '', {
+      font: new PhetFont( { size: 12 } ),
+      fill: 'black',
+      maxWidth: 60,
+      align: 'center'
+    } );
+
+    rightLabel.centerY = abundanceRectangle.centerY;
+    rightLabel.left = abundanceRectangle.right + 10;
+
+    makeIsotopesModel.particleAtom.protonCountProperty.link( function( protonCount ) {
+      var name = AtomIdentifier.getName( protonCount );
+      rightLabel.text = protonCount > 0 ? otherString + '\n' + name + '\n' + isotopesString : '';
+      rightLabel.centerY = abundanceRectangle.centerY;
+      rightLabel.left = abundanceRectangle.right + 10;
+    } );
+
+    abundanceNode.addChild(rightLabel);
 
     // do initial update to the pie chart
     updatePieChart();
@@ -203,14 +290,16 @@ define( function( require ) {
     makeIsotopesModel.on( 'atomReconfigured', function() {
       updatePieChart();
     } );
+    abundanceNode.addChild( line );
 
-    var abundanceBox = new AccordionBox(abundanceRectangle , {
+    var abundanceBox = new AccordionBox(abundanceNode , {
         titleNode: new Text( abundanceTitleString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
         fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
         expandedProperty: new Property( false ),
         minWidth: periodicTableNode.width,
         maxWidth: periodicTableNode.width,
         contentAlign: 'center',
+        contentXMargin: 0,
         titleAlignX: 'left',
         buttonAlign: 'right'
       }

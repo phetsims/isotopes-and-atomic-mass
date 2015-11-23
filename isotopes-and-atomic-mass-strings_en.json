@@ -22,5 +22,17 @@
   },
   "abundance.title": {
     "value": "Abundance in Nature"
+  },
+  "myIsotope": {
+    "value": "My Isotope"
+  },
+  "thisIsotope": {
+    "value": "This Isotope"
+  },
+  "other": {
+    "value": "Other"
+  },
+  "isotopes": {
+    "value": "Isotopes"
   }
 }
