@@ -87,6 +87,7 @@ define( function( require ) {
       else {
         thisAtomView.stabilityIndicator.text = '';
       }
+      thisAtomView.stabilityIndicator.maxWidth = 2 * Math.sqrt((isotopeElectronCloud.radius * isotopeElectronCloud.radius) - (isotopeElectronCloud.radius * 0.53 *  isotopeElectronCloud.radius * 0.53 ));
       thisAtomView.stabilityIndicator.center = stabilityIndicatorCenterPos;
     };
     updateStabilityIndicator(); // Do initial update.
