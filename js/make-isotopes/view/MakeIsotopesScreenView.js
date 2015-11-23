@@ -18,23 +18,19 @@ define( function( require ) {
   var Dimension2 = require( 'DOT/Dimension2' );
   var inherit = require( 'PHET_CORE/inherit' );
   var InteractiveIsotopeNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/InteractiveIsotopeNode' );
-  var Line = require( 'SCENERY/nodes/Line' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
-  var MultiLineText = require( 'SCENERY_PHET/MultiLineText');
   var Node = require( 'SCENERY/nodes/Node' );
-  var Panel = require( 'SUN/Panel' );
   var ParticleCountDisplay = require( 'SHRED/view/ParticleCountDisplay' );
   var PeriodicTableNode = require( 'SHRED/view/PeriodicTableNode' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var PieChartNode = require( 'ISOTOPES_AND_ATOMIC_MASS/common/PieChartNode' );
   var Property = require( 'AXON/Property' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   var ScreenView = require( 'JOIST/ScreenView' );
   var SharedConstants = require( 'SHRED/SharedConstants' );
   var Text = require( 'SCENERY/nodes/Text' );
+  var TwoItemPieChartNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/TwoItemPieChartNode' );
   var Vector2 = require( 'DOT/Vector2' );
-  var Util = require( 'DOT/Util' );
 
   // constants
   var STAGE_SIZE = new Dimension2( 1008, 679 );
@@ -47,9 +43,6 @@ define( function( require ) {
   var symbolTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/symbol.title' );
   var abundanceTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/abundance.title' );
   var myIsotopeString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/myIsotope' );
-  var thisIsotopeString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/thisIsotope' );
-  var otherString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/other' );
-  var isotopesString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopes' );
 
   /**
    * @param {MakeIsotopesModel} makeIsotopesModel
@@ -162,7 +155,6 @@ define( function( require ) {
       protonCountDisplay.bottom = SYMBOL_BOX_HEIGHT - NUMBER_INSET;
     } );
 
-
     // Add the mass number display.
     var massNumberDisplay = new Text( '0',
       {
@@ -193,106 +185,7 @@ define( function( require ) {
     symbolBox.top = periodicTableNode.bottom + 5;
     this.addChild( symbolBox );
 
-    // TODO test cases for pie chart
-    //var slices = [ { value:25, color:'red' } ];
-    //var slices = [ { value:25, color:'red' }, { value:25, color:'blue' } ];
-    //var slices = [ { value:75, color:'red' }, { value:25, color:'blue' } ];
-    //var slices = [ { value:40, color:'red' }, { value:0, color:'blue' }, { value:30, color:'green' } ];
-    var abundanceNode = new Node();
-    var abundanceRectangle = new Rectangle( 120, 0, 120, 120, 0, 0 );
-    // default slices and color coding 1 slice is for my isotope and 2 slice is for other isotope
-    var slices = [ { value:0, color:'purple', stroke:'black', lineWidth: 0.5 }, { value:0, color:'white', stroke:'black', lineWidth: 0.5 } ];
-    var pieChart = new PieChartNode( slices, 60 );
-
-    abundanceRectangle.addChild( pieChart );
-    pieChart.setCenter( 60+120, 60 );
-
-    function updatePieChart(){
-      var myIsotopeAbundance = AtomIdentifier.getNaturalAbundance( makeIsotopesModel.particleAtom );
-      var otherIsotopeAbundance = 1 - myIsotopeAbundance;
-      slices[ 0 ].value = myIsotopeAbundance;
-      slices[ 1 ].value = otherIsotopeAbundance;
-      pieChart.setPieValues( slices );
-      pieChart.setInitialAngle(  Math.PI * 2 * slices[ 1 ].value / ( slices[ 0 ].value + slices[ 1 ].value ) / 2 );
-      updateReadout( myIsotopeAbundance );
-    }
-
-
-
-    abundanceRectangle.scale(0.6);
-    abundanceNode.addChild( abundanceRectangle );
-
-    var readoutAbundanceText = new Text( '', {
-      font: new PhetFont( 18 ),
-      maxWidth: 0.9 * 60,
-      maxHeight: 0.9 * 20
-    } );
-
-    var panel = new Panel( readoutAbundanceText, {
-      minWidth: 60,
-      minHeight: 20,
-      resize: false,
-      cornerRadius: 5,
-      lineWidth: 3,
-      align: 'center',
-      right: abundanceRectangle.left - 20,
-      centerY: abundanceRectangle.centerY
-    } );
-
-    function updateReadout( myIsotopeAbundance ) {
-      readoutAbundanceText.text = ( Util.toFixed( myIsotopeAbundance * 100, 4 ) ).toString() + '%';
-      // Center the text in the display.
-      readoutAbundanceText.centerX = 60 / 2;
-      readoutAbundanceText.centerY = 20 * 0.75;
-    }
-
-    var leftLabel = new Text( thisIsotopeString, {
-     font: new PhetFont( { size: 12 } ),
-     fill: 'black',
-     centerX: panel.centerX,
-     maxWidth: 60
-     } );
-
-    abundanceNode.addChild( panel );
-    leftLabel.bottom = panel.top - 5;
-
-    abundanceNode.addChild(leftLabel);
-
-
-
-    var line = new Line(panel.right, panel.centerY, abundanceRectangle.left, abundanceRectangle.centerY, {
-      stroke: 'black',
-      lineDash: [ 5, 2 ]
-    });
-
-    var rightLabel = new MultiLineText( '', {
-      font: new PhetFont( { size: 12 } ),
-      fill: 'black',
-      maxWidth: 60,
-      align: 'center'
-    } );
-
-    rightLabel.centerY = abundanceRectangle.centerY;
-    rightLabel.left = abundanceRectangle.right + 10;
-
-    makeIsotopesModel.particleAtom.protonCountProperty.link( function( protonCount ) {
-      var name = AtomIdentifier.getName( protonCount );
-      rightLabel.text = protonCount > 0 ? otherString + '\n' + name + '\n' + isotopesString : '';
-      rightLabel.centerY = abundanceRectangle.centerY;
-      rightLabel.left = abundanceRectangle.right + 10;
-    } );
-
-    abundanceNode.addChild(rightLabel);
-
-    // do initial update to the pie chart
-    updatePieChart();
-
-    makeIsotopesModel.on( 'atomReconfigured', function() {
-      updatePieChart();
-    } );
-    abundanceNode.addChild( line );
-
-    var abundanceBox = new AccordionBox(abundanceNode , {
+    var abundanceBox = new AccordionBox( new TwoItemPieChartNode( makeIsotopesModel ) , {
         titleNode: new Text( abundanceTitleString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
         fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
         expandedProperty: new Property( false ),
@@ -306,7 +199,6 @@ define( function( require ) {
     );
     abundanceBox.leftTop = symbolBox.leftBottom;
     abundanceBox.top = symbolBox.bottom + 5;
-
     this.addChild( abundanceBox );
   }
 
