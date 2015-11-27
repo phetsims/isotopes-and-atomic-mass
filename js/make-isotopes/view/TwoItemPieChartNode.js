@@ -68,6 +68,7 @@ define( function( require ) {
       pieChart.setPieValues( slices );
       pieChart.setInitialAngle(  Math.PI * 2 * slices[ 1 ].value / ( slices[ 0 ].value + slices[ 1 ].value ) / 2 );
       updateReadout( myIsotopeAbundance );
+      updateOtherIsotopeLabel(myIsotopeAbundance);
     }
 
     makeIsotopesModel.on( 'atomReconfigured', function() {
@@ -88,7 +89,7 @@ define( function( require ) {
       minHeight: 20,
       resize: false,
       cornerRadius: 5,
-      lineWidth: 3,
+      lineWidth: 1.5,
       align: 'center',
       right: pieChartBoundingRectangle.left - 20,
       centerY: pieChartBoundingRectangle.centerY
@@ -97,7 +98,7 @@ define( function( require ) {
     this.addChild( myIsotopeAbundancePanel );
 
     function updateReadout( myIsotopeAbundance ) {
-      readoutMyIsotopeAbundanceText.text = ( Util.toFixed( myIsotopeAbundance * 100, 4 ) ).toString() + '%';
+      readoutMyIsotopeAbundanceText.text = ( Util.toFixedNumber( myIsotopeAbundance * 100, 4 ) ).toString() + '%';
       // Center the text in the display.
       readoutMyIsotopeAbundanceText.centerX = 60 / 2;
       readoutMyIsotopeAbundanceText.centerY = 20 * 0.75;
@@ -115,7 +116,7 @@ define( function( require ) {
     var connectingLine = new Line( myIsotopeAbundancePanel.right, myIsotopeAbundancePanel.centerY,
       pieChartBoundingRectangle.left, pieChartBoundingRectangle.centerY, {
       stroke: 'black',
-      lineDash: [ 5, 2 ]
+      lineDash: [ 3, 1 ]
     });
 
     this.addChild( connectingLine );
@@ -127,13 +128,18 @@ define( function( require ) {
       align: 'center'
     } );
 
-    // Attach otherIsotopeLabel with protonCountProperty to change element name of proton count change
-    makeIsotopesModel.particleAtom.protonCountProperty.link( function( protonCount ) {
-      var name = AtomIdentifier.getName( protonCount );
-      otherIsotopeLabel.text = protonCount > 0 ? otherString + '\n' + name + '\n' + isotopesString : '';
+    // Attach otherIsotopeLabel with protonCountProperty to change element name on proton count change
+    function updateOtherIsotopeLabel(myIsotopeAbundance) {
+      var name = AtomIdentifier.getName( makeIsotopesModel.particleAtom.protonCount );
+      if ( makeIsotopesModel.particleAtom.protonCount > 0 && myIsotopeAbundance < 1 ){
+        otherIsotopeLabel.text = otherString + '\n' + name + '\n' + isotopesString;
+      }
+      else{
+        otherIsotopeLabel.text = '';
+      }
       otherIsotopeLabel.centerY = pieChartBoundingRectangle.centerY;
       otherIsotopeLabel.left = pieChartBoundingRectangle.right + 10;
-    } );
+    }
 
     this.addChild( otherIsotopeLabel );
 
