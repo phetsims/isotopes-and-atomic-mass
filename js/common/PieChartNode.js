@@ -90,7 +90,10 @@ define( function( require ) {
 
       // if number of slices is 1 then return a circle
       if ( this.slices.length === 1 ) {
-        this.addChild( new Circle( this.radius, { fill: this.slices[ 0 ].color, stroke: this.slices[ 0 ].stroke } ) );
+        var circle = new Circle( this.radius, { fill: this.slices[ 0 ].color, stroke: this.slices[ 0 ].stroke } )
+        this.addChild( circle );
+        circle.centerX = self.centerXCord;
+        circle.centerY = self.centerYCord;
         return;
       }
 
@@ -109,16 +112,18 @@ define( function( require ) {
         // If the slice has a non-zero value, set the color and draw a filled arc.
         var shape = new Shape();
         if ( slice.value > 0 ) {
-          shape.moveTo( self.centerXCord, self.centerYCord );
-          shape.arc( self.centerXCord, self.centerYCord, self.radius, startAngle, endAngle );
-          shape.close();
-          self.addChild( new Path( shape, { fill: slice.color, stroke: slice.stroke, lineWidth: slice.lineWidth } ) );
-        }
-        else {
-          shape.moveTo( self.centerXCord, self.centerYCord );
-          shape.arc( self.centerXCord, self.centerYCord, self.radius, startAngle, endAngle );
-          shape.close();
-          self.addChild( new Path( shape, { stroke: slice.stroke, lineWidth: slice.lineWidth } ) );
+          if ( slice.value === total){
+            var circle = new Circle( self.radius, { fill: slice.color, stroke: slice.stroke } )
+            self.addChild( circle );
+            circle.centerX = self.centerXCord;
+            circle.centerY = self.centerYCord;
+          }
+          else {
+            shape.moveTo( self.centerXCord, self.centerYCord );
+            shape.arc( self.centerXCord, self.centerYCord, self.radius, startAngle, endAngle );
+            shape.close();
+            self.addChild( new Path( shape, { fill: slice.color, stroke: slice.stroke, lineWidth: slice.lineWidth } ) );
+          }
         }
         curValue += slice.value;
       } );
