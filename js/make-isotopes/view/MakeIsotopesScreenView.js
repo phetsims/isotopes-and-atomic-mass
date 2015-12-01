@@ -76,11 +76,7 @@ define( function( require ) {
     } );
     this.addChild( resetAllButton );
 
-    // Add the legend/particle count indicator.
-    var particleCountLegend = new ParticleCountDisplay( makeIsotopesModel.particleAtom, 13, 250 );
-    particleCountLegend.scale( 1.1 );
-    particleCountLegend.setLeftTop( new Vector2( 20, 10 ) );
-    indicatorLayer.addChild( particleCountLegend );
+
 
     // Create the node that represents the scale upon which the atom sits.
     var scaleNode = new AtomScaleNode( makeIsotopesModel.particleAtom );
@@ -117,12 +113,18 @@ define( function( require ) {
     periodicTableNode.right = this.layoutBounds.width - 10;
     this.addChild( periodicTableNode );
 
-    var symbolRectangle = new Rectangle( 0, 0, SYMBOL_BOX_WIDTH, SYMBOL_BOX_HEIGHT, 0, 0,
-      {
-        fill: 'white',
-        stroke: 'black',
-        lineWidth: 2
-      } );
+    // Add the legend/particle count indicator.
+    var particleCountLegend = new ParticleCountDisplay( makeIsotopesModel.particleAtom, 13, 250 );
+    particleCountLegend.scale( 1.1 );
+    particleCountLegend.left = 20;
+    particleCountLegend.top = periodicTableNode.visibleBounds.minY;
+    indicatorLayer.addChild( particleCountLegend );
+
+    var symbolRectangle = new Rectangle( 0, 0, SYMBOL_BOX_WIDTH, SYMBOL_BOX_HEIGHT, 0, 0, {
+      fill: 'white',
+      stroke: 'black',
+      lineWidth: 2
+    } );
 
     // Add the symbol text.
     var symbolText = new Text( '',
@@ -175,30 +177,30 @@ define( function( require ) {
         titleNode: new Text( symbolTitleString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
         fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
         expandedProperty: new Property( false ),
-        minWidth: periodicTableNode.width,
-        maxWidth: periodicTableNode.width,
+        minWidth: periodicTableNode.visibleBounds.width,
+        maxWidth: periodicTableNode.visibleBounds.width,
         contentAlign: 'center',
         titleAlignX: 'left',
         buttonAlign: 'right'
       });
-    symbolBox.leftTop = periodicTableNode.leftBottom;
-    symbolBox.top = periodicTableNode.bottom + 5;
+    symbolBox.left = periodicTableNode.visibleBounds.minX;
+    symbolBox.top = periodicTableNode.bottom + 10;
     this.addChild( symbolBox );
 
     var abundanceBox = new AccordionBox( new TwoItemPieChartNode( makeIsotopesModel ) , {
         titleNode: new Text( abundanceTitleString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
         fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
         expandedProperty: new Property( false ),
-        minWidth: periodicTableNode.width,
-        maxWidth: periodicTableNode.width,
+        minWidth: periodicTableNode.visibleBounds.width,
+        maxWidth: periodicTableNode.visibleBounds.width,
         contentAlign: 'center',
         contentXMargin: 0,
         titleAlignX: 'left',
         buttonAlign: 'right'
       }
     );
-    abundanceBox.leftTop = symbolBox.leftBottom;
-    abundanceBox.top = symbolBox.bottom + 5;
+    abundanceBox.left = symbolBox.left;
+    abundanceBox.top = symbolBox.bottom + 10;
     this.addChild( abundanceBox );
   }
 

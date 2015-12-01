@@ -49,7 +49,7 @@ define( function( require ) {
     //var slices = [ { value:75, color:'red' }, { value:25, color:'blue' } ];
     //var slices = [ { value:40, color:'red' }, { value:0, color:'blue' }, { value:30, color:'green' } ];
 
-    var pieChartBoundingRectangle = new Rectangle( 120, 0, PIE_CHART_RADIUS * 2, PIE_CHART_RADIUS * 2, 0, 0 );
+    var pieChartBoundingRectangle = new Rectangle( 150, 0, PIE_CHART_RADIUS * 2, PIE_CHART_RADIUS * 2, 0, 0 );
 
     // default slices and color coding, first slice is for my isotope and second slice is for other isotope
     var slices = [ { value:0, color:FIRST_SLICE_COLOR, stroke:'black', lineWidth: 0.5 },
@@ -57,7 +57,7 @@ define( function( require ) {
 
     var pieChart = new PieChartNode( slices, PIE_CHART_RADIUS );
     // center point of of bounding rectangle
-    pieChart.setCenter( pieChartBoundingRectangle.width / 2 + 120, pieChartBoundingRectangle.height / 2 );
+    pieChart.setCenter( pieChartBoundingRectangle.width / 2 + 150, pieChartBoundingRectangle.height / 2 );
     pieChartBoundingRectangle.addChild( pieChart );
 
     function updatePieChart(){
@@ -79,19 +79,16 @@ define( function( require ) {
     this.addChild( pieChartBoundingRectangle );
 
     var readoutMyIsotopeAbundanceText = new Text( '', {
-      font: new PhetFont( 18 ),
-      maxWidth: 0.9 * 60,
-      maxHeight: 0.9 * 20
+      font: new PhetFont( 14 )
     } );
 
     var myIsotopeAbundancePanel = new Panel( readoutMyIsotopeAbundanceText, {
       minWidth: 60,
       minHeight: 20,
-      resize: false,
+      resize: true,
       cornerRadius: 5,
       lineWidth: 1.5,
       align: 'center',
-      right: pieChartBoundingRectangle.left - 20,
       centerY: pieChartBoundingRectangle.centerY
     } );
 
@@ -100,26 +97,27 @@ define( function( require ) {
     function updateReadout( myIsotopeAbundance ) {
       readoutMyIsotopeAbundanceText.text = ( Util.toFixedNumber( myIsotopeAbundance * 100, 4 ) ).toString() + '%';
       // Center the text in the display.
-      readoutMyIsotopeAbundanceText.centerX = 60 / 2;
-      readoutMyIsotopeAbundanceText.centerY = 20 * 0.75;
+      //readoutMyIsotopeAbundanceText.centerX = 60 / 2;
+      //readoutMyIsotopeAbundanceText.centerY = 20 * 0.75;
+      myIsotopeAbundancePanel.centerX = pieChartBoundingRectangle.left - 50; // empirically determined
+      myIsotopeLabel.centerX = myIsotopeAbundancePanel.centerX;
     }
 
     var myIsotopeLabel = new Text( thisIsotopeString, {
       font: new PhetFont( { size: 12 } ),
       fill: 'black',
-      centerX: myIsotopeAbundancePanel.centerX,
       maxWidth: 60
     } );
     myIsotopeLabel.bottom = myIsotopeAbundancePanel.top - 5;
     this.addChild( myIsotopeLabel );
 
-    var connectingLine = new Line( myIsotopeAbundancePanel.right, myIsotopeAbundancePanel.centerY,
-      pieChartBoundingRectangle.left, pieChartBoundingRectangle.centerY, {
+    var connectingLine = new Line( myIsotopeAbundancePanel.centerX, myIsotopeAbundancePanel.centerY,
+      pieChartBoundingRectangle.centerX, pieChartBoundingRectangle.centerY, {
       stroke: 'black',
       lineDash: [ 3, 1 ]
     });
-
     this.addChild( connectingLine );
+    connectingLine.moveToBack();
 
     var otherIsotopeLabel = new MultiLineText( '', {
       font: new PhetFont( { size: 12 } ),
@@ -138,7 +136,7 @@ define( function( require ) {
         otherIsotopeLabel.text = '';
       }
       otherIsotopeLabel.centerY = pieChartBoundingRectangle.centerY;
-      otherIsotopeLabel.left = pieChartBoundingRectangle.right + 10;
+      otherIsotopeLabel.left = pieChartBoundingRectangle.right + 5;
     }
 
     this.addChild( otherIsotopeLabel );
