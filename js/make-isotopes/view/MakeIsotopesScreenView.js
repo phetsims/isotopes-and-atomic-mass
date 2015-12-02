@@ -70,6 +70,9 @@ define( function( require ) {
     var resetAllButton = new ResetAllButton( {
       listener: function() {
         makeIsotopesModel.reset();
+        scaleNode.reset();
+        symbolBox.expandedProperty.reset();
+        abundanceBox.expandedProperty.reset();
       },
       right: this.layoutBounds.maxX - 10,
       bottom: this.layoutBounds.maxY - 10

@@ -25,7 +25,7 @@ define( function( require ) {
 
   // constants
   var PIE_CHART_RADIUS = 60;
-  var FIRST_SLICE_COLOR = 'purple';
+  var FIRST_SLICE_COLOR = ' rgb( 134, 102, 172 ) ';
   var SECOND_SLICE_COLOR = 'white';
 
   // strings
@@ -96,11 +96,14 @@ define( function( require ) {
 
     function updateReadout( myIsotopeAbundance ) {
       readoutMyIsotopeAbundanceText.text = ( Util.toFixedNumber( myIsotopeAbundance * 100, 4 ) ).toString() + '%';
-      // Center the text in the display.
-      //readoutMyIsotopeAbundanceText.centerX = 60 / 2;
-      //readoutMyIsotopeAbundanceText.centerY = 20 * 0.75;
       myIsotopeAbundancePanel.centerX = pieChartBoundingRectangle.left - 50; // empirically determined
       myIsotopeLabel.centerX = myIsotopeAbundancePanel.centerX;
+      if (myIsotopeAbundance === 0){
+        connectingLine.visible = false;
+      }
+      else {
+        connectingLine.visible = true;
+      }
     }
 
     var myIsotopeLabel = new Text( thisIsotopeString, {
