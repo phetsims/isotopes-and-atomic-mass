@@ -90,7 +90,7 @@ define( function( require ) {
 
       // if number of slices is 1 then return a circle
       if ( this.slices.length === 1 ) {
-        var circle = new Circle( this.radius, { fill: this.slices[ 0 ].color, stroke: this.slices[ 0 ].stroke } )
+        var circle = new Circle( this.radius, { fill: this.slices[ 0 ].color, stroke: this.slices[ 0 ].stroke } );
         this.addChild( circle );
         circle.centerX = self.centerXCord;
         circle.centerY = self.centerYCord;
@@ -113,7 +113,7 @@ define( function( require ) {
         var shape = new Shape();
         if ( slice.value > 0 ) {
           if ( slice.value === total){
-            var circle = new Circle( self.radius, { fill: slice.color, stroke: slice.stroke } )
+            var circle = new Circle( self.radius, { fill: slice.color, stroke: slice.stroke } );
             self.addChild( circle );
             circle.centerX = self.centerXCord;
             circle.centerY = self.centerYCord;
