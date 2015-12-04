@@ -30,8 +30,7 @@ define( function( require ) {
 
     Screen.call( this, mixIsotopesModuleTitleString, new Image( mixIsotopesIcon ),
       function() { return new MixIsotopesModel(); },
-      function( model ) { return new MixIsotopesScreenView( model ); },
-      { backgroundColor: '#FFFF99' }
+      function( model ) { return new MixIsotopesScreenView( model ); }
     );
   }
 
