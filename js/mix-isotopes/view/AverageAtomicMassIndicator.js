@@ -24,6 +24,7 @@ define( function( require ) {
   var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
   var SubSupText = require( 'SCENERY_PHET/SubSupText' );
   var Path = require( 'SCENERY/nodes/Path' );
+  var Panel = require( 'SUN/Panel' );
   var INDICATOR_WIDTH = 300; // In screen units, which is close to pixels.
 
   /**
@@ -32,12 +33,12 @@ define( function( require ) {
    * @param (NumberAtom} isotopeConfig
    */
   function IsotopeTickMark( isotopeConfig ) {
-    Node.call( this );
+    var node = new Node();
 
 
     // constants that control overall appearance, tweak as needed.
     // var OVERALL_HEIGHT = 40;
-    var TICK_MARK_LINE_HEIGHT = 10;
+    var TICK_MARK_LINE_HEIGHT = 15;
     // var TICK_MARK_LABEL_HEIGHT = OVERALL_HEIGHT - TICK_MARK_LINE_HEIGHT;
     var TICK_MARK_LINEWIDTH = 5;
 
@@ -48,15 +49,15 @@ define( function( require ) {
       stroke: 'black'
     } );
 
-    this.addChild( shape );
+    node.addChild( shape );
     //TODO
     // Create the label that goes above the tick mark.
-    var label = new SubSupText( ' <sup>' + isotopeConfig.getIsotopeAtomicMass() + '</sup>' + AtomIdentifier.getSymbol( isotopeConfig.protonCount ) );
-    //  setFont( new PhetFont( 14 ) );
-    //  setScale( TICK_MARK_LABEL_HEIGHT / getFullBoundsReference().height );
-    //  setOffset( -getFullBoundsReference().width / 2, -getFullBoundsReference().height - TICK_MARK_LINE_HEIGHT / 2 );
-    //}}
-    this.addChild( label );
+    var label = new SubSupText( ' <sup>' + isotopeConfig.massNumber + '</sup>' + AtomIdentifier.getSymbol( isotopeConfig.protonCount ) );
+    label.centerX = shape.centerX;
+    label.bottom = shape.top;
+    node.addChild( label );
+
+    return node;
 
   }
 
@@ -77,7 +78,7 @@ define( function( require ) {
    * @ param {MixIsotopeModel} model
    */
   function ReadoutPointer( model ) {
-    Node.call( this );
+    var node = new Node();
 
     var SIZE = new Dimension2( 120, 25 );
     var TRIANGULAR_POINTER_HEIGHT = 15;
@@ -100,23 +101,34 @@ define( function( require ) {
       new Vector2( TRIANGULAR_POINTER_WIDTH / 2, TRIANGULAR_POINTER_HEIGHT ),
       new Vector2( 0, 0 ) ];
 
-    this.addChild( new Path( Shape.polygon( vertices ), {
-      stroke: new Color( 0, 143, 212 )
-    } ) );
-
-    //TODO Can't figure out how to get the a black line to wrap around the white box. Also what are the 5,5 for?
-    //readoutBackgroundNode = new PhetPPath( new RoundRectangle2D.Double( -SIZE.getWidth() / 2,
-    //  TRIANGULAR_POINTER_HEIGHT, SIZE.getWidth(), SIZE.getHeight(), 5, 5 ), Color.WHITE, new BasicStroke( 1 ), Color.BLACK );
-
-    // Adds the readout background node.
-    this.addChild( new Path( Shape.roundRect( -SIZE.width / 2, TRIANGULAR_POINTER_HEIGHT, SIZE.width, SIZE.height, 5, 5 ), {
-      stroke: 'white',
+    var triangle = new Path( Shape.polygon( vertices ), {
+      fill: new Color( 0, 143, 212 ),
       lineWidth: 1
-    } ) );
+    } );
+    node.addChild(  triangle );
 
-    var textualReadout = new Text( '', { font: new PhetFont( 18 ) } );
+    var readoutText = new Text( '', {
+      font: new PhetFont( 18 ),
+      maxWidth: 0.9 * SIZE.width,
+      maxHeight: 0.9 * SIZE.height
+    } );
 
-    this.addChild( textualReadout );
+    var readoutPanel = new Panel( readoutText, {
+      minWidth: SIZE.width,
+      minHeight: SIZE.height,
+      resize: false,
+      cornerRadius: 2,
+      lineWidth: 1,
+      align: 'center',
+      fill: 'white'
+    } );
+
+    readoutPanel.top = triangle.bottom;
+    readoutPanel.centerX = triangle.centerX;
+
+
+
+    node.addChild( readoutPanel );
 
     // Observe the average atomic weight property in the model and
     // update the textual readout whenever it changes.
@@ -129,6 +141,7 @@ define( function( require ) {
     model.showingNaturesMixProperty.link( function() {
       // this.updateReadout();
     } );
+    return node;
   }
 
   inherit( Node, ReadoutPointer, {
@@ -179,7 +192,6 @@ define( function( require ) {
     // such a way that the (0,0) location will be in the upper left corner.
 
     // Add the bar that makes up "spine" of the indicator.
-    var barOffsetY = 0;
     var barNode = new Line( 0, 0, INDICATOR_WIDTH, 0, {
       lineWidth: 3,
       stroke: 'black'
@@ -221,6 +233,7 @@ define( function( require ) {
       model.possibleIsotopes.forEach( function( isotope ) {
         var tickMark = new IsotopeTickMark( isotope );
         // tickMark.setOffset( calcXOffsetFromAtomicMass( isotope.getAtomicMass() ), barOffsetY );
+        tickMark.centerX = thisNode.calcXOffsetFromAtomicMass( isotope.getIsotopeAtomicMass() );
         tickMarkLayer.addChild( tickMark );
       } );
 
@@ -228,7 +241,8 @@ define( function( require ) {
 
     // Add the moving readout.
     var readoutPointer = new ReadoutPointer( model );
-    readoutPointer.leftTop = new Vector2( barNode.bounds.centerX, barOffsetY + 20 );
+    readoutPointer.top = barNode.bottom;
+    readoutPointer.centerX = barNode.centerX;
     this.addChild( readoutPointer );
 
     // Add a listener to position the moving readout in a location that

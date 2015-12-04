@@ -11,6 +11,8 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var AccordionBox = require( 'SUN/AccordionBox' );
+  var Dimension2 = require( 'DOT/Dimension2' );
   var inherit = require( 'PHET_CORE/inherit' );
   var ScreenView = require( 'JOIST/ScreenView' );
   // var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
@@ -18,15 +20,23 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
   // var Dimension2 = require( 'DOT/Dimension2' );
   var Node = require( 'SCENERY/nodes/Node' );
-  // var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
+  var BucketHole = require( 'SCENERY_PHET/bucket/BucketHole' );
+  var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
+  var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
   // var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
   // var PeriodicTableNode = require( 'SHRED/view/PeriodicTableNode' );
   var Bounds2 = require( 'DOT/Bounds2' );
   // var PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  var SharedConstants = require( 'SHRED/SharedConstants' );
+  var Property = require( 'AXON/Property' );
+  var PeriodicTableNode = require( 'SHRED/view/PeriodicTableNode' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
+  var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   var AverageAtomicMassIndicator = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/AverageAtomicMassIndicator' );
+  var Text = require( 'SCENERY/nodes/Text' );
 
   // class data
+  var STAGE_SIZE = new Dimension2( 1008, 679 );
   // var DISTANCE_BUTTON_CENTER_FROM_BOTTOM = 30;
   // var BUTTON_FONT = new PhetFont( { weight: 'bold', fontSize: 18 } );
 
@@ -45,6 +55,7 @@ define( function( require ) {
 
 
     this.model = mixIsotopesModel;
+    var self = this;
 
 
     // Set up the model-canvas transform.  The test chamber is centered
@@ -55,7 +66,7 @@ define( function( require ) {
     // adjusted to shift the center right or left, and the scale factor
     // can be adjusted to zoom in or out (smaller numbers zoom out, larger
     // ones zoom in).
-    this.modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
+    this.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       new Vector2( 0, 0 ),
       new Vector2( Math.round( this.layoutBounds.width * 0.295 ), Math.round( this.layoutBounds.height * 0.38 ) ),
       0.16 ); // This last parameter is a "Zoom factor" - smaller zooms out, larger zooms in.
@@ -79,6 +90,46 @@ define( function( require ) {
     this.addChild( particleLayer );
     var bucketFrontLayer = new Node();
     this.addChild( bucketFrontLayer );
+
+    // Create and add the Reset All Button in the bottom right, which resets the model
+    var resetAllButton = new ResetAllButton( {
+      listener: function() {
+        mixIsotopesModel.reset();
+      },
+      right: this.layoutBounds.maxX - 10,
+      bottom: this.layoutBounds.maxY - 10
+    } );
+    this.addChild( resetAllButton );
+
+    // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
+    // element is Neon for this sim.
+    var periodicTableNode = new PeriodicTableNode( mixIsotopesModel.numberAtom, mixIsotopesModel.particleAtom, 18 );
+    periodicTableNode.scale( 0.55 );
+    periodicTableNode.top = 10;
+    periodicTableNode.right = this.layoutBounds.width - 10;
+    this.addChild( periodicTableNode );
+
+    // Adding Buckets
+    mixIsotopesModel.bucketList.addItemAddedListener( function( addedBucket ) {
+      var neutronBucketHole = new BucketHole( addedBucket, self.mvt);
+      var neutronBucketFront = new BucketFront( addedBucket, self.mvt );
+      neutronBucketFront.addInputListener( new BucketDragHandler( addedBucket, neutronBucketFront, self.mvt ) );
+
+      // Bucket hole is first item added to view for proper layering.
+      self.addChild( neutronBucketHole );
+      self.addChild( neutronBucketFront );
+    } );
+
+    mixIsotopesModel.bucketList.forEach( function( addedBucket ) {
+      var neutronBucketHole = new BucketHole( addedBucket, self.mvt );
+      var neutronBucketFront = new BucketFront( addedBucket, self.mvt );
+      neutronBucketFront.addInputListener( new BucketDragHandler( addedBucket, neutronBucketFront, self.mvt ) );
+
+      // Bucket hole is first item added to view for proper layering.
+      self.addChild( neutronBucketHole );
+      self.addChild( neutronBucketFront );
+    } );
+
 
     // TODO Will port over soon
     //// Listen to the model for events that concern the canvas.
@@ -142,34 +193,43 @@ define( function( require ) {
     // Add the test chamber into and out of which the individual isotopes
     // will be moved. As with all elements in this model, the shape and
     // position are considered to be two separate things.
-    var testChamberNode = new Rectangle( this.modelViewTransform.modelToViewBounds( this.model.testChamber.getTestChamberRect() ), {
+    var testChamberNode = new Rectangle( this.mvt.modelToViewBounds( this.model.testChamber.getTestChamberRect() ), {
       fill: 'black',
       lineWidth: 1
     } );
 
+    testChamberNode.top = periodicTableNode.top;
     chamberLayer.addChild( testChamberNode );
 
-    // Add the periodic table node that will allow the user to set the
-    // current isotope.
-    // TODO Continue porting
-    //var periodicTableNode = new PeriodicTableNode( model, 18, BACKGROUND_COLOR ) {{
-    //  setOffset( testChamberNode.getFullBoundsReference().getMaxX() + 15, testChamberNode.getFullBoundsReference().getMinY() );
-    //  setScale( 1.1 ); // Empirically determined.
-    //}};
-    //controlsLayer.addChild( periodicTableNode );
 
-    // Add the average atomic mass indicator to the canvas.
-    var averageAtomicMassIndicator = new AverageAtomicMassIndicator( this.model );
-    this.addChild( averageAtomicMassIndicator );
-    //var averageAtomicMassWindow = new MaximizeControlNode( BuildAnAtomStrings.AVERAGE_ATOMIC_MASS, new PDimension( 400, 120 ), averageAtomicMassIndicator, true ) {{
-    //  setOffset( indicatorWindowX, testChamberNode.getFullBoundsReference().getMaxY() - getFullBoundsReference().height );
-    //  addChild( averageAtomicMassIndicator );
-    //}}
-    //controlsLayer.addChild( averageAtomicMassWindow );
-    //averageAtomicMassIndicator.setOffset(
-    //  averageAtomicMassWindow.getFullBoundsReference().width / 2 - averageAtomicMassIndicator.getFullBoundsReference().width / 2,
-    //  30 /* Empirically determined, tweak as needed. */ );
+    var compositionBox = new AccordionBox( new Rectangle( 0, 0, 120, 120, 0, 0 ), {
+      titleNode: new Text( 'Percent Composition', { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
+      fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
+      expandedProperty: new Property( false ),
+      minWidth: periodicTableNode.width,
+      maxWidth: periodicTableNode.width,
+      contentAlign: 'center',
+      titleAlignX: 'left',
+      buttonAlign: 'right'
+    });
+    compositionBox.leftTop = periodicTableNode.leftBottom;
+    compositionBox.top = periodicTableNode.bottom + 5;
+    this.addChild( compositionBox );
 
+    var averageAtomicMassBox = new AccordionBox( new AverageAtomicMassIndicator( this.model ) , {
+        titleNode: new Text( 'Average Atomic Mass', { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
+        fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
+        expandedProperty: new Property( false ),
+        minWidth: periodicTableNode.width,
+        maxWidth: periodicTableNode.width,
+        contentAlign: 'center',
+        titleAlignX: 'left',
+        buttonAlign: 'right'
+      }
+    );
+    averageAtomicMassBox.leftTop = compositionBox.leftBottom;
+    averageAtomicMassBox.top = compositionBox.bottom + 5;
+    this.addChild( averageAtomicMassBox );
   }
 
   return inherit( ScreenView, MixIsotopesScreenView );
