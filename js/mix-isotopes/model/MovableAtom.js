@@ -17,6 +17,7 @@ define( function( require ) {
     'use strict';
 
     //modules
+    var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
     var inherit = require( 'PHET_CORE/inherit' );
     var Particle = require( 'SHRED/model/Particle' );
     var NumberAtom = require( 'SHRED/model/NumberAtom' );
@@ -33,7 +34,7 @@ define( function( require ) {
 
 
     }
-
+    isotopesAndAtomicMass.register( 'MovableAtom', MovableAtom );
     return inherit( Particle, MovableAtom, {
 
     } );

@@ -11,6 +11,7 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var MixIsotopesModel = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MixIsotopesModel' );
   var MixIsotopesScreenView = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/MixIsotopesScreenView' );
   var inherit = require( 'PHET_CORE/inherit' );
@@ -34,5 +35,6 @@ define( function( require ) {
     );
   }
 
+  isotopesAndAtomicMass.register( 'MixIsotopesScreen', MixIsotopesScreen)
   return inherit( Screen, MixIsotopesScreen );
 } );

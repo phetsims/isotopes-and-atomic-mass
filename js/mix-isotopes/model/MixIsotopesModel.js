@@ -15,6 +15,7 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Particle = require( 'SHRED/model/Particle' );
   var ObservableArray = require( 'AXON/ObservableArray' );
@@ -227,6 +228,7 @@ define( function( require ) {
 
   }
 
+  isotopesAndAtomicMass.register( 'MixIsotopesModel', MixIsotopesModel );
   return inherit( PropertySet, MixIsotopesModel, {
     // -----------------------------------------------------------------------
     // Methods
@@ -424,7 +426,6 @@ define( function( require ) {
      * @param {NumberAtom} atom
      */
     setAtomConfiguration: function( atom ) {
-      debugger;
       // This method does NOT check if the specified atom is already the
       // current configuration.  This allows it to be as a sort of reset
       // routine.  For the sake of efficiency, callers should be careful not
@@ -579,7 +580,6 @@ define( function( require ) {
           // notifyNumericalControllerAdded( newController );
         }
       }
-      debugger;
     },
 
     removeNumericalControllers: function() {

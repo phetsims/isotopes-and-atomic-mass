@@ -14,6 +14,7 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
   var IsotopeElectronCloudView = require( 'SHRED/view/IsotopeElectronCloudView' );
   var inherit = require( 'PHET_CORE/inherit' );
@@ -50,47 +51,7 @@ define( function( require ) {
     var isotopeElectronCloud = new IsotopeElectronCloudView( particleAtom, modelViewTransform );
     this.addChild( isotopeElectronCloud );
 
-    // Create the textual readout for the element name.
-    this.elementName = new Text( '', { font: new PhetFont( { size: ELEMENT_NAME_FONT_SIZE, weight: 'bold' } ) } );
-    this.addChild( this.elementName );
 
-    // Define the update function for the element name.
-    var updateElementName = function( numProtons ) {
-      // get element name and append mass number to identify isotope
-      var name = AtomIdentifier.getName( thisAtomView.atom.protonCount ) + '-' + thisAtomView.atom.massNumber;
-      if ( name.length === 0 ) {
-        name = '';
-      }
-      thisAtomView.elementName.text = name;
-      //thisAtomView.elementName.setScaleMagnitude( 1 );
-      thisAtomView.elementName.maxWidth = 2 * Math.sqrt((isotopeElectronCloud.radius * isotopeElectronCloud.radius) - (isotopeElectronCloud.radius * 0.6
-          *  isotopeElectronCloud.radius * 0.6 )) ;
-      //thisAtomView.elementName.setScaleMagnitude( Math.min( maxLabelWidth / thisAtomView.elementName.width, 1 ) );
-      thisAtomView.elementName.center = new Vector2( isotopeElectronCloud.centerX, isotopeElectronCloud.centerY - isotopeElectronCloud.radius * 0.6 );
-    };
-
-    // Create the textual readout for the stability indicator.
-    this.stabilityIndicator = new Text( '', { font: new PhetFont( { size: 12, weight: 'bold' } ) } );
-    this.addChild( this.stabilityIndicator );
-
-    // Define the update function for the stability indicator.
-    var updateStabilityIndicator = function() {
-      var stabilityIndicatorCenterPos = new Vector2( isotopeElectronCloud.centerX, isotopeElectronCloud.centerY + isotopeElectronCloud.radius * 0.53 );
-      if ( thisAtomView.atom.protonCount > 0 ) {
-        if ( AtomIdentifier.isStable( thisAtomView.atom.protonCount, thisAtomView.atom.neutronCount ) ) {
-          thisAtomView.stabilityIndicator.text = stableString;
-        }
-        else {
-          thisAtomView.stabilityIndicator.text = unstableString;
-        }
-      }
-      else {
-        thisAtomView.stabilityIndicator.text = '';
-      }
-      thisAtomView.stabilityIndicator.maxWidth = 2 * Math.sqrt((isotopeElectronCloud.radius * isotopeElectronCloud.radius) - (isotopeElectronCloud.radius * 0.53 *  isotopeElectronCloud.radius * 0.53 ));
-      thisAtomView.stabilityIndicator.center = stabilityIndicatorCenterPos;
-    };
-    updateStabilityIndicator(); // Do initial update.
 
     // Add the handler that keeps the bottom of the atom in one place.  This was added due to a request to make the
     // atom get larger and smaller but to stay on the scale.
@@ -103,17 +64,10 @@ define( function( require ) {
 
     particleAtom.protonCountProperty.link( function( numProtons ) {
       updateAtomPosition( numProtons );
-      updateElementName();
-      updateStabilityIndicator();
     });
-
-    particleAtom.neutronCountProperty.link( function( numNeutrons ) {
-      updateElementName();
-      updateStabilityIndicator();
-    } );
-
   }
 
+  isotopesAndAtomicMass.register( 'IsotopeAtomNode', IsotopeAtomNode );
   // Inherit from Node.
   return inherit( Node, IsotopeAtomNode );
 } );

@@ -7,6 +7,7 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var Circle = require( 'SCENERY/nodes/Circle' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Node = require( 'SCENERY/nodes/Node' );
@@ -43,6 +44,7 @@ define( function( require ) {
     this.update();
   }
 
+  isotopesAndAtomicMass.register( 'PieChartNode', PieChartNode );
   return inherit( Node, PieChartNode, {
 
     /**

@@ -14,6 +14,7 @@ define( function( require ) {
   'use strict';
 
   //modules
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Vector2 = require( 'DOT/Vector2' );
   var Dimension2 = require( 'DOT/Dimension2' );
@@ -77,6 +78,7 @@ define( function( require ) {
 
   }
 
+  isotopesAndAtomicMass.register( 'IsotopeTestChamber', IsotopeTestChamber );
   return inherit( PropertySet, IsotopeTestChamber, {
     /**
      * Get the number of isotopes currently in the chamber that match the

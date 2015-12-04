@@ -13,6 +13,7 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Vector2 = require( 'DOT/Vector2' );
   var SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
@@ -118,6 +119,7 @@ define( function( require ) {
 
   }
 
+  isotopesAndAtomicMass.register( 'MakeIsotopesModel', MakeIsotopesModel );
   return inherit( PropertySet, MakeIsotopesModel, {
     _nucleusJumpCount: 0,
     // Main model step function, called by the framework.

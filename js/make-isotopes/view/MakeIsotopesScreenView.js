@@ -18,6 +18,7 @@ define( function( require ) {
   var Dimension2 = require( 'DOT/Dimension2' );
   var inherit = require( 'PHET_CORE/inherit' );
   var InteractiveIsotopeNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/InteractiveIsotopeNode' );
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var Node = require( 'SCENERY/nodes/Node' );
   var ParticleCountDisplay = require( 'SHRED/view/ParticleCountDisplay' );
@@ -206,6 +207,7 @@ define( function( require ) {
     this.addChild( abundanceBox );
   }
 
+  isotopesAndAtomicMass.register( 'MakeIsotopesScreenView', MakeIsotopesScreenView );
   return inherit( ScreenView, MakeIsotopesScreenView );
 } );
 

@@ -13,6 +13,7 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Image = require( 'SCENERY/nodes/Image' );
   var Dimension2 = require( 'DOT/Dimension2' );
@@ -142,6 +143,7 @@ define( function( require ) {
     this.addChild( displayModeSelectionNode );
   }
 
+  isotopesAndAtomicMass.register( 'AtomScaleNode', AtomScaleNode );
   return inherit( Node, AtomScaleNode, {
 
     /**

@@ -13,6 +13,7 @@ define( function( require ) {
   // modules
   var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
   var inherit = require( 'PHET_CORE/inherit' );
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var Line = require( 'SCENERY/nodes/Line' );
   var MultiLineText = require( 'SCENERY_PHET/MultiLineText');
   var Node = require( 'SCENERY/nodes/Node' );
@@ -150,6 +151,7 @@ define( function( require ) {
 
   }
 
+  isotopesAndAtomicMass.register( 'TwoItemPieChartNode', TwoItemPieChartNode );
   return inherit( Node, TwoItemPieChartNode, {
   } );
 

@@ -12,6 +12,7 @@
 define( function( require ) {
   'use strict';
 
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Vector2 = require( 'DOT/Vector2' );
   var Shape = require( 'KITE/Shape' );
@@ -263,6 +264,7 @@ define( function( require ) {
     this.leftTop = new Vector2( 0, IsotopeTickMark.OVERALL_HEIGHT );
   }
 
+  isotopesAndAtomicMass.register( 'AverageAtomicMassIndicator', AverageAtomicMassIndicator );
   return inherit( Node, AverageAtomicMassIndicator, {
     /**
      * Calculate the X offset on the bar given the atomic mass.  This is

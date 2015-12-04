@@ -13,6 +13,7 @@
 define( function( require ) {
   'use strict';
 
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var inherit = require( 'PHET_CORE/inherit' );
   var SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
   var ObservableArray = require( 'AXON/ObservableArray' );
@@ -47,6 +48,7 @@ define( function( require ) {
 
   }
 
+  isotopesAndAtomicMass.register( 'MonoIsotopeBucket', MonoIsotopeBucket );
   return inherit( SphereBucket, MonoIsotopeBucket, {
     /**
      * Add an isotope to the first open location in the bucket.

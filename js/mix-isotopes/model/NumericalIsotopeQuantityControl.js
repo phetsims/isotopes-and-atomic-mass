@@ -19,6 +19,7 @@
 define( function( require ) {
   'use strict';
   // modules
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var inherit = require( 'PHET_CORE/inherit' );
   var NumberAtom = require( 'SHRED/model/NumberAtom' );
   var Vector2 = require( 'DOT/Vector2' );
@@ -42,6 +43,7 @@ define( function( require ) {
     this.partOfModelProperty = new Property( true );
   }
 
+  isotopesAndAtomicMass.register( 'NumericalIsotopeQuantityControl', NumericalIsotopeQuantityControl );
   return inherit( Object, NumericalIsotopeQuantityControl, {
 
     getCapacity: function() {

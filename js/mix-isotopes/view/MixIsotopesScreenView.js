@@ -11,6 +11,7 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var AccordionBox = require( 'SUN/AccordionBox' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var inherit = require( 'PHET_CORE/inherit' );
@@ -232,5 +233,6 @@ define( function( require ) {
     this.addChild( averageAtomicMassBox );
   }
 
+  isotopesAndAtomicMass.register( 'MixIsotopesScreenView', MixIsotopesScreenView);
   return inherit( ScreenView, MixIsotopesScreenView );
 } );
