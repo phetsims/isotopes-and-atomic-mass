@@ -130,8 +130,7 @@ define( function( require ) {
     } );
 
     // Add the symbol text.
-    var symbolText = new Text( '',
-      {
+    var symbolText = new Text( '', {
         font: new PhetFont( 150 ),
         fill: 'black',
         center: new Vector2( symbolRectangle.width / 2, symbolRectangle.height / 2 )
