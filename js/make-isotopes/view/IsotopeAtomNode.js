@@ -15,20 +15,10 @@ define( function( require ) {
 
   // modules
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
-  var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
   var IsotopeElectronCloudView = require( 'SHRED/view/IsotopeElectronCloudView' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Node = require( 'SCENERY/nodes/Node' );
-  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var Text = require( 'SCENERY/nodes/Text' );
   var Vector2 = require( 'DOT/Vector2' );
-
-  // strings
-  var stableString = require( 'string!SHRED/stable' );
-  var unstableString = require( 'string!SHRED/unstable' );
-
-  // constants
-  var ELEMENT_NAME_FONT_SIZE = 16;
 
   /**
    * Constructor for an IsotopeAtomNode.
@@ -42,7 +32,6 @@ define( function( require ) {
   function IsotopeAtomNode( particleAtom, numberAtom, bottomPoint, modelViewTransform ) {
 
     Node.call( this ); // Call super constructor.
-    var thisAtomView = this;
 
     this.atom = particleAtom;
     this.modelViewTransform = modelViewTransform;

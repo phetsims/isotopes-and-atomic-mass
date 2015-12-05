@@ -13,7 +13,6 @@ define( function( require ) {
   // modules
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var AccordionBox = require( 'SUN/AccordionBox' );
-  var Dimension2 = require( 'DOT/Dimension2' );
   var inherit = require( 'PHET_CORE/inherit' );
   var ScreenView = require( 'JOIST/ScreenView' );
   // var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
@@ -37,7 +36,6 @@ define( function( require ) {
   var Text = require( 'SCENERY/nodes/Text' );
 
   // class data
-  var STAGE_SIZE = new Dimension2( 1008, 679 );
   // var DISTANCE_BUTTON_CENTER_FROM_BOTTOM = 30;
   // var BUTTON_FONT = new PhetFont( { weight: 'bold', fontSize: 18 } );
 

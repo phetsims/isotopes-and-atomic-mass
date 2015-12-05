@@ -35,6 +35,6 @@ define( function( require ) {
     );
   }
 
-  isotopesAndAtomicMass.register( 'MixIsotopesScreen', MixIsotopesScreen)
+  isotopesAndAtomicMass.register( 'MixIsotopesScreen', MixIsotopesScreen);
   return inherit( Screen, MixIsotopesScreen );
 } );

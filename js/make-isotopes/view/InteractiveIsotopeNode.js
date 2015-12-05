@@ -6,6 +6,7 @@
  *
  * @author John Blanco
  * @author Jesse Greenberg
+ * @author Aadish Gupta
  */
 
 
@@ -62,13 +63,15 @@ define( function( require ) {
     this.addChild( neutronBucketHole );
 
     // Add the layers where the nucleons will be maintained.
+    var nucleonLayersNode = new Node();
     var nucleonLayers = [];
     _.times( NUM_NUCLEON_LAYERS, function() {
       var nucleonLayer = new Node();
       nucleonLayers.push( nucleonLayer );
-      thisNode.addChild( nucleonLayer );
+      nucleonLayersNode.addChild( nucleonLayer );
     } );
     nucleonLayers.reverse(); // Set up the nucleon layers so that layer 0 is in front.
+    thisNode.addChild( nucleonLayersNode );
 
     // Function to adjust z-layer ordering for a particle. This is to be linked to the particle's zLayer property.
     var adjustZLayer = function( addedAtom, zLayer ) {
@@ -155,11 +158,7 @@ define( function( require ) {
         name = '';
       }
       elementName.text = name;
-      //thisAtomView.elementName.setScaleMagnitude( 1 );
-      //thisAtomView.elementName.maxWidth = 2 * Math.sqrt((isotopeAtomNode.radius * isotopeAtomNode.radius) - (isotopeElectronCloud.radius * 0.6
-      //                                                                                                                 *  isotopeElectronCloud.radius * 0.6 )) ;
-      //thisAtomView.elementName.setScaleMagnitude( Math.min( maxLabelWidth / thisAtomView.elementName.width, 1 ) );
-      elementName.center = new Vector2( isotopeAtomNode.centerX, isotopeAtomNode.centerY - 25 );
+      elementName.center = new Vector2( isotopeAtomNode.centerX, nucleonLayersNode.top - 20 );
     };
 
     // Create the textual readout for the stability indicator.
@@ -168,7 +167,7 @@ define( function( require ) {
 
     // Define the update function for the stability indicator.
     var updateStabilityIndicator = function( numProtons, numNeutrons ) {
-      var stabilityIndicatorCenterPos = new Vector2( isotopeAtomNode.centerX, isotopeAtomNode.centerY + 30 );
+      var stabilityIndicatorCenterPos = new Vector2( isotopeAtomNode.centerX, isotopeAtomNode.centerY + (isotopeAtomNode.centerY - nucleonLayersNode.top) + 20 );
       if ( numProtons > 0 ) {
         if ( AtomIdentifier.isStable( numProtons, numNeutrons ) ) {
           stabilityIndicator.text = stableString;
@@ -184,17 +183,14 @@ define( function( require ) {
       stabilityIndicator.center = stabilityIndicatorCenterPos;
     };
 
-    //updateStabilityIndicator( makeIsotopesModel.particleAtom.protonCount, makeIsotopesModel.particleAtom.neutronCount ); // Do initial update.
-
-    makeIsotopesModel.particleAtom.protonCountProperty.link( function( numProtons ) {
-      updateElementName( numProtons, makeIsotopesModel.particleAtom.neutronCount );
-      updateStabilityIndicator( numProtons, makeIsotopesModel.particleAtom.neutronCount );
+    makeIsotopesModel.on( 'atomReconfigured', function() {
+      updateElementName( makeIsotopesModel.particleAtom.protonCount, makeIsotopesModel.particleAtom.neutronCount );
+      updateStabilityIndicator( makeIsotopesModel.particleAtom.protonCount, makeIsotopesModel.particleAtom.neutronCount );
     } );
 
-    makeIsotopesModel.particleAtom.neutronCountProperty.link( function( numNeutrons ) {
-      updateElementName( makeIsotopesModel.particleAtom.protonCount, numNeutrons );
-      updateStabilityIndicator( makeIsotopesModel.particleAtom.protonCount, numNeutrons );
-    } );
+    // initial update
+    updateElementName( makeIsotopesModel.particleAtom.protonCount, makeIsotopesModel.particleAtom.neutronCount );
+    updateStabilityIndicator( makeIsotopesModel.particleAtom.protonCount, makeIsotopesModel.particleAtom.neutronCount );
   }
 
   isotopesAndAtomicMass.register( 'InteractiveIsotopeNode', InteractiveIsotopeNode );

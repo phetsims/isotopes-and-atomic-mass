@@ -59,7 +59,7 @@ define( function( require ) {
   // on reality.  The smaller size is used when we want to show a lot of
   // atoms at once.
   var LARGE_ISOTOPE_RADIUS = 83; // in picometers.
-  var SMALL_ISOTOPE_RADIUS = 30; // in picometers. TODO
+  //var SMALL_ISOTOPE_RADIUS = 30; // in picometers. TODO
 
   // Numbers of isotopes that are placed into the buckets when a new atomic
   // number is selected.
@@ -380,7 +380,7 @@ define( function( require ) {
 
       // Add the appropriate isotope controllers.  This will create the
       // controllers in their initial states.
-       addIsotopeControllers();
+       this.addIsotopeControllers();
 
       // Set up the isotope controllers to match whatever is in the test
       // chamber.
