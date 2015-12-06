@@ -35,7 +35,7 @@ define( function( require ) {
 
   // constants
   var STAGE_SIZE = new Dimension2( 1008, 679 );
-  var NUMBER_FONT = new PhetFont( 56 );
+  var NUMBER_FONT = new PhetFont( 70 );
   var NUMBER_INSET = 20; // In screen coords, which are roughly pixels.
   var SYMBOL_BOX_WIDTH = 275; // In screen coords, which are roughly pixels.
   var SYMBOL_BOX_HEIGHT = 300; // In screen coords, which are roughly pixels.
@@ -175,7 +175,7 @@ define( function( require ) {
       massNumberDisplay.top = NUMBER_INSET;
     } );
 
-    symbolRectangle.scale( 0.40 );
+    symbolRectangle.scale( 0.20 );
     var symbolBox = new AccordionBox(symbolRectangle, {
         titleNode: new Text( symbolTitleString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
         fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
