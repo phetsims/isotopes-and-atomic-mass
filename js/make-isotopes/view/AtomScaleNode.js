@@ -34,8 +34,8 @@ define( function( require ) {
 
   // class data
   var DISPLAY_MODE = { MASS_NUMBER: 'mass number', ATOMIC_MASS: 'atomic mass' };
-  var SCALE_WIDTH = 320; //This is the width Aspect Ratio will control height
-  var READOUT_SIZE = new Dimension2( 100, 50 );
+  var SCALE_WIDTH = 275; //This is the width Aspect Ratio will control height
+  var READOUT_SIZE = new Dimension2( 80, 50 );
 
   /**
    * Class that defines the readout on the front of the scale.  This readout can display an atom's mass as either the
@@ -53,7 +53,7 @@ define( function( require ) {
 
     this.atom = atom;
 
-    var readoutText = new Text( '', { font: new PhetFont( 24 ), maxWidth: 0.9 * READOUT_SIZE.width, maxHeight: 0.9 * READOUT_SIZE.height } );
+    var readoutText = new Text( '', { font: new PhetFont( 20 ), maxWidth: 0.9 * READOUT_SIZE.width, maxHeight: 0.9 * READOUT_SIZE.height } );
 
     function updateReadout() {
       if ( displayModeProperty.get() === DISPLAY_MODE.MASS_NUMBER ) {
@@ -66,7 +66,7 @@ define( function( require ) {
 
       // Center the text in the display.
       readoutText.centerX = READOUT_SIZE.width / 2;
-      readoutText.centerY = READOUT_SIZE.height * 0.4;
+      readoutText.centerY = READOUT_SIZE.height * 0.325;
     }
 
     // Watch the property that represents the display mode and update the readout when it changes.
@@ -104,7 +104,7 @@ define( function( require ) {
     var atomicMassButton = new AquaRadioButton( displayModeProperty, DISPLAY_MODE.ATOMIC_MASS, new Text( atomicMassTitleString, { font: LABEL_FONT, maxWidth: 125, fill: 'white' } ), { radius: radioButtonRadius } );
     var displayButtonGroup = new Node();
     displayButtonGroup.addChild( massNumberButton );
-    atomicMassButton.top = massNumberButton.bottom + 10;
+    atomicMassButton.top = massNumberButton.bottom + 8;
     atomicMassButton.left = displayButtonGroup.left;
     displayButtonGroup.addChild( atomicMassButton );
     return displayButtonGroup;
@@ -130,8 +130,8 @@ define( function( require ) {
     // Add the scale readout node which displays either atomic mass or number.
     var scaleReadoutNode = new ScaleReadoutNode( atom, this.displayModeProperty );
     //scaleReadoutNode.setLeftCenter( new Vector2( SIZE.width * 0.16, weighScaleImage.centerY + 55 ) );
-    scaleReadoutNode.left = SCALE_WIDTH * 0.1;
-    scaleReadoutNode.centerY = weighScaleImage.height * 0.725;
+    scaleReadoutNode.left = SCALE_WIDTH * 0.075;
+    scaleReadoutNode.centerY = weighScaleImage.height * 0.7;
 
     this.addChild( scaleReadoutNode );
 
@@ -139,7 +139,7 @@ define( function( require ) {
     var displayModeSelectionNode = new DisplayModeSelectionNode( this.displayModeProperty );
     // Position the selector next to the readout.
     displayModeSelectionNode.centerX = (scaleReadoutNode.right + weighScaleImage.width - 5) / 2;
-    displayModeSelectionNode.centerY = weighScaleImage.height * 0.725;
+    displayModeSelectionNode.centerY = weighScaleImage.height * 0.7;
     this.addChild( displayModeSelectionNode );
   }
 
