@@ -27,7 +27,7 @@ define( function( require ) {
   // constants
   var PIE_CHART_RADIUS = 60;
   var FIRST_SLICE_COLOR = ' rgb( 134, 102, 172 ) ';
-  var SECOND_SLICE_COLOR = 'white';
+  var SECOND_SLICE_COLOR = ' #d3d3d3';
 
   // strings
   var thisIsotopeString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/thisIsotope' );
@@ -90,6 +90,7 @@ define( function( require ) {
       cornerRadius: 5,
       lineWidth: 1.5,
       align: 'center',
+      stroke: FIRST_SLICE_COLOR,
       centerY: pieChartBoundingRectangle.centerY
     } );
 
@@ -100,10 +101,10 @@ define( function( require ) {
       myIsotopeAbundancePanel.centerX = pieChartBoundingRectangle.left - 50; // empirically determined
       myIsotopeLabel.centerX = myIsotopeAbundancePanel.centerX;
       if (myIsotopeAbundance === 0){
-        connectingLine.visible = false;
+        leftConnectingLine.visible = false;
       }
       else {
-        connectingLine.visible = true;
+        leftConnectingLine.visible = true;
       }
     }
 
@@ -115,13 +116,13 @@ define( function( require ) {
     myIsotopeLabel.bottom = myIsotopeAbundancePanel.top - 5;
     this.addChild( myIsotopeLabel );
 
-    var connectingLine = new Line( myIsotopeAbundancePanel.centerX, myIsotopeAbundancePanel.centerY,
+    var leftConnectingLine = new Line( myIsotopeAbundancePanel.centerX, myIsotopeAbundancePanel.centerY,
       pieChartBoundingRectangle.centerX, pieChartBoundingRectangle.centerY, {
-      stroke: 'black',
+      stroke: FIRST_SLICE_COLOR,
       lineDash: [ 3, 1 ]
     });
-    this.addChild( connectingLine );
-    connectingLine.moveToBack();
+    this.addChild( leftConnectingLine );
+    leftConnectingLine.moveToBack();
 
     var otherIsotopeLabel = new MultiLineText( '', {
       font: new PhetFont( { size: 12 } ),
@@ -135,15 +136,26 @@ define( function( require ) {
       var name = AtomIdentifier.getName( makeIsotopesModel.particleAtom.protonCount );
       if ( makeIsotopesModel.particleAtom.protonCount > 0 && myIsotopeAbundance < 1 ){
         otherIsotopeLabel.text = otherString + '\n' + name + '\n' + isotopesString;
+        otherIsotopeLabel.visible = true;
+        //rightConnectingLine.visible = true;
       }
       else{
-        otherIsotopeLabel.text = '';
+        otherIsotopeLabel.visible = false;
+        //rightConnectingLine.visible = false;
       }
       otherIsotopeLabel.centerY = pieChartBoundingRectangle.centerY;
       otherIsotopeLabel.left = pieChartBoundingRectangle.right + 5;
     }
 
     this.addChild( otherIsotopeLabel );
+
+    /*var rightConnectingLine = new Line( pieChartBoundingRectangle.centerX, pieChartBoundingRectangle.centerY,
+      pieChartBoundingRectangle.right + 20, pieChartBoundingRectangle.centerY, {
+        stroke: SECOND_SLICE_COLOR,
+        lineDash: [ 3, 1 ]
+      });
+    this.addChild( rightConnectingLine );
+    rightConnectingLine.moveToBack();*/
 
     // do initial update to the pie chart
     updatePieChart();
