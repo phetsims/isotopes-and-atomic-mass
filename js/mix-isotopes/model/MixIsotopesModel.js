@@ -442,7 +442,7 @@ define( function( require ) {
         var proton = new Particle( 'proton' );
         this.particleAtom.addParticle( proton );
       }
-      for ( var k = 0; k < atom.neutronCount; j++ ) {
+      for ( var k = 0; k < atom.neutronCount; k++ ) {
         var neutron = new Particle( 'neutron' );
         this.particleAtom.addParticle( neutron );
       }
