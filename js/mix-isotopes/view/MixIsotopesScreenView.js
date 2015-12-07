@@ -103,7 +103,9 @@ define( function( require ) {
 
     // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
     // element is Neon for this sim.
-    var periodicTableNode = new PeriodicTableNode( mixIsotopesModel.numberAtom, mixIsotopesModel.particleAtom, 18 );
+    var periodicTableNode = new PeriodicTableNode( mixIsotopesModel.numberAtom,
+      { interactiveMax: 18
+      });
     periodicTableNode.scale( 0.55 );
     periodicTableNode.top = 10;
     periodicTableNode.right = this.layoutBounds.width - 10;
@@ -118,6 +120,14 @@ define( function( require ) {
       // Bucket hole is first item added to view for proper layering.
       self.addChild( neutronBucketHole );
       self.addChild( neutronBucketFront );
+
+      mixIsotopesModel.bucketList.addItemRemovedListener( function removalListener( removedBucket ) {
+        if ( removedBucket === addedBucket ) {
+          self.removeChild( neutronBucketHole );
+          self.removeChild( neutronBucketFront );
+          mixIsotopesModel.bucketList.removeItemRemovedListener( removalListener );
+        }
+      } );
     } );
 
     mixIsotopesModel.bucketList.forEach( function( addedBucket ) {
@@ -128,6 +138,15 @@ define( function( require ) {
       // Bucket hole is first item added to view for proper layering.
       self.addChild( neutronBucketHole );
       self.addChild( neutronBucketFront );
+
+      mixIsotopesModel.bucketList.addItemRemovedListener( function removalListener( removedBucket ) {
+        if ( removedBucket === addedBucket ) {
+          self.removeChild( neutronBucketHole );
+          self.removeChild( neutronBucketFront );
+          mixIsotopesModel.bucketList.removeItemRemovedListener( removalListener );
+        }
+      } );
+
     } );
 
 

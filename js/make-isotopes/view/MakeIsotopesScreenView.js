@@ -22,7 +22,7 @@ define( function( require ) {
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var Node = require( 'SCENERY/nodes/Node' );
   var ParticleCountDisplay = require( 'SHRED/view/ParticleCountDisplay' );
-  var PeriodicTableNode = require( 'SHRED/view/PeriodicTableNode' );
+  var ExpandedPeriodicTableNode = require( 'SHRED/view/ExpandedPeriodicTableNode' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Property = require( 'AXON/Property' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
@@ -111,7 +111,7 @@ define( function( require ) {
 
     // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
     // element is Neon for this sim.
-    var periodicTableNode = new PeriodicTableNode( makeIsotopesModel.numberAtom, makeIsotopesModel.particleAtom, 10 );
+    var periodicTableNode = new ExpandedPeriodicTableNode( makeIsotopesModel.numberAtom, 10 );
     periodicTableNode.scale( 0.55 );
     periodicTableNode.top = 10;
     periodicTableNode.right = this.layoutBounds.width - 10;
