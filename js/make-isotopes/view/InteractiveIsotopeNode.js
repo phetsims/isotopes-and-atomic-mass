@@ -167,7 +167,7 @@ define( function( require ) {
 
     // Define the update function for the stability indicator.
     var updateStabilityIndicator = function( numProtons, numNeutrons ) {
-      var stabilityIndicatorCenterPos = new Vector2( isotopeAtomNode.centerX, isotopeAtomNode.centerY + (isotopeAtomNode.centerY - nucleonLayersNode.top) + 20 );
+      var stabilityIndicatorCenterPos = new Vector2( isotopeAtomNode.centerX, isotopeAtomNode.centerY + (isotopeAtomNode.centerY - nucleonLayersNode.top) + 15 );
       if ( numProtons > 0 ) {
         if ( AtomIdentifier.isStable( numProtons, numNeutrons ) ) {
           stabilityIndicator.text = stableString;

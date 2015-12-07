@@ -137,25 +137,26 @@ define( function( require ) {
       if ( makeIsotopesModel.particleAtom.protonCount > 0 && myIsotopeAbundance < 1 ){
         otherIsotopeLabel.text = otherString + '\n' + name + '\n' + isotopesString;
         otherIsotopeLabel.visible = true;
-        //rightConnectingLine.visible = true;
+        rightConnectingLine.visible = true;
       }
       else{
         otherIsotopeLabel.visible = false;
-        //rightConnectingLine.visible = false;
+        rightConnectingLine.visible = false;
       }
       otherIsotopeLabel.centerY = pieChartBoundingRectangle.centerY;
-      otherIsotopeLabel.left = pieChartBoundingRectangle.right + 5;
+      otherIsotopeLabel.left = pieChartBoundingRectangle.right + 10;
+      rightConnectingLine.right = otherIsotopeLabel.left;
     }
 
     this.addChild( otherIsotopeLabel );
 
-    /*var rightConnectingLine = new Line( pieChartBoundingRectangle.centerX, pieChartBoundingRectangle.centerY,
+    var rightConnectingLine = new Line( pieChartBoundingRectangle.centerX, pieChartBoundingRectangle.centerY,
       pieChartBoundingRectangle.right + 20, pieChartBoundingRectangle.centerY, {
         stroke: SECOND_SLICE_COLOR,
         lineDash: [ 3, 1 ]
       });
     this.addChild( rightConnectingLine );
-    rightConnectingLine.moveToBack();*/
+    rightConnectingLine.moveToBack();
 
     // do initial update to the pie chart
     updatePieChart();
