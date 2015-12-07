@@ -18,7 +18,7 @@ define( function( require ) {
   // var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var Vector2 = require( 'DOT/Vector2' );
-  // var Dimension2 = require( 'DOT/Dimension2' );
+  var Dimension2 = require( 'DOT/Dimension2' );
   var Node = require( 'SCENERY/nodes/Node' );
   var BucketHole = require( 'SCENERY_PHET/bucket/BucketHole' );
   var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
@@ -36,6 +36,7 @@ define( function( require ) {
   var Text = require( 'SCENERY/nodes/Text' );
 
   // class data
+  var STAGE_SIZE = new Dimension2( 1008, 679 );
   // var DISTANCE_BUTTON_CENTER_FROM_BOTTOM = 30;
   // var BUTTON_FONT = new PhetFont( { weight: 'bold', fontSize: 18 } );
 
@@ -65,10 +66,10 @@ define( function( require ) {
     // adjusted to shift the center right or left, and the scale factor
     // can be adjusted to zoom in or out (smaller numbers zoom out, larger
     // ones zoom in).
-    this.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
-      new Vector2( 0, 0 ),
-      new Vector2( Math.round( this.layoutBounds.width * 0.295 ), Math.round( this.layoutBounds.height * 0.38 ) ),
-      0.16 ); // This last parameter is a "Zoom factor" - smaller zooms out, larger zooms in.
+    this.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping( Vector2.ZERO,
+      new Vector2( Math.round( STAGE_SIZE.width * 0.32 ), Math.round( STAGE_SIZE.height * 0.49 ) ),
+      1.0 // "Zoom factor" - smaller zooms out, larger zooms in.
+    );
 
 
     //// Nodes that hide and show the pie chart and mass indicator.
@@ -198,7 +199,8 @@ define( function( require ) {
     } );
 
     testChamberNode.top = periodicTableNode.top;
-    chamberLayer.addChild( testChamberNode );
+    testChamberNode.left = 20;
+    this.addChild( testChamberNode );
 
 
     var compositionBox = new AccordionBox( new Rectangle( 0, 0, 120, 120, 0, 0 ), {

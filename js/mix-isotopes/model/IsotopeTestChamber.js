@@ -30,7 +30,7 @@ define( function( require ) {
   // Size of the "test chamber", which is the area in model space into which
   // the isotopes can be dragged in order to contribute to the current
   // average atomic weight.
-  var SIZE = new Dimension2( 2500, 2000 ); // In picometers.
+  var SIZE = new Dimension2( 450, 300 ); // In picometers.
 
   // Rectangle that defines the location of the test chamber.  This is
   // set up so that the center of the test chamber is at (0, 0) in model

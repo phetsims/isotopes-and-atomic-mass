@@ -540,27 +540,27 @@ define( function( require ) {
       //
       var buckets = this.interactivityMode === InteractivityMode.BUCKETS_AND_LARGE_ATOMS || this.showingNaturesMix;
       // Set up layout variables.
-      var controllerYOffset = this.testChamber.getTestChamberRect().getMinY() - 400;
+      var controllerYOffset = -25 ;
       var interControllerDistanceX;
       var controllerXOffset;
       if ( this.possibleIsotopes.length < 4 ) {
         // We can fit 3 or less cleanly under the test chamber.
         interControllerDistanceX = this.testChamber.getTestChamberRect().getWidth() / this.possibleIsotopes.length;
-        controllerXOffset = this.testChamber.getTestChamberRect().getMinX() + interControllerDistanceX / 2;
+        controllerXOffset = -225;
       }
       else {
         // Four controllers don't fit well under the chamber, so use a
         // positioning algorithm where they are extended a bit to the
         // right.
         interControllerDistanceX = ( this.testChamber.getTestChamberRect().getWidth() * 1.2 ) / this.possibleIsotopes.length;
-        controllerXOffset = this.testChamber.getTestChamberRect().getMinX() + interControllerDistanceX / 2;
+        controllerXOffset = -225;
       }
       // Add the controllers.
       for ( var i = 0; i < this.possibleIsotopes.length; i++ ) {
         // {MovableAtom}
         var isotopeConfig = this.possibleIsotopes[ i ];
         if ( buckets ) {
-          var bucketCaption = AtomIdentifier.getName( isotopeConfig ) + '-' + isotopeConfig.getIsotopeAtomicMass();
+          var bucketCaption = AtomIdentifier.getName( isotopeConfig.protonCount ) + '-' + isotopeConfig.massNumber;
           var newBucket = new MonoIsotopeBucket( new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffset ),
             BUCKET_SIZE, this.getColorForIsotope( isotopeConfig ), bucketCaption, LARGE_ISOTOPE_RADIUS,
             isotopeConfig.protonCount, isotopeConfig.neutronCount );
