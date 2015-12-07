@@ -199,12 +199,17 @@ define( function( require ) {
     },
 
     setAtomConfiguration: function( numberAtom ) {
-        var that =this;
+        var that = this;
         this.particleAtom.clear();
         this.protons.clear();
         this.electrons.clear();
         this.neutrons.clear();
         this.neutronBucket.reset();
+        if ( this.numberAtom != numberAtom ) {
+          this.numberAtom.protonCount = numberAtom.protonCount;
+          this.numberAtom.electronCount = numberAtom.electronCount;
+          this.numberAtom.neutronCount = numberAtom.neutronCount;
+        }
 
         // Add the particles.
         for ( var i = 0; i < numberAtom.electronCount; i++ ) {
