@@ -161,22 +161,22 @@ define( function( require ) {
         this.containedIsotopes.push( isotope );
         // If the edges of the isotope are outside of the container,
         // move it to be fully inside.
-        var protrusion = isotope.position.x + isotope.radius - TEST_CHAMBER_RECT.bounds.maxX;
+        var protrusion = isotope.position.x + isotope.radius - TEST_CHAMBER_RECT.maxX;
         if ( protrusion >= 0 ) {
           isotope.setPositionAndDestination( new Vector2( isotope.position.x - protrusion, isotope.position.y ) );
         }
         else {
-          protrusion = TEST_CHAMBER_RECT.bounds.minX - ( isotope.position.x - isotope.radius );
+          protrusion = TEST_CHAMBER_RECT.minX - ( isotope.position.x - isotope.radius );
           if ( protrusion >= 0 ) {
             isotope.setPositionAndDestination( new Vector2( isotope.position.x + protrusion, isotope.position.y ) );
           }
         }
-        protrusion = isotope.position.y + isotope.radius - TEST_CHAMBER_RECT.bounds.maxY;
+        protrusion = isotope.position.y + isotope.radius - TEST_CHAMBER_RECT.maxY;
         if ( protrusion >= 0 ) {
           isotope.setPositionAndDestination( new Vector2( isotope.position.x, isotope.position.y - protrusion ) );
         }
         else {
-          protrusion = TEST_CHAMBER_RECT.bounds.minY - ( isotope.position.y - isotope.radius );
+          protrusion = TEST_CHAMBER_RECT.minY - ( isotope.position.y - isotope.radius );
           if ( protrusion >= 0 ) {
             isotope.setPositionAndDestination( isotope.position.x, isotope.position.y + protrusion );
           }
@@ -203,8 +203,9 @@ define( function( require ) {
      */
 
     bulkAddIsotopesToChamber: function( isotopeList ) {
+      var self = this;
       isotopeList.forEach( function( isotope ) {
-        this.addIsotopeToChamber( isotopeList.get( isotope ), false );
+        self.addIsotopeToChamber( isotope, false );
       } );
       this.updateCountProperty();
       this.updateAverageAtomicMassProperty();
@@ -481,8 +482,8 @@ define( function( require ) {
      */
     generateRandomLocation: function() {
       return new Vector2(
-        TEST_CHAMBER_RECT.bounds.minX + Math.random() * TEST_CHAMBER_RECT.width,
-        TEST_CHAMBER_RECT.bounds.minY + Math.random() * TEST_CHAMBER_RECT.height );
+        TEST_CHAMBER_RECT.minX + Math.random() * TEST_CHAMBER_RECT.width,
+        TEST_CHAMBER_RECT.minY + Math.random() * TEST_CHAMBER_RECT.height );
     },
 
 

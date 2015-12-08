@@ -205,7 +205,7 @@ define( function( require ) {
         this.electrons.clear();
         this.neutrons.clear();
         this.neutronBucket.reset();
-        if ( this.numberAtom != numberAtom ) {
+        if ( this.numberAtom !== numberAtom ) {
           this.numberAtom.protonCount = numberAtom.protonCount;
           this.numberAtom.electronCount = numberAtom.electronCount;
           this.numberAtom.neutronCount = numberAtom.neutronCount;

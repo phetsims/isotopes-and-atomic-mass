@@ -112,42 +112,44 @@ define( function( require ) {
     this.addChild( periodicTableNode );
 
     // Adding Buckets
-    mixIsotopesModel.bucketList.addItemAddedListener( function( addedBucket ) {
-      var neutronBucketHole = new BucketHole( addedBucket, self.mvt);
-      var neutronBucketFront = new BucketFront( addedBucket, self.mvt );
-      neutronBucketFront.addInputListener( new BucketDragHandler( addedBucket, neutronBucketFront, self.mvt ) );
+
+    function addBucketView ( addedBucket ) {
+      var bucketHole = new BucketHole( addedBucket, self.mvt);
+      var bucketFront = new BucketFront( addedBucket, self.mvt );
+      bucketFront.addInputListener( new BucketDragHandler( addedBucket, bucketFront, self.mvt ) );
 
       // Bucket hole is first item added to view for proper layering.
-      self.addChild( neutronBucketHole );
-      self.addChild( neutronBucketFront );
+      self.addChild( bucketHole );
+      self.addChild( bucketFront );
 
       mixIsotopesModel.bucketList.addItemRemovedListener( function removalListener( removedBucket ) {
         if ( removedBucket === addedBucket ) {
-          self.removeChild( neutronBucketHole );
-          self.removeChild( neutronBucketFront );
+          self.removeChild( bucketHole );
+          self.removeChild( bucketFront );
           mixIsotopesModel.bucketList.removeItemRemovedListener( removalListener );
         }
       } );
-    } );
+    }
+    mixIsotopesModel.bucketList.addItemAddedListener( function( addedBucket ) { addBucketView( addedBucket); } );
 
-    mixIsotopesModel.bucketList.forEach( function( addedBucket ) {
-      var neutronBucketHole = new BucketHole( addedBucket, self.mvt );
-      var neutronBucketFront = new BucketFront( addedBucket, self.mvt );
-      neutronBucketFront.addInputListener( new BucketDragHandler( addedBucket, neutronBucketFront, self.mvt ) );
+    mixIsotopesModel.bucketList.forEach( function( addedBucket ) { addBucketView( addedBucket); } );
 
-      // Bucket hole is first item added to view for proper layering.
-      self.addChild( neutronBucketHole );
-      self.addChild( neutronBucketFront );
+    // Adding Isotopes
 
-      mixIsotopesModel.bucketList.addItemRemovedListener( function removalListener( removedBucket ) {
-        if ( removedBucket === addedBucket ) {
-          self.removeChild( neutronBucketHole );
-          self.removeChild( neutronBucketFront );
-          mixIsotopesModel.bucketList.removeItemRemovedListener( removalListener );
+    mixIsotopesModel.isotopesList.forEach ( function( addedIsotope ) {
+      /*var particleView = new ParticleView( addedIsotope, self.mvt );
+      particleView.center = self.mvt.modelToViewPosition( addedIsotope.position );
+      particleView.pickable = true;
+
+      self.addChild( particleView )
+
+      mixIsotopesModel.isotopesList.addItemRemovedListener( function removalListener( removedIsotope ) {
+        if ( removedIsotope === addedIsotope ) {
+          self.removeChild( particleView );
+          mixIsotopesModel.isotopesList.removeItemRemovedListener( removalListener );
         }
-      } );
-
-    } );
+      } );*/
+    });
 
 
     // TODO Will port over soon
