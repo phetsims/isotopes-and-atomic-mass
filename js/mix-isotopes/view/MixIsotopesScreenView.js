@@ -136,8 +136,8 @@ define( function( require ) {
 
     // Adding Isotopes
 
-    mixIsotopesModel.isotopesList.forEach ( function( addedIsotope ) {
-      /*var particleView = new ParticleView( addedIsotope, self.mvt );
+    /*mixIsotopesModel.isotopesList.forEach ( function( addedIsotope ) {
+      var particleView = new ParticleView( addedIsotope, self.mvt );
       particleView.center = self.mvt.modelToViewPosition( addedIsotope.position );
       particleView.pickable = true;
 
@@ -148,8 +148,8 @@ define( function( require ) {
           self.removeChild( particleView );
           mixIsotopesModel.isotopesList.removeItemRemovedListener( removalListener );
         }
-      } );*/
-    });
+      } );
+    });*/
 
 
     // TODO Will port over soon

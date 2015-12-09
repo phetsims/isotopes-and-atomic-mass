@@ -239,7 +239,7 @@ define( function( require ) {
         // newIsotope.addListener( isotopeGrabbedListener );
 
         this.getBucketForIsotope( isotopeConfig ).addIsotopeInstanceFirstOpen( newIsotope, moveImmediately );
-        this.isotopesList.add(newIsotope);
+        //this.isotopesList.add(newIsotope);
       }
 
       else {
@@ -538,7 +538,7 @@ define( function( require ) {
           if ( !this.showingNaturesMix ) {
             // Create and add initial isotopes to the new bucket.
             for ( var j = 0; j < NUM_LARGE_ISOTOPES_PER_BUCKET; j++ ) {
-              this.createAndAddIsotope( isotopeConfig, true );
+              //this.createAndAddIsotope( isotopeConfig, true );
             }
           }
         }
@@ -735,12 +735,13 @@ define( function( require ) {
      */
     interactivityModeObserver: function() {
       // TODO get this function ported
-      //assert && assert( this.showingNaturesMix === false ); // Interactivity mode shouldn't change when showing nature's mix.
-      /*if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( this.prototypeIsotope.protonCount ) ) {
+      assert && assert( this.showingNaturesMix === false ); // Interactivity mode shouldn't change when showing nature's mix.
+      if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( this.prototypeIsotope.protonCount ) ) {
         // Erase any previous state for this isotope.
-        this.mapIsotopeConfigToUserMixState.delete( this.prototypeIsotope.protonCount );
+        // TODO this is giving error
+        //this.mapIsotopeConfigToUserMixState.delete( this.prototypeIsotope.protonCount );
       }
-      this.removeAllIsotopesFromTestChamberAndModel();*/
+      this.removeAllIsotopesFromTestChamberAndModel();
     }
 
   } );
