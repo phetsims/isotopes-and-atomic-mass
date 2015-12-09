@@ -147,12 +147,12 @@ define( function( require ) {
     symbolRectangle.addChild( symbolText );
 
     // Add the proton count display.
-    var protonCountDisplay = new Text( '0',
-      {
+    var protonCountDisplay = new Text( '0', {
         font: NUMBER_FONT,
         fill: 'red'
       } );
     symbolRectangle.addChild( protonCountDisplay );
+
     // Add the listener to update the proton count.
     makeIsotopesModel.particleAtom.protonCountProperty.link( function( protonCount ) {
       protonCountDisplay.text = protonCount;
@@ -161,8 +161,7 @@ define( function( require ) {
     } );
 
     // Add the mass number display.
-    var massNumberDisplay = new Text( '0',
-      {
+    var massNumberDisplay = new Text( '0', {
         font: NUMBER_FONT,
         fill: 'black'
       } );
@@ -175,7 +174,7 @@ define( function( require ) {
       massNumberDisplay.top = NUMBER_INSET;
     } );
 
-    symbolRectangle.scale( 0.20 );
+    symbolRectangle.scale( 0.25 );
     var symbolBox = new AccordionBox(symbolRectangle, {
         titleNode: new Text( symbolTitleString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
         fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
