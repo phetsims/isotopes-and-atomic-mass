@@ -165,9 +165,29 @@ define( function( require ) {
     var stabilityIndicator = new Text( '', { font: new PhetFont( { size: 12, weight: 'bold' } ) } );
     this.addChild( stabilityIndicator );
 
+    function getNucleusLowerBound () {
+      var lowerBound = 0;
+      makeIsotopesModel.protons.forEach( function( proton ) {
+        var particlePosition = thisNode.modelViewTransform.modelToViewPosition( proton.position );
+        if ( particlePosition.y > lowerBound ){
+          lowerBound = particlePosition.y;
+        }
+      } );
+      makeIsotopesModel.neutrons.forEach( function( neutron ) {
+        if ( makeIsotopesModel.particleAtom.neutrons.contains( neutron ) ){
+          var particlePosition = thisNode.modelViewTransform.modelToViewPosition( neutron.position );
+          if ( particlePosition.y > lowerBound ){
+            lowerBound = particlePosition.y;
+          }
+        }
+      } );
+      return lowerBound;
+    }
+
     // Define the update function for the stability indicator.
     var updateStabilityIndicator = function( numProtons, numNeutrons ) {
-      var stabilityIndicatorCenterPos = new Vector2( isotopeAtomNode.centerX, isotopeAtomNode.centerY + (isotopeAtomNode.centerY - nucleonLayersNode.top) + 15 );
+      var lowerNucleusBound = getNucleusLowerBound();
+      var stabilityIndicatorCenterPos = new Vector2( isotopeAtomNode.centerX,  lowerNucleusBound + 25 );
       if ( numProtons > 0 ) {
         if ( AtomIdentifier.isStable( numProtons, numNeutrons ) ) {
           stabilityIndicator.text = stableString;
