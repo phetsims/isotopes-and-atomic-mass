@@ -9,6 +9,7 @@
  * @author John Blanco
  * @author Jesse Greenberg
  * @author James Smith
+ * @author Aadish Gupta
  */
 
 define( function( require ) {
@@ -56,7 +57,7 @@ define( function( require ) {
   // a given time are all the same size.  The larger size is based somewhat
   // on reality.  The smaller size is used when we want to show a lot of
   // atoms at once.
-  var LARGE_ISOTOPE_RADIUS = 83; // in picometers.
+  var LARGE_ISOTOPE_RADIUS = 10; // in picometers.
   //var SMALL_ISOTOPE_RADIUS = 30; // in picometers. TODO
 
   // Numbers of isotopes that are placed into the buckets when a new atomic
@@ -89,33 +90,10 @@ define( function( require ) {
    * @author James Smith
    */
   function State( model ) {
-
     this.elementConfig = model.prototypeIsotope;
     this.isotopeTestChamberState = model.testChamber.getState();
     this.interactivityMode = model.interactivityMode;
     this.showingNaturesMix = model.showingNaturesMix;
-
-    // TODO These are here just to help with the port and should be removed after the port is completed.
-    //
-    //
-    //public IAtom getElementConfiguration() {
-    //  return elementConfig;
-    //}
-    //
-    //public IsotopeTestChamber.State getIsotopeTestChamberState() {
-    //  return isotopeTestChamberState;
-    //}
-    //
-    //public InteractivityMode getInteractivityMode() {
-    //  return interactivityMode;
-    //}
-    //
-    //public boolean isShowingNaturesMix() {
-    //  return showingNaturesMix;
-    //}
-    //
-    //public void setShowingNaturesMix( boolean showingNaturesMix ) {
-    //  this.showingNaturesMix = showingNaturesMix;
   }
 
   /**
@@ -140,8 +118,6 @@ define( function( require ) {
 
     var self = this;
 
-    // Make available a 'number atom' that tracks the state of the particle atom.
-    // TODO Remove this and put it in particleAtom
     this.numberAtom = new NumberAtom( {
       protonCount: DEFAULT_ATOM_CONFIG.protonCount,
       neutronCount: DEFAULT_ATOM_CONFIG.neutronCount,
@@ -155,8 +131,6 @@ define( function( require ) {
     // to set the atomic weight of the family of isotopes that are currently
     // in use.
     this.prototypeIsotope = new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } );
-
-    // console.log(AtomIdentifier.getStableIsotopesOfElement(1));
 
     // List of the isotope buckets.
     this.bucketList = new ObservableArray();
@@ -184,7 +158,7 @@ define( function( require ) {
 
     // Listen to our own "showing nature's mix" property so that we can
     // show and hide the appropriate isotopes when the value changes.
-    this.showingNaturesMixProperty.link( function() {
+    this.showingNaturesMixProperty.lazyLink( function() {
       if ( self.showingNaturesMix ) {
         // Get the current user's mix state.
         var usersMixState = self.getState();
@@ -210,6 +184,15 @@ define( function( require ) {
   isotopesAndAtomicMass.register( 'MixIsotopesModel', MixIsotopesModel );
 
   return inherit( PropertySet, MixIsotopesModel, {
+
+    _nucleusJumpCount: 0,
+    // Main model step function, called by the framework.
+    step: function( dt ) {
+      // Update particle positions.
+      this.isotopesList.forEach( function( neutron ) {
+        neutron.step( dt );
+      } );
+    },
     // -----------------------------------------------------------------------
     // Methods
     // -----------------------------------------------------------------------
@@ -238,8 +221,8 @@ define( function( require ) {
         // newIsotope.setMotionVelocity( ATOM_MOTION_SPEED );
         // newIsotope.addListener( isotopeGrabbedListener );
 
-        this.getBucketForIsotope( isotopeConfig ).addIsotopeInstanceFirstOpen( newIsotope, moveImmediately );
-        //this.isotopesList.add(newIsotope);
+        this.getBucketForIsotope( isotopeConfig ).addIsotopeInstanceFirstOpen( newIsotope, false );
+        this.isotopesList.add(newIsotope);
       }
 
       else {
@@ -506,6 +489,7 @@ define( function( require ) {
       // Remove existing controllers.
       this.removeBuckets();
       this.removeNumericalControllers();
+      this.isotopesList.clear();
 
       //
       var buckets = this.interactivityMode === InteractivityMode.BUCKETS_AND_LARGE_ATOMS || this.showingNaturesMix;
@@ -538,7 +522,7 @@ define( function( require ) {
           if ( !this.showingNaturesMix ) {
             // Create and add initial isotopes to the new bucket.
             for ( var j = 0; j < NUM_LARGE_ISOTOPES_PER_BUCKET; j++ ) {
-              //this.createAndAddIsotope( isotopeConfig, true );
+              this.createAndAddIsotope( isotopeConfig, true );
             }
           }
         }

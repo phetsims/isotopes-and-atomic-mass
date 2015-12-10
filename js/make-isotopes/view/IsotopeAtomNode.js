@@ -40,8 +40,6 @@ define( function( require ) {
     var isotopeElectronCloud = new IsotopeElectronCloudView( particleAtom, modelViewTransform );
     this.addChild( isotopeElectronCloud );
 
-
-
     // Add the handler that keeps the bottom of the atom in one place.  This was added due to a request to make the
     // atom get larger and smaller but to stay on the scale.
     var updateAtomPosition = function( numProtons ) {

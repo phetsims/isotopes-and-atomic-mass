@@ -13,7 +13,7 @@
 define( function( require ) {
   'use strict';
 
-  //modules
+  // modules
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Vector2 = require( 'DOT/Vector2' );
@@ -22,11 +22,7 @@ define( function( require ) {
   var ObservableArray = require( 'AXON/ObservableArray' );
   var PropertySet = require( 'AXON/PropertySet' );
 
-
-  // ------------------------------------------------------------------------
-  // Class Data
-  // ------------------------------------------------------------------------
-
+  // constants
   // Size of the "test chamber", which is the area in model space into which
   // the isotopes can be dragged in order to contribute to the current
   // average atomic weight.

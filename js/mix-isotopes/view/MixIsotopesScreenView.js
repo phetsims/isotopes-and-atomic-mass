@@ -15,6 +15,7 @@ define( function( require ) {
   var AccordionBox = require( 'SUN/AccordionBox' );
   var inherit = require( 'PHET_CORE/inherit' );
   var ScreenView = require( 'JOIST/ScreenView' );
+  var ParticleView = require( 'SHRED/view/ParticleView' );
   // var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var Vector2 = require( 'DOT/Vector2' );
@@ -121,6 +122,7 @@ define( function( require ) {
       // Bucket hole is first item added to view for proper layering.
       self.addChild( bucketHole );
       self.addChild( bucketFront );
+      bucketFront.moveToFront();
 
       mixIsotopesModel.bucketList.addItemRemovedListener( function removalListener( removedBucket ) {
         if ( removedBucket === addedBucket ) {
@@ -135,8 +137,7 @@ define( function( require ) {
     mixIsotopesModel.bucketList.forEach( function( addedBucket ) { addBucketView( addedBucket); } );
 
     // Adding Isotopes
-
-    /*mixIsotopesModel.isotopesList.forEach ( function( addedIsotope ) {
+    mixIsotopesModel.isotopesList.forEach ( function( addedIsotope ) {
       var particleView = new ParticleView( addedIsotope, self.mvt );
       particleView.center = self.mvt.modelToViewPosition( addedIsotope.position );
       particleView.pickable = true;
@@ -149,7 +150,22 @@ define( function( require ) {
           mixIsotopesModel.isotopesList.removeItemRemovedListener( removalListener );
         }
       } );
-    });*/
+    });
+
+    mixIsotopesModel.isotopesList.addItemAddedListener ( function( addedIsotope ) {
+      var particleView = new ParticleView( addedIsotope, self.mvt );
+      particleView.center = self.mvt.modelToViewPosition( addedIsotope.position );
+      particleView.pickable = true;
+
+      self.addChild( particleView )
+
+      mixIsotopesModel.isotopesList.addItemRemovedListener( function removalListener( removedIsotope ) {
+        if ( removedIsotope === addedIsotope ) {
+          self.removeChild( particleView );
+          mixIsotopesModel.isotopesList.removeItemRemovedListener( removalListener );
+        }
+      } );
+    });
 
 
     // TODO Will port over soon
