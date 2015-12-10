@@ -30,7 +30,7 @@ define( function( require ) {
   // var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var SharedConstants = require( 'SHRED/SharedConstants' );
   var Property = require( 'AXON/Property' );
-  var PeriodicTableNode = require( 'SHRED/view/PeriodicTableNode' );
+  var ExpandedPeriodicTableNode = require( 'SHRED/view/ExpandedPeriodicTableNode' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   var AverageAtomicMassIndicator = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/AverageAtomicMassIndicator' );
@@ -87,8 +87,8 @@ define( function( require ) {
     this.addChild( bucketHoleLayer );
     var chamberLayer = new Node();
     this.addChild( chamberLayer );
-    var particleLayer = new Node();
-    this.addChild( particleLayer );
+    var isotopeLayer = new Node();
+    this.addChild( isotopeLayer );
     var bucketFrontLayer = new Node();
     this.addChild( bucketFrontLayer );
 
@@ -104,9 +104,7 @@ define( function( require ) {
 
     // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
     // element is Neon for this sim.
-    var periodicTableNode = new PeriodicTableNode( mixIsotopesModel.numberAtom,
-      { interactiveMax: 18
-      });
+    var periodicTableNode = new ExpandedPeriodicTableNode( mixIsotopesModel.numberAtom, 18 );
     periodicTableNode.scale( 0.55 );
     periodicTableNode.top = 10;
     periodicTableNode.right = this.layoutBounds.width - 10;
@@ -120,14 +118,14 @@ define( function( require ) {
       bucketFront.addInputListener( new BucketDragHandler( addedBucket, bucketFront, self.mvt ) );
 
       // Bucket hole is first item added to view for proper layering.
-      self.addChild( bucketHole );
-      self.addChild( bucketFront );
+      bucketHoleLayer.addChild( bucketHole );
+      bucketFrontLayer.addChild( bucketFront );
       bucketFront.moveToFront();
 
       mixIsotopesModel.bucketList.addItemRemovedListener( function removalListener( removedBucket ) {
         if ( removedBucket === addedBucket ) {
-          self.removeChild( bucketHole );
-          self.removeChild( bucketFront );
+          bucketHoleLayer.removeChild( bucketHole );
+          bucketFrontLayer.removeChild( bucketFront );
           mixIsotopesModel.bucketList.removeItemRemovedListener( removalListener );
         }
       } );
@@ -137,35 +135,24 @@ define( function( require ) {
     mixIsotopesModel.bucketList.forEach( function( addedBucket ) { addBucketView( addedBucket); } );
 
     // Adding Isotopes
-    mixIsotopesModel.isotopesList.forEach ( function( addedIsotope ) {
-      var particleView = new ParticleView( addedIsotope, self.mvt );
-      particleView.center = self.mvt.modelToViewPosition( addedIsotope.position );
-      particleView.pickable = true;
 
-      self.addChild( particleView )
+    function addIsotopeView ( addedIsotope ){
+      var isotopeView = new ParticleView( addedIsotope, self.mvt );
+      isotopeView.center = self.mvt.modelToViewPosition( addedIsotope.position );
+      isotopeView.pickable = true;
 
-      mixIsotopesModel.isotopesList.addItemRemovedListener( function removalListener( removedIsotope ) {
-        if ( removedIsotope === addedIsotope ) {
-          self.removeChild( particleView );
-          mixIsotopesModel.isotopesList.removeItemRemovedListener( removalListener );
-        }
-      } );
-    });
-
-    mixIsotopesModel.isotopesList.addItemAddedListener ( function( addedIsotope ) {
-      var particleView = new ParticleView( addedIsotope, self.mvt );
-      particleView.center = self.mvt.modelToViewPosition( addedIsotope.position );
-      particleView.pickable = true;
-
-      self.addChild( particleView )
+      isotopeLayer.addChild( isotopeView );
 
       mixIsotopesModel.isotopesList.addItemRemovedListener( function removalListener( removedIsotope ) {
         if ( removedIsotope === addedIsotope ) {
-          self.removeChild( particleView );
+          isotopeLayer.removeChild( isotopeView );
           mixIsotopesModel.isotopesList.removeItemRemovedListener( removalListener );
         }
       } );
-    });
+    }
+
+    mixIsotopesModel.isotopesList.forEach ( function( addedIsotope ) { addIsotopeView( addedIsotope ); });
+    mixIsotopesModel.isotopesList.addItemAddedListener ( function( addedIsotope ) { addIsotopeView( addedIsotope ); });
 
 
     // TODO Will port over soon
