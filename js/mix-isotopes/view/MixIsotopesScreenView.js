@@ -12,6 +12,7 @@ define( function( require ) {
 
   // modules
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
+  var IsotopesAndAtomicMassConstants = require( 'ISOTOPES_AND_ATOMIC_MASS/common/IsotopesAndAtomicMassConstants' );
   var AccordionBox = require( 'SUN/AccordionBox' );
   var inherit = require( 'PHET_CORE/inherit' );
   var ScreenView = require( 'JOIST/ScreenView' );
@@ -36,19 +37,13 @@ define( function( require ) {
   var AverageAtomicMassIndicator = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/AverageAtomicMassIndicator' );
   var Text = require( 'SCENERY/nodes/Text' );
 
-  // class data
-  var STAGE_SIZE = new Dimension2( 1008, 679 );
-  // var DISTANCE_BUTTON_CENTER_FROM_BOTTOM = 30;
-  // var BUTTON_FONT = new PhetFont( { weight: 'bold', fontSize: 18 } );
-
-
   /**
    * @param {MakeIsotopesModel} makeIsotopesModel
    * @constructor
    */
   function MixIsotopesScreenView( mixIsotopesModel ) {
     // supertype constructor
-    ScreenView.call( this, { layoutBounds: new Bounds2( 0, 0, 768, 504 ) } );
+    ScreenView.call( this, { layoutBounds:IsotopesAndAtomicMassConstants.LAYOUT_BOUNDS } );
 
     //----------------------------------------------------------------------------
     // Instance Data
@@ -59,7 +54,7 @@ define( function( require ) {
     var self = this;
 
 
-    // Set up the model-canvas transform.  The test chamber is centered
+    // Set up the model view transform.  The test chamber is centered
     // at (0, 0) in model space, and this transform is set up to place
     // the chamber where we want it on the canvas.
     //
@@ -68,7 +63,7 @@ define( function( require ) {
     // can be adjusted to zoom in or out (smaller numbers zoom out, larger
     // ones zoom in).
     this.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping( Vector2.ZERO,
-      new Vector2( Math.round( STAGE_SIZE.width * 0.32 ), Math.round( STAGE_SIZE.height * 0.49 ) ),
+      new Vector2( Math.round( this.layoutBounds.width * 0.32 ), Math.round( this.layoutBounds.height * 0.35 ) ),
       1.0 // "Zoom factor" - smaller zooms out, larger zooms in.
     );
 
@@ -222,9 +217,9 @@ define( function( require ) {
       lineWidth: 1
     } );
 
-    testChamberNode.top = periodicTableNode.top;
-    testChamberNode.left = 20;
-    this.addChild( testChamberNode );
+    //testChamberNode.top = periodicTableNode.top;
+    //testChamberNode.left = 20;
+    chamberLayer.addChild( testChamberNode );
 
 
     var compositionBox = new AccordionBox( new Rectangle( 0, 0, 120, 120, 0, 0 ), {

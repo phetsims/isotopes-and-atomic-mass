@@ -91,9 +91,9 @@ define( function( require ) {
      * @param {MovableAtom} isotope
      * @param {boolean} moveImmediately
      */
-    addIsotopeInstanceNearestOpen: function( isotope, moveImmediately ) {
+    addIsotopeInstanceNearestOpen: function( isotope, animate ) {
       if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount ) ) {
-        this.addParticleNearestOpen( isotope, moveImmediately );
+        this.addParticleNearestOpen( isotope, animate );
       }
     },
 

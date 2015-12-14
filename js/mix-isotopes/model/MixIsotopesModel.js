@@ -206,22 +206,35 @@ define( function( require ) {
      * TODO Prototype isotope should be made an instance variable in constructor.
      * TODO Port setMotionVelocity
      */
-    createAndAddIsotope: function( isotopeConfig, moveImmediately ) {
-      assert && assert( isotopeConfig.protonCount === this.prototypeIsotope.protonCount, '179' );
-      assert && assert( isotopeConfig.electronCount === isotopeConfig.electronCount );
-      var newIsotope;
+
+  placeIsotope: function( isotope, bucket, testChamber ) {
+    if ( testChamber.isIsotopePositionedOverChamber( isotope ) ) {
+      testChamber.addIsotopeToChamber( isotope );
+      testChamber.adjustForOverlap();
+    }
+    else {
+      bucket.addIsotopeInstanceNearestOpen( isotope, true );
+    }
+  },
+
+  createAndAddIsotope: function( isotopeConfig, animate ) {
+    assert && assert( isotopeConfig.protonCount === this.prototypeIsotope.protonCount, '179' );
+    var self = this;
+    var newIsotope;
 
       if ( this.interactivityMode === InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
         // Create the specified isotope and add it to the appropriate bucket.
         newIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount, new Vector2( 0, 0 ) );
 
         // TODO Make sure this velocity looks good
-        newIsotope.velocity = ATOM_MOTION_SPEED;
-
-        // newIsotope.setMotionVelocity( ATOM_MOTION_SPEED );
-        // newIsotope.addListener( isotopeGrabbedListener );
-
-        this.getBucketForIsotope( isotopeConfig ).addIsotopeInstanceFirstOpen( newIsotope, false );
+        //newIsotope.velocity = ATOM_MOTION_SPEED;
+        var bucket = this.getBucketForIsotope( isotopeConfig );
+        bucket.addIsotopeInstanceFirstOpen( newIsotope, animate );
+        newIsotope.userControlledProperty.link( function( userControlled ) {
+          if ( !userControlled && !bucket.containsParticle( newIsotope ) ) {
+            self.placeIsotope( newIsotope, bucket, self.testChamber );
+          }
+        } );
         this.isotopesList.add(newIsotope);
       }
 
@@ -487,6 +500,7 @@ define( function( require ) {
      */
     addIsotopeControllers: function() {
       // Remove existing controllers.
+      var self = this;
       this.removeBuckets();
       this.removeNumericalControllers();
       this.isotopesList.clear();
@@ -494,20 +508,20 @@ define( function( require ) {
       //
       var buckets = this.interactivityMode === InteractivityMode.BUCKETS_AND_LARGE_ATOMS || this.showingNaturesMix;
       // Set up layout variables.
-      var controllerYOffset = -25 ;
+      var controllerYOffset = -210 ;
       var interControllerDistanceX;
       var controllerXOffset;
       if ( this.possibleIsotopes.length < 4 ) {
         // We can fit 3 or less cleanly under the test chamber.
         interControllerDistanceX = this.testChamber.getTestChamberRect().getWidth() / this.possibleIsotopes.length;
-        controllerXOffset = -225;
+        controllerXOffset = -150;
       }
       else {
         // Four controllers don't fit well under the chamber, so use a
         // positioning algorithm where they are extended a bit to the
         // right.
         interControllerDistanceX = ( this.testChamber.getTestChamberRect().getWidth() * 1.2 ) / this.possibleIsotopes.length;
-        controllerXOffset = -225;
+        controllerXOffset = -150;
       }
       // Add the controllers.
       for ( var i = 0; i < this.possibleIsotopes.length; i++ ) {
@@ -521,9 +535,9 @@ define( function( require ) {
           this.addBucket( newBucket );
           if ( !this.showingNaturesMix ) {
             // Create and add initial isotopes to the new bucket.
-            for ( var j = 0; j < NUM_LARGE_ISOTOPES_PER_BUCKET; j++ ) {
-              this.createAndAddIsotope( isotopeConfig, true );
-            }
+            _.times( NUM_LARGE_ISOTOPES_PER_BUCKET, function() {
+              self.createAndAddIsotope( isotopeConfig, false );
+            });
           }
         }
         else {
