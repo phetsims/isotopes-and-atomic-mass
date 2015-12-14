@@ -49,7 +49,7 @@ define( function( require ) {
 
   // constants that define the size, position, and appearance of the neutron bucket.
   var BUCKET_SIZE = new Dimension2( 130, 60 );
-  var NEUTRON_BUCKET_POSITION = new Vector2( -240, -110 );
+  var NEUTRON_BUCKET_POSITION = new Vector2( -220, -180 );
 
   // Default atom configuration.
   var DEFAULT_ATOM_CONFIG = new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } ); // Hydrogen.

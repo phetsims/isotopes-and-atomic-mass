@@ -19,6 +19,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var InteractiveIsotopeNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/InteractiveIsotopeNode' );
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
+  var IsotopesAndAtomicMassConstants = require( 'ISOTOPES_AND_ATOMIC_MASS/common/IsotopesAndAtomicMassConstants' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var Node = require( 'SCENERY/nodes/Node' );
   var ParticleCountDisplay = require( 'SHRED/view/ParticleCountDisplay' );
@@ -34,7 +35,6 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  var STAGE_SIZE = new Dimension2( 1008, 679 );
   var NUMBER_FONT = new PhetFont( 70 );
   var NUMBER_INSET = 20; // In screen coords, which are roughly pixels.
   var SYMBOL_BOX_WIDTH = 275; // In screen coords, which are roughly pixels.
@@ -51,13 +51,13 @@ define( function( require ) {
    */
   function MakeIsotopesScreenView( makeIsotopesModel ) {
     // supertype constructor
-    ScreenView.call( this, { layoutBounds: new Bounds2( 0, 0, 768, 504 ) } );
+    ScreenView.call( this, { layoutBounds: IsotopesAndAtomicMassConstants.LAYOUT_BOUNDS } );
 
     // Set up the model-canvas transform.  IMPORTANT NOTES: The multiplier factors for the point in the view can be
     // adjusted to shift the center right or left, and the scale factor can be adjusted to zoom in or out (smaller
     // numbers zoom out, larger ones zoom in).
     this.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping( Vector2.ZERO,
-      new Vector2( Math.round( STAGE_SIZE.width * 0.32 ), Math.round( STAGE_SIZE.height * 0.49 ) ),
+      new Vector2( Math.round( this.layoutBounds.width * 0.4 ), Math.round( this.layoutBounds.height * 0.49 ) ),
       1.0 // "Zoom factor" - smaller zooms out, larger zooms in.
     );
 
@@ -112,7 +112,7 @@ define( function( require ) {
     // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
     // element is Neon for this sim.
     var periodicTableNode = new ExpandedPeriodicTableNode( makeIsotopesModel.numberAtom, 10 );
-    periodicTableNode.scale( 0.55 );
+    periodicTableNode.scale( 0.65 );
     periodicTableNode.top = 10;
     periodicTableNode.right = this.layoutBounds.width - 10;
     this.addChild( periodicTableNode );
@@ -174,7 +174,7 @@ define( function( require ) {
       massNumberDisplay.top = NUMBER_INSET;
     } );
 
-    symbolRectangle.scale( 0.25 );
+    symbolRectangle.scale( 0.20 );
     var symbolBox = new AccordionBox(symbolRectangle, {
         titleNode: new Text( symbolTitleString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
         fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
