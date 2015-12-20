@@ -27,7 +27,19 @@ define( function( require ) {
   var SubSupText = require( 'SCENERY_PHET/SubSupText' );
   var Path = require( 'SCENERY/nodes/Path' );
   var Panel = require( 'SUN/Panel' );
-  var INDICATOR_WIDTH = 300; // In screen units, which is close to pixels.
+  var Util = require( 'DOT/Util' );
+
+  // constants
+  var INDICATOR_WIDTH = 200;
+  var TICK_MARK_LINE_HEIGHT = 15;
+  var TICK_MARK_LINE_WIDTH = 5;
+  var SIZE = new Dimension2( 75, 25 );
+  var TRIANGULAR_POINTER_HEIGHT = 15;
+  var TRIANGULAR_POINTER_WIDTH = 20;
+  var NUMBER_DECIMALS = 5;
+
+  // strings
+  var amuString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/amu' );
 
   /**
    * Convenience class for creating tick marks.  This includes both the
@@ -37,30 +49,21 @@ define( function( require ) {
   function IsotopeTickMark( isotopeConfig ) {
     var node = new Node();
 
-
-    // constants that control overall appearance, tweak as needed.
-    // var OVERALL_HEIGHT = 40;
-    var TICK_MARK_LINE_HEIGHT = 15;
-    // var TICK_MARK_LABEL_HEIGHT = OVERALL_HEIGHT - TICK_MARK_LINE_HEIGHT;
-    var TICK_MARK_LINEWIDTH = 5;
-
-    // Create the tick mark itself.  It is positioned such that
-    // (0,0) is the center of the mark.
+    // Create the tick mark itself.  It is positioned such that (0,0) is the center of the mark.
     var shape = new Line( 0, -TICK_MARK_LINE_HEIGHT / 2, 0, TICK_MARK_LINE_HEIGHT / 2, {
-      lineWidth: TICK_MARK_LINEWIDTH,
+      lineWidth: TICK_MARK_LINE_WIDTH,
       stroke: 'black'
     } );
-
     node.addChild( shape );
-    //TODO
+
     // Create the label that goes above the tick mark.
-    var label = new SubSupText( ' <sup>' + isotopeConfig.massNumber + '</sup>' + AtomIdentifier.getSymbol( isotopeConfig.protonCount ) );
+    var label = new SubSupText( ' <sup>' + isotopeConfig.massNumber + '</sup>' + AtomIdentifier.getSymbol( isotopeConfig.protonCount ),
+      {font: new PhetFont(12)} );
     label.centerX = shape.centerX;
     label.bottom = shape.top;
     node.addChild( label );
 
     return node;
-
   }
 
   /**
@@ -77,11 +80,6 @@ define( function( require ) {
   function ReadoutPointer( model ) {
     var node = new Node();
 
-    var SIZE = new Dimension2( 120, 25 );
-    var TRIANGULAR_POINTER_HEIGHT = 15;
-    var TRIANGULAR_POINTER_WIDTH = 20;
-
-
     this.model = model;
     // Add the triangular pointer.  This is created such that the
     // point of the triangle is at (0,0) for this node.
@@ -97,7 +95,7 @@ define( function( require ) {
     node.addChild(  triangle );
 
     var readoutText = new Text( '', {
-      font: new PhetFont( 18 ),
+      font: new PhetFont( 14 ),
       maxWidth: 0.9 * SIZE.width,
       maxHeight: 0.9 * SIZE.height
     } );
@@ -130,7 +128,7 @@ define( function( require ) {
           5 ); // Max of 5 decimal places of resolution.
       }
       else {
-        weight = averageAtomicMass;
+        weight = Util.toFixed( averageAtomicMass, NUMBER_DECIMALS ) + amuString;
         //numDecimalPlacesToDisplay = DECIMAL_PLACES_FOR_USERS_MIX;
       }
       readoutText.setText( weight ) ;
@@ -141,7 +139,7 @@ define( function( require ) {
 
     // Observe the average atomic weight property in the model and
     // update the textual readout whenever it changes.
-    model.testChamber.averageAtomicMassProperty.lazyLink( function( averageAtomiCmass ) {
+    model.testChamber.averageAtomicMassProperty.link( function( averageAtomiCmass ) {
       updateReadout( averageAtomiCmass );
     } );
 
@@ -234,7 +232,7 @@ define( function( require ) {
 
     // Set the root node's offset so that the (0,0) location for this node
     // is in the upper left.
-    this.leftTop = new Vector2( 0, IsotopeTickMark.OVERALL_HEIGHT );
+    //this.leftTop = new Vector2( 0, IsotopeTickMark.OVERALL_HEIGHT );
   }
 
   isotopesAndAtomicMass.register( 'AverageAtomicMassIndicator', AverageAtomicMassIndicator );

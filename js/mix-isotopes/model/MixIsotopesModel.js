@@ -46,7 +46,7 @@ define( function( require ) {
   var DEFAULT_PROTOTYPE_ISOTOPE_CONFIG = new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } );
 
   // Size of the buckets that will hold the isotopes.
-  var BUCKET_SIZE = new Dimension2( 130, 60 );
+  var BUCKET_SIZE = new Dimension2( 120, 50 );
 
   // Speed with which atoms move when animated.  Empirically determined,
   // adjust as needed for the desired look.

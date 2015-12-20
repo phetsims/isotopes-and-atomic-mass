@@ -141,8 +141,18 @@ define( function( require ) {
      *                       number of isotopes at once.
      */
     addIsotopeToChamber: function( isotope, performUpdates ) {
+      var self = this;
       if ( this.isIsotopePositionedOverChamber( isotope ) ) {
         this.containedIsotopes.push( isotope );
+
+        var isotopeRemovedListener = function( userControlled ) {
+          if ( userControlled && self.containedIsotopes.contains( isotope ) ) {
+            self.removeIsotopeFromChamber( isotope );
+          }
+          isotope.userControlledProperty.unlink( isotopeRemovedListener );
+        };
+        isotope.userControlledProperty.lazyLink( isotopeRemovedListener );
+
         // If the edges of the isotope are outside of the container,
         // move it to be fully inside.
         var protrusion = isotope.position.x + isotope.radius - TEST_CHAMBER_RECT.maxX;
@@ -162,7 +172,7 @@ define( function( require ) {
         else {
           protrusion = TEST_CHAMBER_RECT.minY - ( isotope.position.y - isotope.radius );
           if ( protrusion >= 0 ) {
-            isotope.setPositionAndDestination( isotope.position.x, isotope.position.y + protrusion );
+            isotope.setPositionAndDestination( new Vector2( isotope.position.x, isotope.position.y + protrusion ) );
           }
         }
         if ( performUpdates ) {
@@ -268,14 +278,14 @@ define( function( require ) {
     removeAllIsotopes: function( removeFromModel ) {
       var containedIsotopesCopy = this.containedIsotopes.getArray().slice( 0 );
       this.containedIsotopes.clear();
-      if ( removeFromModel ) {
+      /*if ( removeFromModel ) {
         containedIsotopesCopy.forEach( function( isotope ) {
           //  TODO isotope.removeListener( this.model.isotopeGrabbedListener );
-          isotope.removedFromModel();
+          //isotope.removedFromModel();
 
         } );
 
-      }
+      }*/
       this.updateCountProperty();
       this.averageAtomicMass = 0;
 
