@@ -8,6 +8,7 @@
  *
  * @author John Blanco
  * @author James Smith
+ * @author Aadish Gupta
  */
 
 define( function( require ) {
@@ -77,8 +78,7 @@ define( function( require ) {
   isotopesAndAtomicMass.register( 'IsotopeTestChamber', IsotopeTestChamber );
   return inherit( PropertySet, IsotopeTestChamber, {
     /**
-     * Get the number of isotopes currently in the chamber that match the
-     * specified configuration.
+     * Get the number of isotopes currently in the chamber that match the specified configuration.
      *
      * @param {NumberAtom} isotopeConfig
      * @return {number} isotopeCount
@@ -126,18 +126,6 @@ define( function( require ) {
       return this.containedIsotopes.contains( isotope );
     },
 
-    ///**
-    // * Add the specified isotope to the test chamber.  The isotope must be
-    // * positioned within the 2D bounds of the chamber or the request will be
-    // * ignored.
-    // *
-    // * @param {MovableAtom} isotope
-    // * TODO Decide whether or not we should keep this. It seems redundant.
-    // */
-    //addIsotopeToChamber: function( isotope ) {
-    //  addIsotopeToChamber( isotope, true );
-    //},
-
     /**
      * Add the specified isotope to the chamber.  This method requires
      * that the position of the isotope be within the chamber rectangle,
@@ -147,7 +135,7 @@ define( function( require ) {
      * within the chamber but the edges are not, the isotope will be moved
      * so that it is fully contained within the chamber.
      *
-     * @param {MovableAtom} isotope        - Isotope to add.
+     * @param {MovableAtom} isotope
      * @param {boolean} performUpdates - Flag that can be set be used to suppress updates.
      *                       This is generally done for performance reasons when adding a large
      *                       number of isotopes at once.
@@ -391,12 +379,11 @@ define( function( require ) {
             }
             else if ( distanceBetweenIsotopes < isotope1.radius + isotope2.radius ) {
               // Calculate the repulsive force based on the distance.
-              forceFromIsotope.setComponents(
-                isotope1.position.x - isotope2.position.x,
-                isotope1.position.y - isotope2.position.y );
+              forceFromIsotope.x = isotope1.position.x - isotope2.position.x;
+              forceFromIsotope.x = isotope1.position.y - isotope2.position.y;
               var distance = Math.max( forceFromIsotope.magnitude(), minInterParticleDistance );
               forceFromIsotope.normalize();
-              forceFromIsotope.scale( interParticleForceConst / ( distance * distance ) );
+              forceFromIsotope.multiply( interParticleForceConst / ( distance * distance ) );
             }
             totalForce.add( forceFromIsotope );
           }
@@ -404,20 +391,20 @@ define( function( require ) {
           // Calculate the force due to the walls.  This prevents
           // particles from being pushed out of the bounds of the
           // chamber.
-          if ( isotope1.position.x + isotope1.radius >= TEST_CHAMBER_RECT.bounds.maxX ) {
-            var distanceFromRightWall = TEST_CHAMBER_RECT.bounds.maxX - isotope1.position.x;
+          if ( isotope1.position.x + isotope1.radius >= TEST_CHAMBER_RECT.maxX ) {
+            var distanceFromRightWall = TEST_CHAMBER_RECT.maxX - isotope1.position.x;
             totalForce.add( new Vector2( -wallForceConst / ( distanceFromRightWall * distanceFromRightWall ), 0 ) );
           }
-          else if ( isotope1.position.x - isotope1.radius <= TEST_CHAMBER_RECT.bounds.minX ) {
-            var distanceFromLeftWall = isotope1.position.x - TEST_CHAMBER_RECT.bounds.minX;
+          else if ( isotope1.position.x - isotope1.radius <= TEST_CHAMBER_RECT.minX ) {
+            var distanceFromLeftWall = isotope1.position.x - TEST_CHAMBER_RECT.minX;
             totalForce.add( new Vector2( wallForceConst / ( distanceFromLeftWall * distanceFromLeftWall ), 0 ) );
           }
-          if ( isotope1.position.y + isotope1.radius >= TEST_CHAMBER_RECT.bounds.maxY ) {
-            var distanceFromTopWall = TEST_CHAMBER_RECT.bounds.maxY - isotope1.position.y;
+          if ( isotope1.position.y + isotope1.radius >= TEST_CHAMBER_RECT.maxY ) {
+            var distanceFromTopWall = TEST_CHAMBER_RECT.maxY - isotope1.position.y;
             totalForce.add( new Vector2( 0, -wallForceConst / ( distanceFromTopWall * distanceFromTopWall ) ) );
           }
-          else if ( isotope1.position.y - isotope1.radius <= TEST_CHAMBER_RECT.bounds.minY ) {
-            var distanceFromBottomWall = isotope1.position.y - TEST_CHAMBER_RECT.bounds.minY;
+          else if ( isotope1.position.y - isotope1.radius <= TEST_CHAMBER_RECT.minY ) {
+            var distanceFromBottomWall = isotope1.position.y - TEST_CHAMBER_RECT.minY;
             totalForce.add( new Vector2( 0, wallForceConst / ( distanceFromBottomWall * distanceFromBottomWall ) ) );
           }
 

@@ -222,7 +222,7 @@ define( function( require ) {
     chamberLayer.addChild( testChamberNode );
 
 
-    var compositionBox = new AccordionBox( new Rectangle( 0, 0, 120, 120, 0, 0 ), {
+    var compositionBox = new AccordionBox( new Rectangle( 0, 0, 60, 60, 0, 0 ), {
       titleNode: new Text( 'Percent Composition', { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
       fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
       expandedProperty: new Property( false ),

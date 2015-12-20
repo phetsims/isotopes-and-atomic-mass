@@ -209,7 +209,7 @@ define( function( require ) {
 
   placeIsotope: function( isotope, bucket, testChamber ) {
     if ( testChamber.isIsotopePositionedOverChamber( isotope ) ) {
-      testChamber.addIsotopeToChamber( isotope );
+      testChamber.addIsotopeToChamber( isotope, true );
       testChamber.adjustForOverlap();
     }
     else {
@@ -514,14 +514,15 @@ define( function( require ) {
       if ( this.possibleIsotopes.length < 4 ) {
         // We can fit 3 or less cleanly under the test chamber.
         interControllerDistanceX = this.testChamber.getTestChamberRect().getWidth() / this.possibleIsotopes.length;
-        controllerXOffset = -150;
+        controllerXOffset = this.testChamber.getTestChamberRect().minX + interControllerDistanceX / 2;
       }
       else {
         // Four controllers don't fit well under the chamber, so use a
         // positioning algorithm where they are extended a bit to the
         // right.
-        interControllerDistanceX = ( this.testChamber.getTestChamberRect().getWidth() * 1.2 ) / this.possibleIsotopes.length;
-        controllerXOffset = -150;
+        interControllerDistanceX = ( this.testChamber.getTestChamberRect().getWidth() * 1.15 ) / this.possibleIsotopes.length;
+        //controllerXOffset = this.testChamber.getTestChamberRect().minX + interControllerDistanceX / 2;
+        controllerXOffset = -175;
       }
       // Add the controllers.
       for ( var i = 0; i < this.possibleIsotopes.length; i++ ) {

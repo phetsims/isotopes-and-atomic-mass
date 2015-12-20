@@ -6,6 +6,7 @@
  *
  * @author John Blanco
  * @author James Smith
+ * @author Aadish Gupta
  *
  */
 
@@ -62,20 +63,15 @@ define( function( require ) {
 
   }
 
-  inherit( Node, IsotopeTickMark );
-
   /**
    * This class define the "readout pointer", which is an indicator
    * that contains a textual indication of the average atomic mass and
    * also has a pointer on the top that can be used to indicate the position
    * on a linear scale.
-   * <p/>
    * This node is set up such that the (0,0) point is at the top center of
    * the node, which is where the point of the pointer exists.  This is done
    * to make it easy to position the node under the mass indication line.
    *
-   * @author John Blanco
-   * @author James Smith
    * @ param {MixIsotopeModel} model
    */
   function ReadoutPointer( model ) {
@@ -84,21 +80,13 @@ define( function( require ) {
     var SIZE = new Dimension2( 120, 25 );
     var TRIANGULAR_POINTER_HEIGHT = 15;
     var TRIANGULAR_POINTER_WIDTH = 20;
-    // var DECIMAL_PLACES_FOR_USERS_MIX = 5;
 
-    //private final MixIsotopesModel model;
-    //private final PText textualReadout;
-    //private final PNode readoutBackgroundNode;
 
     this.model = model;
     // Add the triangular pointer.  This is created such that the
     // point of the triangle is at (0,0) for this node.
 
-    //var pointerShape = new DoubleGeneralPath( 0, 0 );
-    //pointerShape.lineTo( -TRIANGULAR_POINTER_WIDTH / 2, TRIANGULAR_POINTER_HEIGHT );
-    //pointerShape.lineTo( TRIANGULAR_POINTER_WIDTH / 2, TRIANGULAR_POINTER_HEIGHT );
-    //pointerShape.closePath();
-    var vertices = [ new Vector2( -TRIANGULAR_POINTER_WIDTH / 2, TRIANGULAR_POINTER_HEIGHT ),
+     var vertices = [ new Vector2( -TRIANGULAR_POINTER_WIDTH / 2, TRIANGULAR_POINTER_HEIGHT ),
       new Vector2( TRIANGULAR_POINTER_WIDTH / 2, TRIANGULAR_POINTER_HEIGHT ),
       new Vector2( 0, 0 ) ];
 
@@ -131,10 +119,30 @@ define( function( require ) {
 
     node.addChild( readoutPanel );
 
+    function updateReadout( averageAtomicMass ) {
+      //TODO Finish porting
+      var weight;
+      var numDecimalPlacesToDisplay;
+      if ( model.showingNaturesMix ) {
+        weight = AtomIdentifier.getStandardAtomicMassPrecisionDecimal( this.model.getAtom().protonCount ).getPreciseValue();
+        numDecimalPlacesToDisplay = Math.min(
+          AtomIdentifier.getStandardAtomicMassPrecisionDecimal( model.getAtom().getNumProtons() ).getNumberOfDecimalPlaces(),
+          5 ); // Max of 5 decimal places of resolution.
+      }
+      else {
+        weight = averageAtomicMass;
+        //numDecimalPlacesToDisplay = DECIMAL_PLACES_FOR_USERS_MIX;
+      }
+      readoutText.setText( weight ) ;
+      readoutText.centerX = SIZE.width / 2;
+
+
+    }
+
     // Observe the average atomic weight property in the model and
     // update the textual readout whenever it changes.
-    model.testChamber.averageAtomicMassProperty.link( function() {
-     // this.updateReadout();
+    model.testChamber.averageAtomicMassProperty.lazyLink( function( averageAtomiCmass ) {
+      updateReadout( averageAtomiCmass );
     } );
 
     // Observe whether the user's mix or nature's mix is being
@@ -145,48 +153,13 @@ define( function( require ) {
     return node;
   }
 
-  inherit( Node, ReadoutPointer, {
-
-    updateReadout: function() {
-      //TODO Finish porting
-      //var weight;
-      //var numDecimalPlacesToDisplay;
-      //if ( this.model.showingNaturesMix ) {
-      //  weight = AtomIdentifier.getStandardAtomicMassPrecisionDecimal( this.model.getAtom().protonCount ).getPreciseValue();
-      //  numDecimalPlacesToDisplay = Math.min(
-      //    AtomIdentifier.getStandardAtomicMassPrecisionDecimal( model.getAtom().getNumProtons() ).getNumberOfDecimalPlaces(),
-      //    5 ); // Max of 5 decimal places of resolution.
-      //}
-      //else {
-      //  weight = model.getIsotopeTestChamber().getAverageAtomicMass();
-      //  numDecimalPlacesToDisplay = DECIMAL_PLACES_FOR_USERS_MIX;
-      //}
-      //textualReadout.setText( VariablePrecisionNumberFormat.format( weight, numDecimalPlacesToDisplay ) + BuildAnAtomStrings.UNITS_AMU );
-      //textualReadout.setScale( 1 );
-      //if ( textualReadout.getFullBoundsReference().width >= readoutBackgroundNode.getFullBoundsReference().getWidth() * 0.95 ) {
-      //  textualReadout.setScale( readoutBackgroundNode.getFullBoundsReference().width / textualReadout.getFullBoundsReference().width * 0.95 );
-      //}
-      //textualReadout.centerFullBoundsOnPoint(
-      //  readoutBackgroundNode.getFullBoundsReference().getCenterX(),
-      //  readoutBackgroundNode.getFullBounds().getCenterY() );
-
-    }
-
-  } );
-
-
   /**
-   *
    * @param {MixIsotopeModel} model
    * @constructor
    */
   function AverageAtomicMassIndicator( model ) {
     Node.call( this );
     var thisNode = this;
-
-    // var massSpan = 3; // In amu.
-    // var minMass = 0; // In amu.
-
 
     // Root node onto which all other nodes are added.  This is done so
     // so that the root node can be offset at the end of construction in
@@ -246,17 +219,17 @@ define( function( require ) {
     readoutPointer.centerX = barNode.centerX;
     this.addChild( readoutPointer );
 
-    // Add a listener to position the moving readout in a location that
-    // corresponds to the average atomic mass.
-    //model.isotopeTestChamber.averageAtomicMass.link( function() {
-    //  if ( model.getIsotopeTestChamber().getTotalIsotopeCount() > 0 ) {
-    //    readoutPointer.leftTop( calcXOffsetFromAtomicMass( model.isotopeTestChamber.averageAtomicMass ), barOffsetY );
-    //    readoutPointer.setVisible( true );
-    //  }
-    //  else {
-    //    readoutPointer.setVisible( false );
-    //  }
-    //});
+    model.testChamber.averageAtomicMassProperty.link( function( averageAtomiCmass ) {
+      if ( model.testChamber.isotopeCount > 0 ) {
+            readoutPointer.centerX = thisNode.calcXOffsetFromAtomicMass( averageAtomiCmass );
+            readoutPointer.setVisible( true );
+          }
+          else {
+            readoutPointer.setVisible( false );
+          }
+    } );
+
+
 
 
     // Set the root node's offset so that the (0,0) location for this node
