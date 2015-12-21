@@ -592,6 +592,7 @@ define( function( require ) {
      * @returns {}
      */
     showNaturesMix: function() {
+      var self = this;
       assert && assert( this.showingNaturesMix === true ); // This method shouldn't be called if we're not showing nature's mix.
 
       // Clear out anything that is in the test chamber.  If anything
@@ -615,23 +616,22 @@ define( function( require ) {
 
       // Add the isotopes.
       possibleIsotopesCopy.forEach( function (isotopeConfig) {
-        if ( possibleIsotopesCopy.hasOwnProperty( isotopeConfig ) ) {
-          var numToCreate = Math.round( NUM_NATURES_MIX_ATOMS * AtomIdentifier.getNaturalAbundance( isotopeConfig ) );
-          if ( numToCreate === 0 ) {
-            // The calculated quantity was 0, but we don't want to have
-            // no instances of this isotope in the chamber, so add only
-            // one.  This behavior was requested by the design team.
-            numToCreate = 1;
-          }
-          // { MovableAtom[] }
-          var isotopesToAdd = [];
-          for ( var i = 0; i < numToCreate; i++ ) {
-            var newIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount, this.testChamber.generateRandomLocation() );
-            isotopesToAdd.push( newIsotope );
-            // notifyIsotopeInstanceAdded( newIsotope );
-          }
-          this.testChamber.bulkAddIsotopesToChamber( isotopesToAdd );
+        var numToCreate = Math.round( NUM_NATURES_MIX_ATOMS * AtomIdentifier.getNaturalAbundance( isotopeConfig ) );
+        if ( numToCreate === 0 ) {
+          // The calculated quantity was 0, but we don't want to have
+          // no instances of this isotope in the chamber, so add only
+          // one.  This behavior was requested by the design team.
+          numToCreate = 1;
         }
+          // { MovableAtom[] }
+        var isotopesToAdd = [];
+        for ( var i = 0; i < numToCreate; i++ ) {
+          var newIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount, self.testChamber.generateRandomLocation() );
+          isotopesToAdd.push( newIsotope );
+          self.isotopesList.add( newIsotope );
+            // notifyIsotopeInstanceAdded( newIsotope );
+        }
+        self.testChamber.bulkAddIsotopesToChamber( isotopesToAdd );
       });
 
       // Add the isotope controllers (i.e. the buckets).

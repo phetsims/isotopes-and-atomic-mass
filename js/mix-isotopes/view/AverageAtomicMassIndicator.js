@@ -122,15 +122,13 @@ define( function( require ) {
       var weight;
       var numDecimalPlacesToDisplay;
       if ( model.showingNaturesMix ) {
-        weight = AtomIdentifier.getStandardAtomicMassPrecisionDecimal( this.model.getAtom().protonCount ).getPreciseValue();
-        numDecimalPlacesToDisplay = Math.min(
-          AtomIdentifier.getStandardAtomicMassPrecisionDecimal( model.getAtom().getNumProtons() ).getNumberOfDecimalPlaces(),
-          5 ); // Max of 5 decimal places of resolution.
+        weight = AtomIdentifier.getStandardAtomicMass( model.numberAtom.protonCount );
       }
       else {
-        weight = Util.toFixed( averageAtomicMass, NUMBER_DECIMALS ) + amuString;
+        weight = averageAtomicMass;
         //numDecimalPlacesToDisplay = DECIMAL_PLACES_FOR_USERS_MIX;
       }
+      Util.toFixed( weight, NUMBER_DECIMALS ) + amuString;
       readoutText.setText( weight ) ;
       readoutText.centerX = SIZE.width / 2;
 
