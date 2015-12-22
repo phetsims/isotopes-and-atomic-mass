@@ -20,14 +20,12 @@ define( function( require ) {
   // var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var Vector2 = require( 'DOT/Vector2' );
-  var Dimension2 = require( 'DOT/Dimension2' );
   var Node = require( 'SCENERY/nodes/Node' );
   var BucketHole = require( 'SCENERY_PHET/bucket/BucketHole' );
   var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
   var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
   // var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
   // var PeriodicTableNode = require( 'SHRED/view/PeriodicTableNode' );
-  var Bounds2 = require( 'DOT/Bounds2' );
   // var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var SharedConstants = require( 'SHRED/SharedConstants' );
   var Property = require( 'AXON/Property' );

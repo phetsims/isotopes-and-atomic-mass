@@ -351,18 +351,15 @@ define( function( require ) {
      */
     adjustForOverlap: function() {
       // Bounds checking.  The threshold is pretty much arbitrary.
-      if ( this.getTotalIsotopeCount() > 100 ) {
-        console.error( ' - Warning: Ignoring request to adjust for overlap - too many particles in the chamber for that.' );
-        return;
-      }
+      assert && assert(this.getTotalIsotopeCount() <= 100, 'Ignoring request to adjust for overlap - too many particles in the chamber for that');
 
       // Check for overlap and adjust particle positions until none exists.
       var maxIterations = 10000;
       for ( var i = 0; this.checkForParticleOverlap() && i < maxIterations; i++ ) {
-        // Adjustment factors for the repositioning algorithm.
-        var interParticleForceConst = 2000;
+        // Adjustment factors for the repositioning algorithm, these can be adjusted for different behaviour.
+        var interParticleForceConst = 200;
         var wallForceConst = interParticleForceConst * 10;
-        var minInterParticleDistance = 0.0001;
+        var minInterParticleDistance = 5;
         var mapIsotopesToForces = {};
         var mapIsotopesIDToIsotope = {};
 
@@ -381,16 +378,13 @@ define( function( require ) {
             var forceFromIsotope = new Vector2( 0, 0 );
             var distanceBetweenIsotopes = isotope1.position.distance( isotope2.position );
             if ( distanceBetweenIsotopes === 0 ) {
-              // These isotopes are sitting right on top of one
-              // another.  Add the max amount of inter-particle
-              // force in a random direction.
+              // These isotopes are sitting right on top of one another.  Add the max amount of inter-particle force in a random direction.
               forceFromIsotope.setPolar( interParticleForceConst / ( minInterParticleDistance * minInterParticleDistance ), Math.random() * 2 * Math.PI );
-
             }
             else if ( distanceBetweenIsotopes < isotope1.radius + isotope2.radius ) {
-              // Calculate the repulsive force based on the distance.
+              // calculate the repulsive force based on the distance.
               forceFromIsotope.x = isotope1.position.x - isotope2.position.x;
-              forceFromIsotope.x = isotope1.position.y - isotope2.position.y;
+              forceFromIsotope.y = isotope1.position.y - isotope2.position.y;
               var distance = Math.max( forceFromIsotope.magnitude(), minInterParticleDistance );
               forceFromIsotope.normalize();
               forceFromIsotope.multiply( interParticleForceConst / ( distance * distance ) );
@@ -417,7 +411,6 @@ define( function( require ) {
             var distanceFromBottomWall = isotope1.position.y - TEST_CHAMBER_RECT.minY;
             totalForce.add( new Vector2( 0, wallForceConst / ( distanceFromBottomWall * distanceFromBottomWall ) ) );
           }
-
           // Put the calculated repulsive force into the map.
           mapIsotopesToForces[ isotope1.instanceCount ] = totalForce;
           mapIsotopesIDToIsotope[ isotope1.instanceCount ] = isotope1;
@@ -428,7 +421,8 @@ define( function( require ) {
         for ( var isotopeID in mapIsotopesToForces ) {
           if ( mapIsotopesToForces.hasOwnProperty( isotopeID ) ) {
             // Sets the position of the isotope to the corresponding Vector2 from mapIsotopesToForces
-            mapIsotopesIDToIsotope[ isotopeID ].setPositionAndDestination( mapIsotopesToForces[ isotopeID ] );
+            mapIsotopesIDToIsotope[ isotopeID ]
+              .setPositionAndDestination( mapIsotopesToForces[ isotopeID ].add( mapIsotopesIDToIsotope[ isotopeID ].position ) );
           }
 
         }
@@ -443,7 +437,6 @@ define( function( require ) {
      *
      * @returns {boolean}
      */
-
     checkForParticleOverlap: function() {
       var thisChamber = this;
       var overlapCheck = false;

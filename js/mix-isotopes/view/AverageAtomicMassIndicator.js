@@ -120,7 +120,6 @@ define( function( require ) {
     function updateReadout( averageAtomicMass ) {
       //TODO Finish porting
       var weight;
-      var numDecimalPlacesToDisplay;
       if ( model.showingNaturesMix ) {
         weight = AtomIdentifier.getStandardAtomicMass( model.numberAtom.protonCount );
       }
@@ -128,8 +127,7 @@ define( function( require ) {
         weight = averageAtomicMass;
         //numDecimalPlacesToDisplay = DECIMAL_PLACES_FOR_USERS_MIX;
       }
-      Util.toFixed( weight, NUMBER_DECIMALS ) + amuString;
-      readoutText.setText( weight ) ;
+      readoutText.setText( Util.toFixed( weight, NUMBER_DECIMALS ) + amuString ) ;
       readoutText.centerX = SIZE.width / 2;
 
 

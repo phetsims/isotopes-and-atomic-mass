@@ -48,10 +48,6 @@ define( function( require ) {
   // Size of the buckets that will hold the isotopes.
   var BUCKET_SIZE = new Dimension2( 120, 50 );
 
-  // Speed with which atoms move when animated.  Empirically determined,
-  // adjust as needed for the desired look.
-  var ATOM_MOTION_SPEED = 2500; // In picometers per sec of sim time.
-
   // Within this model, the isotopes come in two sizes, small and large, and
   // atoms are either one size or another, and all atoms that are shown at
   // a given time are all the same size.  The larger size is based somewhat
@@ -65,7 +61,7 @@ define( function( require ) {
   var NUM_LARGE_ISOTOPES_PER_BUCKET = 10;
 
   // List of colors which will be used to represent the various isotopes.
-  var ISOTOPE_COLORS = [ new Color( 180, 82, 205 ), Color.green, new Color( 255, 69, 0 ), new Color( 139, 90, 43 ) ];
+  var ISOTOPE_COLORS = [ new Color( 180, 82, 205 ), Color.green, new Color( 255, 69, 0 ), new Color( 70, 130, 180 ) ];
 
 
   /*
