@@ -40,16 +40,13 @@ define( function( require ) {
    * used for saving and later restoring the state.
    */
 
-  function State( isotopeTestChamber ) {
-    Object.call( this );
-    this.containedIsotopes = new ObservableArray( isotopeTestChamber.getContainedIsotopes() );
+  function State( model ) {
+    var self = this;
+    this.containedIsotopes = new ObservableArray();
+    model.containedIsotopes.forEach( function( isotope ) {
+      self.containedIsotopes.add( isotope )
+    });
   }
-
-  inherit( Object, State, {
-    getContainedIsotopes: function() {
-      return this.containedIsotopes;
-    }
-  } );
 
   /**
    * @constructor
@@ -484,7 +481,7 @@ define( function( require ) {
      */
     setState: function( state ) {
       this.removeAllIsotopes( true );
-      this.bulkAddIsotopesToChamber( state.getContainedIsotopes() );
+      this.bulkAddIsotopesToChamber( state.containedIsotopes );
     }
 
 

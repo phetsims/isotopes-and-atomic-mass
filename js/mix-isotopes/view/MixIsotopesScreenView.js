@@ -11,29 +11,50 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var AquaRadioButton = require( 'SUN/AquaRadioButton' );
+  var AccordionBox = require( 'SUN/AccordionBox' );
+  var AverageAtomicMassIndicator = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/AverageAtomicMassIndicator' );
+  var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
+  var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
+  var BucketHole = require( 'SCENERY_PHET/bucket/BucketHole' );
+  var ExpandedPeriodicTableNode = require( 'SHRED/view/ExpandedPeriodicTableNode' );
+  var HSlider = require( 'SUN/HSlider' );
+  var inherit = require( 'PHET_CORE/inherit' );
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var IsotopesAndAtomicMassConstants = require( 'ISOTOPES_AND_ATOMIC_MASS/common/IsotopesAndAtomicMassConstants' );
-  var AccordionBox = require( 'SUN/AccordionBox' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var ScreenView = require( 'JOIST/ScreenView' );
-  var ParticleView = require( 'SHRED/view/ParticleView' );
-  // var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
-  var Vector2 = require( 'DOT/Vector2' );
   var Node = require( 'SCENERY/nodes/Node' );
-  var BucketHole = require( 'SCENERY_PHET/bucket/BucketHole' );
-  var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
-  var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
-  // var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
-  // var PeriodicTableNode = require( 'SHRED/view/PeriodicTableNode' );
-  // var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var SharedConstants = require( 'SHRED/SharedConstants' );
+  var ParticleView = require( 'SHRED/view/ParticleView' );
+  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Property = require( 'AXON/Property' );
-  var ExpandedPeriodicTableNode = require( 'SHRED/view/ExpandedPeriodicTableNode' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
-  var AverageAtomicMassIndicator = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/AverageAtomicMassIndicator' );
+  var ScreenView = require( 'JOIST/ScreenView' );
+  var SharedConstants = require( 'SHRED/SharedConstants' );
   var Text = require( 'SCENERY/nodes/Text' );
+  var Vector2 = require( 'DOT/Vector2' );
+  var ControlIsotope = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/ControlIsotope' );
+
+  // constants
+  var ISOTOPE_MIXTURE = { MY_MIX: 'my mix', NATURE_MIX: 'nature mix' };
+
+  // strings
+  var myMixString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/myMix' );
+  var natureMixString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/natureMix' );
+
+  function IsotopeMixtureSelectionNode( isotopeMixtureProperty ) {
+    var radioButtonRadius = 6;
+    var LABEL_FONT = new PhetFont( 14 );
+    var massNumberButton = new AquaRadioButton( isotopeMixtureProperty, ISOTOPE_MIXTURE.MY_MIX, new Text( myMixString, { font: LABEL_FONT, maxWidth: 125 } ), { radius: radioButtonRadius } );
+    var atomicMassButton = new AquaRadioButton( isotopeMixtureProperty, ISOTOPE_MIXTURE.NATURE_MIX, new Text( natureMixString, { font: LABEL_FONT, maxWidth: 125 } ), { radius: radioButtonRadius } );
+    var displayButtonGroup = new Node();
+    displayButtonGroup.addChild( massNumberButton );
+    atomicMassButton.top = massNumberButton.bottom + 8;
+    atomicMassButton.left = displayButtonGroup.left;
+    displayButtonGroup.addChild( atomicMassButton );
+    return displayButtonGroup;
+  }
+
 
   /**
    * @param {MakeIsotopesModel} makeIsotopesModel
@@ -148,68 +169,9 @@ define( function( require ) {
     mixIsotopesModel.isotopesList.addItemAddedListener ( function( addedIsotope ) { addIsotopeView( addedIsotope ); });
 
 
-    // TODO Will port over soon
-    //// Listen to the model for events that concern the canvas.
-    //model.addListener( new MixIsotopesModel.Adapter() {
-    //@Override
-    //  public void isotopeInstanceAdded( final MovableAtom atom ) {
-    //    // Add a representation of the new atom to the canvas.
-    //    final LabeledIsotopeNode isotopeNode = new LabeledIsotopeNode( mvt, atom, model.getColorForIsotope( atom.getAtomConfiguration() ) );
-    //    particleLayer.addChild( isotopeNode );
-    //    atom.addListener( new SphericalParticle.Adapter() {
-    //    @Override
-    //      public void removedFromModel( SphericalParticle particle ) {
-    //        particleLayer.removeChild( isotopeNode );
-    //      }
-    //    } );
-    //    // Only allow interaction with the atoms when showing the
-    //    // buckets and when not showing nature's mix.
-    //    boolean interactiveParticles = model.getInteractivityModeProperty().get() == InteractivityMode.BUCKETS_AND_LARGE_ATOMS && !model.getShowingNaturesMixProperty().get();
-    //    isotopeNode.setPickable( interactiveParticles );
-    //    isotopeNode.setChildrenPickable( interactiveParticles );
-    //  }
-    //
-    //        @Override
-    //  public void isotopeBucketAdded( final MonoIsotopeParticleBucket bucket ) {
-    //    final BucketView bucketView = new BucketView( bucket, mvt );
-    //    bucketHoleLayer.addChild( bucketView.getHoleNode() );
-    //    bucketFrontLayer.addChild( bucketView.getFrontNode() );
-    //    mapBucketToView.put( bucket, bucketView );
-    //  }
-    //
-    //        @Override
-    //  public void isotopeBucketRemoved( final MonoIsotopeParticleBucket bucket ) {
-    //    // Remove the representation of the bucket when the bucket
-    //    // itself is removed from the model.
-    //    if ( mapBucketToView.containsKey( bucket ) ) {
-    //      bucketFrontLayer.removeChild( mapBucketToView.get( bucket ).getFrontNode() );
-    //      bucketHoleLayer.removeChild( mapBucketToView.get( bucket ).getHoleNode() );
-    //      mapBucketToView.remove( bucket );
-    //    }
-    //    else {
-    //      System.out.println( getClass().getName() + "Warning: Attempt to remove bucket with no view component." );
-    //    }
-    //  }
-    //
-    //        @Override
-    //  public void isotopeNumericalControllerAdded( final NumericalIsotopeQuantityControl controller ) {
-    //    final IsotopeSliderNode controllerNode = new IsotopeSliderNode( controller, mvt );
-    //    controlsLayer.addChild( controllerNode );
-    //    controller.getPartOfModelProperty().addObserver( new SimpleObserver() {
-    //      public void update() {
-    //        if ( !controller.getPartOfModelProperty().get() ) {
-    //          // Remove the representation of the bucket when the bucket
-    //          // itself is removed from the model.
-    //          controlsLayer.removeChild( controllerNode );
-    //        }
-    //      }
-    //    }, false );
-    //  }
-    //} );
 
-    // Add the test chamber into and out of which the individual isotopes
-    // will be moved. As with all elements in this model, the shape and
-    // position are considered to be two separate things.
+
+
     var testChamberNode = new Rectangle( this.mvt.modelToViewBounds( this.model.testChamber.getTestChamberRect() ), {
       fill: 'black',
       lineWidth: 1
@@ -248,6 +210,29 @@ define( function( require ) {
     averageAtomicMassBox.leftTop = compositionBox.leftBottom;
     averageAtomicMassBox.top = compositionBox.bottom + 5;
     this.addChild( averageAtomicMassBox );
+
+    this.isotopeMixtureProperty = new Property( ISOTOPE_MIXTURE.MY_MIX );
+    var isotopeMixtureSelectionNode = new IsotopeMixtureSelectionNode( this.isotopeMixtureProperty );
+    isotopeMixtureSelectionNode.rightTop = averageAtomicMassBox.rightBottom;
+    isotopeMixtureSelectionNode.top = averageAtomicMassBox.bottom + 5;
+    this.addChild( isotopeMixtureSelectionNode );
+
+    this.isotopeMixtureProperty.link( function() {
+      if ( self.isotopeMixtureProperty.get() === ISOTOPE_MIXTURE.MY_MIX ){
+        mixIsotopesModel.showingNaturesMix = false;
+      }
+      else{
+        mixIsotopesModel.showingNaturesMix = true;
+      }
+    } );
+
+    // Horizontal Slider
+    var temp = new ControlIsotope();
+
+    temp.leftTop = averageAtomicMassBox.leftBottom;
+    temp.top = averageAtomicMassBox.bottom + 5;
+    this.addChild(temp);
+
   }
 
   isotopesAndAtomicMass.register( 'MixIsotopesScreenView', MixIsotopesScreenView);

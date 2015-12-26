@@ -105,8 +105,8 @@ define( function( require ) {
     removeArbitraryIsotope: function() {
       var isotopeToRemove = null;
 
-      if ( this.getParticleList().size() > 0 ) {
-        isotopeToRemove = this.getParticleList().get( this.getParticleList().size() - 1 );
+      if ( this.getParticleList().length > 0 ) {
+        isotopeToRemove = this.getParticleList()[this.getParticleList().length - 1 ];
         this.removeParticle( isotopeToRemove );
       }
 

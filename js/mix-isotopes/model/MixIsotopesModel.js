@@ -86,7 +86,11 @@ define( function( require ) {
    * @author James Smith
    */
   function State( model ) {
-    this.elementConfig = model.prototypeIsotope;
+    this.elementConfig = new NumberAtom( {
+      protonCount: model.prototypeIsotope.protonCount,
+      neutronCount: model.prototypeIsotope.neutronCount,
+      electronCount: model.prototypeIsotope.electronCount
+    });
     this.isotopeTestChamberState = model.testChamber.getState();
     this.interactivityMode = model.interactivityMode;
     this.showingNaturesMix = model.showingNaturesMix;
@@ -126,7 +130,11 @@ define( function( require ) {
     // This atom is the "prototype isotope", meaning that it is set in order
     // to set the atomic weight of the family of isotopes that are currently
     // in use.
-    this.prototypeIsotope = new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } );
+    this.prototypeIsotope = new NumberAtom( {
+      protonCount: DEFAULT_ATOM_CONFIG.protonCount,
+      neutronCount: DEFAULT_ATOM_CONFIG.neutronCount,
+      electronCount: DEFAULT_ATOM_CONFIG.electronCount
+  } );
 
     // List of the isotope buckets.
     this.bucketList = new ObservableArray();
@@ -146,7 +154,7 @@ define( function( require ) {
     });
 
     // Set the initial atom configuration.
-    this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
+    this.setAtomConfiguration( this.numberAtom );
 
     this.interactivityModeProperty.link( function() {
       self.interactivityModeObserver();
@@ -168,7 +176,7 @@ define( function( require ) {
       }
       else {
         if ( self.mapIsotopeConfigToUserMixState.hasOwnProperty( self.prototypeIsotope.protonCount ) ) {
-          this.setState( self.mapIsotopeConfigToUserMixState.get( self.prototypeIsotope.protonCount ) );
+          self.setState( self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ] );
         }
         else {
           self.setUpInitialUsersMix();
@@ -286,6 +294,7 @@ define( function( require ) {
      */
     setUpInitialUsersMix: function() {
       this.removeAllIsotopesFromTestChamberAndModel();
+      this.isotopesList.clear();
       this.showingNaturesMix = false;
       this.interactivityMode = InteractivityMode.BUCKETS_AND_LARGE_ATOMS;
       delete this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ];
@@ -315,7 +324,7 @@ define( function( require ) {
      */
     setState: function( modelState ) {
       // Clear out any particles that are currently in the test chamber.
-      this.removeAllIsotopesFromTestChamberAndModel();
+      //this.removeAllIsotopesFromTestChamberAndModel();
 
       // Restore the prototype isotope.
       this.prototypeIsotope = modelState.elementConfig;
@@ -348,6 +357,7 @@ define( function( require ) {
       // Add any particles that were in the test chamber.
       this.testChamber.setState( modelState.isotopeTestChamberState );
       this.testChamber.containedIsotopes.forEach( function( isotope ) {
+        thisModel.isotopesList.add(isotope);
         // TODO Since these are all listeners can we scrap it?
         // isotope.addListener( isotopeGrabbedListener );
         // isotope.addedToModel();
@@ -371,9 +381,10 @@ define( function( require ) {
           var bucket = thisModel.getBucketForIsotope( isotopeConfig );
           for ( var i = 0; i < isotopeCount; i++ ) {
             var removedIsotope = bucket.removeArbitraryIsotope();
+            thisModel.isotopesList.remove( removedIsotope );
             // removedIsotope.removeListener( isotopeGrabbedListener );
             // TODO Can I comment out the line below?
-            removedIsotope.removedFromModel();
+            //removedIsotope.removedFromModel();
           }
         } );
       }
@@ -407,6 +418,7 @@ define( function( require ) {
       // routine.  For the sake of efficiency, callers should be careful not
       // to call this when it isn't needed.
 
+      this.isotopesList.clear();
       if ( this.numberAtom !== atom ) {
         this.numberAtom.protonCount = atom.protonCount;
         this.numberAtom.electronCount = atom.electronCount;
@@ -422,7 +434,7 @@ define( function( require ) {
       else {
         // Save the user's mix state for the current element
         // before transitioning to the new one.
-        if ( !atom.equals( this.prototypeIsotope ) ) {
+        if ( this.prototypeIsotope !== atom ) {
           this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ] = this.getState();
         }
 
@@ -436,7 +448,9 @@ define( function( require ) {
 
           // Update the prototype atom (a.k.a. isotope) configuration.
           // prototypeIsotope.setConfiguration( atom );
-          this.prototypeIsotope = atom;
+          this.prototypeIsotope.protonCount = atom.protonCount;
+          this.prototypeIsotope.neutronCount = atom.neutronCount;
+          this.prototypeIsotope.electronCount = atom.electronCount;
           this.updatePossibleIsotopesList();
 
           // Set all model elements for the first time this element's
@@ -502,7 +516,7 @@ define( function( require ) {
       var self = this;
       this.removeBuckets();
       this.removeNumericalControllers();
-      this.isotopesList.clear();
+      //this.isotopesList.clear();
 
       //
       var buckets = this.interactivityMode === InteractivityMode.BUCKETS_AND_LARGE_ATOMS || this.showingNaturesMix;
@@ -592,6 +606,7 @@ define( function( require ) {
      */
     showNaturesMix: function() {
       var self = this;
+      this.isotopesList.clear();
       assert && assert( this.showingNaturesMix === true ); // This method shouldn't be called if we're not showing nature's mix.
 
       // Clear out anything that is in the test chamber.  If anything
@@ -626,6 +641,9 @@ define( function( require ) {
         var isotopesToAdd = [];
         for ( var i = 0; i < numToCreate; i++ ) {
           var newIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount, self.testChamber.generateRandomLocation() );
+          newIsotope.color = self.getColorForIsotope( isotopeConfig );
+          newIsotope.massNumber = isotopeConfig.massNumber;
+          newIsotope.protonCount = isotopeConfig.protonCount;
           isotopesToAdd.push( newIsotope );
           self.isotopesList.add( newIsotope );
             // notifyIsotopeInstanceAdded( newIsotope );
@@ -739,7 +757,7 @@ define( function( require ) {
         // TODO this is giving error
         //this.mapIsotopeConfigToUserMixState.delete( this.prototypeIsotope.protonCount );
       }
-      this.removeAllIsotopesFromTestChamberAndModel();
+      //this.removeAllIsotopesFromTestChamberAndModel();
     }
 
   } );
