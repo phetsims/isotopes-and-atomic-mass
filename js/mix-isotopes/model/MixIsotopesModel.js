@@ -619,7 +619,7 @@ define( function( require ) {
       //{NumberAtom[]}
       var possibleIsotopesCopy = this.possibleIsotopes.slice( 0 );
       possibleIsotopesCopy.sort( function( atom1, atom2 ) {
-        return AtomIdentifier.getNaturalAbundance( atom1 ) - AtomIdentifier.getNaturalAbundance( atom2 );
+        return AtomIdentifier.getNaturalAbundance( atom2 ) - AtomIdentifier.getNaturalAbundance( atom1 );
       } );
 
       //Collections.sort( possibleIsotopesCopy, new Comparator<IAtom>() {
@@ -644,6 +644,7 @@ define( function( require ) {
           newIsotope.color = self.getColorForIsotope( isotopeConfig );
           newIsotope.massNumber = isotopeConfig.massNumber;
           newIsotope.protonCount = isotopeConfig.protonCount;
+          newIsotope.radius = 5;
           isotopesToAdd.push( newIsotope );
           self.isotopesList.add( newIsotope );
             // notifyIsotopeInstanceAdded( newIsotope );
