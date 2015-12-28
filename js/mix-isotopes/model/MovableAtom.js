@@ -29,7 +29,7 @@ define( function( require ) {
     this.position = initialPosition;
     this.destination = initialPosition;
     this.atomConfiguration = new NumberAtom( { protonCount: numProtons, neutronCount: numNeutrons, electronCount: numProtons } );
-
+    this.showLabel = true;
     this.instanceCount = instanceCount++;
 
 

@@ -153,7 +153,7 @@ define( function( require ) {
     function addIsotopeView ( addedIsotope ){
       var isotopeView = new ParticleView( addedIsotope, self.mvt );
       isotopeView.center = self.mvt.modelToViewPosition( addedIsotope.position );
-      isotopeView.pickable = true;
+      isotopeView.pickable = !(mixIsotopesModel.showingNaturesMix);
 
       isotopeLayer.addChild( isotopeView );
 

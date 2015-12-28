@@ -53,8 +53,8 @@ define( function( require ) {
   // a given time are all the same size.  The larger size is based somewhat
   // on reality.  The smaller size is used when we want to show a lot of
   // atoms at once.
-  var LARGE_ISOTOPE_RADIUS = 10; // in picometers.
-  //var SMALL_ISOTOPE_RADIUS = 30; // in picometers. TODO
+  var LARGE_ISOTOPE_RADIUS = 10;
+  var SMALL_ISOTOPE_RADIUS = 4;
 
   // Numbers of isotopes that are placed into the buckets when a new atomic
   // number is selected.
@@ -622,12 +622,6 @@ define( function( require ) {
         return AtomIdentifier.getNaturalAbundance( atom2 ) - AtomIdentifier.getNaturalAbundance( atom1 );
       } );
 
-      //Collections.sort( possibleIsotopesCopy, new Comparator<IAtom>() {
-      //  public int compare( IAtom atom2, IAtom atom1 ) {
-      //    return new Double( AtomIdentifier.getNaturalAbundance( atom1 ) ).compareTo( AtomIdentifier.getNaturalAbundance( atom2 ) );
-      //  }
-      //} );
-
       // Add the isotopes.
       possibleIsotopesCopy.forEach( function (isotopeConfig) {
         var numToCreate = Math.round( NUM_NATURES_MIX_ATOMS * AtomIdentifier.getNaturalAbundance( isotopeConfig ) );
@@ -644,7 +638,8 @@ define( function( require ) {
           newIsotope.color = self.getColorForIsotope( isotopeConfig );
           newIsotope.massNumber = isotopeConfig.massNumber;
           newIsotope.protonCount = isotopeConfig.protonCount;
-          newIsotope.radius = 5;
+          newIsotope.radius = SMALL_ISOTOPE_RADIUS;
+          newIsotope.showLabel = false;
           isotopesToAdd.push( newIsotope );
           self.isotopesList.add( newIsotope );
             // notifyIsotopeInstanceAdded( newIsotope );
