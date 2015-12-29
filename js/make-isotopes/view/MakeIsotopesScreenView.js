@@ -47,7 +47,7 @@ define( function( require ) {
    * @param {MakeIsotopesModel} makeIsotopesModel
    * @constructor
    */
-  function MakeIsotopesScreenView( makeIsotopesModel ) {
+  function MakeIsotopesScreenView( makeIsotopesModel, tandem ) {
     // supertype constructor
     ScreenView.call( this, { layoutBounds: IsotopesAndAtomicMassConstants.LAYOUT_BOUNDS } );
 
@@ -109,7 +109,7 @@ define( function( require ) {
 
     // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
     // element is Neon for this sim.
-    var periodicTableNode = new ExpandedPeriodicTableNode( makeIsotopesModel.numberAtom, 10 );
+    var periodicTableNode = new ExpandedPeriodicTableNode( makeIsotopesModel.numberAtom, 10, tandem );
     periodicTableNode.scale( 0.65 );
     periodicTableNode.top = 10;
     periodicTableNode.right = this.layoutBounds.width - 10;

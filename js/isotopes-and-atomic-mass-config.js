@@ -37,6 +37,7 @@ require.config( {
     SCENERY_PHET: '../../scenery-phet/js',
     SUN: '../../sun/js',
     SHRED: '../../shred/js',
+    TANDEM: '../../tandem/js',
 
     // this sim
     ISOTOPES_AND_ATOMIC_MASS: '.'

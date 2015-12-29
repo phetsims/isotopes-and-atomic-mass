@@ -37,6 +37,10 @@ define( function( require ) {
 
   // constants
   var ISOTOPE_MIXTURE = { MY_MIX: 'my mix', NATURE_MIX: 'nature mix' };
+  var INTERACTIVITY_MODE = {
+    BUCKETS_AND_LARGE_ATOMS: 'BUCKETS_AND_LARGE_ATOMS',
+    SLIDERS_AND_SMALL_ATOMS: 'SLIDERS_AND_SMALL_ATOMS'
+  };
 
   // strings
   var myMixString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/myMix' );
@@ -55,12 +59,28 @@ define( function( require ) {
     return displayButtonGroup;
   }
 
+  function InteractivityModeSelectionNode( interactivityModeProperty ) {
+    var radioButtonRadius = 6;
+    var LABEL_FONT = new PhetFont( 14 );
+    debugger;
+    var massNumberButton = new AquaRadioButton( interactivityModeProperty,
+      INTERACTIVITY_MODE.BUCKETS_AND_LARGE_ATOMS, new Text( INTERACTIVITY_MODE.BUCKETS_AND_LARGE_ATOMS, { font: LABEL_FONT, maxWidth: 125 } ), { radius: radioButtonRadius } );
+    var atomicMassButton = new AquaRadioButton( interactivityModeProperty,
+      INTERACTIVITY_MODE.SLIDERS_AND_SMALL_ATOMS, new Text( INTERACTIVITY_MODE.SLIDERS_AND_SMALL_ATOMS, { font: LABEL_FONT, maxWidth: 125 } ), { radius: radioButtonRadius } );
+    var displayButtonGroup = new Node();
+    displayButtonGroup.addChild( massNumberButton );
+    atomicMassButton.top = massNumberButton.bottom + 8;
+    atomicMassButton.left = displayButtonGroup.left;
+    displayButtonGroup.addChild( atomicMassButton );
+    return displayButtonGroup;
+  }
+
 
   /**
    * @param {MakeIsotopesModel} makeIsotopesModel
    * @constructor
    */
-  function MixIsotopesScreenView( mixIsotopesModel ) {
+  function MixIsotopesScreenView( mixIsotopesModel, tandem ) {
     // supertype constructor
     ScreenView.call( this, { layoutBounds:IsotopesAndAtomicMassConstants.LAYOUT_BOUNDS } );
 
@@ -118,7 +138,7 @@ define( function( require ) {
 
     // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
     // element is Neon for this sim.
-    var periodicTableNode = new ExpandedPeriodicTableNode( mixIsotopesModel.numberAtom, 18 );
+    var periodicTableNode = new ExpandedPeriodicTableNode( mixIsotopesModel.numberAtom, 18, tandem );
     periodicTableNode.scale( 0.55 );
     periodicTableNode.top = 10;
     periodicTableNode.right = this.layoutBounds.width - 10;
@@ -217,6 +237,12 @@ define( function( require ) {
     isotopeMixtureSelectionNode.top = averageAtomicMassBox.bottom + 5;
     this.addChild( isotopeMixtureSelectionNode );
 
+    var interactivityModeSelectionNode = new InteractivityModeSelectionNode( mixIsotopesModel.interactivityModeProperty );
+    interactivityModeSelectionNode.leftTop = averageAtomicMassBox.leftBottom;
+    interactivityModeSelectionNode.top = averageAtomicMassBox.bottom + 5;
+    this.addChild( interactivityModeSelectionNode );
+
+
     this.isotopeMixtureProperty.link( function() {
       if ( self.isotopeMixtureProperty.get() === ISOTOPE_MIXTURE.MY_MIX ){
         mixIsotopesModel.showingNaturesMix = false;
@@ -226,12 +252,12 @@ define( function( require ) {
       }
     } );
 
-    // Horizontal Slider
+    /*// Horizontal Slider
     var temp = new ControlIsotope();
 
     temp.leftTop = averageAtomicMassBox.leftBottom;
     temp.top = averageAtomicMassBox.bottom + 5;
-    this.addChild(temp);
+    this.addChild(temp);*/
 
   }
 

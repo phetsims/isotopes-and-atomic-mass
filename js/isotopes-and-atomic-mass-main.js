@@ -13,9 +13,12 @@ define( function( require ) {
   var MixIsotopesScreen = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/MixIsotopesScreen' );
   var Sim = require( 'JOIST/Sim' );
   var SimLauncher = require( 'JOIST/SimLauncher' );
+  var Tandem = require( 'TANDEM/Tandem' );
 
   // strings
   var isotopesAndAtomicMassTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopes-and-atomic-mass.title' );
+
+  var tandem = new Tandem( 'isotopesAndAtomicMass' );
 
   var simOptions = {
     credits: {
@@ -26,7 +29,8 @@ define( function( require ) {
       qualityAssurance: '',
       graphicArts: '',
       thanks: ''
-    }
+    },
+    tandem: tandem
   };
 
   // Appending '?dev' to the URL will enable developer-only features.
@@ -37,7 +41,10 @@ define( function( require ) {
   }
 
   SimLauncher.launch( function() {
-    var sim = new Sim( isotopesAndAtomicMassTitleString, [ new MakeIsotopesScreen(), new MixIsotopesScreen() ], simOptions );
+    var makeIsotopeScreenTandem = tandem.createTandem( 'makeIsotopeScreen' );
+    var mixIsotopeScreenTandem = tandem.createTandem( 'mixIsotopeScreen' );
+
+    var sim = new Sim( isotopesAndAtomicMassTitleString, [ new MakeIsotopesScreen( makeIsotopeScreenTandem ), new MixIsotopesScreen( mixIsotopeScreenTandem ) ], simOptions );
     sim.start();
   } );
 } );

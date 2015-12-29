@@ -156,9 +156,9 @@ define( function( require ) {
     // Set the initial atom configuration.
     this.setAtomConfiguration( this.numberAtom );
 
-    this.interactivityModeProperty.link( function() {
+    /*this.interactivityModeProperty.link( function() {
       self.interactivityModeObserver();
-    } );
+    } );*/
 
     // Listen to our own "showing nature's mix" property so that we can
     // show and hide the appropriate isotopes when the value changes.
@@ -182,6 +182,12 @@ define( function( require ) {
           self.setUpInitialUsersMix();
         }
       }
+    } );
+
+    this.interactivityModeProperty.lazyLink( function(prop) {
+      console.log(prop);
+      self.addIsotopeControllers();
+
     } );
   }
 

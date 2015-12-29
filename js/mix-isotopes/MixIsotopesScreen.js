@@ -27,11 +27,13 @@ define( function( require ) {
   /**
    * @constructor
    */
-  function MixIsotopesScreen() {
+  function MixIsotopesScreen( tandem ) {
 
     Screen.call( this, mixIsotopesModuleTitleString, new Image( mixIsotopesIcon ),
       function() { return new MixIsotopesModel(); },
-      function( model ) { return new MixIsotopesScreenView( model ); }
+      function( model ) { return new MixIsotopesScreenView( model, tandem ); }, {
+        tandem: tandem
+      }
     );
   }
 
