@@ -44,7 +44,7 @@ define( function( require ) {
     var self = this;
     this.containedIsotopes = new ObservableArray();
     model.containedIsotopes.forEach( function( isotope ) {
-      self.containedIsotopes.add( isotope )
+      self.containedIsotopes.add( isotope );
     });
   }
 
@@ -273,7 +273,7 @@ define( function( require ) {
      */
 
     removeAllIsotopes: function( removeFromModel ) {
-      var containedIsotopesCopy = this.containedIsotopes.getArray().slice( 0 );
+      //var containedIsotopesCopy = this.containedIsotopes.getArray().slice( 0 );
       this.containedIsotopes.clear();
       /*if ( removeFromModel ) {
         containedIsotopesCopy.forEach( function( isotope ) {

@@ -6,23 +6,13 @@ define( function( require ) {
   // modules
   var ArrowButton = require( 'SCENERY_PHET/buttons/ArrowButton' );
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
-  var Carousel = require( 'SUN/Carousel' );
-  var CheckBox = require( 'SUN/CheckBox' );
-  var Circle = require( 'SCENERY/nodes/Circle' );
-  var DemosView = require( 'SUN/demo/DemosView' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var HSlider = require( 'SUN/HSlider' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Node = require( 'SCENERY/nodes/Node' );
-  var PageControl = require( 'SUN/PageControl' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Property = require( 'AXON/Property' );
   var Range = require( 'DOT/Range' );
-  var Rectangle = require( 'SCENERY/nodes/Rectangle' );
-  var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
-  var Text = require( 'SCENERY/nodes/Text' );
-  var sun = require( 'SUN/sun' );
-  var VBox = require( 'SCENERY/nodes/VBox' );
   var Text = require( 'SCENERY/nodes/Text' );
   var Panel = require( 'SUN/Panel' );
 
@@ -44,7 +34,7 @@ define( function( require ) {
     var range = new Range( 0, 100 );
     var tickLabelOptions = { font: new PhetFont( 12 ) };
     var slider = new HSlider( valueProperty, range, {
-      thumbSize: new Dimension2( 15, 30 ),
+      thumbSize: new Dimension2( 15, 30 )
       //trackSize: new Dimension2( 300, 5 )
       //center: layoutBounds.center
     } );
@@ -88,7 +78,7 @@ define( function( require ) {
 
       minusButton.enabled = !(Math.floor( value ) === 0);
       plusButton.enabled = !(Math.floor( value ) === 100);
-    })
+    });
 
   }
 
