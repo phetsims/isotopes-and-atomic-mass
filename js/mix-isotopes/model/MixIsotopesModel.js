@@ -185,7 +185,7 @@ define( function( require ) {
     } );
 
     this.interactivityModeProperty.lazyLink( function(prop) {
-      console.log(prop);
+      self.removeAllIsotopesFromTestChamberAndModel();
       self.addIsotopeControllers();
 
     } );
@@ -302,7 +302,7 @@ define( function( require ) {
       this.removeAllIsotopesFromTestChamberAndModel();
       this.isotopesList.clear();
       this.showingNaturesMix = false;
-      this.interactivityMode = InteractivityMode.BUCKETS_AND_LARGE_ATOMS;
+      //this.interactivityMode = InteractivityMode.BUCKETS_AND_LARGE_ATOMS;
       delete this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ];
       this.addIsotopeControllers();
     },
@@ -522,9 +522,7 @@ define( function( require ) {
       var self = this;
       this.removeBuckets();
       this.removeNumericalControllers();
-      //this.isotopesList.clear();
 
-      //
       var buckets = this.interactivityMode === InteractivityMode.BUCKETS_AND_LARGE_ATOMS || this.showingNaturesMix;
       // Set up layout variables.
       var controllerYOffset = -210 ;
@@ -547,10 +545,10 @@ define( function( require ) {
       for ( var i = 0; i < this.possibleIsotopes.length; i++ ) {
         // {MovableAtom}
         var isotopeConfig = this.possibleIsotopes[ i ];
+        var isotopeCaption = AtomIdentifier.getName( isotopeConfig.protonCount ) + '-' + isotopeConfig.massNumber;
         if ( buckets ) {
-          var bucketCaption = AtomIdentifier.getName( isotopeConfig.protonCount ) + '-' + isotopeConfig.massNumber;
           var newBucket = new MonoIsotopeBucket( new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffset ),
-            BUCKET_SIZE, this.getColorForIsotope( isotopeConfig ), bucketCaption, LARGE_ISOTOPE_RADIUS,
+            BUCKET_SIZE, this.getColorForIsotope( isotopeConfig ), isotopeCaption, LARGE_ISOTOPE_RADIUS,
             isotopeConfig.protonCount, isotopeConfig.neutronCount );
           this.addBucket( newBucket );
           if ( !this.showingNaturesMix ) {
@@ -562,10 +560,15 @@ define( function( require ) {
         }
         else {
           // Assume a numerical controller.
-          var newController = new NumericalIsotopeQuantityControl( this, isotopeConfig, new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffset ) );
+          var newController = new NumericalIsotopeQuantityControl( this, isotopeConfig,
+            new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffset ),
+            isotopeCaption );
+          var controllerIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount, new Vector2( 0, 0 ) );
+          controllerIsotope.color = self.getColorForIsotope( isotopeConfig );
+          controllerIsotope.radius = SMALL_ISOTOPE_RADIUS;
+          newController.controllerIsotope = controllerIsotope;
           newController.setIsotopeQuantity( this.testChamber.getIsotopeCount( isotopeConfig ) );
           this.numericalControllerList.add( newController );
-          // notifyNumericalControllerAdded( newController );
         }
       }
     },
@@ -670,6 +673,7 @@ define( function( require ) {
     // TODO Check back on this
     removeAllIsotopesFromTestChamberAndModel: function() {
       this.testChamber.removeAllIsotopes( true );
+      this.isotopesList.clear();
     },
 
     /**

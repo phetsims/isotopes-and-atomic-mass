@@ -29,13 +29,13 @@ define( function( require ) {
   // Global Variables
   var CAPACITY = 100;
 
-  function NumericalIsotopeQuantityControl( model, isotopeConfig, position ) {
+  function NumericalIsotopeQuantityControl( model, isotopeConfig, position, caption ) {
 
     this.quantityProperty = new Property( 0 );
     this.model = model;
-    this.isotopeConfig = new NumberAtom( 0, 0, 0 );
-    this.centerPosition = new Vector2( 0, 0 );
+    this.isotopeConfig = isotopeConfig;
     this.centerPosition = position;
+    this.caption = caption;
 
     // This property tracks whether this model element is still a part
     // of the active model, such that it should be displayed in the view.
@@ -68,14 +68,14 @@ define( function( require ) {
      */
     setIsotopeQuantity: function( targetQuantity ) {
       assert && assert( targetQuantity <= CAPACITY );
-      var changeAmount = targetQuantity - this.model.getIsotopeTestChamber().getIsotopeCount( this.isotopeConfig );
+      var changeAmount = targetQuantity - this.model.testChamber.getIsotopeCount( this.isotopeConfig );
 
       if ( changeAmount > 0 ) {
         for ( var i = 0; i < changeAmount; i++ ) {
           var newIsotope = new MovableAtom( this.isotopeConfig.protonCount, this.isotopeConfig.neutronCount,
-            this.model.SMALL_ISOTOPE_RADIUS, this.model.getIsotopeTestChamber().generateRandomLocation() );
+            this.model.SMALL_ISOTOPE_RADIUS, this.model.testChamber.generateRandomLocation() );
 
-          this.model.getIsotopeTestChamber().addIsotopeToChamber( newIsotope, true );
+          this.model.testChamber.addIsotopeToChamber( newIsotope, true );
           // this.model.notifyIsotopeInstanceAdded( newIsotope );
 
         }
@@ -84,7 +84,7 @@ define( function( require ) {
 
       else if ( changeAmount < 0 ) {
         for ( var j = 0; j < -changeAmount; j++ ) {
-          var isotope = this.model.getIsotopeTestChamber().removeIsotopeMatchingConfig( this.isotopeConfig );
+          var isotope = this.model.testChamber.removeIsotopeMatchingConfig( this.isotopeConfig );
           if ( isotope !== null ) {
             isotope.removedFromModel();
           }
@@ -113,7 +113,7 @@ define( function( require ) {
 
     getQuantity: function() {
       // Verify that the internal property matches that of the test chamber.
-      assert && assert( this.quantityProperty === this.model.getIsotopeTestChamber().getIsotopeCount( this.isotopeConfig ) );
+      assert && assert( this.quantityProperty === this.model.testChamber.getIsotopeCount( this.isotopeConfig ) );
       // Return the value.
       return this.quantityProperty;
     }

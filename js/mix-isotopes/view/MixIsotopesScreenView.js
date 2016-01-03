@@ -62,7 +62,6 @@ define( function( require ) {
   function InteractivityModeSelectionNode( interactivityModeProperty ) {
     var radioButtonRadius = 6;
     var LABEL_FONT = new PhetFont( 14 );
-    debugger;
     var massNumberButton = new AquaRadioButton( interactivityModeProperty,
       INTERACTIVITY_MODE.BUCKETS_AND_LARGE_ATOMS, new Text( INTERACTIVITY_MODE.BUCKETS_AND_LARGE_ATOMS, { font: LABEL_FONT, maxWidth: 125 } ), { radius: radioButtonRadius } );
     var atomicMassButton = new AquaRadioButton( interactivityModeProperty,
@@ -188,7 +187,20 @@ define( function( require ) {
     mixIsotopesModel.isotopesList.forEach ( function( addedIsotope ) { addIsotopeView( addedIsotope ); });
     mixIsotopesModel.isotopesList.addItemAddedListener ( function( addedIsotope ) { addIsotopeView( addedIsotope ); });
 
+    // Adding Numeric Controllers
 
+    mixIsotopesModel.numericalControllerList.addItemAddedListener ( function( addedController ) {
+      var controllerView = new ControlIsotope( addedController );
+      controllerView.center = self.mvt.modelToViewPosition( addedController.centerPosition );
+      controlsLayer.addChild( controllerView );
+
+      mixIsotopesModel.numericalControllerList.addItemRemovedListener( function removalListener( removedController ){
+        if ( removedController === addedController ) {
+          controlsLayer.removeChild( controllerView );
+          mixIsotopesModel.numericalControllerList.removeItemRemovedListener( removalListener );
+        }
+      });
+    });
 
 
 
