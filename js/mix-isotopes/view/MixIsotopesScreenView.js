@@ -55,8 +55,8 @@ define( function( require ) {
   function IsotopeMixtureSelectionNode( isotopeMixtureProperty ) {
     var radioButtonRadius = 6;
     var LABEL_FONT = new PhetFont( 14 );
-    var myMixButton = new AquaRadioButton( isotopeMixtureProperty, ISOTOPE_MIXTURE.MY_MIX, new Text( myMixString, { font: LABEL_FONT, maxWidth: 125 } ), { radius: radioButtonRadius } );
-    var naturesMixButton = new AquaRadioButton( isotopeMixtureProperty, ISOTOPE_MIXTURE.NATURE_MIX, new Text( natureMixString, { font: LABEL_FONT, maxWidth: 125 } ), { radius: radioButtonRadius } );
+    var myMixButton = new AquaRadioButton( isotopeMixtureProperty, false, new Text( myMixString, { font: LABEL_FONT, maxWidth: 125 } ), { radius: radioButtonRadius } );
+    var naturesMixButton = new AquaRadioButton( isotopeMixtureProperty, true, new Text( natureMixString, { font: LABEL_FONT, maxWidth: 125 } ), { radius: radioButtonRadius } );
     var label = new Text( "Isotope Mixture:", { font: LABEL_FONT, maxWidth: 125 } );
     var displayButtonGroup = new Node();
     displayButtonGroup.addChild( label );
@@ -158,6 +158,7 @@ define( function( require ) {
     var resetAllButton = new ResetAllButton( {
       listener: function() {
         mixIsotopesModel.reset();
+
       },
       right: this.layoutBounds.maxX - 10,
       bottom: this.layoutBounds.maxY - 10
@@ -272,8 +273,7 @@ define( function( require ) {
     averageAtomicMassBox.top = compositionBox.bottom + 5;
     this.addChild( averageAtomicMassBox );
 
-    this.isotopeMixtureProperty = new Property( ISOTOPE_MIXTURE.MY_MIX );
-    var isotopeMixtureSelectionNode = new IsotopeMixtureSelectionNode( this.isotopeMixtureProperty );
+    var isotopeMixtureSelectionNode = new IsotopeMixtureSelectionNode( mixIsotopesModel.showingNaturesMixProperty );
     isotopeMixtureSelectionNode.rightTop = averageAtomicMassBox.rightBottom;
     isotopeMixtureSelectionNode.top = averageAtomicMassBox.bottom + 5;
     this.addChild( isotopeMixtureSelectionNode );
@@ -287,14 +287,14 @@ define( function( require ) {
     interactivityModeSelectionNode.top = isotopeMixtureSelectionNode.top;
 
 
-    this.isotopeMixtureProperty.link( function() {
+    /*this.isotopeMixtureProperty.link( function() {
       if ( self.isotopeMixtureProperty.get() === ISOTOPE_MIXTURE.MY_MIX ){
         mixIsotopesModel.showingNaturesMix = false;
       }
       else{
         mixIsotopesModel.showingNaturesMix = true;
       }
-    } );
+    } );*/
 
     var clearBoxButton = new RectangularPushButton( {
       content: new Text( 'Clear Box', { font: new PhetFont( 14 ) } ),

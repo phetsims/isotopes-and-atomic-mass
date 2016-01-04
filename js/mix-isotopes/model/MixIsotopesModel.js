@@ -328,7 +328,7 @@ define( function( require ) {
      */
     setState: function( modelState ) {
       // Clear out any particles that are currently in the test chamber.
-      //this.removeAllIsotopesFromTestChamberAndModel();
+      this.removeAllIsotopesFromTestChamberAndModel();
 
       // Restore the prototype isotope.
       this.prototypeIsotope = modelState.elementConfig;
@@ -668,7 +668,7 @@ define( function( require ) {
       PropertySet.prototype.reset.call( this );
 
       // Remove any stored state for the default atom.
-      delete this.mapIsotopeConfigToUserMixState[ DEFAULT_PROTOTYPE_ISOTOPE_CONFIG.protonCount ];
+      this.mapIsotopeConfigToUserMixState = {};
 
       // Set the default element.
       this.setAtomConfiguration( DEFAULT_PROTOTYPE_ISOTOPE_CONFIG );
