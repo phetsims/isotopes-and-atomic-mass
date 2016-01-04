@@ -298,7 +298,7 @@ define( function( require ) {
 
     var clearBoxButton = new RectangularPushButton( {
       content: new Text( 'Clear Box', { font: new PhetFont( 14 ) } ),
-      listener: function() { mixIsotopesModel.removeAllIsotopesFromTestChamberAndModel(); },
+      listener: function() { mixIsotopesModel.clearBox(); },
       baseColor: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
       fireOnDown: true,
       cornerRadius: 1

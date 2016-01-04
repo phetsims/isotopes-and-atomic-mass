@@ -656,6 +656,11 @@ define( function( require ) {
       this.isotopesList.clear();
     },
 
+    clearBox: function() {
+      this.removeAllIsotopesFromTestChamberAndModel();
+      this.addIsotopeControllers();
+    },
+
     /**
      * Resets the model. Returns the default settings.
      */
