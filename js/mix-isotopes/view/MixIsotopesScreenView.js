@@ -14,10 +14,14 @@ define( function( require ) {
   var AquaRadioButton = require( 'SUN/AquaRadioButton' );
   var AccordionBox = require( 'SUN/AccordionBox' );
   var AverageAtomicMassIndicator = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/AverageAtomicMassIndicator' );
+  var Bucket = require( 'PHETCOMMON/model/Bucket' );
   var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
   var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
   var BucketHole = require( 'SCENERY_PHET/bucket/BucketHole' );
+  var Color = require( 'SCENERY/util/Color' );
+  var Dimension2 = require( 'DOT/Dimension2' );
   var ExpandedPeriodicTableNode = require( 'SHRED/view/ExpandedPeriodicTableNode' );
+  var HSlider = require( 'SUN/HSlider' );
   var inherit = require( 'PHET_CORE/inherit' );
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var IsotopesAndAtomicMassConstants = require( 'ISOTOPES_AND_ATOMIC_MASS/common/IsotopesAndAtomicMassConstants' );
@@ -26,7 +30,10 @@ define( function( require ) {
   var ParticleView = require( 'SHRED/view/ParticleView' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Property = require( 'AXON/Property' );
+  var Range = require( 'DOT/Range' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
+  var RectangularPushButton = require( 'SUN/buttons/RectangularPushButton' );
+  var RadioButtonGroup = require( 'SUN/buttons/RadioButtonGroup' );
   var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   var ScreenView = require( 'JOIST/ScreenView' );
   var SharedConstants = require( 'SHRED/SharedConstants' );
@@ -48,29 +55,52 @@ define( function( require ) {
   function IsotopeMixtureSelectionNode( isotopeMixtureProperty ) {
     var radioButtonRadius = 6;
     var LABEL_FONT = new PhetFont( 14 );
-    var massNumberButton = new AquaRadioButton( isotopeMixtureProperty, ISOTOPE_MIXTURE.MY_MIX, new Text( myMixString, { font: LABEL_FONT, maxWidth: 125 } ), { radius: radioButtonRadius } );
-    var atomicMassButton = new AquaRadioButton( isotopeMixtureProperty, ISOTOPE_MIXTURE.NATURE_MIX, new Text( natureMixString, { font: LABEL_FONT, maxWidth: 125 } ), { radius: radioButtonRadius } );
+    var myMixButton = new AquaRadioButton( isotopeMixtureProperty, ISOTOPE_MIXTURE.MY_MIX, new Text( myMixString, { font: LABEL_FONT, maxWidth: 125 } ), { radius: radioButtonRadius } );
+    var naturesMixButton = new AquaRadioButton( isotopeMixtureProperty, ISOTOPE_MIXTURE.NATURE_MIX, new Text( natureMixString, { font: LABEL_FONT, maxWidth: 125 } ), { radius: radioButtonRadius } );
+    var label = new Text( "Isotope Mixture:", { font: LABEL_FONT, maxWidth: 125 } );
     var displayButtonGroup = new Node();
-    displayButtonGroup.addChild( massNumberButton );
-    atomicMassButton.top = massNumberButton.bottom + 8;
-    atomicMassButton.left = displayButtonGroup.left;
-    displayButtonGroup.addChild( atomicMassButton );
+    displayButtonGroup.addChild( label );
+    myMixButton.top = label.bottom + 10;
+    myMixButton.left = displayButtonGroup.left;
+    displayButtonGroup.addChild( myMixButton );
+    naturesMixButton.top = myMixButton.bottom + 8;
+    naturesMixButton.left = displayButtonGroup.left;
+    displayButtonGroup.addChild( naturesMixButton );
     return displayButtonGroup;
   }
 
-  function InteractivityModeSelectionNode( interactivityModeProperty ) {
-    var radioButtonRadius = 6;
-    var LABEL_FONT = new PhetFont( 14 );
-    var massNumberButton = new AquaRadioButton( interactivityModeProperty,
-      INTERACTIVITY_MODE.BUCKETS_AND_LARGE_ATOMS, new Text( INTERACTIVITY_MODE.BUCKETS_AND_LARGE_ATOMS, { font: LABEL_FONT, maxWidth: 125 } ), { radius: radioButtonRadius } );
-    var atomicMassButton = new AquaRadioButton( interactivityModeProperty,
-      INTERACTIVITY_MODE.SLIDERS_AND_SMALL_ATOMS, new Text( INTERACTIVITY_MODE.SLIDERS_AND_SMALL_ATOMS, { font: LABEL_FONT, maxWidth: 125 } ), { radius: radioButtonRadius } );
-    var displayButtonGroup = new Node();
-    displayButtonGroup.addChild( massNumberButton );
-    atomicMassButton.top = massNumberButton.bottom + 8;
-    atomicMassButton.left = displayButtonGroup.left;
-    displayButtonGroup.addChild( atomicMassButton );
-    return displayButtonGroup;
+  function InteractivityModeSelectionNode( interactivityModeProperty, mvt ) {
+    var bucketNode = new Node();
+    var bucket = new Bucket( { baseColor: Color.gray,
+      caption: "",
+      size: new Dimension2( 50, 30 )
+    } );
+    bucketNode.addChild( new BucketHole( bucket, mvt ) );
+    bucketNode.addChild( new BucketFront( bucket, mvt ) );
+    bucketNode.scale( 0.5 );
+
+    var range = new Range( 0, 100 );
+    var slider = new HSlider( new Property( 50 ), range, {
+      trackSize: new Dimension2( 50, 5 ),
+      thumbSize: new Dimension2( 15, 30 ),
+      majorTickLength: 15
+    } );
+    slider.addMajorTick( 0 );
+    slider.addMajorTick( 100 );
+    slider.scale( 0.5 );
+
+    var radioButtonContent = [
+      { value: INTERACTIVITY_MODE.BUCKETS_AND_LARGE_ATOMS, node: bucketNode },
+      { value: INTERACTIVITY_MODE.SLIDERS_AND_SMALL_ATOMS, node: slider }
+    ];
+    var radioButtonGroup = new RadioButtonGroup( interactivityModeProperty, radioButtonContent, {
+      orientation: 'horizontal',
+      selectedLineWidth: 1,
+      baseColor: Color.white,
+      cornerRadius: 1,
+      spacing: 5
+    } );
+    return radioButtonGroup;
   }
 
 
@@ -247,11 +277,14 @@ define( function( require ) {
     isotopeMixtureSelectionNode.rightTop = averageAtomicMassBox.rightBottom;
     isotopeMixtureSelectionNode.top = averageAtomicMassBox.bottom + 5;
     this.addChild( isotopeMixtureSelectionNode );
+    isotopeMixtureSelectionNode.right = resetAllButton.left - 10;
+    isotopeMixtureSelectionNode.bottom = resetAllButton.bottom - 10;
 
-    var interactivityModeSelectionNode = new InteractivityModeSelectionNode( mixIsotopesModel.interactivityModeProperty );
+    var interactivityModeSelectionNode = new InteractivityModeSelectionNode( mixIsotopesModel.interactivityModeProperty , this.mvt);
     interactivityModeSelectionNode.leftTop = averageAtomicMassBox.leftBottom;
     interactivityModeSelectionNode.top = averageAtomicMassBox.bottom + 5;
     this.addChild( interactivityModeSelectionNode );
+    interactivityModeSelectionNode.top = isotopeMixtureSelectionNode.top;
 
 
     this.isotopeMixtureProperty.link( function() {
@@ -263,12 +296,17 @@ define( function( require ) {
       }
     } );
 
-    /*// Horizontal Slider
-    var temp = new ControlIsotope();
+    var clearBoxButton = new RectangularPushButton( {
+      content: new Text( 'Clear Box', { font: new PhetFont( 14 ) } ),
+      listener: function() { mixIsotopesModel.removeAllIsotopesFromTestChamberAndModel(); },
+      baseColor: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
+      fireOnDown: true,
+      cornerRadius: 1
+    } );
+    this.addChild( clearBoxButton );
+    clearBoxButton.top = interactivityModeSelectionNode.bottom + 10;
+    clearBoxButton.left = interactivityModeSelectionNode.left;
 
-    temp.leftTop = averageAtomicMassBox.leftBottom;
-    temp.top = averageAtomicMassBox.bottom + 5;
-    this.addChild(temp);*/
 
   }
 
