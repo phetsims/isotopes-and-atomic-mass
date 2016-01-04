@@ -21,8 +21,6 @@ define( function( require ) {
   // modules
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var inherit = require( 'PHET_CORE/inherit' );
-  var NumberAtom = require( 'SHRED/model/NumberAtom' );
-  var Vector2 = require( 'DOT/Vector2' );
   var Property = require( 'AXON/Property' );
   var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
 
@@ -31,7 +29,7 @@ define( function( require ) {
 
   function NumericalIsotopeQuantityControl( model, isotopeConfig, position, caption ) {
 
-    this.quantityProperty = new Property( 0 );
+    this.quantityProperty = new Property( model.testChamber.getIsotopeCount( isotopeConfig ) );
     this.model = model;
     this.isotopeConfig = isotopeConfig;
     this.centerPosition = position;
@@ -69,16 +67,10 @@ define( function( require ) {
           newIsotope.protonCount = this.isotopeConfig.protonCount;
           newIsotope.radius = 4;
           newIsotope.showLabel = false;
-
-
           this.model.testChamber.addIsotopeToChamber( newIsotope, true );
           this.model.isotopesList.add( newIsotope );
-          // this.model.notifyIsotopeInstanceAdded( newIsotope );
-
         }
-
       }
-
       else if ( changeAmount < 0 ) {
         for ( var j = 0; j < -changeAmount; j++ ) {
           var isotope = this.model.testChamber.removeIsotopeMatchingConfig( this.isotopeConfig );
@@ -86,7 +78,6 @@ define( function( require ) {
             this.model.isotopesList.remove( isotope );
           }
         }
-
       }
       // TODO might create infinite loop
       //this.quantityProperty.set(targetQuantity);

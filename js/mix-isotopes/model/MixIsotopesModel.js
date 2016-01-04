@@ -26,8 +26,6 @@ define( function( require ) {
   var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
   var PropertySet = require( 'AXON/PropertySet' );
   var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
-
-  //TODO Remove after debugging
   var NumericalIsotopeQuantityControl = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/NumericalIsotopeQuantityControl' );
   var MonoIsotopeBucket = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MonoIsotopeBucket' );
   var IsotopeTestChamber = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/IsotopeTestChamber' );
@@ -342,15 +340,15 @@ define( function( require ) {
       var thisModel = this;
 
       // Make sure that the unlinking and re-linking of the interactivityModeObserver is behaving as expected.
-      this.interactivityModeProperty.unlink( function() {
+      /*this.interactivityModeProperty.unlink( function() {
         thisModel.interactivityModeObserver();
-      } );
+      } );*/
 
       this.interactivityModeProperty.set( modelState.interactivityMode );
 
-      this.interactivityModeProperty.link( function() {
+      /*this.interactivityModeProperty.link( function() {
         thisModel.interactivityModeObserver();
-      } );
+      } );*/
 
 
       // Restore the mix mode.  The assertion here checks that the mix mode
@@ -364,10 +362,6 @@ define( function( require ) {
       this.testChamber.setState( modelState.isotopeTestChamberState );
       this.testChamber.containedIsotopes.forEach( function( isotope ) {
         thisModel.isotopesList.add(isotope);
-        // TODO Since these are all listeners can we scrap it?
-        // isotope.addListener( isotopeGrabbedListener );
-        // isotope.addedToModel();
-        // notifyIsotopeInstanceAdded( isotope );
       } );
 
       // Add the appropriate isotope controllers.  This will create the
@@ -388,23 +382,10 @@ define( function( require ) {
           for ( var i = 0; i < isotopeCount; i++ ) {
             var removedIsotope = bucket.removeArbitraryIsotope();
             thisModel.isotopesList.remove( removedIsotope );
-            // removedIsotope.removeListener( isotopeGrabbedListener );
-            // TODO Can I comment out the line below?
-            //removedIsotope.removedFromModel();
           }
         } );
       }
-      else {
-        // Assume numerical controllers.
-        assert && assert( this.interactivityMode === InteractivityMode.SLIDERS_AND_SMALL_ATOMS );
-        // Set each controller to match the number in the chamber.
-        //@param {NumberAtom}
-        this.possibleIsotopes.forEach( function( isotopeConfig ) {
-          var controller = thisModel.getNumericalControllerForIsotope( isotopeConfig );
-          controller.setIsotopeQuantity( thisModel.testChamber.getIsotopeCount( isotopeConfig ) );
-        } );
 
-      }
     },
 
 
@@ -567,7 +548,6 @@ define( function( require ) {
           controllerIsotope.color = self.getColorForIsotope( isotopeConfig );
           controllerIsotope.radius = SMALL_ISOTOPE_RADIUS;
           newController.controllerIsotope = controllerIsotope;
-          newController.setIsotopeQuantity( this.testChamber.getIsotopeCount( isotopeConfig ) );
           this.numericalControllerList.add( newController );
         }
       }
@@ -721,34 +701,6 @@ define( function( require ) {
       } );
     },
 
-    //  isotopeGrabbedListener: function( particle ) {
-    //    assert && assert( particle instanceof MovableAtom );
-    //    var isotope = particle;
-    //    if ( this.testChamber.isIsotopeContained( isotope ) ) {
-    //      // The particle is removed from the test chamber as soon as it is grabbed.
-    //      this.testChamber.removeIsotopeFromChamber( isotope );
-    //    }
-    //    // isotope.addListener ( isotopeDroppedListener );
-    //  },
-    //
-    //
-    //isotopeDroppedListener: function( particle ) {
-    //  assert && assert( particle instanceof MovableAtom );
-    //  var isotope = particle;
-    //  if ( this.testChamber.isIsotopePositionedOverChamber( isotope ) ) {
-    //    // Dropped inside testChamber, so it should be added as long as it's not overlapping.
-    //    this.testChamber.addIsotopeToChamber( isotope );
-    //    this.testChamber.adjustForOverlap();
-    //  }
-    //  else{
-    //    // Particle was dropped outside of the test chamber, so return it to the bucket.
-    //    var bucket = getBucketForIsotope( isotope.atomConfiguration );
-    //    assert && assert( bucket !== null );
-    //    bucket.addIsotopeInstanceNearestOpen( isotope, false );
-    //  }
-    //  // particle.removeListener( isotopeDropperListener);
-    //}
-
 
     /**
      * This is an observer that watches our own interactivity mode setting.
@@ -768,81 +720,4 @@ define( function( require ) {
 
   } );
 
-} )
-;
-
-// TODO
-
-//// -----------------------------------------------------------------------
-//// Inner Classes and Interfaces
-////------------------------------------------------------------------------
-//
-
-//
-
-//
-//public interface Listener {
-//  void isotopeInstanceAdded( MovableAtom atom );
-//
-//  void isotopeBucketAdded( MonoIsotopeParticleBucket bucket );
-//
-//  void isotopeBucketRemoved( MonoIsotopeParticleBucket bucket );
-//
-//  void isotopeNumericalControllerAdded( NumericalIsotopeQuantityControl controller );
-//}
-//
-//public static class Adapter implements Listener {
-//  public void isotopeInstanceAdded( MovableAtom atom ) {
-//  }
-//
-//  public void isotopeBucketAdded( MonoIsotopeParticleBucket bucket ) {
-//  }
-//
-//  public void isotopeBucketRemoved( MonoIsotopeParticleBucket bucket ) {
-//  }
-//
-//  public void isotopeNumericalControllerAdded( NumericalIsotopeQuantityControl controller ) {
-//  }
-//}
-//
-///**
-// * Class that defines the state of the model.  This can be used for saving
-// * and restoring of the state.
-// *
-// * @author John Blanco
-// */
-//private static class State {
-//
-//  private final ImmutableAtom elementConfig;
-//  private final IsotopeTestChamber.State isotopeTestChamberState;
-//  private final InteractivityMode interactivityMode;
-//  private boolean showingNaturesMix;
-//
-//  public State( MixIsotopesModel model ) {
-//    elementConfig = model.getAtom().toImmutableAtom();
-//    isotopeTestChamberState = model.getIsotopeTestChamber().getState();
-//    interactivityMode = model.getInteractivityModeProperty().get();
-//    showingNaturesMix = model.showingNaturesMixProperty.get();
-//  }
-//
-//  public IAtom getElementConfiguration() {
-//    return elementConfig;
-//  }
-//
-//  public IsotopeTestChamber.State getIsotopeTestChamberState() {
-//    return isotopeTestChamberState;
-//  }
-//
-//  public InteractivityMode getInteractivityMode() {
-//    return interactivityMode;
-//  }
-//
-//  public boolean isShowingNaturesMix() {
-//    return showingNaturesMix;
-//  }
-//
-//  public void setShowingNaturesMix( boolean showingNaturesMix ) {
-//    this.showingNaturesMix = showingNaturesMix;
-//  }
-//}
-//}
+} );

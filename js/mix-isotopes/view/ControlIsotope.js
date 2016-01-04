@@ -12,7 +12,6 @@ define( function( require ) {
   var IsotopeNode = require( 'SHRED/view/IsotopeNode' );
   var Node = require( 'SCENERY/nodes/Node' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var Property = require( 'AXON/Property' );
   var Range = require( 'DOT/Range' );
   var Text = require( 'SCENERY/nodes/Text' );
   var Panel = require( 'SUN/Panel' );
@@ -39,7 +38,7 @@ define( function( require ) {
     var tickLabelOptions = { font: new PhetFont( 12 ) };
     var slider = new HSlider( controller.quantityProperty, range, {
       thumbSize: new Dimension2( 15, 30 ),
-      majorTickLength: 15,
+      majorTickLength: 15
     } );
 
     // major ticks
