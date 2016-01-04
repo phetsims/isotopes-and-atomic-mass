@@ -51,15 +51,6 @@ define( function( require ) {
     },
 
     /**
-     * Notify this model element that it has been removed from the model.
-     * This will result in notifications being sent that should cause view
-     * elements to be removed from the view.
-     */
-    removedFromModel: function() {
-      this.partOfModelProperty.set( false );
-    },
-
-    /**
      * Set the quantity of the isotope associated with this control to the
      * specified value.
      *
@@ -72,10 +63,16 @@ define( function( require ) {
 
       if ( changeAmount > 0 ) {
         for ( var i = 0; i < changeAmount; i++ ) {
-          var newIsotope = new MovableAtom( this.isotopeConfig.protonCount, this.isotopeConfig.neutronCount,
-            this.model.SMALL_ISOTOPE_RADIUS, this.model.testChamber.generateRandomLocation() );
+          var newIsotope = new MovableAtom( this.isotopeConfig.protonCount, this.isotopeConfig.neutronCount, this.model.testChamber.generateRandomLocation() );
+          newIsotope.color = this.model.getColorForIsotope( this.isotopeConfig );
+          newIsotope.massNumber = this.isotopeConfig.massNumber;
+          newIsotope.protonCount = this.isotopeConfig.protonCount;
+          newIsotope.radius = 4;
+          newIsotope.showLabel = false;
+
 
           this.model.testChamber.addIsotopeToChamber( newIsotope, true );
+          this.model.isotopesList.add( newIsotope );
           // this.model.notifyIsotopeInstanceAdded( newIsotope );
 
         }
@@ -86,13 +83,13 @@ define( function( require ) {
         for ( var j = 0; j < -changeAmount; j++ ) {
           var isotope = this.model.testChamber.removeIsotopeMatchingConfig( this.isotopeConfig );
           if ( isotope !== null ) {
-            isotope.removedFromModel();
+            this.model.isotopesList.remove( isotope );
           }
         }
 
       }
-
-      this.quantityProperty = targetQuantity;
+      // TODO might create infinite loop
+      //this.quantityProperty.set(targetQuantity);
 
     },
 

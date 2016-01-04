@@ -256,12 +256,11 @@ define( function( require ) {
       // Locate and remove a matching isotope.
       var removedIsotope = null;
       this.containedIsotopes.forEach( function( isotope ) {
-        if ( isotope.equals( isotopeConfig ) ) {
+        if ( isotope.atomConfiguration.equals( isotopeConfig ) ) {
           removedIsotope = isotope;
           return;
         }
       } );
-
       this.removeIsotopeFromChamber( removedIsotope );
       return removedIsotope;
     },

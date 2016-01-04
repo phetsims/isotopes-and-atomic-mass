@@ -190,7 +190,7 @@ define( function( require ) {
     // Adding Numeric Controllers
 
     mixIsotopesModel.numericalControllerList.addItemAddedListener ( function( addedController ) {
-      var controllerView = new ControlIsotope( addedController );
+      var controllerView = new ControlIsotope( addedController, 0, 100 );
       controllerView.center = self.mvt.modelToViewPosition( addedController.centerPosition );
       controlsLayer.addChild( controllerView );
 

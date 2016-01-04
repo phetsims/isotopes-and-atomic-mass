@@ -17,18 +17,14 @@ define( function( require ) {
   var Text = require( 'SCENERY/nodes/Text' );
   var Panel = require( 'SUN/Panel' );
 
-  var READOUT_SIZE = new Dimension2( 40, 40 );
+  var READOUT_SIZE = new Dimension2( 30, 15 );
 
   /**
    * Constructor for an IsotopeAtomNode.
    *
-   * @param {ParticleAtom} particleAtom Model that represents the atom, including particle positions
-   * @param {NumberAtom} numberAtom Model that representa the atom as a collection of numbers
-   * @param {Vector2} bottomPoint desired bottom point of the atom which holds the atom in position as the size changes.
-   * @param {ModelViewTransform2} modelViewTransform Model-View transform
    * @constructor
    */
-  function ControlIsotope( controller ) {
+  function ControlIsotope( controller, minRange, maxRange ) {
 
     Node.call( this ); // Call super constructor.
     var sliderLayer = new Node();
@@ -38,14 +34,12 @@ define( function( require ) {
     var numericLayer = new Node();
     this.addChild( numericLayer );
 
-    var valueProperty = new Property( 0 );
-    var range = new Range( 0, 100 );
+    //var valueProperty = controller.quantityProperty;
+    var range = new Range( minRange, maxRange );
     var tickLabelOptions = { font: new PhetFont( 12 ) };
-    var slider = new HSlider( valueProperty, range, {
+    var slider = new HSlider( controller.quantityProperty, range, {
       thumbSize: new Dimension2( 15, 30 ),
-      majorTickLength: 15
-      //trackSize: new Dimension2( 300, 5 )
-      //center: layoutBounds.center
+      majorTickLength: 15,
     } );
 
     // major ticks
@@ -54,11 +48,11 @@ define( function( require ) {
     sliderLayer.addChild(slider);
 
     var plusButton = new ArrowButton( 'right', function propertyPlus() {
-      valueProperty.set( Math.floor( valueProperty.get() ) + 1 ) ;
-    } );
+      controller.quantityProperty.set( Math.floor( controller.quantityProperty.get() ) + 1 ) ;
+    }, {arrowHeight: 10, arrowWidth: 10 });
     var minusButton = new ArrowButton( 'left', function propertyMinus() {
-      valueProperty.set( Math.floor( valueProperty.get() ) - 1 ) ;
-    } );
+      controller.quantityProperty.set( Math.floor( controller.quantityProperty.get() ) - 1 ) ;
+    }, {arrowHeight: 10, arrowWidth: 10 });
     numericLayer.addChild(plusButton);
     numericLayer.addChild(minusButton);
 
@@ -77,15 +71,18 @@ define( function( require ) {
     numericLayer.addChild( panel );
     plusButton.left = panel.right + 5;
     minusButton.right = panel.left - 5;
+    plusButton.centerY = panel.centerY;
+    minusButton.centerY = panel.centerY;
     //slider.left = minusButton.left;
 
-    valueProperty.link( function changedValue( value ) {
+    controller.quantityProperty.link( function changedValue( value ) {
       isotopeText.setText( Math.floor( value) );
       isotopeText.centerX = READOUT_SIZE.width / 2;
-      isotopeText.centerY = READOUT_SIZE.height * 0.4;
+      isotopeText.centerY = READOUT_SIZE.height * 0.75;
 
-      minusButton.enabled = !(Math.floor( value ) === 0);
-      plusButton.enabled = !(Math.floor( value ) === 100);
+      minusButton.enabled = !(Math.floor( value ) === minRange);
+      plusButton.enabled = !(Math.floor( value ) === maxRange);
+      controller.setIsotopeQuantity( Math.floor( value) );
     });
 
 
@@ -101,7 +98,6 @@ define( function( require ) {
     labelLayer.addChild( captionLabel );
     captionLabel.left = isotopeNode.right + 5;
     captionLabel.centerY = isotopeNode.centerY;
-    //isotopeNode.centerY = captionLabel.centerY;
     labelLayer.bottom = sliderLayer.top - 5;
     numericLayer.bottom = labelLayer.top - 10;
     labelLayer.centerX = numericLayer.centerX;
