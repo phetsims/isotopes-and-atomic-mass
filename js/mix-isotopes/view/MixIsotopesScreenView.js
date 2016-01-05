@@ -42,7 +42,6 @@ define( function( require ) {
   var ControlIsotope = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/ControlIsotope' );
 
   // constants
-  var ISOTOPE_MIXTURE = { MY_MIX: 'my mix', NATURE_MIX: 'nature mix' };
   var INTERACTIVITY_MODE = {
     BUCKETS_AND_LARGE_ATOMS: 'BUCKETS_AND_LARGE_ATOMS',
     SLIDERS_AND_SMALL_ATOMS: 'SLIDERS_AND_SMALL_ATOMS'
@@ -77,7 +76,7 @@ define( function( require ) {
   function InteractivityModeSelectionNode( interactivityModeProperty, mvt ) {
     var bucketNode = new Node();
     var bucket = new Bucket( { baseColor: Color.gray,
-      caption: "",
+      caption: '',
       size: new Dimension2( 50, 30 )
     } );
     bucketNode.addChild( new BucketHole( bucket, mvt ) );

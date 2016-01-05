@@ -698,7 +698,7 @@ define( function( require ) {
       this.numericalControllerList.forEach( function( controller ) {
         controller.syncToTestChamber();
       } );
-    },
+    }
 
   } );
 
