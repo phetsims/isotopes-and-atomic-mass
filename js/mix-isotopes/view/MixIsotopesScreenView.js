@@ -276,15 +276,6 @@ define( function( require ) {
     this.addChild( interactivityModeSelectionNode );
     interactivityModeSelectionNode.top = isotopeMixtureSelectionNode.top;
 
-    mixIsotopesModel.showingNaturesMixProperty.link( function() {
-      if ( mixIsotopesModel.showingNaturesMixProperty.get() === true ){
-        interactivityModeSelectionNode.visible = false;
-      }
-      else{
-        interactivityModeSelectionNode.visible = true;
-      }
-    } );
-
     var clearBoxButton = new RectangularPushButton( {
       content: new Text( clearBoxString, { font: new PhetFont( 14 ), maxWidth: 63 } ),
       listener: function() { mixIsotopesModel.clearBox(); },
@@ -295,6 +286,17 @@ define( function( require ) {
     this.addChild( clearBoxButton );
     clearBoxButton.top = interactivityModeSelectionNode.bottom + 10;
     clearBoxButton.left = interactivityModeSelectionNode.left;
+
+    mixIsotopesModel.showingNaturesMixProperty.link( function() {
+      if ( mixIsotopesModel.showingNaturesMixProperty.get() === true ){
+        interactivityModeSelectionNode.visible = false;
+        clearBoxButton.visible = false;
+      }
+      else{
+        interactivityModeSelectionNode.visible = true;
+        clearBoxButton.visible = true;
+      }
+    } );
 
 
   }
