@@ -139,11 +139,6 @@ define( function( require ) {
       1.0 // "Zoom factor" - smaller zooms out, larger zooms in.
     );
 
-
-    //// Nodes that hide and show the pie chart and mass indicator.
-    //private final MaximizeControlNode pieChartWindow;
-    //private final MaximizeControlNode averageAtomicMassWindow;
-
     // Map of the buckets in the model to their view representation.
     this.mapBucketToView = {};
 
@@ -163,7 +158,6 @@ define( function( require ) {
     var resetAllButton = new ResetAllButton( {
       listener: function() {
         mixIsotopesModel.reset();
-
       },
       right: this.layoutBounds.maxX - 10,
       bottom: this.layoutBounds.maxY - 10
@@ -179,7 +173,6 @@ define( function( require ) {
     this.addChild( periodicTableNode );
 
     // Adding Buckets
-
     function addBucketView ( addedBucket ) {
       var bucketHole = new BucketHole( addedBucket, self.mvt);
       var bucketFront = new BucketFront( addedBucket, self.mvt );
@@ -198,12 +191,11 @@ define( function( require ) {
         }
       } );
     }
-    mixIsotopesModel.bucketList.addItemAddedListener( function( addedBucket ) { addBucketView( addedBucket); } );
 
+    mixIsotopesModel.bucketList.addItemAddedListener( function( addedBucket ) { addBucketView( addedBucket); } );
     mixIsotopesModel.bucketList.forEach( function( addedBucket ) { addBucketView( addedBucket); } );
 
     // Adding Isotopes
-
     function addIsotopeView ( addedIsotope ){
       var isotopeView = new ParticleView( addedIsotope, self.mvt );
       isotopeView.center = self.mvt.modelToViewPosition( addedIsotope.position );
@@ -223,7 +215,6 @@ define( function( require ) {
     mixIsotopesModel.isotopesList.addItemAddedListener ( function( addedIsotope ) { addIsotopeView( addedIsotope ); });
 
     // Adding Numeric Controllers
-
     mixIsotopesModel.numericalControllerList.addItemAddedListener ( function( addedController ) {
       var controllerView = new ControlIsotope( addedController, 0, 100 );
       controllerView.center = self.mvt.modelToViewPosition( addedController.centerPosition );
@@ -236,8 +227,6 @@ define( function( require ) {
         }
       });
     });
-
-
 
     var testChamberNode = new Rectangle( this.mvt.modelToViewBounds( this.model.testChamber.getTestChamberRect() ), {
       fill: 'black',
@@ -259,7 +248,7 @@ define( function( require ) {
     compositionBox.top = periodicTableNode.bottom + 5;
     this.addChild( compositionBox );
 
-    var averageAtomicMassBox = new AccordionBox( new AverageAtomicMassIndicator( this.model ) , {
+    var averageAtomicMassBox = new AccordionBox( new AverageAtomicMassIndicator( this.model ), {
         titleNode: new Text( averageAtomicMassString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT, maxWidth: 200 } ),
         fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
         expandedProperty: new Property( false ),
@@ -287,15 +276,14 @@ define( function( require ) {
     this.addChild( interactivityModeSelectionNode );
     interactivityModeSelectionNode.top = isotopeMixtureSelectionNode.top;
 
-
-    /*this.isotopeMixtureProperty.link( function() {
-      if ( self.isotopeMixtureProperty.get() === ISOTOPE_MIXTURE.MY_MIX ){
-        mixIsotopesModel.showingNaturesMix = false;
+    mixIsotopesModel.showingNaturesMixProperty.link( function() {
+      if ( mixIsotopesModel.showingNaturesMixProperty.get() === true ){
+        interactivityModeSelectionNode.visible = false;
       }
       else{
-        mixIsotopesModel.showingNaturesMix = true;
+        interactivityModeSelectionNode.visible = true;
       }
-    } );*/
+    } );
 
     var clearBoxButton = new RectangularPushButton( {
       content: new Text( clearBoxString, { font: new PhetFont( 14 ), maxWidth: 63 } ),

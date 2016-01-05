@@ -515,9 +515,7 @@ define( function( require ) {
         controllerXOffset = this.testChamber.getTestChamberRect().minX + interControllerDistanceX / 2;
       }
       else {
-        // Four controllers don't fit well under the chamber, so use a
-        // positioning algorithm where they are extended a bit to the
-        // right.
+        // Four controllers don't fit well under the chamber, so use a positioning algorithm where they are extended a bit to the right.
         interControllerDistanceX = ( this.testChamber.getTestChamberRect().getWidth() * 1.10 ) / this.possibleIsotopes.length;
         //controllerXOffset = this.testChamber.getTestChamberRect().minX + interControllerDistanceX / 2;
         controllerXOffset = -180;
@@ -642,9 +640,6 @@ define( function( require ) {
 
     },
 
-
-
-
     /**
      * Remove all isotopes from the test chamber, and then remove them from
      * the model.  This method does not add removed isotopes back to the
@@ -679,7 +674,6 @@ define( function( require ) {
       this.mapIsotopeConfigToUserMixState = {};
     },
 
-
     /**
      * Remove the particles from the test chamber and set the state of the
      * isotope controllers to be consistent.  This method retains the current
@@ -705,23 +699,6 @@ define( function( require ) {
         controller.syncToTestChamber();
       } );
     },
-
-
-    /**
-     * This is an observer that watches our own interactivity mode setting.
-     * It is declared as a member variable so that it can be "unhooked" in
-     * circumstances where it is necessary.
-     */
-    interactivityModeObserver: function() {
-      // TODO get this function ported
-      assert && assert( this.showingNaturesMix === false ); // Interactivity mode shouldn't change when showing nature's mix.
-      if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( this.prototypeIsotope.protonCount ) ) {
-        // Erase any previous state for this isotope.
-        // TODO this is giving error
-        //this.mapIsotopeConfigToUserMixState.delete( this.prototypeIsotope.protonCount );
-      }
-      //this.removeAllIsotopesFromTestChamberAndModel();
-    }
 
   } );
 
