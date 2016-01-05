@@ -51,13 +51,18 @@ define( function( require ) {
   // strings
   var myMixString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/myMix' );
   var natureMixString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/natureMix' );
+  var isotopeMixtureString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopeMixture' );
+  var clearBoxString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/clearBox' );
+  var percentCompositionString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/percentComposition' );
+  var averageAtomicMassString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/averageAtomicMass' );
 
   function IsotopeMixtureSelectionNode( isotopeMixtureProperty ) {
     var radioButtonRadius = 6;
     var LABEL_FONT = new PhetFont( 14 );
-    var myMixButton = new AquaRadioButton( isotopeMixtureProperty, false, new Text( myMixString, { font: LABEL_FONT, maxWidth: 125 } ), { radius: radioButtonRadius } );
-    var naturesMixButton = new AquaRadioButton( isotopeMixtureProperty, true, new Text( natureMixString, { font: LABEL_FONT, maxWidth: 125 } ), { radius: radioButtonRadius } );
-    var label = new Text( "Isotope Mixture:", { font: LABEL_FONT, maxWidth: 125 } );
+    var MAX_WIDTH = 80;
+    var myMixButton = new AquaRadioButton( isotopeMixtureProperty, false, new Text( myMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ), { radius: radioButtonRadius } );
+    var naturesMixButton = new AquaRadioButton( isotopeMixtureProperty, true, new Text( natureMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ), { radius: radioButtonRadius } );
+    var label = new Text( isotopeMixtureString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } );
     var displayButtonGroup = new Node();
     displayButtonGroup.addChild( label );
     myMixButton.top = label.bottom + 10;
@@ -238,14 +243,10 @@ define( function( require ) {
       fill: 'black',
       lineWidth: 1
     } );
-
-    //testChamberNode.top = periodicTableNode.top;
-    //testChamberNode.left = 20;
     chamberLayer.addChild( testChamberNode );
 
-
     var compositionBox = new AccordionBox( new Rectangle( 0, 0, 60, 60, 0, 0 ), {
-      titleNode: new Text( 'Percent Composition', { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
+      titleNode: new Text( percentCompositionString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT, maxWidth: 200 } ),
       fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
       expandedProperty: new Property( false ),
       minWidth: periodicTableNode.width,
@@ -259,7 +260,7 @@ define( function( require ) {
     this.addChild( compositionBox );
 
     var averageAtomicMassBox = new AccordionBox( new AverageAtomicMassIndicator( this.model ) , {
-        titleNode: new Text( 'Average Atomic Mass', { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
+        titleNode: new Text( averageAtomicMassString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT, maxWidth: 200 } ),
         fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
         expandedProperty: new Property( false ),
         minWidth: periodicTableNode.width,
@@ -297,7 +298,7 @@ define( function( require ) {
     } );*/
 
     var clearBoxButton = new RectangularPushButton( {
-      content: new Text( 'Clear Box', { font: new PhetFont( 14 ) } ),
+      content: new Text( clearBoxString, { font: new PhetFont( 14 ), maxWidth: 63 } ),
       listener: function() { mixIsotopesModel.clearBox(); },
       baseColor: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
       fireOnDown: true,

@@ -43,5 +43,17 @@
   },
   "natureMix": {
     "value": "Nature's Mix"
+  },
+  "isotopeMixture": {
+    "value": "Isotope Mixture:"
+  },
+  "clearBox": {
+    "value": "Clear Box"
+  },
+  "percentComposition": {
+    "value": "Percent Composition"
+  },
+  "averageAtomicMass": {
+    "value": "Average Atomic Mass"
   }
 }

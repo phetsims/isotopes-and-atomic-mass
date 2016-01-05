@@ -300,7 +300,7 @@ define( function( require ) {
       this.removeAllIsotopesFromTestChamberAndModel();
       this.isotopesList.clear();
       this.showingNaturesMix = false;
-      //this.interactivityMode = InteractivityMode.BUCKETS_AND_LARGE_ATOMS;
+      this.interactivityMode = InteractivityMode.BUCKETS_AND_LARGE_ATOMS;
       delete this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ];
       this.addIsotopeControllers();
     },
