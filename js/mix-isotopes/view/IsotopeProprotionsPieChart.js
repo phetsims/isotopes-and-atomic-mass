@@ -47,8 +47,7 @@ define( function( require ) {
         i += 1;
       } );
       var lightestIsotopeProportion = slices[ 0 ].value / model.testChamber.isotopeCount;
-      pieChart.setInitialAngle( Math.PI - ( lightestIsotopeProportion * Math.PI ) );
-      pieChart.setPieValues( slices );
+      pieChart.setAngleAndValues( Math.PI - ( lightestIsotopeProportion * Math.PI ), slices );
     }
 
     model.testChamber.isotopeCountProperty.link( function( isotopeCount ) {

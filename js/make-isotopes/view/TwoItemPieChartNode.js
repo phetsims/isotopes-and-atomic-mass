@@ -66,8 +66,7 @@ define( function( require ) {
       var otherIsotopeAbundance = 1 - myIsotopeAbundance;
       slices[ 0 ].value = myIsotopeAbundance;
       slices[ 1 ].value = otherIsotopeAbundance;
-      pieChart.setPieValues( slices );
-      pieChart.setInitialAngle(  Math.PI * 2 * slices[ 1 ].value / ( slices[ 0 ].value + slices[ 1 ].value ) / 2 );
+      pieChart.setAngleAndValues( Math.PI * 2 * slices[ 1 ].value / ( slices[ 0 ].value + slices[ 1 ].value ) / 2, slices );
       updateReadout( myIsotopeAbundance );
       updateOtherIsotopeLabel(myIsotopeAbundance);
     }

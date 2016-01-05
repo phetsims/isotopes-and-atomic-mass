@@ -71,6 +71,18 @@ define( function( require ) {
       this.update();
     },
 
+    /**
+     * Set the initial angle pie slices
+     *
+     * @param initialAngle - In radians.
+     * @param {Array.<Object>} slices Each slice is described by object literal which looks like { value: x, color: color }
+     */
+    setAngleAndValues: function( initialAngle, slices ) {
+      this.initialAngle = initialAngle;
+      this.slices = slices;
+      this.update();
+    },
+
     getTotal: function() {
       var total = 0;
       this.slices.forEach( function( slice ) {
