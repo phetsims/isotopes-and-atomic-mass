@@ -46,15 +46,10 @@ define( function( require ) {
         slices[ i ] = { value:value, color:color, stroke:'black', lineWidth: 0.5 };
         i += 1;
       } );
-      pieChart.setPieValues( slices );
-      var lightestIsotopeProportion = slices[ 0 ].value / pieChart.getTotal();
+      var lightestIsotopeProportion = slices[ 0 ].value / model.testChamber.isotopeCount;
       pieChart.setInitialAngle( Math.PI - ( lightestIsotopeProportion * Math.PI ) );
+      pieChart.setPieValues( slices );
     }
-
-    // creating slices based on number of isotopes
-    model.possibleIsotopesProperty.link( function() {
-      updatePieChart();
-    } );
 
     model.testChamber.isotopeCountProperty.link( function( isotopeCount ) {
       if ( isotopeCount > 0 ) {
