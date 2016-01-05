@@ -39,7 +39,6 @@ define( function( require ) {
 
     function updatePieChart(){
       slices = [ ];
-      var possibleIsotopesList = model.possibleIsotopes;
       var i = 0;
       model.possibleIsotopes.forEach( function( isotope ) {
         var value = model.testChamber.getIsotopeCount( isotope );
