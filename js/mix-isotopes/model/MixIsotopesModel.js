@@ -506,7 +506,7 @@ define( function( require ) {
 
       var buckets = this.interactivityMode === InteractivityMode.BUCKETS_AND_LARGE_ATOMS || this.showingNaturesMix;
       // Set up layout variables.
-      var controllerYOffset = -210 ;
+      var controllerYOffset = -240 ;
       var interControllerDistanceX;
       var controllerXOffset;
       if ( this.possibleIsotopes.length < 4 ) {
@@ -518,9 +518,9 @@ define( function( require ) {
         // Four controllers don't fit well under the chamber, so use a
         // positioning algorithm where they are extended a bit to the
         // right.
-        interControllerDistanceX = ( this.testChamber.getTestChamberRect().getWidth() * 1.15 ) / this.possibleIsotopes.length;
+        interControllerDistanceX = ( this.testChamber.getTestChamberRect().getWidth() * 1.10 ) / this.possibleIsotopes.length;
         //controllerXOffset = this.testChamber.getTestChamberRect().minX + interControllerDistanceX / 2;
-        controllerXOffset = -175;
+        controllerXOffset = -180;
       }
       // Add the controllers.
       for ( var i = 0; i < this.possibleIsotopes.length; i++ ) {
