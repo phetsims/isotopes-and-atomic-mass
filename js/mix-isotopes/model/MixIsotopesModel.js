@@ -59,7 +59,7 @@ define( function( require ) {
   var NUM_LARGE_ISOTOPES_PER_BUCKET = 10;
 
   // List of colors which will be used to represent the various isotopes.
-  var ISOTOPE_COLORS = [ new Color( 180, 82, 205 ), Color.green, new Color( 255, 69, 0 ), new Color( 70, 130, 180 ) ];
+  var ISOTOPE_COLORS = [ new Color( 180, 82, 205 ), Color.green, new Color( 255, 69, 0 ), new Color( 72, 137, 161 ) ];
 
 
   /*
