@@ -71,6 +71,7 @@ define( function( require ) {
     // avoiding overlap with other labels.  It is used for arbitrating
     // how labels move when handling overlap.
     this.unconstrainedPos = new Vector2( 0, 0 );
+    this.labelOnLeft = labelOnLeft;
     var node = new Node();
     var symbol = new ChemSymbolWithNumbersNode( isotopeConfig );
     node.addChild( symbol );
@@ -117,7 +118,7 @@ define( function( require ) {
     Node.call( this );
     var labelLayer = new Node();
     this.addChild( labelLayer );
-    var pieChartBoundingRectangle = new Rectangle( 150, 0, PIE_CHART_RADIUS * 2, PIE_CHART_RADIUS * 2, 0, 0 );
+    var pieChartBoundingRectangle = new Rectangle( 150, 0, 65 * 2, 65 * 2, 0, 0 );
     var emptyCircle = new Circle( PIE_CHART_RADIUS, { stroke: 'black', lineDash: [ 3, 1 ] } );
     emptyCircle.centerX = pieChartBoundingRectangle.width / 2 + 150;
     emptyCircle.centerY = pieChartBoundingRectangle.height / 2 ;
@@ -126,6 +127,7 @@ define( function( require ) {
 
     // default slices this will be updated based on possible isotopes
     var slices = [ ];
+    var sliceLabels = [ ];
     var pieChart = new PieChartNode( slices, PIE_CHART_RADIUS );
     pieChart.setCenter( pieChartBoundingRectangle.width / 2 + 150, pieChartBoundingRectangle.height / 2 );
     pieChartBoundingRectangle.addChild( pieChart );
@@ -133,8 +135,77 @@ define( function( require ) {
     //pieChartBoundingRectangle.scale(0.6);
     this.addChild( pieChartBoundingRectangle );
 
+    function adjustLabelPositionsForOverlap( sliceLabels, minY, maxY ) {
+      var rotationIncrement = Math.PI / 200; // Empirically chosen.
+      for ( var i = 1; i < 50; i++ ) { // Number of iterations empirically chosen.
+        var overlapDetected = false;
+        sliceLabels.forEach( function( label ) {
+          var moveUp = false;
+          var moveDown = false;
+          for ( var j = 0; j < sliceLabels.length; j++ ) {
+            var comparisonLabel = sliceLabels[ j ];
+            if ( label == comparisonLabel ) {
+              // Same label, so ignore.
+              continue;
+            }
+            if ( label.bounds.intersectsBounds( comparisonLabel.bounds ) ) {
+              // These labels overlap.
+              overlapDetected = true;
+              if ( label.unconstrainedPos.y > comparisonLabel.unconstrainedPos.y && label.bottom < maxY ) {
+                moveUp = true;
+              }
+              else if ( label.unconstrainedPos.y < comparisonLabel.unconstrainedPos.y && label.top > minY ) {
+                moveDown = true;
+              }
+            }
+          }
+          // Adjust this label's position based upon any overlap that
+          // was detected.  The general idea is this: if there is
+          // overlap in both directions, don't move.  If there is only
+          // overlap with a label that has a higher unconstrained
+          // location, move down.  If there is only overlap with a label
+          // with a lower unconstrained location, move down.
+          if ( moveUp && !moveDown ) {
+            if ( label.labelOnLeft ) {
+              var posVector = new Vector2( label.right, label.centerY + label.height / 2 );
+              posVector.rotate( -rotationIncrement );
+              label.centerX = posVector.x - label.width;
+              label.centerY = posVector.y - label.height / 2;
+
+            }
+            else {
+              var posVector = new Vector2( label.centerX, label.centerY + label.height / 2 );
+              posVector.rotate( rotationIncrement );
+              label.centerX = posVector.x;
+              label.centerY = posVector.y - label.height / 2;
+            }
+          }
+          else if ( moveDown && !moveUp ) {
+            if ( label.labelOnLeft ) {
+              var posVector = new Vector2( label.right, label.centerY + label.height / 2 );
+              posVector.rotate( rotationIncrement );
+              label.centerX = posVector.x - label.width;
+              label.centerY = posVector.y - label.height / 2;
+
+            }
+            else {
+              var posVector = new Vector2( label.centerX, label.centerY + label.height / 2 );
+              posVector.rotate( -rotationIncrement );
+              label.centerX = posVector.x,
+                label.centerY = posVector.y - label.height / 2;
+            }
+          }
+        });
+        if ( !overlapDetected ) {
+          // No overlap for any of the labels, so we are done.
+          break;
+        }
+      }
+    }
+
     function updateLabels( possibleIsotopes ) {
       labelLayer.removeAllChildren();
+      sliceLabels = [ ];
       var i = 0;
       possibleIsotopes.forEach( function( isotope ) {
         var proportion;
@@ -189,11 +260,15 @@ define( function( require ) {
             labelNode.centerY = positionVector.y;
           }
           labelLayer.addChild( labelNode );
+          labelNode.unconstrainedPos = labelNode.center;
+          sliceLabels.push( labelNode );
         }
         i = i + 1;
       } );
+      adjustLabelPositionsForOverlap( sliceLabels, pieChart.top, pieChart.bottom );
 
     }
+
     function updatePieChart(){
       slices = [ ];
       var i = 0;
