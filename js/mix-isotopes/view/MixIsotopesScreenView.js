@@ -234,7 +234,9 @@ define( function( require ) {
     } );
     chamberLayer.addChild( testChamberNode );
 
-    var compositionBox = new AccordionBox( new IsotopeProprotionsPieChart( this.model ), {
+    var isotopeProprotionsPieChart = new IsotopeProprotionsPieChart( this.model );
+    isotopeProprotionsPieChart.scale( 0.6 );
+    var compositionBox = new AccordionBox( isotopeProprotionsPieChart, {
       titleNode: new Text( percentCompositionString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT, maxWidth: 200 } ),
       fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
       expandedProperty: new Property( false ),

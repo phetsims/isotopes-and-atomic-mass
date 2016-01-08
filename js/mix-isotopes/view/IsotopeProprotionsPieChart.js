@@ -10,17 +10,113 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
   var Circle = require( 'SCENERY/nodes/Circle' );
+  var Dimension2 = require( 'DOT/Dimension2' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Node = require( 'SCENERY/nodes/Node' );
+  var Panel = require( 'SUN/Panel' );
+  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var PieChartNode = require( 'ISOTOPES_AND_ATOMIC_MASS/common/view/PieChartNode' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
+  var Text = require( 'SCENERY/nodes/Text' );
+  var Util = require( 'DOT/Util' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  var PIE_CHART_RADIUS = 60;
+  var PIE_CHART_RADIUS = 50;
+  var READOUT_FONT = new PhetFont( 18 );
+  var SIZE = new Dimension2( 50, 20 );
+  var CHEMICAL_SYMBOL_FONT = new PhetFont( 16 );
+  var SUPERSCRIPT_SUBSCRIPT_FONT = new PhetFont( 14 );
+  var NUMBER_DECIMALS = 4;
+
+  /**
+   * Class that represents a chemical symbol, including the mass number(in front of the chemical symbol and partially above it)
+   * and the atomic number (in front of the chemical symbol and partially below it).
+  */
+
+  function ChemSymbolWithNumbersNode( isotopeConfig ) {
+    var node = new Node();
+
+    var symbol = new Text( AtomIdentifier.getSymbol( isotopeConfig.protonCount ), {
+      font: CHEMICAL_SYMBOL_FONT,
+      centerX: 0,
+      centerY: 0
+    } );
+    node.addChild( symbol );
+
+    var massNumber = new Text( isotopeConfig.massNumber, {
+      font: SUPERSCRIPT_SUBSCRIPT_FONT,
+      centerY: symbol.top
+    } );
+    massNumber.right = symbol.left;
+    node.addChild(massNumber);
+
+    var atomicNumber = new Text( isotopeConfig.protonCount , {
+      font: SUPERSCRIPT_SUBSCRIPT_FONT,
+      centerY: symbol.bottom
+    } );
+    atomicNumber.right = symbol.left;
+    //atomicNumber.centerY = symbol.height * 0.6;
+    node.addChild( atomicNumber );
+
+    return node;
+  }
+
+  function SliceLabelNode( isotopeConfig, isotopePercentage, labelOnLeft, numberOfDecimals ) {
+    // The "unconstrained position" is the position where this label
+    // would be placed if it didn't need to sit within the upper and
+    // lower bounds of the pie chart and didn't have to worry about
+    // avoiding overlap with other labels.  It is used for arbitrating
+    // how labels move when handling overlap.
+    this.unconstrainedPos = new Vector2( 0, 0 );
+    var node = new Node();
+    var symbol = new ChemSymbolWithNumbersNode( isotopeConfig );
+    node.addChild( symbol );
+
+    var readoutText = new Text( Util.toFixedNumber( isotopePercentage, numberOfDecimals )+ ' %', {
+      font: READOUT_FONT,
+      maxWidth: 0.9 * SIZE.width,
+      maxHeight: 0.9 * SIZE.height
+    } );
+
+    var readoutPanel = new Panel( readoutText, {
+      minWidth: SIZE.width,
+      minHeight: SIZE.height,
+      resize: false,
+      cornerRadius: 2,
+      lineWidth: 1,
+      align: 'center',
+      fill: 'white'
+    } );
+    readoutText.centerX = SIZE.width / 2;
+    node.addChild( readoutPanel );
+
+    // Make the two portions of the label line up on the horizontal axis
+    if ( symbol.height > readoutPanel.height ) {
+      readoutPanel.centerY = symbol.centerY;
+    }
+    else {
+      symbol.centerY = readoutPanel.centerY;
+    }
+
+    // Position the elements of the overall label.
+    if ( labelOnLeft ) {
+      readoutPanel.left = symbol.right + 5;
+      readoutText.centerX = readoutPanel.width / 2;
+    }
+    else {
+      symbol.left = readoutPanel.right + 5;
+    }
+    return node;
+  }
 
   function IsotopeProprotionsPieChart( model ) {
+    var self = this;
     Node.call( this );
+    var labelLayer = new Node();
+    this.addChild( labelLayer );
     var pieChartBoundingRectangle = new Rectangle( 150, 0, PIE_CHART_RADIUS * 2, PIE_CHART_RADIUS * 2, 0, 0 );
     var emptyCircle = new Circle( PIE_CHART_RADIUS, { stroke: 'black', lineDash: [ 3, 1 ] } );
     emptyCircle.centerX = pieChartBoundingRectangle.width / 2 + 150;
@@ -34,9 +130,70 @@ define( function( require ) {
     pieChart.setCenter( pieChartBoundingRectangle.width / 2 + 150, pieChartBoundingRectangle.height / 2 );
     pieChartBoundingRectangle.addChild( pieChart );
 
-    pieChartBoundingRectangle.scale(0.6);
+    //pieChartBoundingRectangle.scale(0.6);
     this.addChild( pieChartBoundingRectangle );
 
+    function updateLabels( possibleIsotopes ) {
+      labelLayer.removeAllChildren();
+      var i = 0;
+      possibleIsotopes.forEach( function( isotope ) {
+        var proportion;
+        if ( model.showingNaturesMix ) {
+          proportion = AtomIdentifier.getNaturalAbundancePreciseDecimal( isotope );
+        }
+        else {
+          proportion = model.testChamber.getIsotopeProportion( isotope );
+        }
+
+        var centerEdgeOfPieSlice = pieChart.getCenterEdgePtForSlice( i );
+        if ( centerEdgeOfPieSlice ) {
+          var labelOnLeft = centerEdgeOfPieSlice.x <= pieChart.centerXCord;
+          var numberOfDecimals = model.showingNaturesMix ? NUMBER_DECIMALS : 1;
+          var labelNode = new SliceLabelNode( isotope, slices[ i ].value / pieChart.getTotal() * 100, labelOnLeft, numberOfDecimals );
+          //labelNode.scale( 0.8 );
+
+          //sliceLabels.add( labelNode );
+
+          // Determine the "unconstrained" target position
+          // for the label, meaning a position that is
+          // directly out from the edge of the slice, but
+          // may be above or below the edges of the pie
+          // chart.
+          var positionVector = centerEdgeOfPieSlice;
+          //positionVector.multiply( 1.4 );
+          //labelNode.setUnconstrainedPos( positionVector.getX(), positionVector.getY() );
+
+          // Constrain the position so that no part of the
+          // label goes above or below the upper and lower
+          // edges of the pie chart.
+          var minY = pieChart.top;
+          var maxY = pieChart.bottom;
+          var xSign = labelOnLeft ? -1 : 1;
+          if ( positionVector.y < minY ) {
+            positionVector.x = pieChart.centerX + xSign * pieChart.radius;
+            positionVector.y = minY;
+          }
+          else if ( positionVector.y > maxY ) {
+            positionVector.x = pieChart.centerX + xSign * pieChart.radius;
+            positionVector.y = maxY;
+          }
+
+          // Position the label.
+          if ( labelOnLeft ) {
+            labelNode.right = positionVector.x - labelNode.width / 2;
+            labelNode.centerY = positionVector.y;
+          }
+          else {
+            // Label on right.
+            labelNode.left = positionVector.x + labelNode.width / 2;
+            labelNode.centerY = positionVector.y;
+          }
+          labelLayer.addChild( labelNode );
+        }
+        i = i + 1;
+      } );
+
+    }
     function updatePieChart(){
       slices = [ ];
       var i = 0;
@@ -48,6 +205,7 @@ define( function( require ) {
       } );
       var lightestIsotopeProportion = slices[ 0 ].value / model.testChamber.isotopeCount;
       pieChart.setAngleAndValues( Math.PI - ( lightestIsotopeProportion * Math.PI ), slices );
+      updateLabels( model.possibleIsotopes );
     }
 
     model.testChamber.isotopeCountProperty.link( function( isotopeCount ) {
@@ -55,10 +213,12 @@ define( function( require ) {
         emptyCircle.setVisible( false );
         updatePieChart();
         pieChart.setVisible( true );
+        labelLayer.setVisible( true );
       }
       else {
         emptyCircle.setVisible( true );
         pieChart.setVisible( false );
+        labelLayer.setVisible( false );
       }
     } );
   }
