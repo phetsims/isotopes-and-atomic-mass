@@ -13,6 +13,7 @@ define( function( require ) {
   var Node = require( 'SCENERY/nodes/Node' );
   var Path = require( 'SCENERY/nodes/Path' );
   var Shape = require( 'KITE/Shape' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   // constants
   var INITIAL_ANGLE = 0;
@@ -32,6 +33,7 @@ define( function( require ) {
     this.centerXCord = DEFAULT_CENTER_X;
     this.centerYCord = DEFAULT_CENTER_Y;
     this.initialAngle = INITIAL_ANGLE;
+    this.sliceEdgeCenterPoints = []; // Useful for labeling.
 
     // validate the radius
     assert && assert( this.radius > 0, 'Pie Chart needs a non-negative radius' );
@@ -95,6 +97,8 @@ define( function( require ) {
     update: function() {
       var self = this;
       this.removeAllChildren();
+      this.sliceEdgeCenterPoints = [ ];
+
       var total = this.getTotal();
 
       if ( total === 0 ) {
@@ -102,14 +106,14 @@ define( function( require ) {
         return;
       }
 
-      // if number of slices is 1 then return a circle
+      /*// if number of slices is 1 then return a circle
       if ( this.slices.length === 1 ) {
         var circle = new Circle( this.radius, { fill: this.slices[ 0 ].color, stroke: this.slices[ 0 ].stroke } );
         this.addChild( circle );
         circle.centerX = self.centerXCord;
         circle.centerY = self.centerYCord;
         return;
-      }
+      }*/
 
       // Draw each pie slice
       var curValue = 0.0;
@@ -131,13 +135,22 @@ define( function( require ) {
             self.addChild( circle );
             circle.centerX = self.centerXCord;
             circle.centerY = self.centerYCord;
+            // Assume, arbitrarily, that the center point is on the left side.
+            self.sliceEdgeCenterPoints.push( new Vector2( self.centerXCord - self.radius, circle.centerY ) );
           }
           else {
             shape.moveTo( self.centerXCord, self.centerYCord );
             shape.arc( self.centerXCord, self.centerYCord, self.radius, startAngle, endAngle );
             shape.close();
             self.addChild( new Path( shape, { fill: slice.color, stroke: slice.stroke, lineWidth: slice.lineWidth } ) );
+            var angle = startAngle + (endAngle - startAngle) / 2 ;
+            self.sliceEdgeCenterPoints.push( new Vector2( Math.cos( angle ) * self.radius + self.centerXCord,
+              Math.sin( angle ) * self.radius + self.centerYCord ) );
           }
+        }
+        else {
+          // No slice drawn, so add null to indicate that there is no center point.
+          self.sliceEdgeCenterPoints.push( null );
         }
         curValue += slice.value;
       } );
@@ -157,7 +170,25 @@ define( function( require ) {
     setRadius: function( radius ) {
       this.radius = radius;
       this.update();
+    },
+
+    /**
+     * Get the center edge point, meaning the point on the outside edge of the
+     * pie chart that represents the center, for the specified slice.  This is
+     * useful for adding labels that are ouside of the chart.
+     *
+     * @param sliceNumber
+     *
+     */
+    getCenterEdgePtForSlice: function( sliceNumber ) {
+    if ( sliceNumber < this.sliceEdgeCenterPoints.length ) {
+      return this.sliceEdgeCenterPoints[ sliceNumber ];
     }
+    else {
+      //System.err.println( getClass().getName() + " - Error: No such slice, val = " + sliceNumber );
+      return null;
+    }
+  }
 
 
 
