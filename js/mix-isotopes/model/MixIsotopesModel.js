@@ -248,16 +248,6 @@ define( function( require ) {
         } );
         this.isotopesList.add(newIsotope);
       }
-
-      else {
-        // Create the specified isotope and add it directly to the test chamber.
-        var randomIsotopeLocation = this.testChamber.generateRandomLocation();
-        newIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount, randomIsotopeLocation );
-
-        this.testChamber.addIsotopeToChamber( newIsotope, true );
-      }
-
-
       // TODO (Remove or not) notifyIsotopeInstanceAdded( newIsotope );
       return newIsotope;
 
@@ -298,7 +288,7 @@ define( function( require ) {
      */
     setUpInitialUsersMix: function() {
       this.removeAllIsotopesFromTestChamberAndModel();
-      this.isotopesList.clear();
+      //this.isotopesList.clear();
       this.showingNaturesMix = false;
       this.interactivityMode = InteractivityMode.BUCKETS_AND_LARGE_ATOMS;
       delete this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ];
@@ -340,15 +330,19 @@ define( function( require ) {
       var thisModel = this;
 
       // Make sure that the unlinking and re-linking of the interactivityModeObserver is behaving as expected.
-      /*this.interactivityModeProperty.unlink( function() {
-        thisModel.interactivityModeObserver();
-      } );*/
+      //this.interactivityModeProperty.unlink( );
 
       this.interactivityModeProperty.set( modelState.interactivityMode );
 
       /*this.interactivityModeProperty.link( function() {
         thisModel.interactivityModeObserver();
       } );*/
+
+      //this.interactivityModeProperty.lazyLink( function(prop) {
+      //  thisModel.removeAllIsotopesFromTestChamberAndModel();
+      //  thisModel.addIsotopeControllers();
+
+      //} );
 
 
       // Restore the mix mode.  The assertion here checks that the mix mode
@@ -405,7 +399,7 @@ define( function( require ) {
       // routine.  For the sake of efficiency, callers should be careful not
       // to call this when it isn't needed.
 
-      this.isotopesList.clear();
+      //this.isotopesList.clear();
       if ( this.numberAtom !== atom ) {
         this.numberAtom.protonCount = atom.protonCount;
         this.numberAtom.electronCount = atom.electronCount;
@@ -479,16 +473,14 @@ define( function( require ) {
      * Remove all buckets that are currently in the model, as well as the particles they contained.
      */
     removeBuckets: function() {
+      var self = this;
       this.bucketList.forEach( function( bucket ) {
+        bucket._particles.forEach( function( isotope ){
+          self.isotopesList.remove( isotope );
+        });
         bucket.reset();
       } );
-
-
-      // TODO Remove? var oldBuckets = this.bucketList;
       this.bucketList.clear();
-      //for ( MonoIsotopeParticleBucket bucket : oldBuckets ) {
-      //  notifyBucketRemoved( bucket );
-      //}
     },
 
     /**
@@ -552,12 +544,7 @@ define( function( require ) {
     },
 
     removeNumericalControllers: function() {
-      var oldControllers = this.numericalControllerList;
       this.numericalControllerList.clear();
-      // TODO Is this necessary?
-      oldControllers.forEach( function( controller ) {
-        controller.removedFromModel();
-      } );
     },
 
     /**
@@ -593,7 +580,7 @@ define( function( require ) {
      */
     showNaturesMix: function() {
       var self = this;
-      this.isotopesList.clear();
+      //this.isotopesList.clear();
       assert && assert( this.showingNaturesMix === true ); // This method shouldn't be called if we're not showing nature's mix.
 
       // Clear out anything that is in the test chamber.  If anything
@@ -647,8 +634,11 @@ define( function( require ) {
      */
     // TODO Check back on this
     removeAllIsotopesFromTestChamberAndModel: function() {
+      var self = this;
+      this.testChamber.containedIsotopes.forEach( function( isotope ) {
+        self.isotopesList.remove( isotope );
+      } );
       this.testChamber.removeAllIsotopes( true );
-      this.isotopesList.clear();
     },
 
     clearBox: function() {
