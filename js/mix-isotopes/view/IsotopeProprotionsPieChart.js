@@ -16,15 +16,18 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Panel = require( 'SUN/Panel' );
+  var Path = require( 'SCENERY/nodes/Path' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var PieChartNode = require( 'ISOTOPES_AND_ATOMIC_MASS/common/view/PieChartNode' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
+  var Shape = require( 'KITE/Shape' );
   var Text = require( 'SCENERY/nodes/Text' );
   var Util = require( 'DOT/Util' );
   var Vector2 = require( 'DOT/Vector2' );
 
   // constants
   var PIE_CHART_RADIUS = 50;
+  var OVERALL_HEIGHT = 120;
   var READOUT_FONT = new PhetFont( 18 );
   var SIZE = new Dimension2( 50, 20 );
   var CHEMICAL_SYMBOL_FONT = new PhetFont( 16 );
@@ -118,7 +121,7 @@ define( function( require ) {
     Node.call( this );
     var labelLayer = new Node();
     this.addChild( labelLayer );
-    var pieChartBoundingRectangle = new Rectangle( 150, 0, 65 * 2, 65 * 2, 0, 0 );
+    var pieChartBoundingRectangle = new Rectangle( 150, 0, OVERALL_HEIGHT, OVERALL_HEIGHT, 0, 0 );
     var emptyCircle = new Circle( PIE_CHART_RADIUS, { stroke: 'black', lineDash: [ 3, 1 ] } );
     emptyCircle.centerX = pieChartBoundingRectangle.width / 2 + 150;
     emptyCircle.centerY = pieChartBoundingRectangle.height / 2 ;
@@ -191,8 +194,8 @@ define( function( require ) {
             else {
               var posVector = new Vector2( label.centerX, label.centerY + label.height / 2 );
               posVector.rotate( -rotationIncrement );
-              label.centerX = posVector.x,
-                label.centerY = posVector.y - label.height / 2;
+              label.centerX = posVector.x;
+              label.centerY = posVector.y - label.height / 2;
             }
           }
         });
@@ -265,8 +268,52 @@ define( function( require ) {
         }
         i = i + 1;
       } );
-      adjustLabelPositionsForOverlap( sliceLabels, pieChart.top, pieChart.bottom );
+      adjustLabelPositionsForOverlap( sliceLabels, -OVERALL_HEIGHT / 2, OVERALL_HEIGHT / 2 );
 
+      // The labels should now be all in reasonable positions,
+      // so draw a line from the edge of the label to the pie
+      // slice to which it corresponds.
+      var j = 0;
+      var k = 0;
+      possibleIsotopes.forEach( function( isotope ) {
+        var sliceConnectPt = pieChart.getCenterEdgePtForSlice( j );
+        if ( sliceConnectPt ) {
+          var label = sliceLabels[ k ];
+          var labelConnectPt = new Vector2( 0, 0 );
+          if ( label.centerX > pieChart.centerX ) {
+            // Label is on right, so connect point should be on left.
+            labelConnectPt.x = label.left;
+            labelConnectPt.y = label.centerY;
+          }
+          else {
+            // Label is on left, so connect point should be on right.
+            labelConnectPt.x = label.right;
+            labelConnectPt.y = label.centerY;
+          }
+          //assert sliceConnectPt != null; // Should be a valid slice edge point for each label.
+          // Find a point that is straight out from the center
+          // of the pie chart above the point that connects to
+          // the slice.  Note that these calculations assume
+          // that the center of the pie chart is at (0,0).
+          var connectingLineShape = new Shape().moveTo( sliceConnectPt.x, sliceConnectPt.y );
+          if ( sliceConnectPt.y > OVERALL_HEIGHT * 0.5 || sliceConnectPt.y < -OVERALL_HEIGHT * 0.4 ) {
+            // Add a "bend point" so that the line doesn't go
+            // under the pie chart.
+            var additionalLength = OVERALL_HEIGHT / ( PIE_CHART_RADIUS * 2 ) - 1;
+            var scaleFactor = 1 - Math.min( ( Math.abs( sliceConnectPt.x ) -150 ) /  PIE_CHART_RADIUS / 4.0 , 1 );
+            //var scaleFactor = 1;
+            connectingLineShape.lineTo( sliceConnectPt.x * ( 1 + additionalLength * scaleFactor ),
+              sliceConnectPt.y * ( 1 + additionalLength * scaleFactor ) );
+          }
+          connectingLineShape.lineTo( labelConnectPt.x, labelConnectPt.y );
+          labelLayer.addChild( new Path( connectingLineShape, {
+            stroke: 'black',
+            lineWidth: 1
+          } ) );
+          k = k + 1;
+        }
+        j = j + 1;
+        });
     }
 
     function updatePieChart(){
