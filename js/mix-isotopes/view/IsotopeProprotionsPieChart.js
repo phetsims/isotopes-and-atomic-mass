@@ -117,7 +117,6 @@ define( function( require ) {
   }
 
   function IsotopeProprotionsPieChart( model ) {
-    var self = this;
     Node.call( this );
     var labelLayer = new Node();
     this.addChild( labelLayer );
@@ -147,7 +146,7 @@ define( function( require ) {
           var moveDown = false;
           for ( var j = 0; j < sliceLabels.length; j++ ) {
             var comparisonLabel = sliceLabels[ j ];
-            if ( label == comparisonLabel ) {
+            if ( label === comparisonLabel ) {
               // Same label, so ignore.
               continue;
             }
@@ -168,16 +167,17 @@ define( function( require ) {
           // overlap with a label that has a higher unconstrained
           // location, move down.  If there is only overlap with a label
           // with a lower unconstrained location, move down.
+          var posVector;
           if ( moveUp && !moveDown ) {
             if ( label.labelOnLeft ) {
-              var posVector = new Vector2( label.right, label.centerY + label.height / 2 );
+              posVector = new Vector2( label.right, label.centerY + label.height / 2 );
               posVector.rotate( -rotationIncrement );
               label.centerX = posVector.x - label.width;
               label.centerY = posVector.y - label.height / 2;
 
             }
             else {
-              var posVector = new Vector2( label.centerX, label.centerY + label.height / 2 );
+              posVector = new Vector2( label.centerX, label.centerY + label.height / 2 );
               posVector.rotate( rotationIncrement );
               label.centerX = posVector.x;
               label.centerY = posVector.y - label.height / 2;
@@ -185,14 +185,14 @@ define( function( require ) {
           }
           else if ( moveDown && !moveUp ) {
             if ( label.labelOnLeft ) {
-              var posVector = new Vector2( label.right, label.centerY + label.height / 2 );
+              posVector = new Vector2( label.right, label.centerY + label.height / 2 );
               posVector.rotate( rotationIncrement );
               label.centerX = posVector.x - label.width;
               label.centerY = posVector.y - label.height / 2;
 
             }
             else {
-              var posVector = new Vector2( label.centerX, label.centerY + label.height / 2 );
+              posVector = new Vector2( label.centerX, label.centerY + label.height / 2 );
               posVector.rotate( -rotationIncrement );
               label.centerX = posVector.x;
               label.centerY = posVector.y - label.height / 2;
@@ -211,13 +211,14 @@ define( function( require ) {
       sliceLabels = [ ];
       var i = 0;
       possibleIsotopes.forEach( function( isotope ) {
-        var proportion;
-        if ( model.showingNaturesMix ) {
+        //var proportion;
+        // TODO Use proportion for natures Mix
+        /*if ( model.showingNaturesMix ) {
           proportion = AtomIdentifier.getNaturalAbundancePreciseDecimal( isotope );
         }
         else {
           proportion = model.testChamber.getIsotopeProportion( isotope );
-        }
+        }*/
 
         var centerEdgeOfPieSlice = pieChart.getCenterEdgePtForSlice( i );
         if ( centerEdgeOfPieSlice ) {
@@ -296,7 +297,7 @@ define( function( require ) {
           // the slice.  Note that these calculations assume
           // that the center of the pie chart is at (0,0).
           var connectingLineShape = new Shape().moveTo( sliceConnectPt.x, sliceConnectPt.y );
-          if ( sliceConnectPt.y > OVERALL_HEIGHT * 0.5 || sliceConnectPt.y < -OVERALL_HEIGHT * 0.4 ) {
+          /*if ( sliceConnectPt.y > OVERALL_HEIGHT * 0.5 || sliceConnectPt.y < -OVERALL_HEIGHT * 0.4 ) {
             // Add a "bend point" so that the line doesn't go
             // under the pie chart.
             var additionalLength = OVERALL_HEIGHT / ( PIE_CHART_RADIUS * 2 ) - 1;
@@ -304,7 +305,7 @@ define( function( require ) {
             //var scaleFactor = 1;
             connectingLineShape.lineTo( sliceConnectPt.x * ( 1 + additionalLength * scaleFactor ),
               sliceConnectPt.y * ( 1 + additionalLength * scaleFactor ) );
-          }
+          }*/
           connectingLineShape.lineTo( labelConnectPt.x, labelConnectPt.y );
           labelLayer.addChild( new Path( connectingLineShape, {
             stroke: 'black',
