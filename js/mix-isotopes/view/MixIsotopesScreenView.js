@@ -244,8 +244,10 @@ define( function( require ) {
       maxWidth: periodicTableNode.width,
       contentAlign: 'center',
       titleAlignX: 'left',
-      buttonAlign: 'right'
-    });
+      buttonAlign: 'right',
+      buttonTouchAreaDilatedX: 16,
+      buttonTouchAreaDilatedY: 16
+    } );
     compositionBox.leftTop = periodicTableNode.leftBottom;
     compositionBox.top = periodicTableNode.bottom + 5;
     this.addChild( compositionBox );
@@ -258,7 +260,9 @@ define( function( require ) {
         maxWidth: periodicTableNode.width,
         contentAlign: 'center',
         titleAlignX: 'left',
-        buttonAlign: 'right'
+        buttonAlign: 'right',
+        buttonTouchAreaDilatedX: 16,
+        buttonTouchAreaDilatedY: 16
       }
     );
     averageAtomicMassBox.leftTop = compositionBox.leftBottom;
