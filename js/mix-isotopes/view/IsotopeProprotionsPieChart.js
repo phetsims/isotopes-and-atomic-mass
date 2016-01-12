@@ -26,10 +26,10 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  var PIE_CHART_RADIUS = 50;
+  var PIE_CHART_RADIUS = 40;
   var OVERALL_HEIGHT = 120;
   var READOUT_FONT = new PhetFont( 18 );
-  var SIZE = new Dimension2( 50, 20 );
+  var SIZE = new Dimension2( 90, 20 );
   var CHEMICAL_SYMBOL_FONT = new PhetFont( 16 );
   var SUPERSCRIPT_SUBSCRIPT_FONT = new PhetFont( 14 );
   var NUMBER_DECIMALS = 4;
@@ -120,10 +120,12 @@ define( function( require ) {
     Node.call( this );
     var labelLayer = new Node();
     this.addChild( labelLayer );
-    var pieChartBoundingRectangle = new Rectangle( 150, 0, OVERALL_HEIGHT, OVERALL_HEIGHT, 0, 0 );
+    var pieChartBoundingRectangle = new Rectangle( -OVERALL_HEIGHT / 2, -OVERALL_HEIGHT / 2, OVERALL_HEIGHT, OVERALL_HEIGHT, 0, 0);
     var emptyCircle = new Circle( PIE_CHART_RADIUS, { stroke: 'black', lineDash: [ 3, 1 ] } );
-    emptyCircle.centerX = pieChartBoundingRectangle.width / 2 + 150;
-    emptyCircle.centerY = pieChartBoundingRectangle.height / 2 ;
+    //emptyCircle.centerX = pieChartBoundingRectangle.width / 2 + 150;
+    //emptyCircle.centerY = pieChartBoundingRectangle.height / 2 ;
+    emptyCircle.centerX = 0;
+    emptyCircle.centerY = 0;
     pieChartBoundingRectangle.addChild( emptyCircle );
 
 
@@ -131,7 +133,7 @@ define( function( require ) {
     var slices = [ ];
     var sliceLabels = [ ];
     var pieChart = new PieChartNode( slices, PIE_CHART_RADIUS );
-    pieChart.setCenter( pieChartBoundingRectangle.width / 2 + 150, pieChartBoundingRectangle.height / 2 );
+    //pieChart.setCenter( pieChartBoundingRectangle.width / 2 + 150, pieChartBoundingRectangle.height / 2 );
     pieChartBoundingRectangle.addChild( pieChart );
 
     //pieChartBoundingRectangle.scale(0.6);
@@ -234,37 +236,37 @@ define( function( require ) {
           // directly out from the edge of the slice, but
           // may be above or below the edges of the pie
           // chart.
-          var positionVector = centerEdgeOfPieSlice;
-          //positionVector.multiply( 1.4 );
+          var posVector = centerEdgeOfPieSlice;
+          var positionVector = posVector.times( 1.4 );
+          labelNode.unconstrainedPos = positionVector;
           //labelNode.setUnconstrainedPos( positionVector.getX(), positionVector.getY() );
 
           // Constrain the position so that no part of the
           // label goes above or below the upper and lower
           // edges of the pie chart.
-          var minY = pieChart.top;
-          var maxY = pieChart.bottom;
+          var minY = -OVERALL_HEIGHT / 2 + labelNode.height / 2;
+          var maxY = OVERALL_HEIGHT / 2 - labelNode.height / 2;
           var xSign = labelOnLeft ? -1 : 1;
           if ( positionVector.y < minY ) {
-            positionVector.x = pieChart.centerX + xSign * pieChart.radius;
+            positionVector.x = xSign * Math.sqrt( positionVector.magnitudeSquared() - minY * minY );
             positionVector.y = minY;
           }
           else if ( positionVector.y > maxY ) {
-            positionVector.x = pieChart.centerX + xSign * pieChart.radius;
+            positionVector.x = xSign * Math.sqrt( positionVector.magnitudeSquared() - maxY * maxY );
             positionVector.y = maxY;
           }
 
           // Position the label.
           if ( labelOnLeft ) {
-            labelNode.right = positionVector.x - labelNode.width / 2;
+            labelNode.centerX = positionVector.x - labelNode.width / 2;
             labelNode.centerY = positionVector.y;
           }
           else {
             // Label on right.
-            labelNode.left = positionVector.x + labelNode.width / 2;
+            labelNode.centerX = positionVector.x + labelNode.width / 2;
             labelNode.centerY = positionVector.y;
           }
           labelLayer.addChild( labelNode );
-          labelNode.unconstrainedPos = labelNode.center;
           sliceLabels.push( labelNode );
         }
         i = i + 1;
@@ -297,15 +299,15 @@ define( function( require ) {
           // the slice.  Note that these calculations assume
           // that the center of the pie chart is at (0,0).
           var connectingLineShape = new Shape().moveTo( sliceConnectPt.x, sliceConnectPt.y );
-          /*if ( sliceConnectPt.y > OVERALL_HEIGHT * 0.5 || sliceConnectPt.y < -OVERALL_HEIGHT * 0.4 ) {
+          if ( sliceConnectPt.y > OVERALL_HEIGHT * 0.25 || sliceConnectPt.y < -OVERALL_HEIGHT * 0.25 ) {
             // Add a "bend point" so that the line doesn't go
             // under the pie chart.
             var additionalLength = OVERALL_HEIGHT / ( PIE_CHART_RADIUS * 2 ) - 1;
-            var scaleFactor = 1 - Math.min( ( Math.abs( sliceConnectPt.x ) -150 ) /  PIE_CHART_RADIUS / 4.0 , 1 );
+            var scaleFactor = 1 - Math.min( Math.abs( sliceConnectPt.x ) /  ( PIE_CHART_RADIUS / 2.0 ), 1 );
             //var scaleFactor = 1;
             connectingLineShape.lineTo( sliceConnectPt.x * ( 1 + additionalLength * scaleFactor ),
               sliceConnectPt.y * ( 1 + additionalLength * scaleFactor ) );
-          }*/
+          }
           connectingLineShape.lineTo( labelConnectPt.x, labelConnectPt.y );
           labelLayer.addChild( new Path( connectingLineShape, {
             stroke: 'black',

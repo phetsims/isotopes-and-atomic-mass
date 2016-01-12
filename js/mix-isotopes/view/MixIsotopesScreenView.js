@@ -236,6 +236,8 @@ define( function( require ) {
 
     var isotopeProprotionsPieChart = new IsotopeProprotionsPieChart( this.model );
     isotopeProprotionsPieChart.scale( 0.6 );
+    isotopeProprotionsPieChart.centerX = isotopeProprotionsPieChart.centerX + 150; // Emperically determined to make pie chart centered
+    //isotopeProprotionsPieChart.centerY = 0;
     var compositionBox = new AccordionBox( isotopeProprotionsPieChart, {
       titleNode: new Text( percentCompositionString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT, maxWidth: 200 } ),
       fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
