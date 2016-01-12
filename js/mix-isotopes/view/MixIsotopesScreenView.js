@@ -247,8 +247,8 @@ define( function( require ) {
       contentAlign: 'center',
       titleAlignX: 'left',
       buttonAlign: 'right',
-      buttonTouchAreaDilatedX: 16,
-      buttonTouchAreaDilatedY: 16
+      buttonTouchAreaXDilation: 16,
+      buttonTouchAreaYDilation: 16
     } );
     compositionBox.leftTop = periodicTableNode.leftBottom;
     compositionBox.top = periodicTableNode.bottom + 5;
@@ -263,8 +263,8 @@ define( function( require ) {
         contentAlign: 'center',
         titleAlignX: 'left',
         buttonAlign: 'right',
-        buttonTouchAreaDilatedX: 16,
-        buttonTouchAreaDilatedY: 16
+        buttonTouchAreaXDilation: 16,
+        buttonTouchAreaYDilation: 16
       }
     );
     averageAtomicMassBox.leftTop = compositionBox.leftBottom;

@@ -182,8 +182,8 @@ define( function( require ) {
         contentAlign: 'center',
         titleAlignX: 'left',
         buttonAlign: 'right',
-        buttonTouchAreaDilatedX: 16,
-        buttonTouchAreaDilatedY: 16
+        buttonTouchAreaXDilation: 16,
+        buttonTouchAreaYDilation: 16
     } );
     symbolBox.left = periodicTableNode.visibleBounds.minX;
     symbolBox.top = periodicTableNode.bottom + 10;
@@ -199,8 +199,8 @@ define( function( require ) {
         contentXMargin: 0,
         titleAlignX: 'left',
         buttonAlign: 'right',
-        buttonTouchAreaDilatedX: 16,
-        buttonTouchAreaDilatedY: 16
+        buttonTouchAreaXDilation: 16,
+        buttonTouchAreaYDilation: 16
       }
     );
     abundanceBox.left = symbolBox.left;
