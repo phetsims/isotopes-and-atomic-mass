@@ -137,6 +137,7 @@ define( function( require ) {
     // List of the isotope buckets.
     this.bucketList = new ObservableArray();
     this.isotopesList = new ObservableArray();
+    this.naturesIsotopesList = [];
 
     // List of the numerical controls that, when present, can be used to add
     // or remove isotopes to/from the test chamber.
@@ -586,6 +587,7 @@ define( function( require ) {
       // Clear out anything that is in the test chamber.  If anything
       // needed to be stored, it should have been done by now.
       this.removeAllIsotopesFromTestChamberAndModel();
+      self.naturesIsotopesList = [ ];
 
       // Get the list of possible isotopes and then sort it by abundance
       // so that the least abundant are added last, thus assuring that
@@ -605,7 +607,6 @@ define( function( require ) {
           // one.  This behavior was requested by the design team.
           numToCreate = 1;
         }
-          // { MovableAtom[] }
         var isotopesToAdd = [];
         for ( var i = 0; i < numToCreate; i++ ) {
           var newIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount, self.testChamber.generateRandomLocation() );
@@ -615,11 +616,11 @@ define( function( require ) {
           newIsotope.radius = SMALL_ISOTOPE_RADIUS;
           newIsotope.showLabel = false;
           isotopesToAdd.push( newIsotope );
-          self.isotopesList.add( newIsotope );
-            // notifyIsotopeInstanceAdded( newIsotope );
+          self.naturesIsotopesList.push( newIsotope );
         }
         self.testChamber.bulkAddIsotopesToChamber( isotopesToAdd );
       });
+      this.trigger( 'naturesIsotopeUpdated' );
 
       // Add the isotope controllers (i.e. the buckets).
       this.addIsotopeControllers();
@@ -635,9 +636,11 @@ define( function( require ) {
     // TODO Check back on this
     removeAllIsotopesFromTestChamberAndModel: function() {
       var self = this;
-      this.testChamber.containedIsotopes.forEach( function( isotope ) {
-        self.isotopesList.remove( isotope );
-      } );
+      if ( this.isotopesList.length > 0 ) {
+        this.testChamber.containedIsotopes.forEach( function( isotope ) {
+          self.isotopesList.remove( isotope );
+        } );
+      }
       this.testChamber.removeAllIsotopes( true );
     },
 

@@ -22,6 +22,7 @@ define( function( require ) {
   var Dimension2 = require( 'DOT/Dimension2' );
   var EraserButton = require( 'SCENERY_PHET/buttons/EraserButton' );
   var ExpandedPeriodicTableNode = require( 'SHRED/view/ExpandedPeriodicTableNode' );
+  var IsotopeCanvasNode = require( 'SHRED/view/IsotopeCanvasNode' );
   var HSlider = require( 'SUN/HSlider' );
   var inherit = require( 'PHET_CORE/inherit' );
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
@@ -232,6 +233,15 @@ define( function( require ) {
       lineWidth: 1
     } );
     chamberLayer.addChild( testChamberNode );
+    this.isotopesLayer = new IsotopeCanvasNode( this.model.naturesIsotopesList, this.mvt, {
+      canvasBounds: this.mvt.modelToViewBounds( this.model.testChamber.getTestChamberRect() )
+    } );
+    this.addChild( this.isotopesLayer );
+    this.isotopesLayer.visible = false;
+    this.model.on( 'naturesIsotopeUpdated', function() {
+      self.isotopesLayer.setIsotopes( self.model.naturesIsotopesList );
+
+    });
 
     var isotopeProprotionsPieChart = new IsotopeProprotionsPieChart( this.model );
     isotopeProprotionsPieChart.scale( 0.6 );
@@ -299,10 +309,12 @@ define( function( require ) {
       if ( mixIsotopesModel.showingNaturesMixProperty.get() === true ){
         interactivityModeSelectionNode.visible = false;
         clearBoxButton.visible = false;
+        self.isotopesLayer.visible = true;
       }
       else{
         interactivityModeSelectionNode.visible = true;
         clearBoxButton.visible = true;
+        self.isotopesLayer.visible = false;
       }
     } );
 
