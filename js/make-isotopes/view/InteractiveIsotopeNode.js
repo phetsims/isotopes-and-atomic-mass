@@ -152,20 +152,35 @@ define( function( require ) {
 
     // Define the update function for the element name.
     var updateElementName = function( numProtons, numNeutrons ) {
+      // This data structure maps the position of element name with respect to center of nucleus so that label don't
+      // overlap with nucleons in the nucleus. These values have been empirically determined
+      var mapElementToPosition = {
+        1: 35,
+        2: 35,
+        3: 40,
+        4: 42,
+        5: 44,
+        6: 47,
+        7: 47,
+        8: 50,
+        9: 50,
+        10: 50
+      };
       // get element name and append mass number to identify isotope
       var name = AtomIdentifier.getName( numProtons ) + '-' + ( numProtons + numNeutrons );
       if ( name.length === 0 ) {
         name = '';
       }
       elementName.text = name;
-      elementName.center = new Vector2( isotopeAtomNode.centerX, nucleonLayersNode.top - 20 );
+      elementName.center = new Vector2( isotopeAtomNode.centerX, isotopeAtomNode.centerY - mapElementToPosition[ numProtons ] );
     };
 
     // Create the textual readout for the stability indicator.
     var stabilityIndicator = new Text( '', { font: new PhetFont( { size: 12, weight: 'bold' } ) } );
     this.addChild( stabilityIndicator );
 
-    function getNucleusLowerBound () {
+    // TODO Remove once tested
+    /*function getNucleusLowerBound () {
       var lowerBound = 0;
       makeIsotopesModel.protons.forEach( function( proton ) {
         var particlePosition = thisNode.modelViewTransform.modelToViewPosition( proton.position );
@@ -182,12 +197,25 @@ define( function( require ) {
         }
       } );
       return lowerBound;
-    }
+    }*/
 
     // Define the update function for the stability indicator.
     var updateStabilityIndicator = function( numProtons, numNeutrons ) {
-      var lowerNucleusBound = getNucleusLowerBound();
-      var stabilityIndicatorCenterPos = new Vector2( isotopeAtomNode.centerX,  lowerNucleusBound + 25 );
+      // This data structure maps the position of stable/unstable with respect to center of nucleus so that label don't
+      // overlap with nucleons in the nucleus. These values have been empirically determined
+      var mapStableUnstableToPosition = {
+        1: 30,
+        2: 35,
+        3: 40,
+        4: 42,
+        5: 44,
+        6: 47,
+        7: 47,
+        8: 50,
+        9: 50,
+        10: 50
+      };
+      var stabilityIndicatorCenterPos = new Vector2( isotopeAtomNode.centerX,  isotopeAtomNode.centerY + mapStableUnstableToPosition[ numProtons ] );
       if ( numProtons > 0 ) {
         if ( AtomIdentifier.isStable( numProtons, numNeutrons ) ) {
           stabilityIndicator.text = stableString;
