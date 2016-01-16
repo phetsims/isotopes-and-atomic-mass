@@ -18,7 +18,7 @@ define( function( require ) {
   // strings
   var isotopesAndAtomicMassTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopes-and-atomic-mass.title' );
 
-  var tandem = new Tandem( 'isotopesAndAtomicMass' );
+  var tandem = Tandem.createRootTandem();
 
   var simOptions = {
     credits: {
