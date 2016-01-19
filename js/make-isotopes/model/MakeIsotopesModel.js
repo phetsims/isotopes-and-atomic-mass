@@ -2,11 +2,12 @@
 
 /**
  * This is the primary model class for the Make Isotopes module.  This class acts as the main interface for model
- * actions, and contains the constituent model elements.  It watches all neutrons and, based on where they are placed by
+ * actions, and contains the constituent model elements. It watches all neutrons and, based on where they are placed by
  * the user, moves them between the neutron bucket and the atom. In this model, units are picometers (1E-12).
  *
  * @author John Blanco
  * @author Jesse Greenberg
+ * @author Aadish Gupta
  */
 
 define( function( require ) {
@@ -30,28 +31,15 @@ define( function( require ) {
   // strings
   var neutronsTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons.title' );
 
-  //----------------------------------------------------------------------------
-  // Class Data
-  //----------------------------------------------------------------------------
-  // Constant that defines the default number of neutrons in the bucket.
+  // constants
   var DEFAULT_NUM_NEUTRONS_IN_BUCKET = 4;
-
-  // Radius of the nucleons, in screen coordinates, which are roughly pixels.
-//  var NUCLEON_RADIUS = 5;
-
   var NUCLEUS_JUMP_PERIOD = 0.1; // In seconds
   var MAX_NUCLEUS_JUMP = SharedConstants.NUCLEON_RADIUS * 0.5;
   var JUMP_ANGLES = [ Math.PI * 0.1, Math.PI * 1.6, Math.PI * 0.7, Math.PI * 1.1, Math.PI * 0.3 ];
   var JUMP_DISTANCES = [ MAX_NUCLEUS_JUMP * 0.4, MAX_NUCLEUS_JUMP * 0.8, MAX_NUCLEUS_JUMP * 0.2, MAX_NUCLEUS_JUMP * 0.9 ];
-
-  // maximum drop distance for a nucleon to be considered part of the particle.
-  var NUCLEON_CAPTURE_RADIUS = 100;
-
-  // constants that define the size, position, and appearance of the neutron bucket.
+  var NUCLEON_CAPTURE_RADIUS = 100; // maximum drop distance for a nucleon to be considered part of the particle
   var BUCKET_SIZE = new Dimension2( 130, 60 );
   var NEUTRON_BUCKET_POSITION = new Vector2( -220, -180 );
-
-  // Default atom configuration.
   var DEFAULT_ATOM_CONFIG = new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } ); // Hydrogen.
 
   /**
