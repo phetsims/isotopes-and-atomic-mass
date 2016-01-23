@@ -653,6 +653,7 @@ define( function( require ) {
      * Resets the model. Returns the default settings.
      */
     reset: function() {
+      this.removeAllIsotopesFromTestChamberAndModel();
       PropertySet.prototype.reset.call( this );
 
       // Remove any stored state for the default atom.
