@@ -19,14 +19,15 @@ define( function( require ) {
   var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
   var BucketHole = require( 'SCENERY_PHET/bucket/BucketHole' );
   var Color = require( 'SCENERY/util/Color' );
+  var ControlIsotope = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/ControlIsotope' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var EraserButton = require( 'SCENERY_PHET/buttons/EraserButton' );
   var ExpandedPeriodicTableNode = require( 'SHRED/view/ExpandedPeriodicTableNode' );
-  var IsotopeCanvasNode = require( 'SHRED/view/IsotopeCanvasNode' );
   var HSlider = require( 'SUN/HSlider' );
   var inherit = require( 'PHET_CORE/inherit' );
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var IsotopesAndAtomicMassConstants = require( 'ISOTOPES_AND_ATOMIC_MASS/common/IsotopesAndAtomicMassConstants' );
+  var IsotopeCanvasNode = require( 'SHRED/view/IsotopeCanvasNode' );
   var IsotopeProprotionsPieChart = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/IsotopeProprotionsPieChart' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var Node = require( 'SCENERY/nodes/Node' );
@@ -41,7 +42,6 @@ define( function( require ) {
   var SharedConstants = require( 'SHRED/SharedConstants' );
   var Text = require( 'SCENERY/nodes/Text' );
   var Vector2 = require( 'DOT/Vector2' );
-  var ControlIsotope = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/ControlIsotope' );
 
   // constants
   var INTERACTIVITY_MODE = {
@@ -139,9 +139,6 @@ define( function( require ) {
       1.0 // "Zoom factor" - smaller zooms out, larger zooms in.
     );
 
-    // Map of the buckets in the model to their view representation.
-    this.mapBucketToView = {};
-
     // Add the nodes that will allow the canvas to be layered.
     var controlsLayer = new Node();
     this.addChild( controlsLayer );
@@ -153,24 +150,6 @@ define( function( require ) {
     this.addChild( isotopeLayer );
     var bucketFrontLayer = new Node();
     this.addChild( bucketFrontLayer );
-
-    // Create and add the Reset All Button in the bottom right, which resets the model
-    var resetAllButton = new ResetAllButton( {
-      listener: function() {
-        mixIsotopesModel.reset();
-      },
-      right: this.layoutBounds.maxX - 10,
-      bottom: this.layoutBounds.maxY - 10
-    } );
-    this.addChild( resetAllButton );
-
-    // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
-    // element is Neon for this sim.
-    var periodicTableNode = new ExpandedPeriodicTableNode( mixIsotopesModel.numberAtom, 18, tandem );
-    periodicTableNode.scale( 0.55 );
-    periodicTableNode.top = 10;
-    periodicTableNode.right = this.layoutBounds.width - 10;
-    this.addChild( periodicTableNode );
 
     // Adding Buckets
     function addBucketView ( addedBucket ) {
@@ -240,13 +219,29 @@ define( function( require ) {
     this.isotopesLayer.visible = false;
     this.model.on( 'naturesIsotopeUpdated', function() {
       self.isotopesLayer.setIsotopes( self.model.naturesIsotopesList );
-
     });
+
+    var clearBoxButton = new EraserButton( {
+      baseColor: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
+      listener: function() {
+        mixIsotopesModel.clearBox();
+      }
+    } );
+    this.addChild( clearBoxButton );
+    clearBoxButton.top = chamberLayer.bottom + 5;
+    clearBoxButton.right = chamberLayer.right;
+
+    // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
+    // element is Neon for this sim.
+    var periodicTableNode = new ExpandedPeriodicTableNode( mixIsotopesModel.numberAtom, 18, tandem );
+    periodicTableNode.scale( 0.55 );
+    periodicTableNode.top = 10;
+    periodicTableNode.right = this.layoutBounds.width - 10;
+    this.addChild( periodicTableNode );
 
     var isotopeProprotionsPieChart = new IsotopeProprotionsPieChart( this.model );
     isotopeProprotionsPieChart.scale( 0.6 );
     isotopeProprotionsPieChart.centerX = isotopeProprotionsPieChart.centerX + 150; // Emperically determined to make pie chart centered
-    //isotopeProprotionsPieChart.centerY = 0;
     var compositionBox = new AccordionBox( isotopeProprotionsPieChart, {
       titleNode: new Text( percentCompositionString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT, maxWidth: 200 } ),
       fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
@@ -259,8 +254,8 @@ define( function( require ) {
       buttonTouchAreaXDilation: 16,
       buttonTouchAreaYDilation: 16
     } );
-    compositionBox.leftTop = periodicTableNode.leftBottom;
-    compositionBox.top = periodicTableNode.bottom + 5;
+    compositionBox.left = periodicTableNode.left;
+    compositionBox.top = periodicTableNode.bottom + 15;
     this.addChild( compositionBox );
 
     var averageAtomicMassBox = new AccordionBox( new AverageAtomicMassIndicator( this.model ), {
@@ -276,34 +271,32 @@ define( function( require ) {
         buttonTouchAreaYDilation: 16
       }
     );
-    averageAtomicMassBox.leftTop = compositionBox.leftBottom;
-    averageAtomicMassBox.top = compositionBox.bottom + 5;
+    averageAtomicMassBox.left = compositionBox.left;
+    averageAtomicMassBox.top = compositionBox.bottom + 10;
     this.addChild( averageAtomicMassBox );
 
     var interactivityModeSelectionNode = new InteractivityModeSelectionNode( mixIsotopesModel.interactivityModeProperty , this.mvt);
-    interactivityModeSelectionNode.leftTop = averageAtomicMassBox.leftBottom;
-    interactivityModeSelectionNode.top = averageAtomicMassBox.bottom + 5;
+    interactivityModeSelectionNode.left = averageAtomicMassBox.left;
+    interactivityModeSelectionNode.top = averageAtomicMassBox.bottom + 10;
     this.addChild( interactivityModeSelectionNode );
-    interactivityModeSelectionNode.top = averageAtomicMassBox.bottom + 5;
 
     var isotopeMixtureSelectionNode = new IsotopeMixtureSelectionNode( mixIsotopesModel.showingNaturesMixProperty );
-    isotopeMixtureSelectionNode.rightTop = averageAtomicMassBox.rightBottom;
-    isotopeMixtureSelectionNode.top = averageAtomicMassBox.bottom + 5;
-    this.addChild( isotopeMixtureSelectionNode );
-    isotopeMixtureSelectionNode.top = averageAtomicMassBox.bottom + 5;
+    isotopeMixtureSelectionNode.top = averageAtomicMassBox.bottom + 10;
     isotopeMixtureSelectionNode.left = interactivityModeSelectionNode.right + 10;
+    this.addChild( isotopeMixtureSelectionNode );
 
-
-
-    var clearBoxButton = new EraserButton( {
-      baseColor: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
+    // Create and add the Reset All Button in the bottom right, which resets the model
+    var resetAllButton = new ResetAllButton( {
       listener: function() {
-        mixIsotopesModel.clearBox();
-      }
+        mixIsotopesModel.reset();
+        compositionBox.expandedProperty.reset();
+        averageAtomicMassBox.expandedProperty.reset();
+      },
+      right: this.layoutBounds.maxX - 10,
+      bottom: this.layoutBounds.maxY - 10
     } );
-    this.addChild( clearBoxButton );
-    clearBoxButton.top = chamberLayer.bottom + 5;
-    clearBoxButton.right = chamberLayer.right;
+    resetAllButton.scale(0.85);
+    this.addChild( resetAllButton );
 
     mixIsotopesModel.showingNaturesMixProperty.link( function() {
       if ( mixIsotopesModel.showingNaturesMixProperty.get() === true ){
@@ -317,8 +310,6 @@ define( function( require ) {
         self.isotopesLayer.visible = false;
       }
     } );
-
-
   }
 
   isotopesAndAtomicMass.register( 'MixIsotopesScreenView', MixIsotopesScreenView);

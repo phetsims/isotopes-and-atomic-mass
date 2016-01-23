@@ -76,6 +76,7 @@ define( function( require ) {
       right: this.layoutBounds.maxX - 10,
       bottom: this.layoutBounds.maxY - 10
     } );
+    resetAllButton.scale(0.85);
     this.addChild( resetAllButton );
 
 
