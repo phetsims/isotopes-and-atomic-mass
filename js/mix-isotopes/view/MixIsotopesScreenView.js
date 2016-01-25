@@ -43,12 +43,6 @@ define( function( require ) {
   var Text = require( 'SCENERY/nodes/Text' );
   var Vector2 = require( 'DOT/Vector2' );
 
-  // constants
-  var INTERACTIVITY_MODE = {
-    BUCKETS_AND_LARGE_ATOMS: 'BUCKETS_AND_LARGE_ATOMS',
-    SLIDERS_AND_SMALL_ATOMS: 'SLIDERS_AND_SMALL_ATOMS'
-  };
-
   // strings
   var myMixString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/myMix' );
   var natureMixString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/natureMix' );
@@ -74,7 +68,7 @@ define( function( require ) {
     return displayButtonGroup;
   }
 
-  function InteractivityModeSelectionNode( interactivityModeProperty, mvt ) {
+  function InteractivityModeSelectionNode( model, mvt ) {
     var bucketNode = new Node();
     var bucket = new Bucket( { baseColor: Color.gray,
       caption: '',
@@ -95,10 +89,10 @@ define( function( require ) {
     slider.scale( 0.5 );
 
     var radioButtonContent = [
-      { value: INTERACTIVITY_MODE.BUCKETS_AND_LARGE_ATOMS, node: bucketNode },
-      { value: INTERACTIVITY_MODE.SLIDERS_AND_SMALL_ATOMS, node: slider }
+      { value: model.interactivityModeEnum.BUCKETS_AND_LARGE_ATOMS, node: bucketNode },
+      { value: model.interactivityModeEnum.SLIDERS_AND_SMALL_ATOMS, node: slider }
     ];
-    var radioButtonGroup = new RadioButtonGroup( interactivityModeProperty, radioButtonContent, {
+    var radioButtonGroup = new RadioButtonGroup( model.interactivityModeProperty, radioButtonContent, {
       orientation: 'vertical',
       selectedLineWidth: 1,
       baseColor: Color.white,
@@ -110,7 +104,8 @@ define( function( require ) {
 
 
   /**
-   * @param {MakeIsotopesModel} makeIsotopesModel
+   * @param {MixIsotopesModel} mixIsotopesModel
+   * @param tandem
    * @constructor
    */
   function MixIsotopesScreenView( mixIsotopesModel, tandem ) {
@@ -178,7 +173,7 @@ define( function( require ) {
     function addIsotopeView ( addedIsotope ){
       var isotopeView = new ParticleView( addedIsotope, self.mvt );
       isotopeView.center = self.mvt.modelToViewPosition( addedIsotope.position );
-      isotopeView.pickable = !(mixIsotopesModel.showingNaturesMix);
+      isotopeView.pickable = ( mixIsotopesModel.interactivityModeProperty.get() == mixIsotopesModel.interactivityModeEnum.BUCKETS_AND_LARGE_ATOMS );
 
       isotopeLayer.addChild( isotopeView );
 
@@ -275,7 +270,7 @@ define( function( require ) {
     averageAtomicMassBox.top = compositionBox.bottom + 10;
     this.addChild( averageAtomicMassBox );
 
-    var interactivityModeSelectionNode = new InteractivityModeSelectionNode( mixIsotopesModel.interactivityModeProperty , this.mvt);
+    var interactivityModeSelectionNode = new InteractivityModeSelectionNode( mixIsotopesModel , this.mvt);
     interactivityModeSelectionNode.left = averageAtomicMassBox.left;
     interactivityModeSelectionNode.top = averageAtomicMassBox.bottom + 10;
     this.addChild( interactivityModeSelectionNode );

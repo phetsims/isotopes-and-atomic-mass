@@ -16,35 +16,23 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var ObservableArray = require( 'AXON/ObservableArray' );
-  var Dimension2 = require( 'DOT/Dimension2' );
-  var Vector2 = require( 'DOT/Vector2' );
-  var Color = require( 'SCENERY/util/Color' );
-  var NumberAtom = require( 'SHRED/model/NumberAtom' );
   var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
-  var PropertySet = require( 'AXON/PropertySet' );
-  var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
-  var NumericalIsotopeQuantityControl = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/NumericalIsotopeQuantityControl' );
-  var MonoIsotopeBucket = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MonoIsotopeBucket' );
+  var Color = require( 'SCENERY/util/Color' );
+  var Dimension2 = require( 'DOT/Dimension2' );
+  var inherit = require( 'PHET_CORE/inherit' );
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var IsotopeTestChamber = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/IsotopeTestChamber' );
+  var MonoIsotopeBucket = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MonoIsotopeBucket' );
+  var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
+  var NumberAtom = require( 'SHRED/model/NumberAtom' );
+  var NumericalIsotopeQuantityControl = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/NumericalIsotopeQuantityControl' );
+  var ObservableArray = require( 'AXON/ObservableArray' );
+  var PropertySet = require( 'AXON/PropertySet' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  // Default atom configuration.
   var DEFAULT_ATOM_CONFIG = new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } ); // Hydrogen.
-
-
-  // -----------------------------------------------------------------------
-  // Class Data
-  // -----------------------------------------------------------------------
-
-  // Default initial atom configuration.
-  // Immutable atom
-  var DEFAULT_PROTOTYPE_ISOTOPE_CONFIG = new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } );
-
-  // Size of the buckets that will hold the isotopes.
-  var BUCKET_SIZE = new Dimension2( 120, 50 );
+  var BUCKET_SIZE = new Dimension2( 120, 50 ); // Size of the buckets that will hold the isotopes.
 
   // Within this model, the isotopes come in two sizes, small and large, and
   // atoms are either one size or another, and all atoms that are shown at
@@ -53,14 +41,10 @@ define( function( require ) {
   // atoms at once.
   var LARGE_ISOTOPE_RADIUS = 10;
   var SMALL_ISOTOPE_RADIUS = 4;
-
-  // Numbers of isotopes that are placed into the buckets when a new atomic
-  // number is selected.
-  var NUM_LARGE_ISOTOPES_PER_BUCKET = 10;
+  var NUM_LARGE_ISOTOPES_PER_BUCKET = 10; // Numbers of isotopes that are placed into the buckets
 
   // List of colors which will be used to represent the various isotopes.
   var ISOTOPE_COLORS = [ new Color( 180, 82, 205 ), Color.green, new Color( 255, 69, 0 ), new Color( 72, 137, 161 ) ];
-
 
   /*
    * Enum of the possible interactivity types.
@@ -71,17 +55,10 @@ define( function( require ) {
     BUCKETS_AND_LARGE_ATOMS: 'BUCKETS_AND_LARGE_ATOMS',
     SLIDERS_AND_SMALL_ATOMS: 'SLIDERS_AND_SMALL_ATOMS'
   };
-
-
-  // Total number of atoms placed in the chamber when depicting nature's mix.
-  var NUM_NATURES_MIX_ATOMS = 1000;
+  var NUM_NATURES_MIX_ATOMS = 1000; // Total number of atoms placed in the chamber when depicting nature's mix.
 
   /**
-   * Class that defines the state of the model.  This can be used for saving
-   * and restoring of the state.
-   *
-   * @author John Blanco
-   * @author James Smith
+   * Class that defines the state of the model.  This will be used for saving and restoring of the state.
    */
   function State( model ) {
     this.elementConfig = new NumberAtom( {
@@ -116,6 +93,7 @@ define( function( require ) {
 
     var self = this;
 
+    this.interactivityModeEnum = InteractivityMode // to be used in the view
     this.numberAtom = new NumberAtom( {
       protonCount: DEFAULT_ATOM_CONFIG.protonCount,
       neutronCount: DEFAULT_ATOM_CONFIG.neutronCount,
@@ -660,7 +638,7 @@ define( function( require ) {
       this.mapIsotopeConfigToUserMixState = {};
 
       // Set the default element.
-      this.setAtomConfiguration( DEFAULT_PROTOTYPE_ISOTOPE_CONFIG );
+      this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
 
       // Remove all stored user's mix states.  This must be done after
       // setting the default isotope because state could have been saved
