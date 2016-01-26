@@ -93,7 +93,6 @@ define( function( require ) {
 
     var self = this;
 
-    this.interactivityModeEnum = InteractivityMode // to be used in the view
     this.numberAtom = new NumberAtom( {
       protonCount: DEFAULT_ATOM_CONFIG.protonCount,
       neutronCount: DEFAULT_ATOM_CONFIG.neutronCount,
@@ -672,6 +671,6 @@ define( function( require ) {
       } );
     }
 
-  } );
+  }, { InteractivityMode: InteractivityMode });
 
 } );

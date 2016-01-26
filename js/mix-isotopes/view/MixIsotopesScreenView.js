@@ -29,6 +29,7 @@ define( function( require ) {
   var IsotopesAndAtomicMassConstants = require( 'ISOTOPES_AND_ATOMIC_MASS/common/IsotopesAndAtomicMassConstants' );
   var IsotopeCanvasNode = require( 'SHRED/view/IsotopeCanvasNode' );
   var IsotopeProprotionsPieChart = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/IsotopeProprotionsPieChart' );
+  var MixIsotopesModel = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MixIsotopesModel' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var Node = require( 'SCENERY/nodes/Node' );
   var ParticleView = require( 'SHRED/view/ParticleView' );
@@ -89,8 +90,8 @@ define( function( require ) {
     slider.scale( 0.5 );
 
     var radioButtonContent = [
-      { value: model.interactivityModeEnum.BUCKETS_AND_LARGE_ATOMS, node: bucketNode },
-      { value: model.interactivityModeEnum.SLIDERS_AND_SMALL_ATOMS, node: slider }
+      { value: MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS, node: bucketNode },
+      { value: MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS, node: slider }
     ];
     var radioButtonGroup = new RadioButtonGroup( model.interactivityModeProperty, radioButtonContent, {
       orientation: 'vertical',
@@ -173,7 +174,7 @@ define( function( require ) {
     function addIsotopeView ( addedIsotope ){
       var isotopeView = new ParticleView( addedIsotope, self.mvt );
       isotopeView.center = self.mvt.modelToViewPosition( addedIsotope.position );
-      isotopeView.pickable = ( mixIsotopesModel.interactivityModeProperty.get() == mixIsotopesModel.interactivityModeEnum.BUCKETS_AND_LARGE_ATOMS );
+      isotopeView.pickable = ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS );
 
       isotopeLayer.addChild( isotopeView );
 
