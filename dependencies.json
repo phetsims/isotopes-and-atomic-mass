@@ -1,5 +1,5 @@
 {
-  "comment": "# isotopes-and-atomic-mass 1.0.0-dev.4 Fri Jan 15 2016 13:53:33 GMT-0700 (Mountain Standard Time)",
+  "comment": "# isotopes-and-atomic-mass 1.0.0-dev.5 Tue Jan 26 2016 16:08:51 GMT-0700 (Mountain Standard Time)",
   "assert": {
     "sha": "d4909677d27ed571d5d859d709a0612bf7811db8",
     "branch": "master"
@@ -9,23 +9,23 @@
     "branch": "master"
   },
   "brand": {
-    "sha": "c9282935819904d033c0e22d9d36e3590019f38b",
+    "sha": "8c6f9c0402d8d445e61b8692c25b78b0ef09f279",
     "branch": "master"
   },
   "chipper": {
-    "sha": "9860bbb4d1266ae03f26393fb33409c156e83c59",
+    "sha": "57c99807c0b8747ad05cf1f5faa87459ade78c1d",
     "branch": "master"
   },
   "dot": {
-    "sha": "7a28b1a92733cee778e2cf5d22ca45042884d416",
+    "sha": "ddf82014392e9956043fab8608d5b8222e6134dc",
     "branch": "master"
   },
   "isotopes-and-atomic-mass": {
-    "sha": "53cbf26ff67c61cf8dfd9ec03815b3d2858fbe0c",
+    "sha": "3d0c3bb9c149460091878cc95af4f420bfc6b054",
     "branch": "master"
   },
   "joist": {
-    "sha": "fa1196f6e353f71a290ca38b807c5aa6a59f14b7",
+    "sha": "4c228a327558f18681a136f64c23a28006f16b9f",
     "branch": "master"
   },
   "kite": {
@@ -33,35 +33,35 @@
     "branch": "master"
   },
   "phet-core": {
-    "sha": "f78b5cfe4765cc949fdcdee511777dae4d6856ba",
+    "sha": "874a703dc94ace52f052a7339ea8b26cfefce482",
     "branch": "master"
   },
   "phetcommon": {
-    "sha": "d712ace0fd0fa47ab617934aec8721228aefc0fc",
+    "sha": "3db92af30d53b7d6bb3ce3c47c632f622f17986c",
     "branch": "master"
   },
   "scenery": {
-    "sha": "ace9a1cc9c36d6e8c94413ccd09bb5923cb8a20a",
+    "sha": "953fe860fe8b51c8d853dba824550eb40d4720f9",
     "branch": "master"
   },
   "scenery-phet": {
-    "sha": "6bed84d9cfd8253be8d8334ae8ffcb50ce65ecda",
+    "sha": "e903fad21de1daea73dc854965e6f8c50d72ac6f",
     "branch": "master"
   },
   "sherpa": {
-    "sha": "ae737ccba66ccac3b6e10f4386709c642a5df02c",
+    "sha": "bf82eb95d808250f7191328b3b30179ec1f44090",
     "branch": "master"
   },
   "shred": {
-    "sha": "cde9d33d3d2a2a9aea52994a1a7a5fda5ab816ef",
+    "sha": "c1d4863f5ae0dbb9f1766daca67c3a1dcc179975",
     "branch": "master"
   },
   "sun": {
-    "sha": "982a49b8b0381ccec86dba8eeb17d4205876b4cb",
+    "sha": "45c7d334c5417ec96dcf6e43b9735c4064a44a8c",
     "branch": "master"
   },
   "tandem": {
-    "sha": "873e03879d6af9bf642151585cb27e1605c817fb",
+    "sha": "5388a9e411c9b75bcfde1c4ca504c2774e630f11",
     "branch": "master"
   }
 }
