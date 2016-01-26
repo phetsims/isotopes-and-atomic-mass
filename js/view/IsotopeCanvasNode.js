@@ -38,7 +38,6 @@ define( function( require ) {
       for ( i = 0; i < this.isotopes.length; i++ ) {
         isotope = this.isotopes[ i ];
         context.fillStyle = isotope.color._css;
-        context.lineWidth = 0.4;
         context.beginPath();
         context.arc( this.modelViewTransform.modelToViewX( isotope.positionProperty.get().x ),
           this.modelViewTransform.modelToViewY( isotope.positionProperty.get().y ),
