@@ -80,6 +80,9 @@ define( function( require ) {
           self.particleAtom.nucleusOffset = Vector2.ZERO;
         }
       }
+      if ( self.particleAtom.protonCount > 0 && self.particleAtom.neutronCount > 0 ) {
+        self.trigger( 'atomReconfigured' );
+      }
     } );
 
     // Arrays that contain the subatomic particles, whether they are in the  bucket or in the atom.  This is part of a
