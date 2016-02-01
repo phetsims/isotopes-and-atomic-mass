@@ -30,6 +30,7 @@ define( function( require ) {
   // strings
   var stableString = require( 'string!SHRED/stable' );
   var unstableString = require( 'string!SHRED/unstable' );
+  var myIsotopeString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/myIsotope' );
 
   // constants
   var NUM_NUCLEON_LAYERS = 5; // This is based on max number of particles, may need adjustment if that changes.
@@ -53,6 +54,14 @@ define( function( require ) {
     // TODO: bottomPoint should not be passed in this way.  Refactor soon.
     var isotopeAtomNode = new IsotopeAtomNode( makeIsotopesModel.particleAtom, makeIsotopesModel.numberAtom, bottomPoint, modelViewTransform );
     this.addChild( isotopeAtomNode );
+    var myIsotopeLabel = new Text( myIsotopeString, {
+      font: new PhetFont( { size: 16, weight: 'bold' } ),
+      fill: 'black',
+      centerX: isotopeAtomNode.centerX,
+      maxWidth: 100
+    } );
+    this.addChild(myIsotopeLabel);
+    myIsotopeLabel.bottom = isotopeAtomNode.top - 5;
 
     // Add the bucket components that hold the neutrons.
     var neutronBucketHole = new BucketHole( makeIsotopesModel.neutronBucket, modelViewTransform );
@@ -234,6 +243,7 @@ define( function( require ) {
     makeIsotopesModel.on( 'atomReconfigured', function() {
       updateElementName( makeIsotopesModel.particleAtom.protonCount, makeIsotopesModel.particleAtom.neutronCount );
       updateStabilityIndicator( makeIsotopesModel.particleAtom.protonCount, makeIsotopesModel.particleAtom.neutronCount );
+      myIsotopeLabel.bottom = isotopeAtomNode.top - 5;
     } );
 
     // initial update

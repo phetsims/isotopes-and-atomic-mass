@@ -41,7 +41,6 @@ define( function( require ) {
   // strings
   var symbolTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/symbol.title' );
   var abundanceTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/abundance.title' );
-  var myIsotopeString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/myIsotope' );
 
   /**
    * @param {MakeIsotopesModel} makeIsotopesModel
@@ -94,19 +93,6 @@ define( function( require ) {
 
     var atomAndBucketNode = new InteractiveIsotopeNode( makeIsotopesModel, this.mvt, bottomOfAtomPosition );
     this.addChild( atomAndBucketNode );
-
-    var myIsotopeLabel = new Text( myIsotopeString, {
-        font: new PhetFont( { size: 16, weight: 'bold' } ),
-        fill: 'black',
-        centerX: scaleNode.centerX,
-        maxWidth: 100
-      } );
-    this.addChild(myIsotopeLabel);
-
-    // add listener to update position of myIsotopeLabel
-    atomAndBucketNode.addEventListener( 'bounds', function(){
-      myIsotopeLabel.bottom = atomAndBucketNode.top - 5;
-    });
 
     // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
     // element is Neon for this sim.
