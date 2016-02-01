@@ -61,6 +61,7 @@ define( function( require ) {
    * Class that defines the state of the model.  This will be used for saving and restoring of the state.
    */
   function State( model ) {
+    var self = this;
     this.elementConfig = new NumberAtom( {
       protonCount: model.prototypeIsotope.protonCount,
       neutronCount: model.prototypeIsotope.neutronCount,
@@ -69,6 +70,16 @@ define( function( require ) {
     this.isotopeTestChamberState = model.testChamber.getState();
     this.interactivityMode = model.interactivityMode;
     this.showingNaturesMix = model.showingNaturesMix;
+    this.bucketList = new ObservableArray();
+    model.bucketList.forEach( function( bucket ) {
+      var newBucket = bucket;
+      newBucket.particles = [];
+      bucket._particles.forEach( function( particle ) {
+        newBucket.particles.push( particle );
+      });
+      self.bucketList.add( newBucket );
+
+    });
   }
 
   /**
@@ -105,11 +116,7 @@ define( function( require ) {
     // This atom is the "prototype isotope", meaning that it is set in order
     // to set the atomic weight of the family of isotopes that are currently
     // in use.
-    this.prototypeIsotope = new NumberAtom( {
-      protonCount: DEFAULT_ATOM_CONFIG.protonCount,
-      neutronCount: DEFAULT_ATOM_CONFIG.neutronCount,
-      electronCount: DEFAULT_ATOM_CONFIG.electronCount
-  } );
+    this.prototypeIsotope = new NumberAtom();
 
     // List of the isotope buckets.
     this.bucketList = new ObservableArray();
@@ -348,14 +355,17 @@ define( function( require ) {
         // in the chamber must have come from the buckets.
         // @param {NumberAtom} isotopeConfig
         // var thisModel = this; TODO Check and make sure that this is ok
-        this.possibleIsotopes.forEach( function( isotopeConfig ) {
-          var isotopeCount = thisModel.testChamber.getIsotopeCount( isotopeConfig );
-          var bucket = thisModel.getBucketForIsotope( isotopeConfig );
-          for ( var i = 0; i < isotopeCount; i++ ) {
-            var removedIsotope = bucket.removeArbitraryIsotope();
-            thisModel.isotopesList.remove( removedIsotope );
-          }
-        } );
+        thisModel.removeBuckets();
+        modelState.bucketList.forEach( function( bucket ) {
+          thisModel.bucketList.add( bucket );
+          var that = thisModel;
+          bucket.particles.forEach( function( isotope ){
+            bucket.addParticleFirstOpen( isotope, false );
+            that.isotopesList.add( isotope );
+          });
+
+        });
+        //this.bucketList = modelState.bucketList;
       }
 
     },
