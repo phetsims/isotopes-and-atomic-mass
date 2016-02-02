@@ -39,7 +39,7 @@ define( function( require ) {
    * and the atomic number (in front of the chemical symbol and partially below it).
   */
 
-  function ChemSymbolWithNumbersNode( isotopeConfig ) {
+  function chemSymbolWithNumbersNode( isotopeConfig ) {
     var node = new Node();
 
     var symbol = new Text( AtomIdentifier.getSymbol( isotopeConfig.protonCount ), {
@@ -67,16 +67,16 @@ define( function( require ) {
     return node;
   }
 
-  function SliceLabelNode( isotopeConfig, isotopePercentage, labelOnLeft, numberOfDecimals ) {
+  function sliceLabelNode( isotopeConfig, isotopePercentage, labelOnLeft, numberOfDecimals ) {
     // The "unconstrained position" is the position where this label
     // would be placed if it didn't need to sit within the upper and
     // lower bounds of the pie chart and didn't have to worry about
     // avoiding overlap with other labels.  It is used for arbitrating
     // how labels move when handling overlap.
-    this.unconstrainedPos = new Vector2( 0, 0 );
-    this.labelOnLeft = labelOnLeft;
     var node = new Node();
-    var symbol = new ChemSymbolWithNumbersNode( isotopeConfig );
+    node.unconstrainedPos = new Vector2( 0, 0 );
+    node.labelOnLeft = labelOnLeft;
+    var symbol = chemSymbolWithNumbersNode( isotopeConfig );
     node.addChild( symbol );
 
     var readoutText = new Text( Util.toFixedNumber( isotopePercentage, numberOfDecimals )+ ' %', {
@@ -170,7 +170,7 @@ define( function( require ) {
             if ( label.labelOnLeft ) {
               posVector = new Vector2( label.right, label.centerY + label.height / 2 );
               posVector.rotate( -rotationIncrement );
-              label.centerX = posVector.x - label.width;
+              label.centerX = posVector.x - label.width / 2;
               label.centerY = posVector.y - label.height / 2;
 
             }
@@ -185,7 +185,7 @@ define( function( require ) {
             if ( label.labelOnLeft ) {
               posVector = new Vector2( label.right, label.centerY + label.height / 2 );
               posVector.rotate( rotationIncrement );
-              label.centerX = posVector.x - label.width;
+              label.centerX = posVector.x - label.width / 2;
               label.centerY = posVector.y - label.height / 2;
 
             }
@@ -221,7 +221,7 @@ define( function( require ) {
         if ( centerEdgeOfPieSlice ) {
           var labelOnLeft = centerEdgeOfPieSlice.x <= pieChart.centerXCord;
           var numberOfDecimals = model.showingNaturesMix ? NUMBER_DECIMALS : 1;
-          var labelNode = new SliceLabelNode( isotope, proportion * 100, labelOnLeft, numberOfDecimals );
+          var labelNode = sliceLabelNode( isotope, proportion * 100, labelOnLeft, numberOfDecimals );
 
           // Determine the "unconstrained" target position
           // for the label, meaning a position that is
