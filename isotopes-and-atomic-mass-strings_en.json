@@ -29,11 +29,8 @@
   "thisIsotope": {
     "value": "This Isotope"
   },
-  "other": {
-    "value": "Other"
-  },
-  "isotopes": {
-    "value": "Isotopes"
+  "otherIsotopesPattern": {
+    "value": "Other\n{0}\nIsotopes"
   },
   "amu": {
     "value": "amu"

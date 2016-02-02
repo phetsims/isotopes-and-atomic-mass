@@ -21,6 +21,7 @@ define( function( require ) {
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var PieChartNode = require( 'ISOTOPES_AND_ATOMIC_MASS/common/view/PieChartNode' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
+  var StringUtils = require( 'PHETCOMMON/util/StringUtils' );
   var Text = require( 'SCENERY/nodes/Text' );
   var Util = require( 'DOT/Util' );
 
@@ -31,8 +32,7 @@ define( function( require ) {
 
   // strings
   var thisIsotopeString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/thisIsotope' );
-  var otherString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/other' );
-  var isotopesString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopes' );
+  var otherIsotopesPattern = require( 'string!ISOTOPES_AND_ATOMIC_MASS/otherIsotopesPattern' );
 
   /**
    * Constructor for an TwoItemPieChartNode.
@@ -134,7 +134,7 @@ define( function( require ) {
     function updateOtherIsotopeLabel(myIsotopeAbundance) {
       var name = AtomIdentifier.getName( makeIsotopesModel.particleAtom.protonCount );
       if ( makeIsotopesModel.particleAtom.protonCount > 0 && myIsotopeAbundance < 1 ){
-        otherIsotopeLabel.text = otherString + '\n' + name + '\n' + isotopesString;
+        otherIsotopeLabel.text = StringUtils.format( otherIsotopesPattern, name );
         otherIsotopeLabel.visible = true;
         rightConnectingLine.visible = true;
       }
