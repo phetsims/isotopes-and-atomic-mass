@@ -161,7 +161,10 @@ define( function( require ) {
 
     symbolRectangle.scale( 0.20 );
     var symbolBox = new AccordionBox(symbolRectangle, {
-        titleNode: new Text( symbolTitleString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
+        titleNode: new Text( symbolTitleString, {
+          font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
+          maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
+        } ),
         fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
         expandedProperty: new Property( false ),
         minWidth: periodicTableNode.visibleBounds.width,
@@ -177,7 +180,10 @@ define( function( require ) {
     this.addChild( symbolBox );
 
     var abundanceBox = new AccordionBox( new TwoItemPieChartNode( makeIsotopesModel ) , {
-        titleNode: new Text( abundanceTitleString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT } ),
+        titleNode: new Text( abundanceTitleString, {
+          font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
+          maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
+        } ),
         fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
         expandedProperty: new Property( false ),
         minWidth: periodicTableNode.visibleBounds.width,

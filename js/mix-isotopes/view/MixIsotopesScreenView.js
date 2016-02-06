@@ -239,7 +239,10 @@ define( function( require ) {
     isotopeProprotionsPieChart.scale( 0.6 );
     isotopeProprotionsPieChart.centerX = isotopeProprotionsPieChart.centerX + 150; // Emperically determined to make pie chart centered
     var compositionBox = new AccordionBox( isotopeProprotionsPieChart, {
-      titleNode: new Text( percentCompositionString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT, maxWidth: 200 } ),
+      titleNode: new Text( percentCompositionString, {
+        font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
+        maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
+      } ),
       fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
       expandedProperty: new Property( true ),
       minWidth: periodicTableNode.width,
@@ -255,7 +258,10 @@ define( function( require ) {
     this.addChild( compositionBox );
 
     var averageAtomicMassBox = new AccordionBox( new AverageAtomicMassIndicator( this.model ), {
-        titleNode: new Text( averageAtomicMassString, { font: SharedConstants.ACCORDION_BOX_TITLE_FONT, maxWidth: 200 } ),
+        titleNode: new Text( averageAtomicMassString, {
+          font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
+          maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
+        } ),
         fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
         expandedProperty: new Property( true ),
         minWidth: periodicTableNode.width,

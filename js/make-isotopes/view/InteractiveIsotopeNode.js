@@ -181,32 +181,16 @@ define( function( require ) {
         name = '';
       }
       elementName.text = name;
+      var isotopeAtomNodeRadius = isotopeAtomNode.centerY - isotopeAtomNode.top;
+      var elementNameMaxWidth = 2 * Math.sqrt(
+          ( isotopeAtomNodeRadius * isotopeAtomNodeRadius) - ( mapElementToPosition[ numProtons ] * mapElementToPosition[ numProtons ]  ) );
+      elementName.maxWidth = elementNameMaxWidth;
       elementName.center = new Vector2( isotopeAtomNode.centerX, isotopeAtomNode.centerY - mapElementToPosition[ numProtons ] );
     };
 
     // Create the textual readout for the stability indicator.
     var stabilityIndicator = new Text( '', { font: new PhetFont( { size: 12, weight: 'bold' } ) } );
     this.addChild( stabilityIndicator );
-
-    // TODO Remove once tested
-    /*function getNucleusLowerBound () {
-      var lowerBound = 0;
-      makeIsotopesModel.protons.forEach( function( proton ) {
-        var particlePosition = thisNode.modelViewTransform.modelToViewPosition( proton.position );
-        if ( particlePosition.y > lowerBound ){
-          lowerBound = particlePosition.y;
-        }
-      } );
-      makeIsotopesModel.neutrons.forEach( function( neutron ) {
-        if ( makeIsotopesModel.particleAtom.neutrons.contains( neutron ) ){
-          var particlePosition = thisNode.modelViewTransform.modelToViewPosition( neutron.position );
-          if ( particlePosition.y > lowerBound ){
-            lowerBound = particlePosition.y;
-          }
-        }
-      } );
-      return lowerBound;
-    }*/
 
     // Define the update function for the stability indicator.
     var updateStabilityIndicator = function( numProtons, numNeutrons ) {
@@ -225,6 +209,10 @@ define( function( require ) {
         10: 50
       };
       var stabilityIndicatorCenterPos = new Vector2( isotopeAtomNode.centerX,  isotopeAtomNode.centerY + mapStableUnstableToPosition[ numProtons ] );
+      var isotopeAtomNodeRadius = isotopeAtomNode.centerY - isotopeAtomNode.top;
+      var stabilityIndicatorMaxWidth = 2 * Math.sqrt(
+          ( isotopeAtomNodeRadius * isotopeAtomNodeRadius) -
+          ( mapStableUnstableToPosition[ numProtons ] * mapStableUnstableToPosition[ numProtons ]  ) );
       if ( numProtons > 0 ) {
         if ( AtomIdentifier.isStable( numProtons, numNeutrons ) ) {
           stabilityIndicator.text = stableString;
@@ -236,7 +224,9 @@ define( function( require ) {
       else {
         stabilityIndicator.text = '';
       }
-      //thisAtomView.stabilityIndicator.maxWidth = 2 * Math.sqrt( (isotopeElectronCloud.radius * isotopeElectronCloud.radius) - (isotopeElectronCloud.radius * 0.53 * isotopeElectronCloud.radius * 0.53 ) );
+      debugger;
+      stabilityIndicator.maxWidth = stabilityIndicatorMaxWidth;
+        //2 * Math.sqrt( ( isotopeAtomNode.radius * isotopeAtomNode.radius) - ( (isotopeAtomNode.centerY + mapStableUnstableToPosition[ numProtons ]) * (isotopeAtomNode.centerY + mapStableUnstableToPosition[ numProtons ]) ) );
       stabilityIndicator.center = stabilityIndicatorCenterPos;
     };
 
