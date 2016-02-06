@@ -224,7 +224,6 @@ define( function( require ) {
       else {
         stabilityIndicator.text = '';
       }
-      debugger;
       stabilityIndicator.maxWidth = stabilityIndicatorMaxWidth;
         //2 * Math.sqrt( ( isotopeAtomNode.radius * isotopeAtomNode.radius) - ( (isotopeAtomNode.centerY + mapStableUnstableToPosition[ numProtons ]) * (isotopeAtomNode.centerY + mapStableUnstableToPosition[ numProtons ]) ) );
       stabilityIndicator.center = stabilityIndicatorCenterPos;
