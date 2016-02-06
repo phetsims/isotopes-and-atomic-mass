@@ -32,7 +32,7 @@ define( function( require ) {
 
   // strings
   var thisIsotopeString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/thisIsotope' );
-  var otherIsotopesPattern = require( 'string!ISOTOPES_AND_ATOMIC_MASS/otherIsotopesPattern' );
+  var otherIsotopesPatternString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/otherIsotopesPattern' );
 
   /**
    * Constructor for an TwoItemPieChartNode.
@@ -134,7 +134,7 @@ define( function( require ) {
     function updateOtherIsotopeLabel(myIsotopeAbundance) {
       var name = AtomIdentifier.getName( makeIsotopesModel.particleAtom.protonCount );
       if ( makeIsotopesModel.particleAtom.protonCount > 0 && myIsotopeAbundance < 1 ){
-        otherIsotopeLabel.text = StringUtils.format( otherIsotopesPattern, name );
+        otherIsotopeLabel.text = StringUtils.format( otherIsotopesPatternString, name );
         otherIsotopeLabel.visible = true;
         rightConnectingLine.visible = true;
       }
