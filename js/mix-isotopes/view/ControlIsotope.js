@@ -37,6 +37,7 @@ define( function( require ) {
     var range = new Range( minRange, maxRange );
     var tickLabelOptions = { font: new PhetFont( 12 ) };
     var slider = new HSlider( controller.quantityProperty, range, {
+      trackSize: new Dimension2( 80, 5 ),
       thumbSize: new Dimension2( 15, 30 ),
       majorTickLength: 15
     } );
@@ -100,7 +101,7 @@ define( function( require ) {
     labelLayer.bottom = sliderLayer.top - 5;
     numericLayer.bottom = labelLayer.top - 10;
     labelLayer.centerX = numericLayer.centerX;
-    sliderLayer.centerX = numericLayer.centerX;
+    sliderLayer.centerX = numericLayer.centerX + 5;
   }
 
   isotopesAndAtomicMass.register( 'ControlIsotope', ControlIsotope );
