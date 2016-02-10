@@ -324,6 +324,10 @@ define( function( require ) {
         clearBoxButton.visible = true;
         self.isotopesLayer.visible = false;
       }
+      if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS ){
+        self.isotopesLayer.visible = true;
+        self.isotopesLayer.setIsotopes( self.model.isotopesList._array );
+      }
     } );
 
     mixIsotopesModel.interactivityModeProperty.link( function() {
@@ -332,6 +336,8 @@ define( function( require ) {
       }
       else{
         self.isotopesLayer.visible = true;
+        self.isotopesLayer.setIsotopes( self.model.isotopesList._array );
+
       }
     } );
 
