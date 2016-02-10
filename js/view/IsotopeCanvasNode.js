@@ -36,7 +36,7 @@ define( function( require ) {
       var isotope;
       var i;
       for ( i = 0; i < this.isotopes.length; i++ ) {
-        isotope = this.isotopes[ i ];
+        isotope = this.isotopes.get( i );
         context.fillStyle = isotope.color._css;
         context.beginPath();
         context.arc( this.modelViewTransform.modelToViewX( isotope.positionProperty.get().x ),
