@@ -121,7 +121,7 @@ define( function( require ) {
     // List of the isotope buckets.
     this.bucketList = new ObservableArray();
     this.isotopesList = new ObservableArray();
-    this.naturesIsotopesList = [];
+    this.naturesIsotopesList = new ObservableArray();
 
     // List of the numerical controls that, when present, can be used to add
     // or remove isotopes to/from the test chamber.
@@ -574,7 +574,7 @@ define( function( require ) {
       // Clear out anything that is in the test chamber.  If anything
       // needed to be stored, it should have been done by now.
       this.removeAllIsotopesFromTestChamberAndModel();
-      self.naturesIsotopesList = [ ];
+      self.naturesIsotopesList.clear();
 
       // Get the list of possible isotopes and then sort it by abundance
       // so that the least abundant are added last, thus assuring that

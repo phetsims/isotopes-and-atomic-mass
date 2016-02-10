@@ -193,10 +193,10 @@ define( function( require ) {
         addIsotopeView( addedIsotope );
       }
       else{
-        self.isotopesLayer.setIsotopes( self.model.isotopesList._array );
+        self.isotopesLayer.setIsotopes( self.model.isotopesList );
         mixIsotopesModel.isotopesList.addItemRemovedListener( function removalListener( removedIsotope ) {
           if ( removedIsotope === addedIsotope ) {
-            self.isotopesLayer.setIsotopes( self.model.isotopesList._array );
+            self.isotopesLayer.setIsotopes( self.model.isotopesList );
           }
         } );
       }
@@ -326,7 +326,7 @@ define( function( require ) {
       }
       if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS ){
         self.isotopesLayer.visible = true;
-        self.isotopesLayer.setIsotopes( self.model.isotopesList._array );
+        self.isotopesLayer.setIsotopes( self.model.isotopesList );
       }
     } );
 
@@ -336,7 +336,7 @@ define( function( require ) {
       }
       else{
         self.isotopesLayer.visible = true;
-        self.isotopesLayer.setIsotopes( self.model.isotopesList._array );
+        self.isotopesLayer.setIsotopes( self.model.isotopesList );
 
       }
     } );
