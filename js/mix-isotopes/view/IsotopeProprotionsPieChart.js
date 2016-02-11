@@ -118,24 +118,166 @@ define( function( require ) {
 
   function IsotopeProprotionsPieChart( model ) {
     Node.call( this );
-    var labelLayer = new Node();
-    this.addChild( labelLayer );
-    var pieChartBoundingRectangle = new Rectangle( -OVERALL_HEIGHT / 2, -OVERALL_HEIGHT / 2, OVERALL_HEIGHT, OVERALL_HEIGHT, 0, 0);
-    var emptyCircle = new Circle( PIE_CHART_RADIUS, { stroke: 'black', lineDash: [ 3, 1 ] } );
-    emptyCircle.centerX = 0;
-    emptyCircle.centerY = 0;
-    pieChartBoundingRectangle.addChild( emptyCircle );
+    this.model = model;
+    this.labelLayer = new Node();
+    this.addChild( this.labelLayer );
+    this.pieChartBoundingRectangle = new Rectangle( -OVERALL_HEIGHT / 2, -OVERALL_HEIGHT / 2, OVERALL_HEIGHT, OVERALL_HEIGHT, 0, 0);
+    this.emptyCircle = new Circle( PIE_CHART_RADIUS, { stroke: 'black', lineDash: [ 3, 1 ] } );
+    this.emptyCircle.centerX = 0;
+    this.emptyCircle.centerY = 0;
+    this.pieChartBoundingRectangle.addChild( this.emptyCircle );
 
 
     // default slices this will be updated based on possible isotopes
-    var slices = [ ];
-    var sliceLabels = [ ];
-    var pieChart = new PieChartNode( slices, PIE_CHART_RADIUS );
-    pieChartBoundingRectangle.addChild( pieChart );
+    this.slices = [ ];
+    this.sliceLabels = [ ];
+    this.pieChart = new PieChartNode( this.slices, PIE_CHART_RADIUS );
+    this.pieChartBoundingRectangle.addChild( this.pieChart );
 
-    this.addChild( pieChartBoundingRectangle );
+    this.addChild( this.pieChartBoundingRectangle );
+  }
 
-    function adjustLabelPositionsForOverlap( sliceLabels, minY, maxY ) {
+  return inherit( Node, IsotopeProprotionsPieChart, {
+
+    update: function(){
+      if ( this.model.testChamber.isotopeCountProperty.get() > 0 ) {
+        this.emptyCircle.setVisible( false );
+        this.updatePieChart();
+        this.pieChart.setVisible( true );
+        this.labelLayer.setVisible( true );
+      }
+      else {
+        this.emptyCircle.setVisible( true );
+        this.pieChart.setVisible( false );
+        this.labelLayer.setVisible( false );
+      }
+    },
+
+    updatePieChart: function(){
+      var self = this;
+      this.slices = [ ];
+      var i = 0;
+      this.model.possibleIsotopes.forEach( function( isotope ) {
+        var value = self.model.testChamber.getIsotopeCount( isotope );
+        var color = self.model.getColorForIsotope( isotope );
+        self.slices[ i ] = { value:value, color:color, stroke:'black', lineWidth: 0.5 };
+        i += 1;
+      } );
+      var lightestIsotopeProportion = this.slices[ 0 ].value / this.model.testChamber.isotopeCount;
+      this.pieChart.setAngleAndValues( Math.PI - ( lightestIsotopeProportion * Math.PI ), this.slices );
+      this.updateLabels( this.model.possibleIsotopes );
+    },
+
+    updateLabels: function( possibleIsotopes ) {
+      var self = this;
+      this.labelLayer.removeAllChildren();
+      this.sliceLabels = [];
+      var i = 0;
+      possibleIsotopes.forEach( function( isotope ) {
+        var proportion;
+        if ( self.model.showingNaturesMix ) {
+          proportion = AtomIdentifier.getNaturalAbundancePreciseDecimal( isotope );
+        }
+        else {
+          proportion = self.model.testChamber.getIsotopeProportion( isotope );
+        }
+
+        var centerEdgeOfPieSlice = self.pieChart.getCenterEdgePtForSlice( i );
+        if ( centerEdgeOfPieSlice ) {
+          var labelOnLeft = centerEdgeOfPieSlice.x <= self.pieChart.centerXCord;
+          var numberOfDecimals = self.model.showingNaturesMix ? NUMBER_DECIMALS : 1;
+          var labelNode = sliceLabelNode( isotope, proportion * 100, labelOnLeft, numberOfDecimals );
+
+          // Determine the "unconstrained" target position
+          // for the label, meaning a position that is
+          // directly out from the edge of the slice, but
+          // may be above or below the edges of the pie
+          // chart.
+          var posVector = centerEdgeOfPieSlice;
+          var positionVector = posVector.times( 1.4 );
+          labelNode.unconstrainedPos = positionVector;
+          //labelNode.setUnconstrainedPos( positionVector.getX(), positionVector.getY() );
+
+          // Constrain the position so that no part of the
+          // label goes above or below the upper and lower
+          // edges of the pie chart.
+          var minY = -OVERALL_HEIGHT / 2 + labelNode.height / 2;
+          var maxY = OVERALL_HEIGHT / 2 - labelNode.height / 2;
+          var xSign = labelOnLeft ? -1 : 1;
+          if ( positionVector.y < minY ) {
+            positionVector.x = xSign * Math.sqrt( positionVector.magnitudeSquared() - minY * minY );
+            positionVector.y = minY;
+          }
+          else if ( positionVector.y > maxY ) {
+            positionVector.x = xSign * Math.sqrt( positionVector.magnitudeSquared() - maxY * maxY );
+            positionVector.y = maxY;
+          }
+
+          // Position the label.
+          if ( labelOnLeft ) {
+            labelNode.centerX = positionVector.x - labelNode.width / 2;
+            labelNode.centerY = positionVector.y;
+          }
+          else {
+            // Label on right.
+            labelNode.centerX = positionVector.x + labelNode.width / 2;
+            labelNode.centerY = positionVector.y;
+          }
+          self.labelLayer.addChild( labelNode );
+          self.sliceLabels.push( labelNode );
+        }
+        i = i + 1;
+      } );
+      this.adjustLabelPositionsForOverlap( this.sliceLabels, -OVERALL_HEIGHT / 2, OVERALL_HEIGHT / 2 );
+
+      // The labels should now be all in reasonable positions,
+      // so draw a line from the edge of the label to the pie
+      // slice to which it corresponds.
+      var j = 0;
+      var k = 0;
+      possibleIsotopes.forEach( function( isotope ) {
+        var sliceConnectPt = self.pieChart.getCenterEdgePtForSlice( j );
+        if ( sliceConnectPt ) {
+          var label = self.sliceLabels[ k ];
+          var labelConnectPt = new Vector2( 0, 0 );
+          if ( label.centerX > self.pieChart.centerX ) {
+            // Label is on right, so connect point should be on left.
+            labelConnectPt.x = label.left;
+            labelConnectPt.y = label.centerY;
+          }
+          else {
+            // Label is on left, so connect point should be on right.
+            labelConnectPt.x = label.right;
+            labelConnectPt.y = label.centerY;
+          }
+          //assert sliceConnectPt != null; // Should be a valid slice edge point for each label.
+          // Find a point that is straight out from the center
+          // of the pie chart above the point that connects to
+          // the slice.  Note that these calculations assume
+          // that the center of the pie chart is at (0,0).
+          var connectingLineShape = new Shape().moveTo( sliceConnectPt.x, sliceConnectPt.y );
+          if ( sliceConnectPt.y > OVERALL_HEIGHT * 0.25 || sliceConnectPt.y < -OVERALL_HEIGHT * 0.25 ) {
+            // Add a "bend point" so that the line doesn't go
+            // under the pie chart.
+            var additionalLength = OVERALL_HEIGHT / ( PIE_CHART_RADIUS * 2 ) - 1;
+            var scaleFactor = 1 - Math.min( Math.abs( sliceConnectPt.x ) / ( PIE_CHART_RADIUS / 2.0 ), 1 );
+            //var scaleFactor = 1;
+            connectingLineShape.lineTo( sliceConnectPt.x * ( 1 + additionalLength * scaleFactor ),
+              sliceConnectPt.y * ( 1 + additionalLength * scaleFactor ) );
+          }
+          connectingLineShape.lineTo( labelConnectPt.x, labelConnectPt.y );
+          self.labelLayer.addChild( new Path( connectingLineShape, {
+            stroke: 'black',
+            lineWidth: 1
+          } ) );
+          k = k + 1;
+        }
+        j = j + 1;
+      } );
+    },
+
+    adjustLabelPositionsForOverlap: function( sliceLabels, minY, maxY ) {
+      var self = this;
       var rotationIncrement = Math.PI / 200; // Empirically chosen.
       for ( var i = 1; i < 50; i++ ) { // Number of iterations empirically chosen.
         var overlapDetected = false;
@@ -196,151 +338,12 @@ define( function( require ) {
               label.centerY = posVector.y - label.height / 2;
             }
           }
-        });
+        } );
         if ( !overlapDetected ) {
           // No overlap for any of the labels, so we are done.
           break;
         }
       }
     }
-
-    function updateLabels( possibleIsotopes ) {
-      labelLayer.removeAllChildren();
-      sliceLabels = [ ];
-      var i = 0;
-      possibleIsotopes.forEach( function( isotope ) {
-        var proportion;
-        if ( model.showingNaturesMix ) {
-          proportion = AtomIdentifier.getNaturalAbundancePreciseDecimal( isotope );
-        }
-        else {
-          proportion = model.testChamber.getIsotopeProportion( isotope );
-        }
-
-        var centerEdgeOfPieSlice = pieChart.getCenterEdgePtForSlice( i );
-        if ( centerEdgeOfPieSlice ) {
-          var labelOnLeft = centerEdgeOfPieSlice.x <= pieChart.centerXCord;
-          var numberOfDecimals = model.showingNaturesMix ? NUMBER_DECIMALS : 1;
-          var labelNode = sliceLabelNode( isotope, proportion * 100, labelOnLeft, numberOfDecimals );
-
-          // Determine the "unconstrained" target position
-          // for the label, meaning a position that is
-          // directly out from the edge of the slice, but
-          // may be above or below the edges of the pie
-          // chart.
-          var posVector = centerEdgeOfPieSlice;
-          var positionVector = posVector.times( 1.4 );
-          labelNode.unconstrainedPos = positionVector;
-          //labelNode.setUnconstrainedPos( positionVector.getX(), positionVector.getY() );
-
-          // Constrain the position so that no part of the
-          // label goes above or below the upper and lower
-          // edges of the pie chart.
-          var minY = -OVERALL_HEIGHT / 2 + labelNode.height / 2;
-          var maxY = OVERALL_HEIGHT / 2 - labelNode.height / 2;
-          var xSign = labelOnLeft ? -1 : 1;
-          if ( positionVector.y < minY ) {
-            positionVector.x = xSign * Math.sqrt( positionVector.magnitudeSquared() - minY * minY );
-            positionVector.y = minY;
-          }
-          else if ( positionVector.y > maxY ) {
-            positionVector.x = xSign * Math.sqrt( positionVector.magnitudeSquared() - maxY * maxY );
-            positionVector.y = maxY;
-          }
-
-          // Position the label.
-          if ( labelOnLeft ) {
-            labelNode.centerX = positionVector.x - labelNode.width / 2;
-            labelNode.centerY = positionVector.y;
-          }
-          else {
-            // Label on right.
-            labelNode.centerX = positionVector.x + labelNode.width / 2;
-            labelNode.centerY = positionVector.y;
-          }
-          labelLayer.addChild( labelNode );
-          sliceLabels.push( labelNode );
-        }
-        i = i + 1;
-      } );
-      adjustLabelPositionsForOverlap( sliceLabels, -OVERALL_HEIGHT / 2, OVERALL_HEIGHT / 2 );
-
-      // The labels should now be all in reasonable positions,
-      // so draw a line from the edge of the label to the pie
-      // slice to which it corresponds.
-      var j = 0;
-      var k = 0;
-      possibleIsotopes.forEach( function( isotope ) {
-        var sliceConnectPt = pieChart.getCenterEdgePtForSlice( j );
-        if ( sliceConnectPt ) {
-          var label = sliceLabels[ k ];
-          var labelConnectPt = new Vector2( 0, 0 );
-          if ( label.centerX > pieChart.centerX ) {
-            // Label is on right, so connect point should be on left.
-            labelConnectPt.x = label.left;
-            labelConnectPt.y = label.centerY;
-          }
-          else {
-            // Label is on left, so connect point should be on right.
-            labelConnectPt.x = label.right;
-            labelConnectPt.y = label.centerY;
-          }
-          //assert sliceConnectPt != null; // Should be a valid slice edge point for each label.
-          // Find a point that is straight out from the center
-          // of the pie chart above the point that connects to
-          // the slice.  Note that these calculations assume
-          // that the center of the pie chart is at (0,0).
-          var connectingLineShape = new Shape().moveTo( sliceConnectPt.x, sliceConnectPt.y );
-          if ( sliceConnectPt.y > OVERALL_HEIGHT * 0.25 || sliceConnectPt.y < -OVERALL_HEIGHT * 0.25 ) {
-            // Add a "bend point" so that the line doesn't go
-            // under the pie chart.
-            var additionalLength = OVERALL_HEIGHT / ( PIE_CHART_RADIUS * 2 ) - 1;
-            var scaleFactor = 1 - Math.min( Math.abs( sliceConnectPt.x ) /  ( PIE_CHART_RADIUS / 2.0 ), 1 );
-            //var scaleFactor = 1;
-            connectingLineShape.lineTo( sliceConnectPt.x * ( 1 + additionalLength * scaleFactor ),
-              sliceConnectPt.y * ( 1 + additionalLength * scaleFactor ) );
-          }
-          connectingLineShape.lineTo( labelConnectPt.x, labelConnectPt.y );
-          labelLayer.addChild( new Path( connectingLineShape, {
-            stroke: 'black',
-            lineWidth: 1
-          } ) );
-          k = k + 1;
-        }
-        j = j + 1;
-        });
-    }
-
-    function updatePieChart(){
-      slices = [ ];
-      var i = 0;
-      model.possibleIsotopes.forEach( function( isotope ) {
-        var value = model.testChamber.getIsotopeCount( isotope );
-        var color = model.getColorForIsotope( isotope );
-        slices[ i ] = { value:value, color:color, stroke:'black', lineWidth: 0.5 };
-        i += 1;
-      } );
-      var lightestIsotopeProportion = slices[ 0 ].value / model.testChamber.isotopeCount;
-      pieChart.setAngleAndValues( Math.PI - ( lightestIsotopeProportion * Math.PI ), slices );
-      updateLabels( model.possibleIsotopes );
-    }
-
-    model.testChamber.isotopeCountProperty.link( function( isotopeCount ) {
-      if ( isotopeCount > 0 ) {
-        emptyCircle.setVisible( false );
-        updatePieChart();
-        pieChart.setVisible( true );
-        labelLayer.setVisible( true );
-      }
-      else {
-        emptyCircle.setVisible( true );
-        pieChart.setVisible( false );
-        labelLayer.setVisible( false );
-      }
-    } );
-  }
-
-  return inherit( Node, IsotopeProprotionsPieChart, {
-    //TODO prototypes
   } );
 } );

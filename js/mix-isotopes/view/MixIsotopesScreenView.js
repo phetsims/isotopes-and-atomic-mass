@@ -120,6 +120,7 @@ define( function( require ) {
 
     this.model = mixIsotopesModel;
     var self = this;
+    this.updatePieChart = true; // track when to update pie chart in the animation frame
 
 
     // Set up the model view transform.  The test chamber is centered
@@ -187,7 +188,19 @@ define( function( require ) {
     }
 
     mixIsotopesModel.isotopesList.forEach ( function( addedIsotope ) { addIsotopeView( addedIsotope ); });
-    mixIsotopesModel.isotopesList.addItemAddedListener ( function( addedIsotope ) { addIsotopeView( addedIsotope ); });
+    mixIsotopesModel.isotopesList.addItemAddedListener ( function( addedIsotope ) {
+      if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
+        addIsotopeView( addedIsotope );
+      }
+      else{
+        self.isotopesLayer.setIsotopes( self.model.isotopesList );
+        mixIsotopesModel.isotopesList.addItemRemovedListener( function removalListener( removedIsotope ) {
+          if ( removedIsotope === addedIsotope ) {
+            self.isotopesLayer.setIsotopes( self.model.isotopesList );
+          }
+        } );
+      }
+    });
 
     // Adding Numeric Controllers
     mixIsotopesModel.numericalControllerList.addItemAddedListener ( function( addedController ) {
@@ -235,10 +248,10 @@ define( function( require ) {
     periodicTableNode.right = this.layoutBounds.width - 10;
     this.addChild( periodicTableNode );
 
-    var isotopeProprotionsPieChart = new IsotopeProprotionsPieChart( this.model );
-    isotopeProprotionsPieChart.scale( 0.6 );
-    isotopeProprotionsPieChart.centerX = isotopeProprotionsPieChart.centerX + 150; // Emperically determined to make pie chart centered
-    var compositionBox = new AccordionBox( isotopeProprotionsPieChart, {
+    this.isotopeProprotionsPieChart = new IsotopeProprotionsPieChart( this.model );
+    this.isotopeProprotionsPieChart.scale( 0.6 );
+    this.isotopeProprotionsPieChart.centerX = this.isotopeProprotionsPieChart.centerX + 150; // Emperically determined to make pie chart centered
+    var compositionBox = new AccordionBox( this.isotopeProprotionsPieChart, {
       titleNode: new Text( percentCompositionString, {
         font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
         maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
@@ -311,9 +324,38 @@ define( function( require ) {
         clearBoxButton.visible = true;
         self.isotopesLayer.visible = false;
       }
+      if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS ){
+        self.isotopesLayer.visible = true;
+        self.isotopesLayer.setIsotopes( self.model.isotopesList );
+      }
+    } );
+
+    mixIsotopesModel.interactivityModeProperty.link( function() {
+      if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS ){
+        self.isotopesLayer.visible = false;
+      }
+      else{
+        self.isotopesLayer.visible = true;
+        self.isotopesLayer.setIsotopes( self.model.isotopesList );
+
+      }
+    } );
+
+    mixIsotopesModel.testChamber.isotopeCountProperty.link( function( isotopeCount ) {
+      self.updatePieChart = true;
     } );
   }
 
   isotopesAndAtomicMass.register( 'MixIsotopesScreenView', MixIsotopesScreenView);
-  return inherit( ScreenView, MixIsotopesScreenView );
+  return inherit( ScreenView, MixIsotopesScreenView, {
+    step: function(){
+      // as an optimization we would updating pie chart once every animation frame in place of updating it every time
+      // isotope is added in the test chamber in single animation frame
+      if ( this.updatePieChart ){
+        this.isotopeProprotionsPieChart.update();
+        this.updatePieChart = false;
+      }
+    }
+
+  });
 } );
