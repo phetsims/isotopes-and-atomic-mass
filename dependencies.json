@@ -1,11 +1,11 @@
 {
-  "comment": "# isotopes-and-atomic-mass 1.0.0-dev.5 Tue Jan 26 2016 16:08:51 GMT-0700 (Mountain Standard Time)",
+  "comment": "# isotopes-and-atomic-mass 1.0.0-dev.6 Fri Feb 12 2016 12:47:58 GMT-0700 (Mountain Standard Time)",
   "assert": {
     "sha": "d4909677d27ed571d5d859d709a0612bf7811db8",
     "branch": "master"
   },
   "axon": {
-    "sha": "5a39ec570a6b10c5e632599c903bacd0d8d2d075",
+    "sha": "a50d8c6067729c3985c5b95c960a84cd1fca634d",
     "branch": "master"
   },
   "brand": {
@@ -13,19 +13,19 @@
     "branch": "master"
   },
   "chipper": {
-    "sha": "57c99807c0b8747ad05cf1f5faa87459ade78c1d",
+    "sha": "6018126d0432b3cf2c161daeb6b0a39e7aa01744",
     "branch": "master"
   },
   "dot": {
-    "sha": "ddf82014392e9956043fab8608d5b8222e6134dc",
+    "sha": "0cb241dadd06554555000adb7414edf3c4dba23a",
     "branch": "master"
   },
   "isotopes-and-atomic-mass": {
-    "sha": "3d0c3bb9c149460091878cc95af4f420bfc6b054",
+    "sha": "2499fd5d77964ac73bf0fec002c99ba470d06d23",
     "branch": "master"
   },
   "joist": {
-    "sha": "4c228a327558f18681a136f64c23a28006f16b9f",
+    "sha": "2741718e853d216299d317f28fd7252c4baf8720",
     "branch": "master"
   },
   "kite": {
@@ -41,27 +41,27 @@
     "branch": "master"
   },
   "scenery": {
-    "sha": "953fe860fe8b51c8d853dba824550eb40d4720f9",
+    "sha": "8a58e6f400dfb5e8768100bd24bcf35b347a339d",
     "branch": "master"
   },
   "scenery-phet": {
-    "sha": "e903fad21de1daea73dc854965e6f8c50d72ac6f",
+    "sha": "d54979734d4192bae17d97c8373fba40e764f2e7",
     "branch": "master"
   },
   "sherpa": {
-    "sha": "bf82eb95d808250f7191328b3b30179ec1f44090",
+    "sha": "e75c37565d50ae862c2141cb6ff665b85b45c1b1",
     "branch": "master"
   },
   "shred": {
-    "sha": "c1d4863f5ae0dbb9f1766daca67c3a1dcc179975",
+    "sha": "d75834b8b9ef775d8bb347adff7badf145c982d9",
     "branch": "master"
   },
   "sun": {
-    "sha": "45c7d334c5417ec96dcf6e43b9735c4064a44a8c",
+    "sha": "c23d1bd7784353673279f401c2948d9630e68ff9",
     "branch": "master"
   },
   "tandem": {
-    "sha": "5388a9e411c9b75bcfde1c4ca504c2774e630f11",
+    "sha": "38dc5e4ca92af142d724d273d00d9f5ac50a000e",
     "branch": "master"
   }
 }
