@@ -33,6 +33,7 @@ define( function( require ) {
   // set up so that the center of the test chamber is at (0, 0) in model
   // space.
   var TEST_CHAMBER_RECT = new Rectangle( -SIZE.width / 2, -SIZE.height / 2, SIZE.width, SIZE.height );
+  var BUFFER = 1; // isotopes stroke doesn't cross the wall, empirically determined
 
 
   /**
@@ -152,22 +153,22 @@ define( function( require ) {
 
         // If the edges of the isotope are outside of the container,
         // move it to be fully inside.
-        var protrusion = isotope.position.x + isotope.radius - TEST_CHAMBER_RECT.maxX;
+        var protrusion = isotope.position.x + isotope.radius - TEST_CHAMBER_RECT.maxX + BUFFER;
         if ( protrusion >= 0 ) {
           isotope.setPositionAndDestination( new Vector2( isotope.position.x - protrusion, isotope.position.y ) );
         }
         else {
-          protrusion = TEST_CHAMBER_RECT.minX - ( isotope.position.x - isotope.radius );
+          protrusion = TEST_CHAMBER_RECT.minX + BUFFER - ( isotope.position.x - isotope.radius );
           if ( protrusion >= 0 ) {
             isotope.setPositionAndDestination( new Vector2( isotope.position.x + protrusion, isotope.position.y ) );
           }
         }
-        protrusion = isotope.position.y + isotope.radius - TEST_CHAMBER_RECT.maxY;
+        protrusion = isotope.position.y + isotope.radius - TEST_CHAMBER_RECT.maxY + BUFFER;
         if ( protrusion >= 0 ) {
           isotope.setPositionAndDestination( new Vector2( isotope.position.x, isotope.position.y - protrusion ) );
         }
         else {
-          protrusion = TEST_CHAMBER_RECT.minY - ( isotope.position.y - isotope.radius );
+          protrusion = TEST_CHAMBER_RECT.minY + BUFFER - ( isotope.position.y - isotope.radius );
           if ( protrusion >= 0 ) {
             isotope.setPositionAndDestination( new Vector2( isotope.position.x, isotope.position.y + protrusion ) );
           }

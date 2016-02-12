@@ -396,7 +396,9 @@ define( function( require ) {
 
       if ( this.showingNaturesMix ) {
         this.removeAllIsotopesFromTestChamberAndModel();
-        this.prototypeIsotope = atom;
+        this.prototypeIsotope.protonCount = atom.protonCount;
+        this.prototypeIsotope.neutronCount = atom.neutronCount;
+        this.prototypeIsotope.electronCount = atom.electronCount;
         this.updatePossibleIsotopesList();
         this.showNaturesMix();
       }
