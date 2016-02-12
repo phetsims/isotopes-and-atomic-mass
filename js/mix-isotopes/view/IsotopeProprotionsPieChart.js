@@ -277,7 +277,6 @@ define( function( require ) {
     },
 
     adjustLabelPositionsForOverlap: function( sliceLabels, minY, maxY ) {
-      var self = this;
       var rotationIncrement = Math.PI / 200; // Empirically chosen.
       for ( var i = 1; i < 50; i++ ) { // Number of iterations empirically chosen.
         var overlapDetected = false;
