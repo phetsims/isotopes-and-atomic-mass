@@ -37,12 +37,15 @@ define( function( require ) {
       var i;
       for ( i = 0; i < this.isotopes.length; i++ ) {
         isotope = this.isotopes.get( i );
+        var radius = this.modelViewTransform.modelToViewDeltaX( isotope.radius );
+        var x = this.modelViewTransform.modelToViewX( isotope.positionProperty.get().x );
+        var y = this.modelViewTransform.modelToViewY( isotope.positionProperty.get().y );
         context.fillStyle = isotope.color._css;
+        context.strokeStyle = 'black';
         context.beginPath();
-        context.arc( this.modelViewTransform.modelToViewX( isotope.positionProperty.get().x ),
-          this.modelViewTransform.modelToViewY( isotope.positionProperty.get().y ),
-          this.modelViewTransform.modelToViewDeltaX( isotope.radius ), 0, 2 * Math.PI, true );
+        context.arc( x , y, radius, 0, 2 * Math.PI, true );
         context.fill();
+        context.stroke();
       }
     },
 
