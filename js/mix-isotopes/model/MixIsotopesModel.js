@@ -654,7 +654,7 @@ define( function( require ) {
       // Remove all stored user's mix states.  This must be done after
       // setting the default isotope because state could have been saved
       // when the default was set.
-      //this.mapIsotopeConfigToUserMixState = {};
+      this.mapIsotopeConfigToUserMixState = {};
     },
 
     /**
