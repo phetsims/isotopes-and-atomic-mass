@@ -194,8 +194,9 @@ define( function( require ) {
           // may be above or below the edges of the pie
           // chart.
           var posVector = centerEdgeOfPieSlice;
-          var positionVector = posVector.times( 1.4 );
-          labelNode.unconstrainedPos = positionVector;
+          var positionVector = posVector.times( 1.6 );
+          labelNode.unconstrainedPos.x = positionVector.x;
+          labelNode.unconstrainedPos.y = positionVector.y;
           //labelNode.setUnconstrainedPos( positionVector.getX(), positionVector.getY() );
 
           // Constrain the position so that no part of the
@@ -212,6 +213,7 @@ define( function( require ) {
             positionVector.x = xSign * Math.sqrt( positionVector.magnitudeSquared() - maxY * maxY );
             positionVector.y = maxY;
           }
+          labelNode.unconstrainedPos.x = positionVector.x;
 
           // Position the label.
           if ( labelOnLeft ) {
