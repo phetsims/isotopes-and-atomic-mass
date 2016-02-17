@@ -488,7 +488,7 @@ define( function( require ) {
 
       var buckets = this.interactivityMode === InteractivityMode.BUCKETS_AND_LARGE_ATOMS || this.showingNaturesMix;
       // Set up layout variables.
-      var controllerYOffset = -240 ;
+      var controllerYOffset = -245 ;
       var interControllerDistanceX;
       var controllerXOffset;
       if ( this.possibleIsotopes.length < 4 ) {

@@ -55,8 +55,18 @@ define( function( require ) {
     var radioButtonRadius = 6;
     var LABEL_FONT = new PhetFont( 14 );
     var MAX_WIDTH = 80;
-    var myMixButton = new AquaRadioButton( isotopeMixtureProperty, false, new Text( myMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ), { radius: radioButtonRadius } );
-    var naturesMixButton = new AquaRadioButton( isotopeMixtureProperty, true, new Text( natureMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ), { radius: radioButtonRadius } );
+    var myMixButton = new AquaRadioButton(
+      isotopeMixtureProperty,
+      false,
+      new Text( myMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ),
+      { radius: radioButtonRadius }
+    );
+    var naturesMixButton = new AquaRadioButton(
+      isotopeMixtureProperty,
+      true,
+      new Text( natureMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ),
+      { radius: radioButtonRadius }
+    );
     var label = new Text( isotopeMixtureString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } );
     var displayButtonGroup = new Node();
     displayButtonGroup.addChild( label );
@@ -93,16 +103,14 @@ define( function( require ) {
       { value: MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS, node: bucketNode },
       { value: MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS, node: slider }
     ];
-    var radioButtonGroup = new RadioButtonGroup( model.interactivityModeProperty, radioButtonContent, {
-      orientation: 'vertical',
-      selectedLineWidth: 1,
+    return new RadioButtonGroup( model.interactivityModeProperty, radioButtonContent, {
+      orientation: 'horizontal',
       baseColor: Color.white,
-      cornerRadius: 1,
-      spacing: 5
+      spacing: 5,
+      selectedStroke: '#3291b8',
+      selectedLineWidth: 2
     } );
-    return radioButtonGroup;
   }
-
 
   /**
    * @param {MixIsotopesModel} mixIsotopesModel
@@ -238,7 +246,7 @@ define( function( require ) {
     } );
     this.addChild( clearBoxButton );
     clearBoxButton.top = chamberLayer.bottom + 5;
-    clearBoxButton.right = chamberLayer.right;
+    clearBoxButton.left = chamberLayer.left;
 
     // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
     // element is Neon for this sim.
@@ -290,14 +298,14 @@ define( function( require ) {
     averageAtomicMassBox.top = compositionBox.bottom + 10;
     this.addChild( averageAtomicMassBox );
 
-    var interactivityModeSelectionNode = new InteractivityModeSelectionNode( mixIsotopesModel , this.mvt);
-    interactivityModeSelectionNode.left = averageAtomicMassBox.left;
-    interactivityModeSelectionNode.top = averageAtomicMassBox.bottom + 10;
+    var interactivityModeSelectionNode = new InteractivityModeSelectionNode( mixIsotopesModel , this.mvt );
+    interactivityModeSelectionNode.right = testChamberNode.right;
+    interactivityModeSelectionNode.top = testChamberNode.bottom + 5;
     this.addChild( interactivityModeSelectionNode );
 
     var isotopeMixtureSelectionNode = new IsotopeMixtureSelectionNode( mixIsotopesModel.showingNaturesMixProperty );
     isotopeMixtureSelectionNode.top = averageAtomicMassBox.bottom + 10;
-    isotopeMixtureSelectionNode.left = interactivityModeSelectionNode.right + 10;
+    isotopeMixtureSelectionNode.left = averageAtomicMassBox.left;
     this.addChild( isotopeMixtureSelectionNode );
 
     // Create and add the Reset All Button in the bottom right, which resets the model
