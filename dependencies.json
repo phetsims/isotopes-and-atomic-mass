@@ -1,5 +1,5 @@
 {
-  "comment": "# isotopes-and-atomic-mass 1.0.0-dev.7 Tue Feb 16 2016 15:38:28 GMT-0700 (Mountain Standard Time)",
+  "comment": "# isotopes-and-atomic-mass 1.0.0-dev.8 Thu Feb 18 2016 09:44:21 GMT-0700 (Mountain Standard Time)",
   "assert": {
     "sha": "7d27130a4d27da15aa7f8a21bbfb9245288c1b44",
     "branch": "master"
@@ -13,7 +13,7 @@
     "branch": "master"
   },
   "chipper": {
-    "sha": "a0be095e20c438757fe5ad1ea3043d978bb4065c",
+    "sha": "9375d494bcf754953f9db9e6e0ea71f44f8c44b3",
     "branch": "master"
   },
   "dot": {
@@ -21,11 +21,11 @@
     "branch": "master"
   },
   "isotopes-and-atomic-mass": {
-    "sha": "9a9a79675fc5f88f904349604c4937bebeced9c0",
+    "sha": "3d1bc206767c34efeed06a6a3d9bf9e67cdf225c",
     "branch": "master"
   },
   "joist": {
-    "sha": "03e28c2c65da16bce8b93bfa795cc426807958d3",
+    "sha": "10671cfcff4e505e91627794cc4fbb35089c6644",
     "branch": "master"
   },
   "kite": {
@@ -37,11 +37,11 @@
     "branch": "master"
   },
   "phetcommon": {
-    "sha": "35c2abc1378ec6a00435124922a360b721576a72",
+    "sha": "140ddaeb05c322c932364c96036bb1f1f08fb78c",
     "branch": "master"
   },
   "scenery": {
-    "sha": "f2a142e56d16506853e7e3f57365ed344674689a",
+    "sha": "a0593aab0515f069ba40b7aa724017437afd44df",
     "branch": "master"
   },
   "scenery-phet": {
@@ -53,15 +53,15 @@
     "branch": "master"
   },
   "shred": {
-    "sha": "d75834b8b9ef775d8bb347adff7badf145c982d9",
+    "sha": "8240f56d0be6a1f23418b3d87e96395175cf999f",
     "branch": "master"
   },
   "sun": {
-    "sha": "e2b9bd9b539b5602fc7e01b0a31a4c914b2d372e",
+    "sha": "60350ec5c9650bcc14a741f12e2a2d0ea6e6cab2",
     "branch": "master"
   },
   "tandem": {
-    "sha": "d0be78ddaf3bbbba746ecd7a4bf891fef99fc7ee",
+    "sha": "2441eec6b422cb20e08682da02ab2bf7bf73250c",
     "branch": "master"
   }
 }
