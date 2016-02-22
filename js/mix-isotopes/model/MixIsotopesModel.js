@@ -488,7 +488,8 @@ define( function( require ) {
 
       var buckets = this.interactivityMode === InteractivityMode.BUCKETS_AND_LARGE_ATOMS || this.showingNaturesMix;
       // Set up layout variables.
-      var controllerYOffset = -245 ;
+      var controllerYOffsetBucket = -250 ;
+      var controllerYOffsetSlider = -245 ;
       var interControllerDistanceX;
       var controllerXOffset;
       if ( this.possibleIsotopes.length < 4 ) {
@@ -508,7 +509,7 @@ define( function( require ) {
         var isotopeConfig = this.possibleIsotopes[ i ];
         var isotopeCaption = AtomIdentifier.getName( isotopeConfig.protonCount ) + '-' + isotopeConfig.massNumber;
         if ( buckets ) {
-          var newBucket = new MonoIsotopeBucket( new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffset ),
+          var newBucket = new MonoIsotopeBucket( new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetBucket ),
             BUCKET_SIZE, this.getColorForIsotope( isotopeConfig ), isotopeCaption, LARGE_ISOTOPE_RADIUS,
             isotopeConfig.protonCount, isotopeConfig.neutronCount );
           this.addBucket( newBucket );
@@ -522,7 +523,7 @@ define( function( require ) {
         else {
           // Assume a numerical controller.
           var newController = new NumericalIsotopeQuantityControl( this, isotopeConfig,
-            new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffset ),
+            new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetSlider ),
             isotopeCaption );
           var controllerIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount, new Vector2( 0, 0 ) );
           controllerIsotope.color = self.getColorForIsotope( isotopeConfig );

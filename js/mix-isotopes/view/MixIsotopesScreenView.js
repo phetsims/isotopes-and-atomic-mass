@@ -141,7 +141,7 @@ define( function( require ) {
     // can be adjusted to zoom in or out (smaller numbers zoom out, larger
     // ones zoom in).
     this.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping( Vector2.ZERO,
-      new Vector2( Math.round( this.layoutBounds.width * 0.32 ), Math.round( this.layoutBounds.height * 0.35 ) ),
+      new Vector2( Math.round( this.layoutBounds.width * 0.32 ), Math.round( this.layoutBounds.height * 0.33 ) ),
       1.0 // "Zoom factor" - smaller zooms out, larger zooms in.
     );
 
