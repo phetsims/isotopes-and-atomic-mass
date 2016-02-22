@@ -75,9 +75,8 @@ define( function( require ) {
       right: this.layoutBounds.maxX - 10,
       bottom: this.layoutBounds.maxY - 10
     } );
-    resetAllButton.scale(0.85);
+    resetAllButton.scale( 0.85 );
     this.addChild( resetAllButton );
-
 
 
     // Create the node that represents the scale upon which the atom sits.
@@ -96,7 +95,9 @@ define( function( require ) {
 
     // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
     // element is Neon for this sim.
-    var periodicTableNode = new ExpandedPeriodicTableNode( makeIsotopesModel.numberAtom, 10, tandem );
+    var periodicTableNode = new ExpandedPeriodicTableNode( makeIsotopesModel.numberAtom, 10, {
+      tandem: tandem
+    } );
     periodicTableNode.scale( 0.65 );
     periodicTableNode.top = 10;
     periodicTableNode.right = this.layoutBounds.width - 10;
@@ -117,10 +118,10 @@ define( function( require ) {
 
     // Add the symbol text.
     var symbolText = new Text( '', {
-        font: new PhetFont( 150 ),
-        fill: 'black',
-        center: new Vector2( symbolRectangle.width / 2, symbolRectangle.height / 2 )
-      } );
+      font: new PhetFont( 150 ),
+      fill: 'black',
+      center: new Vector2( symbolRectangle.width / 2, symbolRectangle.height / 2 )
+    } );
 
     // Add the listener to update the symbol text.
     var textCenter = new Vector2( symbolRectangle.width / 2, symbolRectangle.height / 2 );
@@ -133,9 +134,9 @@ define( function( require ) {
 
     // Add the proton count display.
     var protonCountDisplay = new Text( '0', {
-        font: NUMBER_FONT,
-        fill: 'red'
-      } );
+      font: NUMBER_FONT,
+      fill: 'red'
+    } );
     symbolRectangle.addChild( protonCountDisplay );
 
     // Add the listener to update the proton count.
@@ -147,9 +148,9 @@ define( function( require ) {
 
     // Add the mass number display.
     var massNumberDisplay = new Text( '0', {
-        font: NUMBER_FONT,
-        fill: 'black'
-      } );
+      font: NUMBER_FONT,
+      fill: 'black'
+    } );
     symbolRectangle.addChild( massNumberDisplay );
 
     // Add the listener to update the mass number.
@@ -160,26 +161,26 @@ define( function( require ) {
     } );
 
     symbolRectangle.scale( 0.20 );
-    var symbolBox = new AccordionBox(symbolRectangle, {
-        titleNode: new Text( symbolTitleString, {
-          font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
-          maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
-        } ),
-        fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
-        expandedProperty: new Property( false ),
-        minWidth: periodicTableNode.visibleBounds.width,
-        maxWidth: periodicTableNode.visibleBounds.width,
-        contentAlign: 'center',
-        titleAlignX: 'left',
-        buttonAlign: 'right',
-        buttonTouchAreaXDilation: 16,
-        buttonTouchAreaYDilation: 16
+    var symbolBox = new AccordionBox( symbolRectangle, {
+      titleNode: new Text( symbolTitleString, {
+        font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
+        maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
+      } ),
+      fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
+      expandedProperty: new Property( false ),
+      minWidth: periodicTableNode.visibleBounds.width,
+      maxWidth: periodicTableNode.visibleBounds.width,
+      contentAlign: 'center',
+      titleAlignX: 'left',
+      buttonAlign: 'right',
+      buttonTouchAreaXDilation: 16,
+      buttonTouchAreaYDilation: 16
     } );
     symbolBox.left = periodicTableNode.visibleBounds.minX;
     symbolBox.top = periodicTableNode.bottom + 10;
     this.addChild( symbolBox );
 
-    var abundanceBox = new AccordionBox( new TwoItemPieChartNode( makeIsotopesModel ) , {
+    var abundanceBox = new AccordionBox( new TwoItemPieChartNode( makeIsotopesModel ), {
         titleNode: new Text( abundanceTitleString, {
           font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
           maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH

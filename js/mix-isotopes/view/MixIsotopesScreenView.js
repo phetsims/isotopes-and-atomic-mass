@@ -81,7 +81,8 @@ define( function( require ) {
 
   function InteractivityModeSelectionNode( model, mvt ) {
     var bucketNode = new Node();
-    var bucket = new Bucket( { baseColor: Color.gray,
+    var bucket = new Bucket( {
+      baseColor: Color.gray,
       caption: '',
       size: new Dimension2( 50, 30 )
     } );
@@ -119,7 +120,7 @@ define( function( require ) {
    */
   function MixIsotopesScreenView( mixIsotopesModel, tandem ) {
     // supertype constructor
-    ScreenView.call( this, { layoutBounds:IsotopesAndAtomicMassConstants.LAYOUT_BOUNDS } );
+    ScreenView.call( this, { layoutBounds: IsotopesAndAtomicMassConstants.LAYOUT_BOUNDS } );
 
     //----------------------------------------------------------------------------
     // Instance Data
@@ -157,8 +158,8 @@ define( function( require ) {
     this.addChild( bucketFrontLayer );
 
     // Adding Buckets
-    function addBucketView ( addedBucket ) {
-      var bucketHole = new BucketHole( addedBucket, self.mvt);
+    function addBucketView( addedBucket ) {
+      var bucketHole = new BucketHole( addedBucket, self.mvt );
       var bucketFront = new BucketFront( addedBucket, self.mvt );
       bucketFront.addInputListener( new BucketDragHandler( addedBucket, bucketFront, self.mvt ) );
 
@@ -176,11 +177,11 @@ define( function( require ) {
       } );
     }
 
-    mixIsotopesModel.bucketList.addItemAddedListener( function( addedBucket ) { addBucketView( addedBucket); } );
-    mixIsotopesModel.bucketList.forEach( function( addedBucket ) { addBucketView( addedBucket); } );
+    mixIsotopesModel.bucketList.addItemAddedListener( function( addedBucket ) { addBucketView( addedBucket ); } );
+    mixIsotopesModel.bucketList.forEach( function( addedBucket ) { addBucketView( addedBucket ); } );
 
     // Adding Isotopes
-    function addIsotopeView ( addedIsotope ){
+    function addIsotopeView( addedIsotope ) {
       var isotopeView = new ParticleView( addedIsotope, self.mvt );
       isotopeView.center = self.mvt.modelToViewPosition( addedIsotope.position );
       isotopeView.pickable = ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS );
@@ -195,12 +196,12 @@ define( function( require ) {
       } );
     }
 
-    mixIsotopesModel.isotopesList.forEach ( function( addedIsotope ) { addIsotopeView( addedIsotope ); });
-    mixIsotopesModel.isotopesList.addItemAddedListener ( function( addedIsotope ) {
+    mixIsotopesModel.isotopesList.forEach( function( addedIsotope ) { addIsotopeView( addedIsotope ); } );
+    mixIsotopesModel.isotopesList.addItemAddedListener( function( addedIsotope ) {
       if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
         addIsotopeView( addedIsotope );
       }
-      else{
+      else {
         self.isotopesLayer.setIsotopes( self.model.isotopesList );
         mixIsotopesModel.isotopesList.addItemRemovedListener( function removalListener( removedIsotope ) {
           if ( removedIsotope === addedIsotope ) {
@@ -208,21 +209,21 @@ define( function( require ) {
           }
         } );
       }
-    });
+    } );
 
     // Adding Numeric Controllers
-    mixIsotopesModel.numericalControllerList.addItemAddedListener ( function( addedController ) {
+    mixIsotopesModel.numericalControllerList.addItemAddedListener( function( addedController ) {
       var controllerView = new ControlIsotope( addedController, 0, 100 );
       controllerView.center = self.mvt.modelToViewPosition( addedController.centerPosition );
       controlsLayer.addChild( controllerView );
 
-      mixIsotopesModel.numericalControllerList.addItemRemovedListener( function removalListener( removedController ){
+      mixIsotopesModel.numericalControllerList.addItemRemovedListener( function removalListener( removedController ) {
         if ( removedController === addedController ) {
           controlsLayer.removeChild( controllerView );
           mixIsotopesModel.numericalControllerList.removeItemRemovedListener( removalListener );
         }
-      });
-    });
+      } );
+    } );
 
     var testChamberNode = new Rectangle( this.mvt.modelToViewBounds( this.model.testChamber.getTestChamberRect() ), {
       fill: 'black',
@@ -236,7 +237,7 @@ define( function( require ) {
     this.isotopesLayer.visible = false;
     this.model.on( 'naturesIsotopeUpdated', function() {
       self.isotopesLayer.setIsotopes( self.model.naturesIsotopesList );
-    });
+    } );
 
     var clearBoxButton = new EraserButton( {
       baseColor: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
@@ -250,7 +251,9 @@ define( function( require ) {
 
     // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
     // element is Neon for this sim.
-    var periodicTableNode = new ExpandedPeriodicTableNode( mixIsotopesModel.numberAtom, 18, tandem );
+    var periodicTableNode = new ExpandedPeriodicTableNode( mixIsotopesModel.numberAtom, 18, {
+      tandem: tandem
+    } );
     periodicTableNode.scale( 0.55 );
     periodicTableNode.top = 10;
     periodicTableNode.right = this.layoutBounds.width - 10;
@@ -298,7 +301,7 @@ define( function( require ) {
     averageAtomicMassBox.top = compositionBox.bottom + 10;
     this.addChild( averageAtomicMassBox );
 
-    var interactivityModeSelectionNode = new InteractivityModeSelectionNode( mixIsotopesModel , this.mvt );
+    var interactivityModeSelectionNode = new InteractivityModeSelectionNode( mixIsotopesModel, this.mvt );
     interactivityModeSelectionNode.right = testChamberNode.right;
     interactivityModeSelectionNode.top = testChamberNode.bottom + 5;
     this.addChild( interactivityModeSelectionNode );
@@ -318,32 +321,32 @@ define( function( require ) {
       right: this.layoutBounds.maxX - 10,
       bottom: this.layoutBounds.maxY - 10
     } );
-    resetAllButton.scale(0.85);
+    resetAllButton.scale( 0.85 );
     this.addChild( resetAllButton );
 
     mixIsotopesModel.showingNaturesMixProperty.link( function() {
-      if ( mixIsotopesModel.showingNaturesMixProperty.get() === true ){
+      if ( mixIsotopesModel.showingNaturesMixProperty.get() === true ) {
         interactivityModeSelectionNode.visible = false;
         clearBoxButton.visible = false;
         self.isotopesLayer.visible = true;
       }
-      else{
+      else {
         interactivityModeSelectionNode.visible = true;
         clearBoxButton.visible = true;
         self.isotopesLayer.visible = false;
       }
       if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS &&
-           mixIsotopesModel.showingNaturesMixProperty.get() === false){
+           mixIsotopesModel.showingNaturesMixProperty.get() === false ) {
         self.isotopesLayer.visible = true;
         self.isotopesLayer.setIsotopes( self.model.isotopesList );
       }
     } );
 
     mixIsotopesModel.interactivityModeProperty.link( function() {
-      if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS ){
+      if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
         self.isotopesLayer.visible = false;
       }
-      else{
+      else {
         self.isotopesLayer.visible = true;
         self.isotopesLayer.setIsotopes( self.model.isotopesList );
 
@@ -355,16 +358,16 @@ define( function( require ) {
     } );
   }
 
-  isotopesAndAtomicMass.register( 'MixIsotopesScreenView', MixIsotopesScreenView);
+  isotopesAndAtomicMass.register( 'MixIsotopesScreenView', MixIsotopesScreenView );
   return inherit( ScreenView, MixIsotopesScreenView, {
-    step: function(){
+    step: function() {
       // as an optimization we would updating pie chart once every animation frame in place of updating it every time
       // isotope is added in the test chamber in single animation frame
-      if ( this.updatePieChart ){
+      if ( this.updatePieChart ) {
         this.isotopeProprotionsPieChart.update();
         this.updatePieChart = false;
       }
     }
 
-  });
+  } );
 } );
