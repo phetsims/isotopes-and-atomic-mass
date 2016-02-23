@@ -53,7 +53,7 @@ define( function( require ) {
     // Set up the model-canvas transform.  IMPORTANT NOTES: The multiplier factors for the point in the view can be
     // adjusted to shift the center right or left, and the scale factor can be adjusted to zoom in or out (smaller
     // numbers zoom out, larger ones zoom in).
-    this.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping( Vector2.ZERO,
+    this.modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping( Vector2.ZERO,
       new Vector2( Math.round( this.layoutBounds.width * 0.4 ), Math.round( this.layoutBounds.height * 0.49 ) ),
       1.0 // "Zoom factor" - smaller zooms out, larger zooms in.
     );
@@ -83,14 +83,14 @@ define( function( require ) {
     var scaleNode = new AtomScaleNode( makeIsotopesModel.particleAtom );
 
     // The scale needs to sit just below the atom, and there are some "tweak factors" needed to get it looking right.
-    scaleNode.setCenterBottom( new Vector2( this.mvt.modelToViewX( 0 ), this.bottom ) );
+    scaleNode.setCenterBottom( new Vector2( this.modelViewTransform.modelToViewX( 0 ), this.bottom ) );
     this.addChild( scaleNode );
 
     // Create the node that contains both the atom and the neutron bucket.
     // TODO: find a way to calculate the scale node top ( scaleNode.top + 15 ).
     var bottomOfAtomPosition = new Vector2( scaleNode.centerX, scaleNode.top + 15 );
 
-    var atomAndBucketNode = new InteractiveIsotopeNode( makeIsotopesModel, this.mvt, bottomOfAtomPosition );
+    var atomAndBucketNode = new InteractiveIsotopeNode( makeIsotopesModel, this.modelViewTransform, bottomOfAtomPosition );
     this.addChild( atomAndBucketNode );
 
     // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive

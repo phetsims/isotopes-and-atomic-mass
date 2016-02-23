@@ -79,15 +79,15 @@ define( function( require ) {
     return displayButtonGroup;
   }
 
-  function InteractivityModeSelectionNode( model, mvt ) {
+  function InteractivityModeSelectionNode( model, modelViewTransform ) {
     var bucketNode = new Node();
     var bucket = new Bucket( {
       baseColor: Color.gray,
       caption: '',
       size: new Dimension2( 50, 30 )
     } );
-    bucketNode.addChild( new BucketHole( bucket, mvt ) );
-    bucketNode.addChild( new BucketFront( bucket, mvt ) );
+    bucketNode.addChild( new BucketHole( bucket, modelViewTransform ) );
+    bucketNode.addChild( new BucketFront( bucket, modelViewTransform ) );
     bucketNode.scale( 0.5 );
 
     var range = new Range( 0, 100 );
@@ -140,7 +140,7 @@ define( function( require ) {
     // adjusted to shift the center right or left, and the scale factor
     // can be adjusted to zoom in or out (smaller numbers zoom out, larger
     // ones zoom in).
-    this.mvt = ModelViewTransform2.createSinglePointScaleInvertedYMapping( Vector2.ZERO,
+    this.modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping( Vector2.ZERO,
       new Vector2( Math.round( this.layoutBounds.width * 0.32 ), Math.round( this.layoutBounds.height * 0.33 ) ),
       1.0 // "Zoom factor" - smaller zooms out, larger zooms in.
     );
@@ -159,9 +159,9 @@ define( function( require ) {
 
     // Adding Buckets
     function addBucketView( addedBucket ) {
-      var bucketHole = new BucketHole( addedBucket, self.mvt );
-      var bucketFront = new BucketFront( addedBucket, self.mvt );
-      bucketFront.addInputListener( new BucketDragHandler( addedBucket, bucketFront, self.mvt ) );
+      var bucketHole = new BucketHole( addedBucket, self.modelViewTransform );
+      var bucketFront = new BucketFront( addedBucket, self.modelViewTransform );
+      bucketFront.addInputListener( new BucketDragHandler( addedBucket, bucketFront, self.modelViewTransform ) );
 
       // Bucket hole is first item added to view for proper layering.
       bucketHoleLayer.addChild( bucketHole );
@@ -182,8 +182,8 @@ define( function( require ) {
 
     // Adding Isotopes
     function addIsotopeView( addedIsotope ) {
-      var isotopeView = new ParticleView( addedIsotope, self.mvt );
-      isotopeView.center = self.mvt.modelToViewPosition( addedIsotope.position );
+      var isotopeView = new ParticleView( addedIsotope, self.modelViewTransform );
+      isotopeView.center = self.modelViewTransform.modelToViewPosition( addedIsotope.position );
       isotopeView.pickable = ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS );
 
       isotopeLayer.addChild( isotopeView );
@@ -214,7 +214,7 @@ define( function( require ) {
     // Adding Numeric Controllers
     mixIsotopesModel.numericalControllerList.addItemAddedListener( function( addedController ) {
       var controllerView = new ControlIsotope( addedController, 0, 100 );
-      controllerView.center = self.mvt.modelToViewPosition( addedController.centerPosition );
+      controllerView.center = self.modelViewTransform.modelToViewPosition( addedController.centerPosition );
       controlsLayer.addChild( controllerView );
 
       mixIsotopesModel.numericalControllerList.addItemRemovedListener( function removalListener( removedController ) {
@@ -225,13 +225,13 @@ define( function( require ) {
       } );
     } );
 
-    var testChamberNode = new Rectangle( this.mvt.modelToViewBounds( this.model.testChamber.getTestChamberRect() ), {
+    var testChamberNode = new Rectangle( this.modelViewTransform.modelToViewBounds( this.model.testChamber.getTestChamberRect() ), {
       fill: 'black',
       lineWidth: 1
     } );
     chamberLayer.addChild( testChamberNode );
-    this.isotopesLayer = new IsotopeCanvasNode( this.model.naturesIsotopesList, this.mvt, {
-      canvasBounds: this.mvt.modelToViewBounds( this.model.testChamber.getTestChamberRect() )
+    this.isotopesLayer = new IsotopeCanvasNode( this.model.naturesIsotopesList, this.modelViewTransform, {
+      canvasBounds: this.modelViewTransform.modelToViewBounds( this.model.testChamber.getTestChamberRect() )
     } );
     this.addChild( this.isotopesLayer );
     this.isotopesLayer.visible = false;
@@ -301,7 +301,7 @@ define( function( require ) {
     averageAtomicMassBox.top = compositionBox.bottom + 10;
     this.addChild( averageAtomicMassBox );
 
-    var interactivityModeSelectionNode = new InteractivityModeSelectionNode( mixIsotopesModel, this.mvt );
+    var interactivityModeSelectionNode = new InteractivityModeSelectionNode( mixIsotopesModel, this.modelViewTransform );
     interactivityModeSelectionNode.right = testChamberNode.right;
     interactivityModeSelectionNode.top = testChamberNode.bottom + 5;
     this.addChild( interactivityModeSelectionNode );
