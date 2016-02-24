@@ -109,7 +109,8 @@ define( function( require ) {
       baseColor: Color.white,
       spacing: 5,
       selectedStroke: '#3291b8',
-      selectedLineWidth: 2
+      selectedLineWidth: 2,
+      deselectedContentOpacity: 0.2
     } );
   }
 

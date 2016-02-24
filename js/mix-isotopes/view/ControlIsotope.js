@@ -39,7 +39,8 @@ define( function( require ) {
     var slider = new HSlider( controller.quantityProperty, range, {
       trackSize: new Dimension2( 80, 5 ),
       thumbSize: new Dimension2( 15, 30 ),
-      majorTickLength: 15
+      majorTickLength: 15,
+      tickLabelSpacing: 0
     } );
 
     // major ticks
