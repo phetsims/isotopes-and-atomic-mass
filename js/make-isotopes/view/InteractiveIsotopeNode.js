@@ -80,7 +80,7 @@ define( function( require ) {
       nucleonLayersNode.addChild( nucleonLayer );
     } );
     nucleonLayers.reverse(); // Set up the nucleon layers so that layer 0 is in front.
-    thisNode.addChild( nucleonLayersNode );
+
 
     // Function to adjust z-layer ordering for a particle. This is to be linked to the particle's zLayer property.
     var adjustZLayer = function( addedAtom, zLayer ) {
@@ -125,6 +125,11 @@ define( function( require ) {
         adjustZLayer( addedParticle, zLayer );
       } );
 
+      addedParticle.userControlledProperty.link( function ( value ) {
+        if ( value ){
+          particleView.moveToFront();
+        }
+      });
       // Add the item removed listener.
       var temp;
       if ( addedParticle.type === 'proton' ) {
@@ -151,9 +156,6 @@ define( function( require ) {
 
     // add the item added listeners for particles of this isotope
     makeIsotopesModel.neutrons.addItemAddedListener( function( addedAtom ) { addParticleView( addedAtom );} );
-
-    // Add the neutron bucket child here for proper layering with neutrons.
-    this.addChild( neutronBucketFront );
 
     // Create the textual readout for the element name.
     var elementName = new Text( '', { font: new PhetFont( { size: ELEMENT_NAME_FONT_SIZE, weight: 'bold' } ) } );
@@ -228,6 +230,10 @@ define( function( require ) {
         //2 * Math.sqrt( ( isotopeAtomNode.radius * isotopeAtomNode.radius) - ( (isotopeAtomNode.centerY + mapStableUnstableToPosition[ numProtons ]) * (isotopeAtomNode.centerY + mapStableUnstableToPosition[ numProtons ]) ) );
       stabilityIndicator.center = stabilityIndicatorCenterPos;
     };
+
+    thisNode.addChild( nucleonLayersNode );
+    // Add the neutron bucket child here for proper layering with neutrons.
+    this.addChild( neutronBucketFront );
 
     makeIsotopesModel.on( 'atomReconfigured', function() {
       updateElementName( makeIsotopesModel.particleAtom.protonCount, makeIsotopesModel.particleAtom.neutronCount );

@@ -153,10 +153,9 @@ define( function( require ) {
     this.addChild( bucketHoleLayer );
     var chamberLayer = new Node();
     this.addChild( chamberLayer );
+    // rendering these two nodes at last so that isotopes are at the over everything but behind the bucket
     var isotopeLayer = new Node();
-    this.addChild( isotopeLayer );
     var bucketFrontLayer = new Node();
-    this.addChild( bucketFrontLayer );
 
     // Adding Buckets
     function addBucketView( addedBucket ) {
@@ -189,6 +188,11 @@ define( function( require ) {
 
       isotopeLayer.addChild( isotopeView );
 
+      addedIsotope.userControlledProperty.link( function ( value ) {
+        if ( value ){
+          isotopeView.moveToFront();
+        }
+      });
       mixIsotopesModel.isotopesList.addItemRemovedListener( function removalListener( removedIsotope ) {
         if ( removedIsotope === addedIsotope ) {
           isotopeLayer.removeChild( isotopeView );
@@ -324,6 +328,9 @@ define( function( require ) {
     } );
     resetAllButton.scale( 0.85 );
     this.addChild( resetAllButton );
+
+    this.addChild( isotopeLayer );
+    this.addChild( bucketFrontLayer );
 
     mixIsotopesModel.showingNaturesMixProperty.link( function() {
       if ( mixIsotopesModel.showingNaturesMixProperty.get() === true ) {

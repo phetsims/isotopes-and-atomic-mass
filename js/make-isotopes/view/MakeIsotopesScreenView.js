@@ -61,8 +61,8 @@ define( function( require ) {
     // Layers upon which the various display elements are placed.  This allows us to created the desired layering effects.
     var indicatorLayer = new Node();
     this.addChild( indicatorLayer );
+    //adding this layer later so that its on the top
     var atomLayer = new Node();
-    this.addChild( atomLayer );
 
     // Create and add the Reset All Button in the bottom right, which resets the model
     var resetAllButton = new ResetAllButton( {
@@ -91,7 +91,7 @@ define( function( require ) {
     var bottomOfAtomPosition = new Vector2( scaleNode.centerX, scaleNode.top + 15 );
 
     var atomAndBucketNode = new InteractiveIsotopeNode( makeIsotopesModel, this.modelViewTransform, bottomOfAtomPosition );
-    this.addChild( atomAndBucketNode );
+    atomLayer.addChild( atomAndBucketNode );
 
     // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
     // element is Neon for this sim.
@@ -200,6 +200,7 @@ define( function( require ) {
     abundanceBox.left = symbolBox.left;
     abundanceBox.top = symbolBox.bottom + 10;
     this.addChild( abundanceBox );
+    this.addChild( atomLayer );
   }
 
   isotopesAndAtomicMass.register( 'MakeIsotopesScreenView', MakeIsotopesScreenView );
