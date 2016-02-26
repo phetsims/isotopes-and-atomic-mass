@@ -70,7 +70,7 @@ define( function( require ) {
     var label = new Text( isotopeMixtureString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } );
     var displayButtonGroup = new Node();
     displayButtonGroup.addChild( label );
-    myMixButton.top = label.bottom + 10;
+    myMixButton.top = label.bottom + 3;
     myMixButton.left = displayButtonGroup.left;
     displayButtonGroup.addChild( myMixButton );
     naturesMixButton.top = myMixButton.bottom + 8;
