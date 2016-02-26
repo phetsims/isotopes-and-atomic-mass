@@ -688,12 +688,13 @@ define( function( require ) {
      */
     reset: function() {
       this.clearBox();
-      PropertySet.prototype.reset.call( this );
 
       // Remove any stored state for the default atom.
       this.mapIsotopeConfigToUserMixState = {};
 
-      // Set the default element.
+      PropertySet.prototype.reset.call( this );
+
+      // Set the default element
       this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
 
       // Remove all stored user's mix states.  This must be done after
