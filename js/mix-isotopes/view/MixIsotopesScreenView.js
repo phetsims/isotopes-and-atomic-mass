@@ -51,6 +51,9 @@ define( function( require ) {
   var percentCompositionString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/percentComposition' );
   var averageAtomicMassString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/averageAtomicMass' );
 
+  // constants
+  var MAX_SLIDER_WIDTH = 99.75; //empirically determined
+
   function IsotopeMixtureSelectionNode( isotopeMixtureProperty ) {
     var radioButtonRadius = 6;
     var LABEL_FONT = new PhetFont( 14 );
@@ -219,7 +222,10 @@ define( function( require ) {
     // Adding Numeric Controllers
     mixIsotopesModel.numericalControllerList.addItemAddedListener( function( addedController ) {
       var controllerView = new ControlIsotope( addedController, 0, 100 );
-      controllerView.center = self.modelViewTransform.modelToViewPosition( addedController.centerPosition );
+      var center_pos = self.modelViewTransform.modelToViewPosition( addedController.centerPosition );
+      controllerView.centerY = center_pos.y;
+      // if the width of slider decreases due to thumb position, keep the left position fixed
+      controllerView.left = center_pos.x - ( MAX_SLIDER_WIDTH / 2 );
       controlsLayer.addChild( controllerView );
 
       mixIsotopesModel.numericalControllerList.addItemRemovedListener( function removalListener( removedController ) {
