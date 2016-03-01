@@ -164,7 +164,12 @@ define( function( require ) {
       }
       else {
         if ( self.mapIsotopeConfigToUserMixState.hasOwnProperty( self.prototypeIsotope.protonCount ) ) {
-          self.setState( self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ][ self.interactivityMode ] );
+          if ( self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ].hasOwnProperty( self.interactivityMode ) ) {
+            self.setState( self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ][ self.interactivityMode ] );
+          }
+          else{
+            self.setUpInitialUsersMix();
+          }
         }
         else {
           self.setUpInitialUsersMix();
