@@ -11,6 +11,7 @@ define( function( require ) {
   // modules
   var inherit = require( 'PHET_CORE/inherit' );
   var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
+  var shred = require( 'SHRED/shred' );
 
   /**
    * A particle layer rendered on canvas
@@ -19,14 +20,16 @@ define( function( require ) {
    * @param {Object} [options] that can be passed on to the underlying node
    * @constructor
    */
-  function ParticleCanvasNode( isotopes, modelViewTransform, options ) {
+  function IsotopeCanvasNode( isotopes, modelViewTransform, options ) {
 
     this.isotopes = isotopes;
     this.modelViewTransform = modelViewTransform;
     CanvasNode.call( this, options );
   }
 
-  return inherit( CanvasNode, ParticleCanvasNode, {
+  shred.register( 'IsotopeCanvasNode', IsotopeCanvasNode );
+
+  return inherit( CanvasNode, IsotopeCanvasNode, {
 
     /**
      * Paints the particles on the canvas node.
