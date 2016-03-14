@@ -14,6 +14,7 @@ define( function( require ) {
   var Circle = require( 'SCENERY/nodes/Circle' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var inherit = require( 'PHET_CORE/inherit' );
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Panel = require( 'SUN/Panel' );
   var Path = require( 'SCENERY/nodes/Path' );
@@ -136,6 +137,8 @@ define( function( require ) {
 
     this.addChild( this.pieChartBoundingRectangle );
   }
+
+  isotopesAndAtomicMass.register( 'IsotopeProprotionsPieChart', IsotopeProprotionsPieChart );
 
   return inherit( Node, IsotopeProprotionsPieChart, {
 

@@ -17,7 +17,6 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var InteractiveIsotopeNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/InteractiveIsotopeNode' );
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
-  var IsotopesAndAtomicMassConstants = require( 'ISOTOPES_AND_ATOMIC_MASS/common/IsotopesAndAtomicMassConstants' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var Node = require( 'SCENERY/nodes/Node' );
   var ParticleCountDisplay = require( 'SHRED/view/ParticleCountDisplay' );
@@ -48,7 +47,7 @@ define( function( require ) {
    */
   function MakeIsotopesScreenView( makeIsotopesModel, tandem ) {
     // supertype constructor
-    ScreenView.call( this, { layoutBounds: IsotopesAndAtomicMassConstants.LAYOUT_BOUNDS } );
+    ScreenView.call( this, { layoutBounds: SharedConstants.LAYOUT_BOUNDS } );
 
     // Set up the model-canvas transform.  IMPORTANT NOTES: The multiplier factors for the point in the view can be
     // adjusted to shift the center right or left, and the scale factor can be adjusted to zoom in or out (smaller

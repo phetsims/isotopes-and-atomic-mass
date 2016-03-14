@@ -26,7 +26,6 @@ define( function( require ) {
   var HSlider = require( 'SUN/HSlider' );
   var inherit = require( 'PHET_CORE/inherit' );
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
-  var IsotopesAndAtomicMassConstants = require( 'ISOTOPES_AND_ATOMIC_MASS/common/IsotopesAndAtomicMassConstants' );
   var IsotopeCanvasNode = require( 'SHRED/view/IsotopeCanvasNode' );
   var IsotopeProprotionsPieChart = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/IsotopeProprotionsPieChart' );
   var MixIsotopesModel = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MixIsotopesModel' );
@@ -124,7 +123,7 @@ define( function( require ) {
    */
   function MixIsotopesScreenView( mixIsotopesModel, tandem ) {
     // supertype constructor
-    ScreenView.call( this, { layoutBounds: IsotopesAndAtomicMassConstants.LAYOUT_BOUNDS } );
+    ScreenView.call( this, { layoutBounds: SharedConstants.LAYOUT_BOUNDS } );
 
     //----------------------------------------------------------------------------
     // Instance Data
