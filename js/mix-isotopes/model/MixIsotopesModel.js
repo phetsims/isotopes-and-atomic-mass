@@ -663,8 +663,6 @@ define( function( require ) {
 
       // Add the isotope controllers (i.e. the buckets).
       this.addIsotopeControllers();
-
-
     },
 
     /**
@@ -706,34 +704,6 @@ define( function( require ) {
       // setting the default isotope because state could have been saved
       // when the default was set.
       this.mapIsotopeConfigToUserMixState = {};
-    },
-
-    /**
-     * Remove the particles from the test chamber and set the state of the
-     * isotope controllers to be consistent.  This method retains the current
-     * interactivity mode, and thus the controllers.
-     */
-    clearTestChamber: function() {
-      // To prevent any scope issues with forEach loops.
-      var thisModel = this;
-      this.testChamber.getContainedIsotopes().forEach( function( isotope ) {
-        thisModel.testChamber.removeIsotopeFromChamber( isotope );
-        if ( thisModel.interactivityMode === InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
-          // Add isotope to bucket.
-          this.getBucketForIsotope( isotope.atomConfiguration ).addIsotopeInstanceFirstOpen( isotope, true );
-        }
-        else {
-          // Remove isotope completely from model.
-          isotope.removedFromModel();
-        }
-      } );
-
-      // Force any numerical controllers that exist to update.
-      this.numericalControllerList.forEach( function( controller ) {
-        controller.syncToTestChamber();
-      } );
     }
-
   }, { InteractivityMode: InteractivityMode });
-
 } );

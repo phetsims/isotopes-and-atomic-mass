@@ -77,15 +77,6 @@ define( function( require ) {
     },
 
     /**
-     *
-     * @param {MovableAtom} isotopeConfig
-     * @returns {*}
-     */
-    isIsotopeAllowedNumberAtom: function( isotopeConfig ) {
-      return this.isIsotopeAllowed( isotopeConfig.atomConfiguration.protonCount, isotopeConfig.atomConfiguration.neutronCount );
-    },
-
-    /**
      * Add an isotope to the nearest open location in the bucket.
      *
      * @param {MovableAtom} isotope
@@ -95,26 +86,6 @@ define( function( require ) {
       if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount ) ) {
         this.addParticleNearestOpen( isotope, animate );
       }
-    },
-
-    /**
-     * Remove an isotope
-     *
-     * return {MovableAtom} isotopeToRemove
-     */
-    removeArbitraryIsotope: function() {
-      var isotopeToRemove = null;
-
-      if ( this.getParticleList().length > 0 ) {
-        isotopeToRemove = this.getParticleList()[this.getParticleList().length - 1 ];
-        this.removeParticle( isotopeToRemove );
-      }
-
-      else {
-        // TODO is this the proper way to throw error?
-        throw AtomIdentifier.getName( isotopeToRemove.atomConfiguration.protonCount ) + ' - Warning: Ignoring attempt to remove particle from empty bucket.';
-      }
-      return isotopeToRemove;
     },
 
     /**

@@ -34,19 +34,10 @@ define( function( require ) {
     this.isotopeConfig = isotopeConfig;
     this.centerPosition = position;
     this.caption = caption;
-
-    // This property tracks whether this model element is still a part
-    // of the active model, such that it should be displayed in the view.
-    //TODO Changed to globally accessible variable, make sure this is ok.
-    this.partOfModelProperty = new Property( true );
   }
 
   isotopesAndAtomicMass.register( 'NumericalIsotopeQuantityControl', NumericalIsotopeQuantityControl );
   return inherit( Object, NumericalIsotopeQuantityControl, {
-
-    getCapacity: function() {
-      return CAPACITY;
-    },
 
     /**
      * Set the quantity of the isotope associated with this control to the
@@ -79,17 +70,6 @@ define( function( require ) {
           }
         }
       }
-      // TODO might create infinite loop
-      //this.quantityProperty.set(targetQuantity);
-
-    },
-
-    /**
-     * Force the quantity property to sync up with the test chamber.
-     * TODO Make sure that this method is not accessible to user (was listed as protected in old version)
-     */
-    syncToTestChamber: function() {
-      this.quantityProperty = this.model.getIsotopeTestChamber().getIsotopeCount( this.isotopeConfig );
     },
 
     /**
@@ -105,10 +85,7 @@ define( function( require ) {
       // Return the value.
       return this.quantityProperty;
     }
-
   } );
-
-} )
-;
+} );
 
 
