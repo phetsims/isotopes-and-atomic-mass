@@ -21,13 +21,12 @@ define( function( require ) {
   //TODO Check and see if we actually need these
   // TODO Should I be using numberAtom instead of movable atom?
   var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
-  var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
 
   /**
    * Constructor.
    * @param {Vector2} position
    * @param {Dimension2} size
-   * @param {Color} color
+   * @param {Color} baseColor
    * @param {String} caption
    * @param {number} particleRadius
    * @param {number} numProtonsInIsotope
