@@ -1,15 +1,12 @@
 // Copyright 2015, University of Colorado Boulder
 
 /**
- * This class is the model representation of a numerical controller that
- * allows the user to add or remove isotopes from the test chamber.  It is
- * admittedly a little odd to have a class like this that is really more
- * of a view sort of thing, but it was needed in order to be consistent
- * with the buckets, which are the other UI device that the user has for
- * moving isotopes into and out of the test chamber.  The buckets must
- * have a presence in the model so that the isotopes that are outside of
- * the chamber have somewhere to go, so this class allows buckets and
- * other controls to be handled consistently between the model and view.
+ * This class is the model representation of a numerical controller that allows the user to add or remove isotopes from
+ * the test chamber. It is admittedly a little odd to have a class like this that is really more of a view sort of thing,
+ * but it was needed in order to be consistent with the buckets, which are the other UI device that the user has for
+ * moving isotopes into and out of the test chamber. The buckets must have a presence in the model so that the isotopes
+ * that are outside of the chamber have somewhere to go, so this class allows buckets and other controls to be handled
+ * consistently between the model and view.
  *
  * @author James Smith
  * @author Jesse Greenberg
@@ -27,6 +24,14 @@ define( function( require ) {
   // Global Variables
   var CAPACITY = 100;
 
+  /**
+   *
+   * @param {MixIsotopesModel} model
+   * @param {NumberAtom} isotopeConfig
+   * @param {Vector2} position
+   * @param {String} caption
+   * @constructor
+   */
   function NumericalIsotopeQuantityControl( model, isotopeConfig, position, caption ) {
 
     this.quantityProperty = new Property( model.testChamber.getIsotopeCount( isotopeConfig ) );
@@ -40,10 +45,9 @@ define( function( require ) {
   return inherit( Object, NumericalIsotopeQuantityControl, {
 
     /**
-     * Set the quantity of the isotope associated with this control to the
-     * specified value.
+     * Set the quantity of the isotope associated with this control to the specified value.
      *
-     * @param targetQuantity
+     * @param {number} targetQuantity
      * @return
      */
     setIsotopeQuantity: function( targetQuantity ) {
@@ -72,9 +76,6 @@ define( function( require ) {
       }
     },
 
-    /**
-     * @return
-     */
     getBaseColor: function() {
       return this.model.getColorForIsotope( this.isotopeConfig );
     },

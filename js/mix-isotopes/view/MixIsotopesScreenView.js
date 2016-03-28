@@ -27,7 +27,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var IsotopeCanvasNode = require( 'SHRED/view/IsotopeCanvasNode' );
-  var IsotopeProprotionsPieChart = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/IsotopeProprotionsPieChart' );
+  var IsotopeProportionsPieChart = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/IsotopeProportionsPieChart' );
   var MixIsotopesModel = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MixIsotopesModel' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var Node = require( 'SCENERY/nodes/Node' );
@@ -122,18 +122,11 @@ define( function( require ) {
    * @constructor
    */
   function MixIsotopesScreenView( mixIsotopesModel, tandem ) {
-    // supertype constructor
     ScreenView.call( this, { layoutBounds: SharedConstants.LAYOUT_BOUNDS } );
-
-    //----------------------------------------------------------------------------
-    // Instance Data
-    //----------------------------------------------------------------------------
-
 
     this.model = mixIsotopesModel;
     var self = this;
     this.updatePieChart = true; // track when to update pie chart in the animation frame
-
 
     // Set up the model view transform.  The test chamber is centered
     // at (0, 0) in model space, and this transform is set up to place
@@ -145,7 +138,7 @@ define( function( require ) {
     // ones zoom in).
     this.modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping( Vector2.ZERO,
       new Vector2( Math.round( this.layoutBounds.width * 0.32 ), Math.round( this.layoutBounds.height * 0.33 ) ),
-      1.0 // "Zoom factor" - smaller zooms out, larger zooms in.
+      1.0
     );
 
     // Add the nodes that will allow the canvas to be layered.
@@ -269,10 +262,10 @@ define( function( require ) {
     periodicTableNode.right = this.layoutBounds.width - 10;
     this.addChild( periodicTableNode );
 
-    this.isotopeProprotionsPieChart = new IsotopeProprotionsPieChart( this.model );
-    this.isotopeProprotionsPieChart.scale( 0.6 );
-    this.isotopeProprotionsPieChart.centerX = this.isotopeProprotionsPieChart.centerX + 150; // Emperically determined to make pie chart centered
-    var compositionBox = new AccordionBox( this.isotopeProprotionsPieChart, {
+    this.isotopeProportionsPieChart = new IsotopeProportionsPieChart( this.model );
+    this.isotopeProportionsPieChart.scale( 0.6 );
+    this.isotopeProportionsPieChart.centerX = this.isotopeProportionsPieChart.centerX + 150; // Empirically determined
+    var compositionBox = new AccordionBox( this.isotopeProportionsPieChart, {
       titleNode: new Text( percentCompositionString, {
         font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
         maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
@@ -348,8 +341,8 @@ define( function( require ) {
         clearBoxButton.visible = true;
         self.isotopesLayer.visible = false;
       }
-      if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS &&
-           mixIsotopesModel.showingNaturesMixProperty.get() === false ) {
+      if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS
+           && mixIsotopesModel.showingNaturesMixProperty.get() === false ) {
         self.isotopesLayer.visible = true;
         self.isotopesLayer.setIsotopes( self.model.isotopesList );
       }
@@ -362,7 +355,6 @@ define( function( require ) {
       else {
         self.isotopesLayer.visible = true;
         self.isotopesLayer.setIsotopes( self.model.isotopesList );
-
       }
     } );
 
@@ -377,7 +369,7 @@ define( function( require ) {
       // as an optimization we would updating pie chart once every animation frame in place of updating it every time
       // isotope is added in the test chamber in single animation frame
       if ( this.updatePieChart ) {
-        this.isotopeProprotionsPieChart.update();
+        this.isotopeProportionsPieChart.update();
         this.updatePieChart = false;
       }
     }

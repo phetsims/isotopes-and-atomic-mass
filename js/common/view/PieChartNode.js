@@ -50,9 +50,8 @@ define( function( require ) {
   return inherit( Node, PieChartNode, {
 
     /**
-     * Set the initial angle for drawing the pie slices.  Zero (the default)
-     * means that the first slice will start at the right middle.  A value
-     * of PI/2 would start at the bottom of the pie.  And so on.
+     * Set the initial angle for drawing the pie slices.  Zero (the default) means that the first slice will start at
+     * the right middle. A value of PI/2 would start at the bottom of the pie.  And so on.
      *
      * @param initialAngle - In radians.
      */
@@ -105,15 +104,6 @@ define( function( require ) {
         // if there are no values then there is no chart
         return;
       }
-
-      /*// if number of slices is 1 then return a circle
-      if ( this.slices.length === 1 ) {
-        var circle = new Circle( this.radius, { fill: this.slices[ 0 ].color, stroke: this.slices[ 0 ].stroke } );
-        this.addChild( circle );
-        circle.centerX = self.centerXCord;
-        circle.centerY = self.centerYCord;
-        return;
-      }*/
 
       // Draw each pie slice
       var curValue = 0.0;
@@ -173,11 +163,10 @@ define( function( require ) {
     },
 
     /**
-     * Get the center edge point, meaning the point on the outside edge of the
-     * pie chart that represents the center, for the specified slice.  This is
-     * useful for adding labels that are ouside of the chart.
+     * Get the center edge point, meaning the point on the outside edge of the pie chart that represents the center, for
+     * the specified slice.  This is useful for adding labels that are outside of the chart.
      *
-     * @param sliceNumber
+     * @param {number} sliceNumber
      *
      */
     getCenterEdgePtForSlice: function( sliceNumber ) {
@@ -185,13 +174,8 @@ define( function( require ) {
       return this.sliceEdgeCenterPoints[ sliceNumber ];
     }
     else {
-      //System.err.println( getClass().getName() + " - Error: No such slice, val = " + sliceNumber );
       return null;
     }
   }
-
-
-
-    //TODO prototypes
   } );
 } );

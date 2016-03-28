@@ -37,7 +37,7 @@ define( function( require ) {
   /**
    * Constructor for an TwoItemPieChartNode.
    *
-   * @param {makeIsotopesModel} makeIsotopesModel
+   * @param {MakeIsotopesModel} makeIsotopesModel
    * @constructor
    */
   function TwoItemPieChartNode( makeIsotopesModel ) {
@@ -159,8 +159,6 @@ define( function( require ) {
 
     // do initial update to the pie chart
     updatePieChart();
-
-
   }
 
   isotopesAndAtomicMass.register( 'TwoItemPieChartNode', TwoItemPieChartNode );

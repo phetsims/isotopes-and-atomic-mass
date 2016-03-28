@@ -38,19 +38,15 @@ define( function( require ) {
   var READOUT_SIZE = new Dimension2( 80, 50 );
 
   /**
-   * Class that defines the readout on the front of the scale.  This readout can display an atom's mass as either the
-   * mass number, which is an integer number representing the total number of nucleons, or as the atomic mass, which is
-   * the relative actual mass of the atom.
+   * Utility function that defines the readout on the front of the scale. This readout can display an atom's mass as
+   * either the mass number, which is an integer number representing the total number of nucleons, or as the atomic mass,
+   * which is the relative actual mass of the atom.
    *
    * @param {NumberAtom} atom
    * @param {Property} displayModeProperty
    * @constructor
-   *
-   * @author John Blanco
-   * @author Jesse Greenberg
    */
   function ScaleReadoutNode( atom, displayModeProperty ) {
-
     this.atom = atom;
 
     var readoutText = new Text( '', { font: new PhetFont( 20 ), maxWidth: 0.9 * READOUT_SIZE.width, maxHeight: 0.9 * READOUT_SIZE.height } );
@@ -86,16 +82,13 @@ define( function( require ) {
       cornerRadius: 5,
       lineWidth: 3,
       align: 'center'
-
     } );
   }
 
   /**
    * This object contains the radio buttons that allow the user to select the display mode for the scale.
    *
-   * @constructor
-   * @author John Blanco
-   * @author Jesse Greenberg
+   * @param {Property} displayModeProperty
    */
   function DisplayModeSelectionNode( displayModeProperty ) {
     var radioButtonRadius = 6;
@@ -113,7 +106,7 @@ define( function( require ) {
   /**
    * Constructor for an AtomScaleNode.
    *
-   * @param {atom} atom
+   * @param {ParticleAtom} atom
    * @constructor
    */
   function AtomScaleNode( atom ) {
@@ -129,17 +122,16 @@ define( function( require ) {
 
     // Add the scale readout node which displays either atomic mass or number.
     var scaleReadoutNode = new ScaleReadoutNode( atom, this.displayModeProperty );
-    //scaleReadoutNode.setLeftCenter( new Vector2( SIZE.width * 0.16, weighScaleImage.centerY + 55 ) );
-    scaleReadoutNode.left = SCALE_WIDTH * 0.075;
-    scaleReadoutNode.centerY = weighScaleImage.height * 0.7;
+    scaleReadoutNode.left = SCALE_WIDTH * 0.075; // empirically determined
+    scaleReadoutNode.centerY = weighScaleImage.height * 0.7; // empirically determined
 
     this.addChild( scaleReadoutNode );
 
     // Add the display mode selector to the scale base.
     var displayModeSelectionNode = new DisplayModeSelectionNode( this.displayModeProperty );
     // Position the selector next to the readout.
-    displayModeSelectionNode.centerX = (scaleReadoutNode.right + weighScaleImage.width - 5) / 2;
-    displayModeSelectionNode.centerY = weighScaleImage.height * 0.7;
+    displayModeSelectionNode.centerX = (scaleReadoutNode.right + weighScaleImage.width - 5) / 2; // empirically determined
+    displayModeSelectionNode.centerY = weighScaleImage.height * 0.7; // empirically determined
     this.addChild( displayModeSelectionNode );
   }
 
@@ -151,18 +143,6 @@ define( function( require ) {
      */
     reset: function() {
       this.displayModeProperty.reset();
-    },
-
-    /**
-     * Get the height of the weigh plate top.  This should be the very top of this node.
-     * TODO: See if you can just use the top of this node to make weighPlate a private variable.
-     *
-     * @returns {number}
-     */
-    getWeighPlateTopProjectedHeight: function() {
-      return this.weighPlateTop.getHeight();
     }
-
   } );
-
 } );

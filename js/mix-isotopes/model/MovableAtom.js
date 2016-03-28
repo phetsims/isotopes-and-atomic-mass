@@ -1,11 +1,9 @@
 // Copyright 2015, University of Colorado Boulder
 
 /**
- * This class represents an atom that can move around but is otherwise
- * immutable.  It was created due to a need to represent atoms as single
- * entities rather than as a collection of particles.
- * At the time of this writing, this class is used only in the Isotopes flavor
- * of this simulation.
+ * This class represents an atom that can move around but is otherwise immutable. It was created due to a need to
+ * represent atoms as single entities rather than as a collection of particles. At the time of this writing, this class
+ * is used only in the Isotopes flavor of this simulation.
  *
  * @author John Blanco
  * @author Jesse Greenberg
@@ -24,6 +22,12 @@ define( function( require ) {
   // class variables
   var instanceCount = 0;
 
+  /**
+   * @param {number} numProtons
+   * @param {number} numNeutrons
+   * @param {Vector2} initialPosition
+   * @constructor
+   */
   function MovableAtom( numProtons, numNeutrons, initialPosition ) {
     Particle.call( this, 'Isotope' );
     this.position = initialPosition;
@@ -31,8 +35,6 @@ define( function( require ) {
     this.atomConfiguration = new NumberAtom( { protonCount: numProtons, neutronCount: numNeutrons, electronCount: numProtons } );
     this.showLabel = true;
     this.instanceCount = instanceCount++;
-
-
   }
   isotopesAndAtomicMass.register( 'MovableAtom', MovableAtom );
   return inherit( Particle, MovableAtom, {

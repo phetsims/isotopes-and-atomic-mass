@@ -44,15 +44,12 @@ define( function( require ) {
    * @constructor
    */
   function InteractiveIsotopeNode( makeIsotopesModel, modelViewTransform, bottomPoint ) {
-
-    // supetype constructor
     Node.call( this );
     var thisNode = this;
     this.modelViewTransform = modelViewTransform; // extend scope of modelViewTransform.
 
     // Add the node that shows the textual labels and electron cloud.
-    // TODO: bottomPoint should not be passed in this way.  Refactor soon.
-    var isotopeAtomNode = new IsotopeAtomNode( makeIsotopesModel.particleAtom, makeIsotopesModel.numberAtom, bottomPoint, modelViewTransform );
+    var isotopeAtomNode = new IsotopeAtomNode( makeIsotopesModel.particleAtom, bottomPoint, modelViewTransform );
     this.addChild( isotopeAtomNode );
     var myIsotopeLabel = new Text( myIsotopeString, {
       font: new PhetFont( { size: 16, weight: 'bold' } ),
@@ -66,7 +63,8 @@ define( function( require ) {
     // Add the bucket components that hold the neutrons.
     var neutronBucketHole = new BucketHole( makeIsotopesModel.neutronBucket, modelViewTransform );
     var neutronBucketFront = new BucketFront( makeIsotopesModel.neutronBucket, modelViewTransform );
-    neutronBucketFront.addInputListener( new BucketDragHandler( makeIsotopesModel.neutronBucket, neutronBucketFront, modelViewTransform ) );
+    neutronBucketFront.addInputListener( new BucketDragHandler( makeIsotopesModel.neutronBucket, neutronBucketFront,
+      modelViewTransform ) );
 
     // Bucket hole is first item added to view for proper layering.
     this.addChild( neutronBucketHole );
@@ -227,7 +225,6 @@ define( function( require ) {
         stabilityIndicator.text = '';
       }
       stabilityIndicator.maxWidth = stabilityIndicatorMaxWidth;
-        //2 * Math.sqrt( ( isotopeAtomNode.radius * isotopeAtomNode.radius) - ( (isotopeAtomNode.centerY + mapStableUnstableToPosition[ numProtons ]) * (isotopeAtomNode.centerY + mapStableUnstableToPosition[ numProtons ]) ) );
       stabilityIndicator.center = stabilityIndicatorCenterPos;
     };
 

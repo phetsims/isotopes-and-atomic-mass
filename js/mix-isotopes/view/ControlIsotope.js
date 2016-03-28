@@ -19,8 +19,10 @@ define( function( require ) {
   var READOUT_SIZE = new Dimension2( 30, 15 );
 
   /**
-   * Constructor for an IsotopeAtomNode.
    *
+   * @param {Property.<number>} controller
+   * @param {number} minRange
+   * @param {number} maxRange
    * @constructor
    */
   function ControlIsotope( controller, minRange, maxRange ) {
@@ -33,7 +35,6 @@ define( function( require ) {
     var numericLayer = new Node();
     this.addChild( numericLayer );
 
-    //var valueProperty = controller.quantityProperty;
     var range = new Range( minRange, maxRange );
     var tickLabelOptions = { font: new PhetFont( 12 ) };
     var slider = new HSlider( controller.quantityProperty, range, {
@@ -106,6 +107,6 @@ define( function( require ) {
   }
 
   isotopesAndAtomicMass.register( 'ControlIsotope', ControlIsotope );
-  // Inherit from Node.
+
   return inherit( Node, ControlIsotope );
 } );

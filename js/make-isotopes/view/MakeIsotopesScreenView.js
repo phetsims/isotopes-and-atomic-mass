@@ -1,7 +1,7 @@
 // Copyright 2014-2015, University of Colorado Boulder
 
 /**
- * Screen view for the tab where the user makes isotopes of a given element by adding and removing neutrons.
+ * Screen view where the user makes isotopes of a given element by adding and removing neutrons.
  *
  * @author John Blanco
  * @author Jesse Greenberg
@@ -54,10 +54,10 @@ define( function( require ) {
     // numbers zoom out, larger ones zoom in).
     this.modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping( Vector2.ZERO,
       new Vector2( Math.round( this.layoutBounds.width * 0.4 ), Math.round( this.layoutBounds.height * 0.49 ) ),
-      1.0 // "Zoom factor" - smaller zooms out, larger zooms in.
+      1.0
     );
 
-    // Layers upon which the various display elements are placed.  This allows us to created the desired layering effects.
+    // Layers upon which the various display elements are placed. This allows us to create the desired layering effects.
     var indicatorLayer = new Node();
     this.addChild( indicatorLayer );
     //adding this layer later so that its on the top
@@ -86,8 +86,7 @@ define( function( require ) {
     this.addChild( scaleNode );
 
     // Create the node that contains both the atom and the neutron bucket.
-    // TODO: find a way to calculate the scale node top ( scaleNode.top + 15 ).
-    var bottomOfAtomPosition = new Vector2( scaleNode.centerX, scaleNode.top + 15 );
+    var bottomOfAtomPosition = new Vector2( scaleNode.centerX, scaleNode.top + 15 ); //empirically determined
 
     var atomAndBucketNode = new InteractiveIsotopeNode( makeIsotopesModel, this.modelViewTransform, bottomOfAtomPosition );
     atomLayer.addChild( atomAndBucketNode );

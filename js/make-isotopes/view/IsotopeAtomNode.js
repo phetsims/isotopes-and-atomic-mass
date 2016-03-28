@@ -5,8 +5,6 @@
  * itself is represented by particles, which take care of themselves in the view.  This view element also maintains
  * the electron cloud.  This is essentially identical to AtomNode of 'Build an Atom' with some reduced functionality.
  *
- * TODO: Perhaps IsotopeAtomNode and AtomNode should inherit from some other base class to be located in shred.
- *
  * @author John Blanco
  * @author Jesse Greenberg
  */
@@ -24,14 +22,13 @@ define( function( require ) {
    * Constructor for an IsotopeAtomNode.
    *
    * @param {ParticleAtom} particleAtom Model that represents the atom, including particle positions
-   * @param {NumberAtom} numberAtom Model that representa the atom as a collection of numbers
    * @param {Vector2} bottomPoint desired bottom point of the atom which holds the atom in position as the size changes.
    * @param {ModelViewTransform2} modelViewTransform Model-View transform
    * @constructor
    */
-  function IsotopeAtomNode( particleAtom, numberAtom, bottomPoint, modelViewTransform ) {
+  function IsotopeAtomNode( particleAtom, bottomPoint, modelViewTransform ) {
 
-    Node.call( this ); // Call super constructor.
+    Node.call( this );
 
     this.atom = particleAtom;
     this.modelViewTransform = modelViewTransform;
@@ -40,11 +37,12 @@ define( function( require ) {
     var isotopeElectronCloud = new IsotopeElectronCloudView( particleAtom, modelViewTransform );
     this.addChild( isotopeElectronCloud );
 
-    // Add the handler that keeps the bottom of the atom in one place.  This was added due to a request to make the
-    // atom get larger and smaller but to stay on the scale.
+    // Add the handler that keeps the bottom of the atom in one place. This was added due to a request to make the atom
+    // get larger and smaller but to stay on the scale.
     var updateAtomPosition = function( numProtons ) {
-      //modelViewTransform.modelToViewDeltaX( thisNode.getElectronShellDiameter( numElectrons ) / 2 )
-      var newCenter = new Vector2( bottomPoint.x, bottomPoint.y - modelViewTransform.modelToViewDeltaX( isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2 ) * 1.2);
+      var newCenter = new Vector2( bottomPoint.x, bottomPoint.y
+                                                  - modelViewTransform.modelToViewDeltaX(
+          isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2 ) * 1.2 ); // empirically determined
       particleAtom.position = modelViewTransform.viewToModelPosition( newCenter );
       isotopeElectronCloud.center = newCenter;
     };

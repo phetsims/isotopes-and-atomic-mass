@@ -59,7 +59,6 @@ define( function( require ) {
     this.particleAtom = new ParticleAtom();
 
     // Make available a 'number atom' that tracks the state of the particle atom.
-    // TODO Remove this and put it in particleAtom
     this.numberAtom = new NumberAtom( {
       protonCount: DEFAULT_ATOM_CONFIG.protonCount,
       neutronCount: DEFAULT_ATOM_CONFIG.neutronCount,
@@ -170,9 +169,6 @@ define( function( require ) {
 
     setNeutronBucketConfiguration: function () {
         var that = this;
-        // Define a function that will decide where to put nucleons.
-
-
         // Add the neutrons to the neutron bucket.
         _.times( DEFAULT_NUM_NEUTRONS_IN_BUCKET, function() {
           var neutron = new Particle( 'neutron' );
@@ -231,8 +227,7 @@ define( function( require ) {
     },
 
     /**
-     * Reset the model.  The sets the atom and the neutron bucket into their
-     * default initial states.
+     * Reset the model. The sets the atom and the neutron bucket into their default initial states.
      */
     reset: function() {
       // Reset the atom.  This also resets the neutron bucket.
@@ -240,7 +235,7 @@ define( function( require ) {
     },
 
     /**
-     * Get this neutron bucket.
+     * Get neutron bucket.
      *
      * @returns { SphereBucket }
      */

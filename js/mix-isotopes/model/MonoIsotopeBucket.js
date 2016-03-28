@@ -1,9 +1,8 @@
 // Copyright 2015, University of Colorado Boulder
 
 /**
- *
- * A particle bucket that can only contain one configuration of isotope,
- * though it may contain multiple instances of that isotope.
+ * A particle bucket that can only contain one configuration of isotope, though it may contain multiple instances
+ * of that isotope.
  *
  * @author John Blanco
  * @author Jesse Greenberg
@@ -17,9 +16,6 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
   var ObservableArray = require( 'AXON/ObservableArray' );
-
-  //TODO Check and see if we actually need these
-  // TODO Should I be using numberAtom instead of movable atom?
   var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
 
   /**
@@ -33,7 +29,6 @@ define( function( require ) {
    * @param {number} numNeutronsInIsotope
    */
   function MonoIsotopeBucket( position, size, baseColor, caption, particleRadius, numProtonsInIsotope, numNeutronsInIsotope ) {
-    // call the supertype
     SphereBucket.call( this, {
       position: position,
       size: size,
@@ -53,7 +48,7 @@ define( function( require ) {
      * Add an isotope to the first open location in the bucket.
      *
      * @param {MovableAtom} isotope
-     * @param moveImmediately
+     * @param {boolean} moveImmediately
      */
     addIsotopeInstanceFirstOpen: function( isotope, moveImmediately ) {
       if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount ) ) {
@@ -67,10 +62,7 @@ define( function( require ) {
      * @param {number} numProtons
      * @param {number} numNeutrons
      * @returns {boolean}
-     * TODO pick which of the following two functions to keep/ make sure in all instances of the second call switched to first version.
-     * TODO Is there a more compact way to get protonCount and neutronCount?
      */
-
     isIsotopeAllowed: function( numProtons, numNeutrons ) {
       return this.numProtonsInIsotope === numProtons && this.numNeutronsInIsotope === numNeutrons;
     },
@@ -79,7 +71,7 @@ define( function( require ) {
      * Add an isotope to the nearest open location in the bucket.
      *
      * @param {MovableAtom} isotope
-     * @param {boolean} moveImmediately
+     * @param {boolean} animate
      */
     addIsotopeInstanceNearestOpen: function( isotope, animate ) {
       if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount ) ) {
@@ -89,21 +81,16 @@ define( function( require ) {
 
     /**
      * Get a list of all isotopes contained within this bucket.
-     * @return {ObservableArray} contained isotopes
+     * @return {ObservableArray} containedIsotopes
      */
     getContainedIsotopes: function() {
-      // TODO Should contained Isotopes here be an ObservableArray?
       var containedIsotopes = new ObservableArray();
       this.getParticleList().forEach( function( isotope ) {
         assert && assert( isotope instanceof MovableAtom );
         containedIsotopes.push( isotope );
-
       } );
 
       return containedIsotopes;
     }
-
-
   } );
-
 } );

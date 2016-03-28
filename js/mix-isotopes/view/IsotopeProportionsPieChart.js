@@ -36,9 +36,11 @@ define( function( require ) {
   var NUMBER_DECIMALS = 4;
 
   /**
-   * Class that represents a chemical symbol, including the mass number(in front of the chemical symbol and partially above it)
-   * and the atomic number (in front of the chemical symbol and partially below it).
-  */
+   * Utility function to create a node which represents a chemical symbol, including the mass number(in front of the
+   * chemical symbol and partially above it) and the atomic number (in front of the chemical symbol and partially below it).
+   *
+   * @param {NumberAtom} isotopeConfig
+   */
 
   function chemSymbolWithNumbersNode( isotopeConfig ) {
     var node = new Node();
@@ -62,20 +64,26 @@ define( function( require ) {
       centerY: symbol.bottom
     } );
     atomicNumber.right = symbol.left;
-    //atomicNumber.centerY = symbol.height * 0.6;
     node.addChild( atomicNumber );
 
     return node;
   }
 
+  /**
+   * @param {NumberAtom} isotopeConfig
+   * @param {number} isotopePercentage
+   * @param {boolean} labelOnLeft
+   * @param {number} numberOfDecimals
+   * @returns {*}
+   */
   function sliceLabelNode( isotopeConfig, isotopePercentage, labelOnLeft, numberOfDecimals ) {
-    // The "unconstrained position" is the position where this label
-    // would be placed if it didn't need to sit within the upper and
-    // lower bounds of the pie chart and didn't have to worry about
-    // avoiding overlap with other labels.  It is used for arbitrating
-    // how labels move when handling overlap.
     var node = new Node();
+
+    // The "unconstrained position" is the position where this label would be placed if it didn't need to sit within the
+    // upper and lower bounds of the pie chart and didn't have to worry about avoiding overlap with other labels.
+    // It is used for arbitrating how labels move when handling overlap.
     node.unconstrainedPos = new Vector2( 0, 0 );
+
     node.labelOnLeft = labelOnLeft;
     var symbol = chemSymbolWithNumbersNode( isotopeConfig );
     node.addChild( symbol );
@@ -117,7 +125,12 @@ define( function( require ) {
     return node;
   }
 
-  function IsotopeProprotionsPieChart( model ) {
+  /**
+   *
+   * @param {MixIsotopesModel} model
+   * @constructor
+   */
+  function IsotopeProportionsPieChart( model ) {
     Node.call( this );
     this.model = model;
     this.labelLayer = new Node();
@@ -128,7 +141,6 @@ define( function( require ) {
     this.emptyCircle.centerY = 0;
     this.pieChartBoundingRectangle.addChild( this.emptyCircle );
 
-
     // default slices this will be updated based on possible isotopes
     this.slices = [ ];
     this.sliceLabels = [ ];
@@ -138,9 +150,9 @@ define( function( require ) {
     this.addChild( this.pieChartBoundingRectangle );
   }
 
-  isotopesAndAtomicMass.register( 'IsotopeProprotionsPieChart', IsotopeProprotionsPieChart );
+  isotopesAndAtomicMass.register( 'IsotopeProportionsPieChart', IsotopeProportionsPieChart );
 
-  return inherit( Node, IsotopeProprotionsPieChart, {
+  return inherit( Node, IsotopeProportionsPieChart, {
 
     update: function(){
       if ( this.model.testChamber.isotopeCountProperty.get() > 0 ) {
@@ -191,20 +203,15 @@ define( function( require ) {
           var numberOfDecimals = self.model.showingNaturesMix ? NUMBER_DECIMALS : 1;
           var labelNode = sliceLabelNode( isotope, proportion * 100, labelOnLeft, numberOfDecimals );
 
-          // Determine the "unconstrained" target position
-          // for the label, meaning a position that is
-          // directly out from the edge of the slice, but
-          // may be above or below the edges of the pie
-          // chart.
+          // Determine the "unconstrained" target position for the label, meaning a position that is directly out from
+          // the edge of the slice, but may be above or below the edges of the pie chart.
           var posVector = centerEdgeOfPieSlice;
-          var positionVector = posVector.times( 1.6 );
+          var positionVector = posVector.times( 1.6 ); // empirically determined for positioning
           labelNode.unconstrainedPos.x = positionVector.x;
           labelNode.unconstrainedPos.y = positionVector.y;
-          //labelNode.setUnconstrainedPos( positionVector.getX(), positionVector.getY() );
 
-          // Constrain the position so that no part of the
-          // label goes above or below the upper and lower
-          // edges of the pie chart.
+          // Constrain the position so that no part of the label goes above or below the upper and lower edges
+          // of the pie chart.
           var minY = -OVERALL_HEIGHT / 2 + labelNode.height / 2;
           var maxY = OVERALL_HEIGHT / 2 - labelNode.height / 2;
           var xSign = labelOnLeft ? -1 : 1;
@@ -224,7 +231,6 @@ define( function( require ) {
             labelNode.centerY = positionVector.y;
           }
           else {
-            // Label on right.
             labelNode.centerX = positionVector.x + labelNode.width / 2;
             labelNode.centerY = positionVector.y;
           }
@@ -235,8 +241,7 @@ define( function( require ) {
       } );
       this.adjustLabelPositionsForOverlap( this.sliceLabels, -OVERALL_HEIGHT / 2, OVERALL_HEIGHT / 2 );
 
-      // The labels should now be all in reasonable positions,
-      // so draw a line from the edge of the label to the pie
+      // The labels should now be all in reasonable positions, so draw a line from the edge of the label to the pie
       // slice to which it corresponds.
       var j = 0;
       var k = 0;
@@ -255,18 +260,13 @@ define( function( require ) {
             labelConnectPt.x = label.right;
             labelConnectPt.y = label.centerY;
           }
-          //assert sliceConnectPt != null; // Should be a valid slice edge point for each label.
-          // Find a point that is straight out from the center
-          // of the pie chart above the point that connects to
-          // the slice.  Note that these calculations assume
-          // that the center of the pie chart is at (0,0).
+          // Find a point that is straight out from the center of the pie chart above the point that connects to the
+          // slice. Note that these calculations assume that the center of the pie chart is at (0,0).
           var connectingLineShape = new Shape().moveTo( sliceConnectPt.x, sliceConnectPt.y );
           if ( sliceConnectPt.y > OVERALL_HEIGHT * 0.25 || sliceConnectPt.y < -OVERALL_HEIGHT * 0.25 ) {
-            // Add a "bend point" so that the line doesn't go
-            // under the pie chart.
+            // Add a "bend point" so that the line doesn't go under the pie chart.
             var additionalLength = OVERALL_HEIGHT / ( PIE_CHART_RADIUS * 2 ) - 1;
             var scaleFactor = 1 - Math.min( Math.abs( sliceConnectPt.x ) / ( PIE_CHART_RADIUS / 2.0 ), 1 );
-            //var scaleFactor = 1;
             connectingLineShape.lineTo( sliceConnectPt.x * ( 1 + additionalLength * scaleFactor ),
               sliceConnectPt.y * ( 1 + additionalLength * scaleFactor ) );
           }
@@ -305,12 +305,10 @@ define( function( require ) {
               }
             }
           }
-          // Adjust this label's position based upon any overlap that
-          // was detected.  The general idea is this: if there is
-          // overlap in both directions, don't move.  If there is only
-          // overlap with a label that has a higher unconstrained
-          // location, move down.  If there is only overlap with a label
-          // with a lower unconstrained location, move down.
+          // Adjust this label's position based upon any overlap that was detected.  The general idea is this: if there
+          // is overlap in both directions, don't move.  If there is only overlap with a label that has a higher
+          // unconstrained location, move down.  If there is only overlap with a label with a lower unconstrained
+          // location, move down.
           var posVector;
           if ( moveUp && !moveDown ) {
             if ( label.labelOnLeft ) {
