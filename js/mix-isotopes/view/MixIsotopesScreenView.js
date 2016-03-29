@@ -85,7 +85,6 @@ define( function( require ) {
     var bucketNode = new Node();
     var bucket = new Bucket( {
       baseColor: Color.gray,
-      caption: '',
       size: new Dimension2( 50, 30 )
     } );
     bucketNode.addChild( new BucketHole( bucket, modelViewTransform ) );
