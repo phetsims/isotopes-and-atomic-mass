@@ -9,8 +9,8 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var inherit = require( 'PHET_CORE/inherit' );
   var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
+  var inherit = require( 'PHET_CORE/inherit' );
   var shred = require( 'SHRED/shred' );
 
   /**
@@ -21,7 +21,6 @@ define( function( require ) {
    * @constructor
    */
   function IsotopeCanvasNode( isotopes, modelViewTransform, options ) {
-
     this.isotopes = isotopes;
     this.modelViewTransform = modelViewTransform;
     CanvasNode.call( this, options );
