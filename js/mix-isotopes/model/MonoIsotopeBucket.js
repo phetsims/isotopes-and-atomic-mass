@@ -12,11 +12,11 @@
 define( function( require ) {
   'use strict';
 
-  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var inherit = require( 'PHET_CORE/inherit' );
-  var SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
-  var ObservableArray = require( 'AXON/ObservableArray' );
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
+  var ObservableArray = require( 'AXON/ObservableArray' );
+  var SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
 
   /**
    * Constructor.
@@ -37,9 +37,8 @@ define( function( require ) {
       sphereRadius: particleRadius
     } );
 
-    this.numProtonsInIsotope = numProtonsInIsotope;
-    this.numNeutronsInIsotope = numNeutronsInIsotope;
-
+    this.numProtonsInIsotope = numProtonsInIsotope; // @public
+    this.numNeutronsInIsotope = numNeutronsInIsotope; // @public
   }
 
   isotopesAndAtomicMass.register( 'MonoIsotopeBucket', MonoIsotopeBucket );
@@ -49,6 +48,8 @@ define( function( require ) {
      *
      * @param {MovableAtom} isotope
      * @param {boolean} moveImmediately
+     *
+     * @public
      */
     addIsotopeInstanceFirstOpen: function( isotope, moveImmediately ) {
       if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount ) ) {
@@ -62,6 +63,8 @@ define( function( require ) {
      * @param {number} numProtons
      * @param {number} numNeutrons
      * @returns {boolean}
+     *
+     * @public
      */
     isIsotopeAllowed: function( numProtons, numNeutrons ) {
       return this.numProtonsInIsotope === numProtons && this.numNeutronsInIsotope === numNeutrons;
@@ -72,6 +75,8 @@ define( function( require ) {
      *
      * @param {MovableAtom} isotope
      * @param {boolean} animate
+     *
+     * @public
      */
     addIsotopeInstanceNearestOpen: function( isotope, animate ) {
       if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount ) ) {
@@ -82,6 +87,8 @@ define( function( require ) {
     /**
      * Get a list of all isotopes contained within this bucket.
      * @return {ObservableArray} containedIsotopes
+     *
+     * @public
      */
     getContainedIsotopes: function() {
       var containedIsotopes = new ObservableArray();

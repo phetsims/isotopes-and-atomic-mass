@@ -10,12 +10,12 @@ define( function( require ) {
   'use strict';
 
   // modules
+  var Image = require( 'SCENERY/nodes/Image' );
+  var inherit = require( 'PHET_CORE/inherit' );
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var MakeIsotopesModel = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/model/MakeIsotopesModel' );
   var MakeIsotopesScreenView = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/MakeIsotopesScreenView' );
-  var inherit = require( 'PHET_CORE/inherit' );
   var Screen = require( 'JOIST/Screen' );
-  var Image = require( 'SCENERY/nodes/Image' );
 
   // strings
   var makeIsotopesModuleTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/make-isotopes-module.title' );
@@ -24,6 +24,8 @@ define( function( require ) {
   var makeIsotopesIcon = require( 'mipmap!ISOTOPES_AND_ATOMIC_MASS/make-isotopes-icon.png' );
 
   /**
+   *
+   * @param tandem
    * @constructor
    */
   function MakeIsotopesScreen( tandem ) {

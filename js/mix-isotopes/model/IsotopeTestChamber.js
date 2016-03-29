@@ -15,32 +15,31 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var Vector2 = require( 'DOT/Vector2' );
   var Dimension2 = require( 'DOT/Dimension2' );
-  var Rectangle = require( 'DOT/Rectangle' );
+  var inherit = require( 'PHET_CORE/inherit' );
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var ObservableArray = require( 'AXON/ObservableArray' );
   var PropertySet = require( 'AXON/PropertySet' );
+  var Rectangle = require( 'DOT/Rectangle' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  // Size of the "test chamber", which is the area in model space into which
-  // the isotopes can be dragged in order to contribute to the current
-  // average atomic weight.
+  // Size of the "test chamber", which is the area in model space into which the isotopes can be dragged in order to
+  // contribute to the current average atomic weight.
   var SIZE = new Dimension2( 450, 280 ); // In picometers.
 
-  // Rectangle that defines the location of the test chamber.  This is
-  // set up so that the center of the test chamber is at (0, 0) in model
-  // space.
+  // Rectangle that defines the location of the test chamber. This is set up so that the center of the test chamber is
+  // at (0, 0) in model space.
   var TEST_CHAMBER_RECT = new Rectangle( -SIZE.width / 2, -SIZE.height / 2, SIZE.width, SIZE.height );
   var BUFFER = 1; // isotopes stroke doesn't cross the wall, empirically determined
 
 
   /**
-   * Class that contains the state of the isotope test chamber, and can be
-   * used for saving and later restoring the state.
+   * Utility Function that contains the state of the isotope test chamber, and can be used for saving and later restoring
+   * the state.
+   *
+   * @param {IsotopeTestChamber} model
    */
-
   function State( model ) {
     var self = this;
     this.containedIsotopes = new ObservableArray();
@@ -51,22 +50,19 @@ define( function( require ) {
 
   /**
    * @constructor
-   * @param {MixIsotopeModel} model
+   * @param {MixIsotopesModel} model
    *
    */
-  // TODO Remove var test = null;
-
   function IsotopeTestChamber( model ) {
-
     // Isotope Mixtures Model that contains this test chamber.
-    this.model = model;
+    this.model = model; // @private
 
-    // {MovableAtom} Observable array that keeps track of the isotopes in the chamber and is updated as isotopes
-    // come and go.
+    // {MovableAtom} Observable array that keeps track of the isotopes in the chamber and is updated as isotopes come and go.
     // @public
     this.containedIsotopes = new ObservableArray();
 
     PropertySet.call( this, {
+      // @public {Read-Only}
       isotopeCount: 0,
       averageAtomicMass: 0
     } );
@@ -80,6 +76,7 @@ define( function( require ) {
      *
      * @param {NumberAtom} isotopeConfig
      * @return {number} isotopeCount
+     * @public
      */
     getIsotopeCount: function( isotopeConfig ) {
       assert && assert( isotopeConfig.protonCount === isotopeConfig.electronCount ); // Should always be neutral atom.
@@ -93,35 +90,23 @@ define( function( require ) {
     },
 
     /**
-     *
      * @returns {Rectangle} TEST_CHAMBER_RECT
+     * @public
      */
     getTestChamberRect: function() {
       return TEST_CHAMBER_RECT;
     },
 
     /**
-     * Test whether an isotope is within the chamber.  This is strictly
-     * a 2D test that looks as the isotopes center position and determines
-     * if it is within the bounds of the chamber rectangle.
+     * Test whether an isotope is within the chamber. This is strictly a 2D test that looks as the isotopes center
+     * position and determines if it is within the bounds of the chamber rectangle.
      *
      * @param {MovableAtom} isotope
      * @return {boolean}
+     * @public
      */
     isIsotopePositionedOverChamber: function( isotope ) {
       return TEST_CHAMBER_RECT.containsPoint( isotope.position );
-    },
-
-    /**
-     * Returns true if the specified isotope instance is contained by the
-     * chamber.  Note that it is possible for an isotope to be positioned
-     * within the chamber bounds but not contained by it.
-     *
-     * @param {MovableAtom} isotope
-     * @return {boolean}
-     */
-    isIsotopeContained: function( isotope ) {
-      return this.containedIsotopes.contains( isotope );
     },
 
     /**
@@ -135,8 +120,8 @@ define( function( require ) {
      *
      * @param {MovableAtom} isotope
      * @param {boolean} performUpdates - Flag that can be set be used to suppress updates.
-     *                       This is generally done for performance reasons when adding a large
-     *                       number of isotopes at once.
+     *
+     * @public
      */
     addIsotopeToChamber: function( isotope, performUpdates ) {
       var self = this;
@@ -151,8 +136,7 @@ define( function( require ) {
         };
         isotope.userControlledProperty.lazyLink( isotopeRemovedListener );
 
-        // If the edges of the isotope are outside of the container,
-        // move it to be fully inside.
+        // If the edges of the isotope are outside of the container, move it to be fully inside.
         var protrusion = isotope.position.x + isotope.radius - TEST_CHAMBER_RECT.maxX + BUFFER;
         if ( protrusion >= 0 ) {
           isotope.setPositionAndDestination( new Vector2( isotope.position.x - protrusion, isotope.position.y ) );
@@ -192,8 +176,9 @@ define( function( require ) {
      * Adds a list of isotopes to the test chamber. Same restrictions as above.
      *
      * @param {MovableAtom[]} isotopeList
+     *
+     * @public
      */
-
     bulkAddIsotopesToChamber: function( isotopeList ) {
       var self = this;
       isotopeList.forEach( function( isotope ) {
@@ -203,14 +188,16 @@ define( function( require ) {
       this.updateAverageAtomicMassProperty();
     },
 
-
     /**
      * Convenience function to set the isotopeCount property equal to the number of isotopes contained in this test chamber.
+     *
+     * @private
      */
     updateCountProperty: function() {
       this.isotopeCount = this.containedIsotopes.length;
     },
 
+    // @private
     updateAverageAtomicMassProperty: function() {
       if ( this.containedIsotopes.length > 0 ) {
         var totalMass = 0;
@@ -227,6 +214,8 @@ define( function( require ) {
 
     /**
      * @param {MovableAtom} isotope
+     *
+     * @public
      */
     removeIsotopeFromChamber: function( isotope ) {
       this.containedIsotopes.remove( isotope );
@@ -243,17 +232,16 @@ define( function( require ) {
 
 
     /**
-     * Remove an isotope from the chamber that matches the specified atom
-     * configuration.  Note that electrons are ignored.
+     * Remove an isotope from the chamber that matches the specified atom configuration. Note that electrons are ignored.
      *
      * @param {NumberAtom} isotopeConfig
      * @return {MovableAtom} removedIsotope
+     *
+     * @public
      */
     removeIsotopeMatchingConfig: function( isotopeConfig ) {
-      // Argument checking.
-      if ( ( isotopeConfig.protonCount - isotopeConfig.electronCount ) !== 0 ) {
-        console.error( 'Isotope must be neutral' );
-      }
+      assert && assert( ( isotopeConfig.protonCount - isotopeConfig.electronCount ) === 0 );
+
       // Locate and remove a matching isotope.
       var removedIsotope = null;
       this.containedIsotopes.forEach( function( isotope ) {
@@ -267,63 +255,42 @@ define( function( require ) {
     },
 
     /**
-     * Removes all isotopes and their listeners from the model one at a time.
+     * Removes all isotopes
      *
-     * @param {boolean} removeFromModel
+     * @public
      */
-
-    removeAllIsotopes: function( removeFromModel ) {
-      //var containedIsotopesCopy = this.containedIsotopes.getArray().slice( 0 );
+    removeAllIsotopes: function( ) {
       this.containedIsotopes.clear();
-      /*if ( removeFromModel ) {
-        containedIsotopesCopy.forEach( function( isotope ) {
-          //  TODO isotope.removeListener( this.model.isotopeGrabbedListener );
-          //isotope.removedFromModel();
-
-        } );
-
-      }*/
       this.updateCountProperty();
       this.averageAtomicMass = 0;
-
-      assert && assert( this.isotopeCount === 0 );      // Logical consistency check.
-      assert && assert( this.averageAtomicMass === 0 ); // Logical consistency check.
     },
 
     /**
      * Returns the containedIsotopes.
      * @returns {ObservableArray}
+     *
+     * @public
      */
     getContainedIsotopes: function() {
       return this.containedIsotopes;
     },
 
-
     /**
      * Get a count of the total number of isotopes in the chamber.
      * @return {number}
+     * @public
      */
     getTotalIsotopeCount: function() {
       return this.isotopeCount;
     },
 
-
-    ///**
-    //* TODO Look over with Jesse
-    //* @param {SimpleObserver} so
-    //*/
-    //addTotalCountChangeObserver: function( so ) {
-    //  this.isotopeCount.addObserver( so );
-    //},
-
     /**
-     * Get the proportion of isotopes currently within the chamber that
-     * match the specified configuration.  Note that electrons are
-     * ignored.
+     * Get the proportion of isotopes currently within the chamber that match the specified configuration.
      *
-     * @param {NumberAtom} isotopeConfig - Atom representing the configuration in
-     *                      question, MUST BE NEUTRAL.
+     * @param {NumberAtom} isotopeConfig
      * @return {number} isotopeProportion
+     *
+     * @public
      */
     getIsotopeProportion: function( isotopeConfig ) {
       // Calculates charge to ensure that isotopes are neutral.
@@ -341,17 +308,17 @@ define( function( require ) {
 
 
     /**
-     * Move all the particles in the chamber such that they don't overlap.
-     * This is intended for usage where there are not a lot of particles in
-     * the chamber.  Using it in cases where there are a lost of particles
-     * could take a very long time.
+     * Move all the particles in the chamber such that they don't overlap. This is intended for usage where there are not
+     * a lot of particles in the chamber. Using it in cases where there are a lost of particles could take a very long time.
+     *
+     * @public
      */
     adjustForOverlap: function() {
       // Bounds checking.  The threshold is pretty much arbitrary.
       assert && assert(this.getTotalIsotopeCount() <= 100, 'Ignoring request to adjust for overlap - too many particles in the chamber for that');
 
       // Check for overlap and adjust particle positions until none exists.
-      var maxIterations = 10000;
+      var maxIterations = 10000; // Empirically determined
       for ( var i = 0; this.checkForParticleOverlap() && i < maxIterations; i++ ) {
         // Adjustment factors for the repositioning algorithm, these can be adjusted for different behaviour.
         var interParticleForceConst = 200;
@@ -389,9 +356,7 @@ define( function( require ) {
             totalForce.add( forceFromIsotope );
           }
 
-          // Calculate the force due to the walls.  This prevents
-          // particles from being pushed out of the bounds of the
-          // chamber.
+          // Calculate the force due to the walls. This prevents particles from being pushed out of the bounds of the chamber.
           if ( isotope1.position.x + isotope1.radius >= TEST_CHAMBER_RECT.maxX ) {
             var distanceFromRightWall = TEST_CHAMBER_RECT.maxX - isotope1.position.x;
             totalForce.add( new Vector2( -wallForceConst / ( distanceFromRightWall * distanceFromRightWall ), 0 ) );
@@ -411,7 +376,6 @@ define( function( require ) {
           // Put the calculated repulsive force into the map.
           mapIsotopesToForces[ isotope1.instanceCount ] = totalForce;
           mapIsotopesIDToIsotope[ isotope1.instanceCount ] = isotope1;
-
         } );
 
         // Adjust the particle positions based on forces.
@@ -423,9 +387,6 @@ define( function( require ) {
           }
 
         }
-        if ( i === maxIterations - 1 ) {
-          console.error( '- Warning: Hit max iterations of repositioning algorithm.' );
-        }
       }
     },
 
@@ -433,6 +394,8 @@ define( function( require ) {
      * Checks to ensure that particles are not overlapped.
      *
      * @returns {boolean}
+     *
+     * //@private
      */
     checkForParticleOverlap: function() {
       var thisChamber = this;
@@ -462,6 +425,8 @@ define( function( require ) {
      * Generate a random location within the test chamber.
      *
      * @return {Vector2}
+     *
+     * @public
      */
     generateRandomLocation: function() {
       return new Vector2(
@@ -469,7 +434,7 @@ define( function( require ) {
         TEST_CHAMBER_RECT.minY + Math.random() * TEST_CHAMBER_RECT.height );
     },
 
-
+    // @public
     getState: function() {
       return new State( this );
     },
@@ -478,17 +443,12 @@ define( function( require ) {
     /**
      * Restore a previously captured state
      * @param {State} state
+     *
+     * @public
      */
     setState: function( state ) {
       this.removeAllIsotopes( true );
       this.bulkAddIsotopesToChamber( state.containedIsotopes );
     }
-
-
   } );
-} )
-;
-
-
-
-
+} );

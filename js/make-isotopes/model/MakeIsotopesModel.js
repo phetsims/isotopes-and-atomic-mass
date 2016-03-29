@@ -14,19 +14,19 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
+  var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
+  var Color = require( 'SCENERY/util/Color' );
+  var Dimension2 = require( 'DOT/Dimension2' );
   var inherit = require( 'PHET_CORE/inherit' );
-  var Vector2 = require( 'DOT/Vector2' );
-  var SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
+  var NumberAtom = require( 'SHRED/model/NumberAtom' );
+  var ObservableArray = require( 'AXON/ObservableArray' );
   var Particle = require( 'SHRED/model/Particle' );
   var ParticleAtom = require( 'SHRED/model/ParticleAtom' );
-  var Dimension2 = require( 'DOT/Dimension2' );
-  var Color = require( 'SCENERY/util/Color' );
-  var NumberAtom = require( 'SHRED/model/NumberAtom' );
-  var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
-  var SharedConstants = require( 'SHRED/SharedConstants' );
   var PropertySet = require('AXON/PropertySet');
-  var ObservableArray = require( 'AXON/ObservableArray' );
+  var SharedConstants = require( 'SHRED/SharedConstants' );
+  var SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   // strings
   var neutronsTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons.title' );
@@ -56,9 +56,10 @@ define( function( require ) {
     var self = this;
 
     // create the atom.
-    this.particleAtom = new ParticleAtom();
+    this.particleAtom = new ParticleAtom(); // @public
 
     // Make available a 'number atom' that tracks the state of the particle atom.
+    // @public
     this.numberAtom = new NumberAtom( {
       protonCount: DEFAULT_ATOM_CONFIG.protonCount,
       neutronCount: DEFAULT_ATOM_CONFIG.neutronCount,
@@ -66,9 +67,9 @@ define( function( require ) {
     } );
 
     // Update the stability state and counter on changes.
-    self.nucleusStable = true;
-    self.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
-    self.nucleusOffset = Vector2.ZERO;
+    self.nucleusStable = true; // @public
+    self.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD; // @private
+    self.nucleusOffset = Vector2.ZERO; // @private
     self.particleAtom.massNumberProperty.link( function( massNumber ) {
       var stable = massNumber > 0 ? AtomIdentifier.isStable( self.particleAtom.protonCount, self.particleAtom.neutronCount ) : true;
       if ( self.nucleusStable !== stable ) {
@@ -87,11 +88,12 @@ define( function( require ) {
     // Arrays that contain the subatomic particles, whether they are in the  bucket or in the atom.  This is part of a
     // basic assumption about how the model works, which is that the model contains all the particles, and the particles
     // move back and forth from being in the bucket or in in the atom.
-    this.neutrons = new ObservableArray();
-    this.protons = new ObservableArray();
-    this.electrons = new ObservableArray();
+    this.neutrons = new ObservableArray(); // @public
+    this.protons = new ObservableArray(); // @public
+    this.electrons = new ObservableArray(); // @public
 
     // The bucket that holds the neutrons that are not in the atom.
+    // @public
     this.neutronBucket = new SphereBucket( {
       position: NEUTRON_BUCKET_POSITION,
       size: BUCKET_SIZE,
@@ -113,6 +115,7 @@ define( function( require ) {
   return inherit( PropertySet, MakeIsotopesModel, {
     _nucleusJumpCount: 0,
     // Main model step function, called by the framework.
+    // @public
     step: function( dt ) {
       // Update particle positions.
       this.neutrons.forEach( function( neutron ) {
@@ -142,8 +145,7 @@ define( function( require ) {
 
     /**
      * Get the current atom of this model, in its number representation
-     *
-     * @returns {NumberAtom}
+     * @public
      */
     getNumberAtom: function() {
       return this.numberAtom;
@@ -156,8 +158,8 @@ define( function( require ) {
      * reinitialized.
      *
      * @param {NumberAtom} numberAtom - New configuration of atomic properties to which the atom should be set.
+     * @public
      */
-
     placeNucleon: function( particle, bucket, atom ) {
       if ( particle.position.distance( atom.position ) < NUCLEON_CAPTURE_RADIUS ) {
         atom.addParticle( particle );
@@ -167,6 +169,7 @@ define( function( require ) {
       }
     },
 
+    // @public
     setNeutronBucketConfiguration: function () {
         var that = this;
         // Add the neutrons to the neutron bucket.
@@ -185,6 +188,7 @@ define( function( require ) {
         } );
     },
 
+    // @public
     setAtomConfiguration: function( numberAtom ) {
         var that = this;
         this.particleAtom.clear();
@@ -228,6 +232,7 @@ define( function( require ) {
 
     /**
      * Reset the model. The sets the atom and the neutron bucket into their default initial states.
+     * @public
      */
     reset: function() {
       // Reset the atom.  This also resets the neutron bucket.
@@ -238,6 +243,8 @@ define( function( require ) {
      * Get neutron bucket.
      *
      * @returns { SphereBucket }
+     *
+     * @public
      */
     getNeutronBucket: function() {
       return this.neutronBucket;

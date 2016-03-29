@@ -16,16 +16,15 @@
 define( function( require ) {
   'use strict';
   // modules
-  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var inherit = require( 'PHET_CORE/inherit' );
-  var Property = require( 'AXON/Property' );
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
+  var Property = require( 'AXON/Property' );
 
   // Global Variables
   var CAPACITY = 100;
 
   /**
-   *
    * @param {MixIsotopesModel} model
    * @param {NumberAtom} isotopeConfig
    * @param {Vector2} position
@@ -34,11 +33,11 @@ define( function( require ) {
    */
   function NumericalIsotopeQuantityControl( model, isotopeConfig, position, caption ) {
 
-    this.quantityProperty = new Property( model.testChamber.getIsotopeCount( isotopeConfig ) );
-    this.model = model;
-    this.isotopeConfig = isotopeConfig;
-    this.centerPosition = position;
-    this.caption = caption;
+    this.quantityProperty = new Property( model.testChamber.getIsotopeCount( isotopeConfig ) ); // @public
+    this.model = model; // @private
+    this.isotopeConfig = isotopeConfig; // @public
+    this.centerPosition = position; // @public
+    this.caption = caption; // @public
   }
 
   isotopesAndAtomicMass.register( 'NumericalIsotopeQuantityControl', NumericalIsotopeQuantityControl );
@@ -48,7 +47,8 @@ define( function( require ) {
      * Set the quantity of the isotope associated with this control to the specified value.
      *
      * @param {number} targetQuantity
-     * @return
+     *
+     * @public
      */
     setIsotopeQuantity: function( targetQuantity ) {
       assert && assert( targetQuantity <= CAPACITY );
@@ -76,10 +76,12 @@ define( function( require ) {
       }
     },
 
+    // @public
     getBaseColor: function() {
       return this.model.getColorForIsotope( this.isotopeConfig );
     },
 
+    // @public
     getQuantity: function() {
       // Verify that the internal property matches that of the test chamber.
       assert && assert( this.quantityProperty === this.model.testChamber.getIsotopeCount( this.isotopeConfig ) );
@@ -88,5 +90,3 @@ define( function( require ) {
     }
   } );
 } );
-
-

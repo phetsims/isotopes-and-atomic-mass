@@ -14,10 +14,10 @@ define( function( require ) {
   'use strict';
 
   //modules
-  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var inherit = require( 'PHET_CORE/inherit' );
-  var Particle = require( 'SHRED/model/Particle' );
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var NumberAtom = require( 'SHRED/model/NumberAtom' );
+  var Particle = require( 'SHRED/model/Particle' );
 
   // class variables
   var instanceCount = 0;
@@ -30,15 +30,14 @@ define( function( require ) {
    */
   function MovableAtom( numProtons, numNeutrons, initialPosition ) {
     Particle.call( this, 'Isotope' );
-    this.position = initialPosition;
-    this.destination = initialPosition;
+    this.position = initialPosition; // @public
+    this.destination = initialPosition; // @public
+    // @public
     this.atomConfiguration = new NumberAtom( { protonCount: numProtons, neutronCount: numNeutrons, electronCount: numProtons } );
-    this.showLabel = true;
-    this.instanceCount = instanceCount++;
+    this.showLabel = true; // @public
+    this.instanceCount = instanceCount++; // @private
   }
   isotopesAndAtomicMass.register( 'MovableAtom', MovableAtom );
   return inherit( Particle, MovableAtom, {
-
   } );
-
 } );

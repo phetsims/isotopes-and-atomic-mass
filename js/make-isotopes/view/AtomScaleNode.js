@@ -13,17 +13,17 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
+  var AquaRadioButton = require( 'SUN/AquaRadioButton' );
+  var Dimension2 = require( 'DOT/Dimension2' );
   var inherit = require( 'PHET_CORE/inherit' );
   var Image = require( 'SCENERY/nodes/Image' );
-  var Dimension2 = require( 'DOT/Dimension2' );
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var Node = require( 'SCENERY/nodes/Node' );
-  var Text = require( 'SCENERY/nodes/Text' );
-  var Property = require( 'AXON/Property' );
-  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var Util = require( 'DOT/Util' );
   var Panel = require( 'SUN/Panel' );
-  var AquaRadioButton = require( 'SUN/AquaRadioButton' );
+  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  var Property = require( 'AXON/Property' );
+  var Text = require( 'SCENERY/nodes/Text' );
+  var Util = require( 'DOT/Util' );
 
   // images
   var scaleImage = require( 'mipmap!ISOTOPES_AND_ATOMIC_MASS/scale.png' );

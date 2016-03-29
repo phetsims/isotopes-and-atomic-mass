@@ -12,21 +12,22 @@
 define( function( require ) {
   'use strict';
 
-  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var Vector2 = require( 'DOT/Vector2' );
-  var Shape = require( 'KITE/Shape' );
-  var Line = require( 'SCENERY/nodes/Line' );
-  var Node = require( 'SCENERY/nodes/Node' );
+  // modules
+  var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
   var Color = require( 'SCENERY/util/Color' );
   var Dimension2 = require( 'DOT/Dimension2' );
-  var Text = require( 'SCENERY/nodes/Text' );
-  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
-  var SubSupText = require( 'SCENERY_PHET/SubSupText' );
-  var Path = require( 'SCENERY/nodes/Path' );
+  var inherit = require( 'PHET_CORE/inherit' );
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
+  var Line = require( 'SCENERY/nodes/Line' );
+  var Node = require( 'SCENERY/nodes/Node' );
   var Panel = require( 'SUN/Panel' );
+  var Path = require( 'SCENERY/nodes/Path' );
+  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  var Shape = require( 'KITE/Shape' );
+  var SubSupText = require( 'SCENERY_PHET/SubSupText' );
+  var Text = require( 'SCENERY/nodes/Text' );
   var Util = require( 'DOT/Util' );
+  var Vector2 = require( 'DOT/Vector2' );
 
   // constants
   var INDICATOR_WIDTH = 200;

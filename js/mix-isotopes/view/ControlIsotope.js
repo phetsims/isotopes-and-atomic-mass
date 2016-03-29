@@ -5,28 +5,26 @@ define( function( require ) {
 
   // modules
   var ArrowButton = require( 'SCENERY_PHET/buttons/ArrowButton' );
-  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var HSlider = require( 'SUN/HSlider' );
   var inherit = require( 'PHET_CORE/inherit' );
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var IsotopeNode = require( 'SHRED/view/IsotopeNode' );
   var Node = require( 'SCENERY/nodes/Node' );
+  var Panel = require( 'SUN/Panel' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Range = require( 'DOT/Range' );
   var Text = require( 'SCENERY/nodes/Text' );
-  var Panel = require( 'SUN/Panel' );
 
   var READOUT_SIZE = new Dimension2( 30, 15 );
 
   /**
-   *
    * @param {Property.<number>} controller
    * @param {number} minRange
    * @param {number} maxRange
    * @constructor
    */
   function ControlIsotope( controller, minRange, maxRange ) {
-
     Node.call( this ); // Call super constructor.
     var sliderLayer = new Node();
     this.addChild( sliderLayer );

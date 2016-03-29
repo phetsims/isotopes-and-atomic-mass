@@ -128,14 +128,10 @@ define( function( require ) {
     var self = this;
     this.updatePieChart = true; // track when to update pie chart in the animation frame
 
-    // Set up the model view transform.  The test chamber is centered
-    // at (0, 0) in model space, and this transform is set up to place
-    // the chamber where we want it on the canvas.
-    //
-    // IMPORTANT NOTES: The multiplier factors for the 2nd point can be
-    // adjusted to shift the center right or left, and the scale factor
-    // can be adjusted to zoom in or out (smaller numbers zoom out, larger
-    // ones zoom in).
+    // Set up the model view transform. The test chamber is centered at (0, 0) in model space, and this transform is set
+    // up to place the chamber where we want it on the canvas.
+    // IMPORTANT NOTES: The multiplier factors for the 2nd point can be adjusted to shift the center right or left, and
+    // the scale factor can be adjusted to zoom in or out (smaller numbers zoom out, larger ones zoom in).
     this.modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping( Vector2.ZERO,
       new Vector2( Math.round( this.layoutBounds.width * 0.32 ), Math.round( this.layoutBounds.height * 0.33 ) ),
       1.0

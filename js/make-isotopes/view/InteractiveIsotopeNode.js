@@ -15,14 +15,14 @@ define( function( require ) {
 
   // modules
   var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var Node = require( 'SCENERY/nodes/Node' );
-  var BucketHole = require( 'SCENERY_PHET/bucket/BucketHole' );
-  var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
-  var ParticleView = require( 'SHRED/view/ParticleView' );
   var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
+  var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
+  var BucketHole = require( 'SCENERY_PHET/bucket/BucketHole' );
+  var inherit = require( 'PHET_CORE/inherit' );
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var IsotopeAtomNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/IsotopeAtomNode' );
+  var Node = require( 'SCENERY/nodes/Node' );
+  var ParticleView = require( 'SHRED/view/ParticleView' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Text = require( 'SCENERY/nodes/Text' );
   var Vector2 = require( 'DOT/Vector2' );
