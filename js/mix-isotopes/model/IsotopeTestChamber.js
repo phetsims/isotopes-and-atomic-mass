@@ -19,6 +19,7 @@ define( function( require ) {
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var ObservableArray = require( 'AXON/ObservableArray' );
   var PropertySet = require( 'AXON/PropertySet' );
+  var Random = require( 'DOT/Random' );
   var Rectangle = require( 'DOT/Rectangle' );
   var Vector2 = require( 'DOT/Vector2' );
 
@@ -55,6 +56,8 @@ define( function( require ) {
   function IsotopeTestChamber( model ) {
     // Isotope Mixtures Model that contains this test chamber.
     this.model = model; // @private
+
+    this.random = new Random(); // @private
 
     // {MovableAtom} Observable array that keeps track of the isotopes in the chamber and is updated as isotopes come and go.
     // @public
@@ -345,7 +348,7 @@ define( function( require ) {
               // These isotopes are sitting right on top of one another.
               // Add the max amount of inter-particle force in a random direction.
               forceFromIsotope.setPolar( interParticleForceConst / ( minInterParticleDistance * minInterParticleDistance ),
-                Math.random() * 2 * Math.PI );
+                this.random.random() * 2 * Math.PI );
             }
             else if ( distanceBetweenIsotopes < isotope1.radius + isotope2.radius ) {
               // calculate the repulsive force based on the distance.
@@ -432,8 +435,8 @@ define( function( require ) {
      */
     generateRandomLocation: function() {
       return new Vector2(
-        TEST_CHAMBER_RECT.minX + Math.random() * TEST_CHAMBER_RECT.width,
-        TEST_CHAMBER_RECT.minY + Math.random() * TEST_CHAMBER_RECT.height );
+        TEST_CHAMBER_RECT.minX + this.random.random() * TEST_CHAMBER_RECT.width,
+        TEST_CHAMBER_RECT.minY + this.random.random() * TEST_CHAMBER_RECT.height );
     },
 
     // @public
