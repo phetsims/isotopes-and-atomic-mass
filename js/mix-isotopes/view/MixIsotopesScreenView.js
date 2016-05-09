@@ -189,6 +189,7 @@ define( function( require ) {
       mixIsotopesModel.isotopesList.addItemRemovedListener( function removalListener( removedIsotope ) {
         if ( removedIsotope === addedIsotope ) {
           isotopeLayer.removeChild( isotopeView );
+          isotopeView.dispose();
           mixIsotopesModel.isotopesList.removeItemRemovedListener( removalListener );
         }
       } );

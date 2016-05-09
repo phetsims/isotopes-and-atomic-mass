@@ -142,6 +142,7 @@ define( function( require ) {
       temp.addItemRemovedListener( function removalListener( removedAtom ) {
         if ( removedAtom === addedParticle ) {
           nucleonLayers[ addedParticle.zLayer ].removeChild( particleView );
+          particleView.dispose();
           temp.removeItemRemovedListener( removalListener );
         }
       } );
