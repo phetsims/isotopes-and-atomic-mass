@@ -135,7 +135,8 @@ define( function( require ) {
     this.model = model;
     this.labelLayer = new Node();
     this.addChild( this.labelLayer );
-    this.pieChartBoundingRectangle = new Rectangle( -OVERALL_HEIGHT / 2, -OVERALL_HEIGHT / 2, OVERALL_HEIGHT, OVERALL_HEIGHT, 0, 0);
+    this.pieChartBoundingRectangle = new Rectangle( -OVERALL_HEIGHT / 2, -OVERALL_HEIGHT / 2,
+      OVERALL_HEIGHT, OVERALL_HEIGHT, 0, 0);
     this.emptyCircle = new Circle( PIE_CHART_RADIUS, { stroke: 'black', lineDash: [ 3, 1 ] } );
     this.emptyCircle.centerX = 0;
     this.emptyCircle.centerY = 0;

@@ -174,7 +174,8 @@ define( function( require ) {
     function addIsotopeView( addedIsotope ) {
       var isotopeView = new ParticleView( addedIsotope, self.modelViewTransform );
       isotopeView.center = self.modelViewTransform.modelToViewPosition( addedIsotope.position );
-      isotopeView.pickable = ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS );
+      isotopeView.pickable = ( mixIsotopesModel.interactivityModeProperty.get() ===
+                               MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS );
 
       isotopeLayer.addChild( isotopeView );
 
@@ -193,7 +194,8 @@ define( function( require ) {
 
     mixIsotopesModel.isotopesList.forEach( function( addedIsotope ) { addIsotopeView( addedIsotope ); } );
     mixIsotopesModel.isotopesList.addItemAddedListener( function( addedIsotope ) {
-      if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
+      if ( mixIsotopesModel.interactivityModeProperty.get() ===
+           MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
         addIsotopeView( addedIsotope );
       }
       else {
@@ -223,7 +225,8 @@ define( function( require ) {
       } );
     } );
 
-    var testChamberNode = new Rectangle( this.modelViewTransform.modelToViewBounds( this.model.testChamber.getTestChamberRect() ), {
+    var testChamberNode = new Rectangle( this.modelViewTransform.modelToViewBounds(
+      this.model.testChamber.getTestChamberRect() ), {
       fill: 'black',
       lineWidth: 1
     } );

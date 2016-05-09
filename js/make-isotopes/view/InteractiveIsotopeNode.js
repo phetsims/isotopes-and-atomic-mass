@@ -82,7 +82,8 @@ define( function( require ) {
 
     // Function to adjust z-layer ordering for a particle. This is to be linked to the particle's zLayer property.
     var adjustZLayer = function( addedAtom, zLayer ) {
-      assert && assert( nucleonLayers.length > zLayer, 'zLayer for proton exceeds number of layers, max number may need increasing.' );
+      assert && assert( nucleonLayers.length > zLayer,
+        'zLayer for proton exceeds number of layers, max number may need increasing.' );
       // Determine whether proton view is on the correct layer.
       var onCorrectLayer = false;
       nucleonLayers[ zLayer ].children.forEach( function( particleView ) {
@@ -110,7 +111,8 @@ define( function( require ) {
 
     // function to add the view for a nucleon, i.e. a proton or neutron
     function addParticleView( addedParticle ) {
-      assert && assert( addedParticle.type === 'proton' || addedParticle.type === 'neutron', 'unrecognized particle type' );
+      assert && assert( addedParticle.type === 'proton' || addedParticle.type === 'neutron',
+        'unrecognized particle type' );
 
       var particleView = new ParticleView( addedParticle, thisNode.modelViewTransform );
       particleView.center = thisNode.modelViewTransform.modelToViewPosition( addedParticle.position );
@@ -183,9 +185,11 @@ define( function( require ) {
       elementName.text = name;
       var isotopeAtomNodeRadius = isotopeAtomNode.centerY - isotopeAtomNode.top;
       var elementNameMaxWidth = 2 * Math.sqrt(
-          ( isotopeAtomNodeRadius * isotopeAtomNodeRadius) - ( mapElementToPosition[ numProtons ] * mapElementToPosition[ numProtons ]  ) );
+          ( isotopeAtomNodeRadius * isotopeAtomNodeRadius) -
+          ( mapElementToPosition[ numProtons ] * mapElementToPosition[ numProtons ]  ) );
       elementName.maxWidth = elementNameMaxWidth;
-      elementName.center = new Vector2( isotopeAtomNode.centerX, isotopeAtomNode.centerY - mapElementToPosition[ numProtons ] );
+      elementName.center = new Vector2( isotopeAtomNode.centerX,
+        isotopeAtomNode.centerY - mapElementToPosition[ numProtons ] );
     };
 
     // Create the textual readout for the stability indicator.
@@ -208,7 +212,8 @@ define( function( require ) {
         9: 50,
         10: 50
       };
-      var stabilityIndicatorCenterPos = new Vector2( isotopeAtomNode.centerX,  isotopeAtomNode.centerY + mapStableUnstableToPosition[ numProtons ] );
+      var stabilityIndicatorCenterPos = new Vector2( isotopeAtomNode.centerX,
+        isotopeAtomNode.centerY + mapStableUnstableToPosition[ numProtons ] );
       var isotopeAtomNodeRadius = isotopeAtomNode.centerY - isotopeAtomNode.top;
       var stabilityIndicatorMaxWidth = 2 * Math.sqrt(
           ( isotopeAtomNodeRadius * isotopeAtomNodeRadius) -

@@ -33,7 +33,10 @@ define( function( require ) {
     this.position = initialPosition; // @public
     this.destination = initialPosition; // @public
     // @public
-    this.atomConfiguration = new NumberAtom( { protonCount: numProtons, neutronCount: numNeutrons, electronCount: numProtons } );
+    this.atomConfiguration = new NumberAtom( {
+      protonCount: numProtons,
+      neutronCount: numNeutrons,
+      electronCount: numProtons } );
     this.showLabel = true; // @public
     this.instanceCount = instanceCount++; // @private
   }

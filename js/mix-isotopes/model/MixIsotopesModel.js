@@ -137,19 +137,24 @@ define( function( require ) {
         usersMixState.showingNaturesMix = false;
         // Save the user's mix state.
         if ( self.mapIsotopeConfigToUserMixState.hasOwnProperty( self.prototypeIsotope.protonCount ) ){
-          self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ][ self.interactivityMode ] = usersMixState;
+          self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ][ self.interactivityMode ] =
+            usersMixState;
         }
         else{
           self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ] = {};
-          self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ][ self.interactivityMode ] = usersMixState;
+          self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ][ self.interactivityMode ] =
+            usersMixState;
         }
         // Display nature's mix.
         self.showNaturesMix();
       }
       else {
         if ( self.mapIsotopeConfigToUserMixState.hasOwnProperty( self.prototypeIsotope.protonCount ) ) {
-          if ( self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ].hasOwnProperty( self.interactivityMode ) ) {
-            self.setState( self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ][ self.interactivityMode ] );
+          if ( self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ]
+              .hasOwnProperty( self.interactivityMode ) ) {
+            self.setState(
+              self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ][ self.interactivityMode ]
+            );
           }
           else{
             self.setUpInitialUsersMix();
@@ -358,8 +363,9 @@ define( function( require ) {
      * @public
      */
     setAtomConfiguration: function( atom ) {
-      // This method does NOT check if the specified atom is already the current configuration.  This allows it to be as
-      // a sort of reset routine. For the sake of efficiency, callers should be careful not to call this when it isn't needed.
+      // This method does NOT check if the specified atom is already the current configuration. This allows it to be as
+      // a sort of reset routine.
+      // For the sake of efficiency, callers should be careful not to call this when it isn't needed.
 
       if ( this.numberAtom !== atom ) {
         this.numberAtom.protonCount = atom.protonCount;
@@ -379,11 +385,13 @@ define( function( require ) {
         // Save the user's mix state for the current element before transitioning to the new one.
         if ( this.prototypeIsotope !== atom ) {
           if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( this.prototypeIsotope.protonCount ) ){
-            this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ][ this.interactivityMode ] = this.getState();
+            this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ][ this.interactivityMode ] =
+              this.getState();
           }
           else{
             this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ] = {};
-            this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ][ this.interactivityMode ] = this.getState();
+            this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ][ this.interactivityMode ] =
+              this.getState();
           }
         }
         if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( atom.protonCount ) ) {
@@ -437,8 +445,9 @@ define( function( require ) {
           } ) );
         }
       }
-      //Sort from lightest to heaviest. Do not change this without careful considerations, since several areas of the
-      // code count on this. This is kept in case someone adds another isotope to AtomIdentifier and doesn't add it in order.
+      // Sort from lightest to heaviest. Do not change this without careful considerations, since several areas of the
+      // code count on this. This is kept in case someone adds another isotope to AtomIdentifier and doesn't add it
+      // in order.
       newIsotopesList.sort( function( atom1, atom2 ) {
         return atom1.getIsotopeAtomicMass() - atom2.getIsotopeAtomicMass();
       } );
@@ -488,8 +497,10 @@ define( function( require ) {
         controllerXOffset = this.testChamber.getTestChamberRect().minX + interControllerDistanceX / 2;
       }
       else {
-        // Four controllers don't fit well under the chamber, so use a positioning algorithm where they are extended a bit to the right.
-        interControllerDistanceX = ( this.testChamber.getTestChamberRect().getWidth() * 1.10 ) / this.possibleIsotopes.length;
+        // Four controllers don't fit well under the chamber, so use a positioning algorithm where they are extended
+        // a bit to the right.
+        interControllerDistanceX = ( this.testChamber.getTestChamberRect().getWidth() * 1.10 ) /
+                                   this.possibleIsotopes.length;
         controllerXOffset = -180;
       }
       // Add the controllers.
@@ -497,7 +508,8 @@ define( function( require ) {
         var isotopeConfig = this.possibleIsotopes[ i ];
         var isotopeCaption = AtomIdentifier.getName( isotopeConfig.protonCount ) + '-' + isotopeConfig.massNumber;
         if ( buckets ) {
-          var newBucket = new MonoIsotopeBucket( new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetBucket ),
+          var newBucket = new MonoIsotopeBucket( new Vector2( controllerXOffset + interControllerDistanceX * i,
+              controllerYOffsetBucket ),
             BUCKET_SIZE, this.getColorForIsotope( isotopeConfig ), isotopeCaption, LARGE_ISOTOPE_RADIUS,
             isotopeConfig.protonCount, isotopeConfig.neutronCount );
           this.addBucket( newBucket );
@@ -513,7 +525,8 @@ define( function( require ) {
           var newController = new NumericalIsotopeQuantityControl( this, isotopeConfig,
             new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetSlider ),
             isotopeCaption );
-          var controllerIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount, new Vector2( 0, 0 ) );
+          var controllerIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount,
+            new Vector2( 0, 0 ) );
           controllerIsotope.color = self.getColorForIsotope( isotopeConfig );
           controllerIsotope.radius = SMALL_ISOTOPE_RADIUS;
           newController.controllerIsotope = controllerIsotope;
@@ -581,7 +594,8 @@ define( function( require ) {
         }
         var isotopesToAdd = [];
         for ( var i = 0; i < numToCreate; i++ ) {
-          var newIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount, self.testChamber.generateRandomLocation() );
+          var newIsotope = new MovableAtom( isotopeConfig.protonCount, isotopeConfig.neutronCount,
+            self.testChamber.generateRandomLocation() );
           newIsotope.color = self.getColorForIsotope( isotopeConfig );
           newIsotope.massNumber = isotopeConfig.massNumber;
           newIsotope.protonCount = isotopeConfig.protonCount;

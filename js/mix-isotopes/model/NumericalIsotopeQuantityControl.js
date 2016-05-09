@@ -21,7 +21,7 @@ define( function( require ) {
   var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
   var Property = require( 'AXON/Property' );
 
-  // Global Variables
+  // constants
   var CAPACITY = 100;
 
   /**
@@ -56,7 +56,8 @@ define( function( require ) {
 
       if ( changeAmount > 0 ) {
         for ( var i = 0; i < changeAmount; i++ ) {
-          var newIsotope = new MovableAtom( this.isotopeConfig.protonCount, this.isotopeConfig.neutronCount, this.model.testChamber.generateRandomLocation() );
+          var newIsotope = new MovableAtom( this.isotopeConfig.protonCount, this.isotopeConfig.neutronCount,
+            this.model.testChamber.generateRandomLocation() );
           newIsotope.color = this.model.getColorForIsotope( this.isotopeConfig );
           newIsotope.massNumber = this.isotopeConfig.massNumber;
           newIsotope.protonCount = this.isotopeConfig.protonCount;

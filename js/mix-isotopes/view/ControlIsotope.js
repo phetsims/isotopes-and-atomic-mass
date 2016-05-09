@@ -56,7 +56,11 @@ define( function( require ) {
     numericLayer.addChild(plusButton);
     numericLayer.addChild(minusButton);
 
-    var isotopeText = new Text( '', { font: new PhetFont( 20 ), maxWidth: 0.9 * READOUT_SIZE.width, maxHeight: 0.9 * READOUT_SIZE.height } );
+    var isotopeText = new Text( '', {
+      font: new PhetFont( 20 ),
+      maxWidth: 0.9 * READOUT_SIZE.width,
+      maxHeight: 0.9 * READOUT_SIZE.height
+    } );
 
     var panel = new Panel( isotopeText, {
       minWidth: READOUT_SIZE.width,

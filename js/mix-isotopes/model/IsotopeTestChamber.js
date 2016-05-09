@@ -1,10 +1,9 @@
 // Copyright 2015, University of Colorado Boulder
 
 /**
- * Class that represents a "test chamber" where multiple isotopes can be
- * placed.  The test chamber calculates the average atomic mass and the
- * proportions of the various isotopes.  It is intended to be contained in
- * the main model class.
+ * Class that represents a "test chamber" where multiple isotopes can be placed. The test chamber calculates the
+ * average atomic mass and the proportions of the various isotopes. It is intended to be contained in the
+ * main model class.
  *
  * @author John Blanco
  * @author James Smith
@@ -161,8 +160,8 @@ define( function( require ) {
           // Update the isotope count.
           this.updateCountProperty();
           // Update the average atomic mass.
-          this.averageAtomicMass = ( ( this.averageAtomicMass * ( this.isotopeCount - 1 ) ) + isotope.atomConfiguration.getIsotopeAtomicMass() ) /
-                                   this.isotopeCount;
+          this.averageAtomicMass = ( ( this.averageAtomicMass * ( this.isotopeCount - 1 ) ) +
+                                     isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCount;
         }
       }
       else {
@@ -315,7 +314,8 @@ define( function( require ) {
      */
     adjustForOverlap: function() {
       // Bounds checking.  The threshold is pretty much arbitrary.
-      assert && assert(this.getTotalIsotopeCount() <= 100, 'Ignoring request to adjust for overlap - too many particles in the chamber for that');
+      assert && assert(this.getTotalIsotopeCount() <= 100,
+        'Ignoring request to adjust for overlap - too many particles in the chamber for that');
 
       // Check for overlap and adjust particle positions until none exists.
       var maxIterations = 10000; // Empirically determined
@@ -342,8 +342,10 @@ define( function( require ) {
             var forceFromIsotope = new Vector2( 0, 0 );
             var distanceBetweenIsotopes = isotope1.position.distance( isotope2.position );
             if ( distanceBetweenIsotopes === 0 ) {
-              // These isotopes are sitting right on top of one another.  Add the max amount of inter-particle force in a random direction.
-              forceFromIsotope.setPolar( interParticleForceConst / ( minInterParticleDistance * minInterParticleDistance ), Math.random() * 2 * Math.PI );
+              // These isotopes are sitting right on top of one another.
+              // Add the max amount of inter-particle force in a random direction.
+              forceFromIsotope.setPolar( interParticleForceConst / ( minInterParticleDistance * minInterParticleDistance ),
+                Math.random() * 2 * Math.PI );
             }
             else if ( distanceBetweenIsotopes < isotope1.radius + isotope2.radius ) {
               // calculate the repulsive force based on the distance.

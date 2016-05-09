@@ -1,8 +1,7 @@
 // Copyright 2014-2015, University of Colorado Boulder
 
 /**
- * Node that represents a scale on which an atom can be weighed.  This node is intended to have a faux 3D look to it,
- * but is not truly 3D in any way.
+ * Node that represents a scale on which an atom can be weighed.
  *
  * @author John Blanco
  * @author Jesse Greenberg
@@ -39,8 +38,8 @@ define( function( require ) {
 
   /**
    * Utility function that defines the readout on the front of the scale. This readout can display an atom's mass as
-   * either the mass number, which is an integer number representing the total number of nucleons, or as the atomic mass,
-   * which is the relative actual mass of the atom.
+   * either the mass number, which is an integer number representing the total number of nucleons, or as the atomic
+   * mass, which is the relative actual mass of the atom.
    *
    * @param {NumberAtom} atom
    * @param {Property} displayModeProperty
@@ -49,7 +48,11 @@ define( function( require ) {
   function ScaleReadoutNode( atom, displayModeProperty ) {
     this.atom = atom;
 
-    var readoutText = new Text( '', { font: new PhetFont( 20 ), maxWidth: 0.9 * READOUT_SIZE.width, maxHeight: 0.9 * READOUT_SIZE.height } );
+    var readoutText = new Text( '', {
+      font: new PhetFont( 20 ),
+      maxWidth: 0.9 * READOUT_SIZE.width,
+      maxHeight: 0.9 * READOUT_SIZE.height
+    } );
 
     function updateReadout() {
       if ( displayModeProperty.get() === DISPLAY_MODE.MASS_NUMBER ) {
@@ -93,8 +96,18 @@ define( function( require ) {
   function DisplayModeSelectionNode( displayModeProperty ) {
     var radioButtonRadius = 6;
     var LABEL_FONT = new PhetFont( 14 );
-    var massNumberButton = new AquaRadioButton( displayModeProperty, DISPLAY_MODE.MASS_NUMBER, new Text( massNumberTitleString, { font: LABEL_FONT, maxWidth: 125, fill: 'white' } ), { radius: radioButtonRadius } );
-    var atomicMassButton = new AquaRadioButton( displayModeProperty, DISPLAY_MODE.ATOMIC_MASS, new Text( atomicMassTitleString, { font: LABEL_FONT, maxWidth: 125, fill: 'white' } ), { radius: radioButtonRadius } );
+    var massNumberButton = new AquaRadioButton( displayModeProperty, DISPLAY_MODE.MASS_NUMBER,
+      new Text( massNumberTitleString, {
+        font: LABEL_FONT,
+        maxWidth: 125,
+        fill: 'white'
+      } ), { radius: radioButtonRadius } );
+    var atomicMassButton = new AquaRadioButton( displayModeProperty, DISPLAY_MODE.ATOMIC_MASS,
+      new Text( atomicMassTitleString, {
+        font: LABEL_FONT,
+        maxWidth: 125,
+        fill: 'white'
+      } ), { radius: radioButtonRadius } );
     var displayButtonGroup = new Node();
     displayButtonGroup.addChild( massNumberButton );
     atomicMassButton.top = massNumberButton.bottom + 8;

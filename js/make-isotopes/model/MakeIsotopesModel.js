@@ -1,7 +1,7 @@
 // Copyright 2014-2015, University of Colorado Boulder
 
 /**
- * This is the primary model class for the Make Isotopes module.  This class acts as the main interface for model
+ * This is the primary model class for the Make Isotopes module. This class acts as the main interface for model
  * actions, and contains the constituent model elements. It watches all neutrons and, based on where they are placed by
  * the user, moves them between the neutron bucket and the atom. In this model, units are picometers (1E-12).
  *
@@ -71,7 +71,8 @@ define( function( require ) {
     self.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD; // @private
     self.nucleusOffset = Vector2.ZERO; // @private
     self.particleAtom.massNumberProperty.link( function( massNumber ) {
-      var stable = massNumber > 0 ? AtomIdentifier.isStable( self.particleAtom.protonCount, self.particleAtom.neutronCount ) : true;
+      var stable = massNumber > 0 ?
+                   AtomIdentifier.isStable( self.particleAtom.protonCount, self.particleAtom.neutronCount ) : true;
       if ( self.nucleusStable !== stable ) {
         // Stability has changed.
         self.nucleusStable = stable;

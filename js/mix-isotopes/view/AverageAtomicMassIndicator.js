@@ -56,8 +56,10 @@ define( function( require ) {
     node.addChild( shape );
 
     // Create the label that goes above the tick mark.
-    var label = new SubSupText( ' <sup>' + isotopeConfig.massNumber + '</sup>' + AtomIdentifier.getSymbol( isotopeConfig.protonCount ),
-      {font: new PhetFont(12)} );
+    var label = new SubSupText( ' <sup>' + isotopeConfig.massNumber + '</sup>' +
+                                AtomIdentifier.getSymbol( isotopeConfig.protonCount ), {
+      font: new PhetFont(12)
+    } );
     label.centerX = shape.centerX;
     label.bottom = shape.top;
     node.addChild( label );
