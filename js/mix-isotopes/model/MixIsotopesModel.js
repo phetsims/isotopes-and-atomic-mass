@@ -26,6 +26,7 @@ define( function( require ) {
   var NumericalIsotopeQuantityControl = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/NumericalIsotopeQuantityControl' );
   var ObservableArray = require( 'AXON/ObservableArray' );
   var PropertySet = require( 'AXON/PropertySet' );
+  var Util = require( 'DOT/Util' );
   var Vector2 = require( 'DOT/Vector2' );
 
   // constants
@@ -586,7 +587,7 @@ define( function( require ) {
 
       // Add the isotopes.
       possibleIsotopesCopy.forEach( function (isotopeConfig) {
-        var numToCreate = Math.round( NUM_NATURES_MIX_ATOMS * AtomIdentifier.getNaturalAbundance( isotopeConfig ) );
+        var numToCreate = Util.roundSymmetric( NUM_NATURES_MIX_ATOMS * AtomIdentifier.getNaturalAbundance( isotopeConfig ) );
         if ( numToCreate === 0 ) {
           // The calculated quantity was 0, but we don't want to have no instances of this isotope in the chamber, so
           // add only one. This behavior was requested by the design team.
