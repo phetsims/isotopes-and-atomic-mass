@@ -42,7 +42,7 @@ define( function( require ) {
         var radius = this.modelViewTransform.modelToViewDeltaX( isotope.radius );
         var x = this.modelViewTransform.modelToViewX( isotope.positionProperty.get().x );
         var y = this.modelViewTransform.modelToViewY( isotope.positionProperty.get().y );
-        context.fillStyle = isotope.color._css;
+        context.fillStyle = isotope.color.toCSS();
         context.strokeStyle = 'black';
         context.beginPath();
         context.arc( x , y, radius, 0, 2 * Math.PI, true );
