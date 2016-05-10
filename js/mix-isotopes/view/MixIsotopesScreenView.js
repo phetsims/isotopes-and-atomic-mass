@@ -181,14 +181,16 @@ define( function( require ) {
 
       isotopeLayer.addChild( isotopeView );
 
-      addedIsotope.userControlledProperty.link( function ( value ) {
+      var moveToFront = function ( value ) {
         if ( value ){
           isotopeView.moveToFront();
         }
-      });
+      };
+      addedIsotope.userControlledProperty.link( moveToFront );
       mixIsotopesModel.isotopesList.addItemRemovedListener( function removalListener( removedIsotope ) {
         if ( removedIsotope === addedIsotope ) {
           isotopeLayer.removeChild( isotopeView );
+          addedIsotope.userControlledProperty.unlink( moveToFront );
           isotopeView.dispose();
           mixIsotopesModel.isotopesList.removeItemRemovedListener( removalListener );
         }

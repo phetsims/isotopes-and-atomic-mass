@@ -199,8 +199,8 @@ define( function( require ) {
     // @public
     step: function( dt ) {
       // Update particle positions.
-      this.isotopesList.forEach( function( neutron ) {
-        neutron.step( dt );
+      this.isotopesList.forEach( function( isotope ) {
+        isotope.step( dt );
       } );
     },
 
