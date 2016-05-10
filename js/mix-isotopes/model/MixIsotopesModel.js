@@ -45,7 +45,7 @@ define( function( require ) {
 
   /*
    * Enum of the possible interactivity types. The user is dragging large isotopes between the test chamber and a set of
-    * buckets. The user is adding and removing small isotopes to/from the chamber using sliders.
+   * buckets. The user is adding and removing small isotopes to/from the chamber using sliders.
    */
   var InteractivityMode = {
     BUCKETS_AND_LARGE_ATOMS: 'BUCKETS_AND_LARGE_ATOMS',

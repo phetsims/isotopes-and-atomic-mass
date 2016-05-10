@@ -153,12 +153,10 @@ define( function( require ) {
     },
 
     /**
-     * Set the configuration of the atom that the user interacts with.  Specifically, this sets the particle atom equal
-     * to the current number atom.  This is done here rather than by directly accessing the atom so that the
-     * appropriate notifications can be sent and the bucket can be
-     * reinitialized.
      *
-     * @param {NumberAtom} numberAtom - New configuration of atomic properties to which the atom should be set.
+     * @param {Particle} particle
+     * @param {SphereBucket} bucket
+     * @param {ParticleAtom} atom
      * @public
      */
     placeNucleon: function( particle, bucket, atom ) {
@@ -172,60 +170,68 @@ define( function( require ) {
 
     // @public
     setNeutronBucketConfiguration: function () {
-        var that = this;
-        // Add the neutrons to the neutron bucket.
-        _.times( DEFAULT_NUM_NEUTRONS_IN_BUCKET, function() {
-          var neutron = new Particle( 'neutron' );
+      var that = this;
+      // Add the neutrons to the neutron bucket.
+      _.times( DEFAULT_NUM_NEUTRONS_IN_BUCKET, function() {
+        var neutron = new Particle( 'neutron' );
 
-          that.neutronBucket.addParticleFirstOpen( neutron, false );
-          neutron.userControlledProperty.link( function( userControlled ) {
+        that.neutronBucket.addParticleFirstOpen( neutron, false );
+        neutron.userControlledProperty.link( function( userControlled ) {
+          that.trigger( 'atomReconfigured' );
+          if ( !userControlled && !that.neutronBucket.containsParticle( neutron ) ) {
+            that.placeNucleon( neutron, that.neutronBucket, that.particleAtom );
             that.trigger( 'atomReconfigured' );
-            if ( !userControlled && !that.neutronBucket.containsParticle( neutron ) ) {
-              that.placeNucleon( neutron, that.neutronBucket, that.particleAtom );
-              that.trigger( 'atomReconfigured' );
-            }
-          } );
-          that.neutrons.add( neutron );
+          }
         } );
+        that.neutrons.add( neutron );
+      } );
     },
 
-    // @public
+    /**
+     * Set the configuration of the atom that the user interacts with.  Specifically, this sets the particle atom equal
+     * to the current number atom.  This is done here rather than by directly accessing the atom so that the
+     * appropriate notifications can be sent and the bucket can be
+     * reinitialized.
+     *
+     * @param {NumberAtom} numberAtom - New configuration of atomic properties to which the atom should be set.
+     * @public
+     */
     setAtomConfiguration: function( numberAtom ) {
-        var that = this;
-        this.particleAtom.clear();
-        this.protons.clear();
-        this.electrons.clear();
-        this.neutrons.clear();
-        this.neutronBucket.reset();
-        if ( this.numberAtom !== numberAtom ) {
-          this.numberAtom.protonCount = numberAtom.protonCount;
-          this.numberAtom.electronCount = numberAtom.electronCount;
-          this.numberAtom.neutronCount = numberAtom.neutronCount;
-        }
+      var that = this;
+      this.particleAtom.clear();
+      this.protons.clear();
+      this.electrons.clear();
+      this.neutrons.clear();
+      this.neutronBucket.reset();
+      if ( this.numberAtom !== numberAtom ) {
+        this.numberAtom.protonCount = numberAtom.protonCount;
+        this.numberAtom.electronCount = numberAtom.electronCount;
+        this.numberAtom.neutronCount = numberAtom.neutronCount;
+      }
 
-        // Add the particles.
-        for ( var i = 0; i < numberAtom.electronCount; i++ ) {
-          var electron = new Particle( 'electron' );
-          this.particleAtom.addParticle( electron );
-          this.electrons.add( electron );
-        }
-        for ( var j = 0; j < numberAtom.protonCount; j++ ) {
-          var proton = new Particle( 'proton' );
-          this.particleAtom.addParticle( proton );
-          this.protons.add( proton );
-        }
-        _.times( numberAtom.neutronCount, function() {
-            var neutron = new Particle( 'neutron' );
-            that.particleAtom.addParticle( neutron );
-            that.neutrons.add( neutron );
-            neutron.userControlledProperty.lazyLink( function( userControlled ) {
-              that.trigger( 'atomReconfigured' );
-              if ( !userControlled && !that.particleAtom.neutrons.contains( neutron ) ) {
-                that.placeNucleon( neutron, that.neutronBucket, that.particleAtom );
-                that.trigger( 'atomReconfigured' );
-              }
-            } );
-        });
+      // Add the particles.
+      for ( var i = 0; i < numberAtom.electronCount; i++ ) {
+        var electron = new Particle( 'electron' );
+        this.particleAtom.addParticle( electron );
+        this.electrons.add( electron );
+      }
+      for ( var j = 0; j < numberAtom.protonCount; j++ ) {
+        var proton = new Particle( 'proton' );
+        this.particleAtom.addParticle( proton );
+        this.protons.add( proton );
+      }
+      _.times( numberAtom.neutronCount, function() {
+        var neutron = new Particle( 'neutron' );
+        that.particleAtom.addParticle( neutron );
+        that.neutrons.add( neutron );
+        neutron.userControlledProperty.lazyLink( function( userControlled ) {
+          that.trigger( 'atomReconfigured' );
+          if ( !userControlled && !that.particleAtom.neutrons.contains( neutron ) ) {
+            that.placeNucleon( neutron, that.neutronBucket, that.particleAtom );
+            that.trigger( 'atomReconfigured' );
+          }
+        } );
+      });
       this.particleAtom.moveAllParticlesToDestination();
       this.setNeutronBucketConfiguration();
       this.trigger( 'atomReconfigured' );

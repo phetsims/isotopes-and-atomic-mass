@@ -81,7 +81,7 @@ define( function( require ) {
     this.model = model;
     // Add the triangular pointer. This is created such that the point of the triangle is at (0,0) for this node.
 
-     var vertices = [ new Vector2( -TRIANGULAR_POINTER_WIDTH / 2, TRIANGULAR_POINTER_HEIGHT ),
+    var vertices = [ new Vector2( -TRIANGULAR_POINTER_WIDTH / 2, TRIANGULAR_POINTER_HEIGHT ),
       new Vector2( TRIANGULAR_POINTER_WIDTH / 2, TRIANGULAR_POINTER_HEIGHT ),
       new Vector2( 0, 0 ) ];
 
@@ -196,11 +196,11 @@ define( function( require ) {
 
     model.testChamber.averageAtomicMassProperty.link( function( averageAtomiCmass ) {
       if ( model.testChamber.isotopeCount > 0 ) {
-            readoutPointer.centerX = self.calcXOffsetFromAtomicMass( averageAtomiCmass );
-            readoutPointer.setVisible( true );
+        readoutPointer.centerX = self.calcXOffsetFromAtomicMass( averageAtomiCmass );
+        readoutPointer.setVisible( true );
       }
       else {
-            readoutPointer.setVisible( false );
+        readoutPointer.setVisible( false );
       }
     } );
   }

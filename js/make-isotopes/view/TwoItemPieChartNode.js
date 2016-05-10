@@ -118,9 +118,9 @@ define( function( require ) {
 
     var leftConnectingLine = new Line( myIsotopeAbundancePanel.centerX, myIsotopeAbundancePanel.centerY,
       pieChartBoundingRectangle.centerX, pieChartBoundingRectangle.centerY, {
-      stroke: FIRST_SLICE_COLOR,
-      lineDash: [ 3, 1 ]
-    });
+        stroke: FIRST_SLICE_COLOR,
+        lineDash: [ 3, 1 ]
+      });
     this.addChild( leftConnectingLine );
     leftConnectingLine.moveToBack();
 
