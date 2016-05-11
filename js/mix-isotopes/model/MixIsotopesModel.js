@@ -642,10 +642,10 @@ define( function( require ) {
           bucket.reset();
         } );
         state[ InteractivityMode.BUCKETS_AND_LARGE_ATOMS ].bucketList.clear();
-        state[ InteractivityMode.BUCKETS_AND_LARGE_ATOMS ].isotopeTestChamberState.containedIsotopes.clear()
+        state[ InteractivityMode.BUCKETS_AND_LARGE_ATOMS ].isotopeTestChamberState.containedIsotopes.clear();
       }
       if ( state[ InteractivityMode.SLIDERS_AND_SMALL_ATOMS ] ){
-        state[ InteractivityMode.SLIDERS_AND_SMALL_ATOMS ].isotopeTestChamberState.containedIsotopes.clear()
+        state[ InteractivityMode.SLIDERS_AND_SMALL_ATOMS ].isotopeTestChamberState.containedIsotopes.clear();
       }
     },
 

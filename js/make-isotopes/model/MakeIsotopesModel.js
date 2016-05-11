@@ -175,7 +175,7 @@ define( function( require ) {
       _.times( DEFAULT_NUM_NEUTRONS_IN_BUCKET, function() {
         var neutron = new Particle( 'neutron' );
 
-        that.neutronBucket.addParticleFirstOpen( neutron, false );
+        self.neutronBucket.addParticleFirstOpen( neutron, false );
         neutron.userControlledProperty.link( function( userControlled ) {
           self.trigger( 'atomReconfigured' );
           if ( !userControlled && !self.neutronBucket.containsParticle( neutron ) ) {
