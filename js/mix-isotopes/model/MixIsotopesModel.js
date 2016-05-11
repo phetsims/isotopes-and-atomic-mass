@@ -344,10 +344,9 @@ define( function( require ) {
         thisModel.removeBuckets();
         modelState.bucketList.forEach( function( bucket ) {
           thisModel.bucketList.add( bucket );
-          var that = thisModel;
           bucket.particles.forEach( function( isotope ){
             bucket.addParticleFirstOpen( isotope, false );
-            that.isotopesList.add( isotope );
+            thisModel.isotopesList.add( isotope );
           });
         });
       }

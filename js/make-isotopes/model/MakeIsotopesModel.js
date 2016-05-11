@@ -170,20 +170,20 @@ define( function( require ) {
 
     // @public
     setNeutronBucketConfiguration: function () {
-      var that = this;
+      var self = this;
       // Add the neutrons to the neutron bucket.
       _.times( DEFAULT_NUM_NEUTRONS_IN_BUCKET, function() {
         var neutron = new Particle( 'neutron' );
 
         that.neutronBucket.addParticleFirstOpen( neutron, false );
         neutron.userControlledProperty.link( function( userControlled ) {
-          that.trigger( 'atomReconfigured' );
-          if ( !userControlled && !that.neutronBucket.containsParticle( neutron ) ) {
-            that.placeNucleon( neutron, that.neutronBucket, that.particleAtom );
-            that.trigger( 'atomReconfigured' );
+          self.trigger( 'atomReconfigured' );
+          if ( !userControlled && !self.neutronBucket.containsParticle( neutron ) ) {
+            self.placeNucleon( neutron, self.neutronBucket, self.particleAtom );
+            self.trigger( 'atomReconfigured' );
           }
         } );
-        that.neutrons.add( neutron );
+        self.neutrons.add( neutron );
       } );
     },
 
@@ -197,7 +197,7 @@ define( function( require ) {
      * @public
      */
     setAtomConfiguration: function( numberAtom ) {
-      var that = this;
+      var self = this;
       this.particleAtom.clear();
       this.protons.clear();
       this.electrons.clear();
@@ -222,13 +222,13 @@ define( function( require ) {
       }
       _.times( numberAtom.neutronCount, function() {
         var neutron = new Particle( 'neutron' );
-        that.particleAtom.addParticle( neutron );
-        that.neutrons.add( neutron );
+        self.particleAtom.addParticle( neutron );
+        self.neutrons.add( neutron );
         neutron.userControlledProperty.lazyLink( function( userControlled ) {
-          that.trigger( 'atomReconfigured' );
-          if ( !userControlled && !that.particleAtom.neutrons.contains( neutron ) ) {
-            that.placeNucleon( neutron, that.neutronBucket, that.particleAtom );
-            that.trigger( 'atomReconfigured' );
+          self.trigger( 'atomReconfigured' );
+          if ( !userControlled && !self.particleAtom.neutrons.contains( neutron ) ) {
+            self.placeNucleon( neutron, self.neutronBucket, self.particleAtom );
+            self.trigger( 'atomReconfigured' );
           }
         } );
       });
