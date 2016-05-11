@@ -509,10 +509,13 @@ define( function( require ) {
         var isotopeConfig = this.possibleIsotopes[ i ];
         var isotopeCaption = AtomIdentifier.getName( isotopeConfig.protonCount ) + '-' + isotopeConfig.massNumber;
         if ( buckets ) {
-          var newBucket = new MonoIsotopeBucket( new Vector2( controllerXOffset + interControllerDistanceX * i,
-              controllerYOffsetBucket ),
-            BUCKET_SIZE, this.getColorForIsotope( isotopeConfig ), isotopeCaption, LARGE_ISOTOPE_RADIUS,
-            isotopeConfig.protonCount, isotopeConfig.neutronCount );
+          var newBucket = new MonoIsotopeBucket( isotopeConfig.protonCount, isotopeConfig.neutronCount, {
+              position: new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetBucket ),
+              size: BUCKET_SIZE,
+              baseColor: this.getColorForIsotope( isotopeConfig ),
+              caption: isotopeCaption,
+              sphereRadius: LARGE_ISOTOPE_RADIUS
+            } );
           this.addBucket( newBucket );
           if ( !this.showingNaturesMix ) {
             // Create and add initial isotopes to the new bucket.

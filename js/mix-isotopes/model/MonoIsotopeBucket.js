@@ -20,22 +20,12 @@ define( function( require ) {
 
   /**
    * Constructor.
-   * @param {Vector2} position
-   * @param {Dimension2} size
-   * @param {Color} baseColor
-   * @param {String} caption
-   * @param {number} particleRadius
    * @param {number} numProtonsInIsotope
    * @param {number} numNeutronsInIsotope
+   * @param {Object} options
    */
-  function MonoIsotopeBucket( position, size, baseColor, caption, particleRadius, numProtonsInIsotope, numNeutronsInIsotope ) {
-    SphereBucket.call( this, {
-      position: position,
-      size: size,
-      baseColor: baseColor,
-      caption: caption,
-      sphereRadius: particleRadius
-    } );
+  function MonoIsotopeBucket( numProtonsInIsotope, numNeutronsInIsotope, options ) {
+    SphereBucket.call( this, options );
 
     this.numProtonsInIsotope = numProtonsInIsotope; // @public
     this.numNeutronsInIsotope = numNeutronsInIsotope; // @public
