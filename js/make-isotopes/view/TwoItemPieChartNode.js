@@ -44,12 +44,6 @@ define( function( require ) {
 
     Node.call( this );
 
-    // TODO test cases for pie chart
-    //var slices = [ { value:25, color:'red' } ];
-    //var slices = [ { value:25, color:'red' }, { value:25, color:'blue' } ];
-    //var slices = [ { value:75, color:'red' }, { value:25, color:'blue' } ];
-    //var slices = [ { value:40, color:'red' }, { value:0, color:'blue' }, { value:30, color:'green' } ];
-
     var pieChartBoundingRectangle = new Rectangle( 150, 0, PIE_CHART_RADIUS * 2, PIE_CHART_RADIUS * 2, 0, 0 );
 
     // default slices and color coding, first slice is for my isotope and second slice is for other isotope
