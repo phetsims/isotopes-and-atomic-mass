@@ -15,7 +15,7 @@ define( function( require ) {
 
   /**
    * A particle layer rendered on canvas
-   * @param {Array< particles >} isotopes that need to be rendered on the canvas
+   * @param {Array< movableAtom >} isotopes that need to be rendered on the canvas
    * @param {ModelViewTransform2} modelViewTransform to convert between model and view coordinate frames
    * @param {Object} [options] that can be passed on to the underlying node
    * @constructor
