@@ -79,7 +79,7 @@ define( function( require ) {
     minusButton.centerY = panel.centerY;
     //slider.left = minusButton.left;
 
-    controller.quantityProperty.link( function changedValue( value ) {
+    var changedValue = function( value ){
       isotopeText.setText( Math.floor( value) );
       isotopeText.centerX = READOUT_SIZE.width / 2;
       isotopeText.centerY = READOUT_SIZE.height * 0.75;
@@ -87,8 +87,9 @@ define( function( require ) {
       minusButton.enabled = !(Math.floor( value ) === minRange);
       plusButton.enabled = !(Math.floor( value ) === maxRange);
       controller.setIsotopeQuantity( Math.floor( value) );
-    });
+    };
 
+    controller.quantityProperty.link( changedValue );
 
     var isotopeNode = new IsotopeNode( controller.controllerIsotope, 6, {
       showLabel: false
@@ -106,9 +107,17 @@ define( function( require ) {
     numericLayer.bottom = labelLayer.top - 10;
     labelLayer.centerX = numericLayer.centerX;
     sliderLayer.centerX = numericLayer.centerX + 5;
+
+    this.controlIsotopeDispose = function(){
+      controller.quantityProperty.link( changedValue );
+    };
   }
 
   isotopesAndAtomicMass.register( 'ControlIsotope', ControlIsotope );
 
-  return inherit( Node, ControlIsotope );
+  return inherit( Node, ControlIsotope, {
+    dispose: function(){
+      this.controlIsotopeDispose();
+    }
+  } );
 } );

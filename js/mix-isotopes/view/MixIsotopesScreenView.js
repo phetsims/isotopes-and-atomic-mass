@@ -198,6 +198,7 @@ define( function( require ) {
     }
 
     mixIsotopesModel.isotopesList.forEach( function( addedIsotope ) { addIsotopeView( addedIsotope ); } );
+
     mixIsotopesModel.isotopesList.addItemAddedListener( function( addedIsotope ) {
       if ( mixIsotopesModel.interactivityModeProperty.get() ===
            MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
@@ -208,6 +209,7 @@ define( function( require ) {
         mixIsotopesModel.isotopesList.addItemRemovedListener( function removalListener( removedIsotope ) {
           if ( removedIsotope === addedIsotope ) {
             self.isotopesLayer.setIsotopes( self.model.isotopesList );
+            mixIsotopesModel.isotopesList.removeItemRemovedListener( removalListener );
           }
         } );
       }
@@ -225,6 +227,7 @@ define( function( require ) {
       mixIsotopesModel.numericalControllerList.addItemRemovedListener( function removalListener( removedController ) {
         if ( removedController === addedController ) {
           controlsLayer.removeChild( controllerView );
+          controllerView.dispose();
           mixIsotopesModel.numericalControllerList.removeItemRemovedListener( removalListener );
         }
       } );

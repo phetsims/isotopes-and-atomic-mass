@@ -19,8 +19,7 @@ define( function( require ) {
   var NumberAtom = require( 'SHRED/model/NumberAtom' );
   var Particle = require( 'SHRED/model/Particle' );
 
-  // class variables
-  var instanceCount = 0;
+
 
   /**
    * @param {number} numProtons
@@ -38,7 +37,6 @@ define( function( require ) {
       neutronCount: numNeutrons,
       electronCount: numProtons } );
     this.showLabel = true; // @public
-    this.instanceCount = instanceCount++; // @private
   }
   isotopesAndAtomicMass.register( 'MovableAtom', MovableAtom );
   return inherit( Particle, MovableAtom, {
