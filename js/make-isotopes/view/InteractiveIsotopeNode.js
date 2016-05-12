@@ -125,11 +125,12 @@ define( function( require ) {
         adjustZLayer( addedParticle, zLayer );
       } );
 
-      addedParticle.userControlledProperty.link( function ( value ) {
+      var moveParticleToFront = function( value ){
         if ( value ){
           particleView.moveToFront();
         }
-      });
+      };
+      addedParticle.userControlledProperty.link( moveParticleToFront );
       // Add the item removed listener.
       var temp;
       if ( addedParticle.type === 'proton' ) {
@@ -143,6 +144,7 @@ define( function( require ) {
         if ( removedAtom === addedParticle ) {
           nucleonLayers[ addedParticle.zLayer ].removeChild( particleView );
           particleView.dispose();
+          addedParticle.userControlledProperty.unlink( moveParticleToFront );
           temp.removeItemRemovedListener( removalListener );
         }
       } );

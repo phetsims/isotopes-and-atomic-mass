@@ -70,6 +70,7 @@ define( function( require ) {
     self.nucleusStable = true; // @public
     self.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD; // @private
     self.nucleusOffset = Vector2.ZERO; // @private
+    // Unlink in not required here as it is used through out the sim life
     self.particleAtom.massNumberProperty.link( function( massNumber ) {
       var stable = massNumber > 0 ?
                    AtomIdentifier.isStable( self.particleAtom.protonCount, self.particleAtom.neutronCount ) : true;
@@ -168,21 +169,40 @@ define( function( require ) {
       }
     },
 
+    /**
+     *
+     * @param {Particle} neutron
+     * @param {boolean} lazyLink whether the linking has to be lazy or not
+     * @private
+     */
+    linkNeutron: function( neutron, lazyLink ){
+      var self = this;
+      var userControlledLink = function( userControlled ) {
+        self.trigger( 'atomReconfigured' );
+        if ( !userControlled && !self.neutronBucket.containsParticle( neutron ) ) {
+          self.placeNucleon( neutron, self.neutronBucket, self.particleAtom );
+          self.trigger( 'atomReconfigured' );
+        }
+      };
+      if( lazyLink ){
+        neutron.userControlledProperty.lazyLink( userControlledLink );
+      }
+      else{
+        neutron.userControlledProperty.link( userControlledLink );
+      }
+      neutron.userControlledPropertyUnlink = function(){
+        neutron.userControlledProperty.unlink( userControlledLink );
+      }
+    },
+
     // @public
     setNeutronBucketConfiguration: function () {
       var self = this;
       // Add the neutrons to the neutron bucket.
       _.times( DEFAULT_NUM_NEUTRONS_IN_BUCKET, function() {
         var neutron = new Particle( 'neutron' );
-
         self.neutronBucket.addParticleFirstOpen( neutron, false );
-        neutron.userControlledProperty.link( function( userControlled ) {
-          self.trigger( 'atomReconfigured' );
-          if ( !userControlled && !self.neutronBucket.containsParticle( neutron ) ) {
-            self.placeNucleon( neutron, self.neutronBucket, self.particleAtom );
-            self.trigger( 'atomReconfigured' );
-          }
-        } );
+        self.linkNeutron( neutron, false );
         self.neutrons.add( neutron );
       } );
     },
@@ -201,6 +221,9 @@ define( function( require ) {
       this.particleAtom.clear();
       this.protons.clear();
       this.electrons.clear();
+      this.neutrons.forEach( function( neutron ) {
+        neutron.userControlledPropertyUnlink();
+      } );
       this.neutrons.clear();
       this.neutronBucket.reset();
       if ( this.numberAtom !== numberAtom ) {
@@ -224,13 +247,7 @@ define( function( require ) {
         var neutron = new Particle( 'neutron' );
         self.particleAtom.addParticle( neutron );
         self.neutrons.add( neutron );
-        neutron.userControlledProperty.lazyLink( function( userControlled ) {
-          self.trigger( 'atomReconfigured' );
-          if ( !userControlled && !self.particleAtom.neutrons.contains( neutron ) ) {
-            self.placeNucleon( neutron, self.neutronBucket, self.particleAtom );
-            self.trigger( 'atomReconfigured' );
-          }
-        } );
+        self.linkNeutron( neutron, true );
       });
       this.particleAtom.moveAllParticlesToDestination();
       this.setNeutronBucketConfiguration();
