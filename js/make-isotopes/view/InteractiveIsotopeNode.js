@@ -120,10 +120,12 @@ define( function( require ) {
 
       // add particle view to correct z layer.
       nucleonLayers[ addedParticle.zLayer ].addChild( particleView );
-      // Add a listener that adjusts a nucleon's z-order layering.
-      addedParticle.zLayerProperty.link( function( zLayer ) {
+
+      var adjustZLayerLink = function( zLayer ) {
         adjustZLayer( addedParticle, zLayer );
-      } );
+      };
+      // Add a listener that adjusts a nucleon's z-order layering.
+      addedParticle.zLayerProperty.link( adjustZLayerLink );
 
       var moveParticleToFront = function( value ){
         if ( value ){
@@ -144,6 +146,7 @@ define( function( require ) {
         if ( removedAtom === addedParticle ) {
           nucleonLayers[ addedParticle.zLayer ].removeChild( particleView );
           particleView.dispose();
+          addedParticle.zLayerProperty.unlink( adjustZLayerLink );
           addedParticle.userControlledProperty.unlink( moveParticleToFront );
           temp.removeItemRemovedListener( removalListener );
         }
