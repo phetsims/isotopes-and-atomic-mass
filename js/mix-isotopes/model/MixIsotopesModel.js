@@ -130,6 +130,7 @@ define( function( require ) {
     this.setAtomConfiguration( this.numberAtom );
 
     // Listen to "showing nature's mix" property and show/hide the appropriate isotopes when the value changes.
+    // Doesn't need unlink as it stays through out the sim life
     this.showingNaturesMixProperty.lazyLink( function() {
       if ( self.showingNaturesMix ) {
         // Get the current user's mix state.
@@ -168,6 +169,7 @@ define( function( require ) {
       }
     } );
 
+    // Doesn't need unlink as it stays through out the sim life
     this.interactivityModeProperty.lazyLink( function( value, oldValue) {
       var usersMixState = self.getState();
       usersMixState.interactivityMode = oldValue;
