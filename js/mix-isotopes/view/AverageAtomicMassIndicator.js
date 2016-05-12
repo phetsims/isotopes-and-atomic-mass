@@ -124,6 +124,7 @@ define( function( require ) {
     }
 
     // Observe the average atomic weight property in the model and update the textual readout whenever it changes.
+    // Doesn't need unlink as it stays through out the sim life
     model.testChamber.averageAtomicMassProperty.link( function( averageAtomicMass ) {
       updateReadout( averageAtomicMass );
     } );
@@ -154,6 +155,7 @@ define( function( require ) {
     this.addChild( tickMarkLayer );
 
     // Listen for changes to the list of possible isotopes and update the tick marks when changes occur.
+    // Doesn't need unlink as it stays through out the sim life
     model.possibleIsotopesProperty.link( function() {
 
       tickMarkLayer.removeAllChildren();
@@ -194,9 +196,10 @@ define( function( require ) {
     readoutPointer.centerX = barNode.centerX;
     this.addChild( readoutPointer );
 
-    model.testChamber.averageAtomicMassProperty.link( function( averageAtomiCmass ) {
+    // Doesn't need unlink as it stays through out the sim life
+    model.testChamber.averageAtomicMassProperty.link( function( averageAtomicMass ) {
       if ( model.testChamber.isotopeCount > 0 ) {
-        readoutPointer.centerX = self.calcXOffsetFromAtomicMass( averageAtomiCmass );
+        readoutPointer.centerX = self.calcXOffsetFromAtomicMass( averageAtomicMass );
         readoutPointer.setVisible( true );
       }
       else {

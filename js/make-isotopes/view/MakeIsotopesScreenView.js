@@ -125,6 +125,7 @@ define( function( require ) {
 
     // Add the listener to update the symbol text.
     var textCenter = new Vector2( symbolRectangle.width / 2, symbolRectangle.height / 2 );
+    // Doesn't need unlink as it stays through out the sim life
     makeIsotopesModel.particleAtom.protonCountProperty.link( function( protonCount ) {
       var symbol = AtomIdentifier.getSymbol( protonCount );
       symbolText.text = protonCount > 0 ? symbol : '';
@@ -140,6 +141,7 @@ define( function( require ) {
     symbolRectangle.addChild( protonCountDisplay );
 
     // Add the listener to update the proton count.
+    // Doesn't need unlink as it stays through out the sim life
     makeIsotopesModel.particleAtom.protonCountProperty.link( function( protonCount ) {
       protonCountDisplay.text = protonCount;
       protonCountDisplay.left = NUMBER_INSET;
@@ -154,6 +156,7 @@ define( function( require ) {
     symbolRectangle.addChild( massNumberDisplay );
 
     // Add the listener to update the mass number.
+    // Doesn't need unlink as it stays through out the sim life
     makeIsotopesModel.particleAtom.massNumberProperty.link( function( massNumber ) {
       massNumberDisplay.text = massNumber;
       massNumberDisplay.left = NUMBER_INSET;

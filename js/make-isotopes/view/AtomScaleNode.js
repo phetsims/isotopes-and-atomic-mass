@@ -69,11 +69,13 @@ define( function( require ) {
     }
 
     // Watch the property that represents the display mode and update the readout when it changes.
+    // Doesn't need unlink as it stays through out the sim life
     displayModeProperty.link( function() {
       updateReadout();
     } );
 
     // Watch the atom and update the readout whenever it changes.
+    // Doesn't need unlink as it stays through out the sim life
     atom.massNumberProperty.link( function() {
       updateReadout();
     } );

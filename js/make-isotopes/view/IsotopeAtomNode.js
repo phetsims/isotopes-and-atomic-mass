@@ -47,6 +47,7 @@ define( function( require ) {
       isotopeElectronCloud.center = newCenter;
     };
 
+    // Doesn't need unlink as it stays through out the sim life
     particleAtom.protonCountProperty.link( function( numProtons ) {
       updateAtomPosition( numProtons );
     });

@@ -109,7 +109,7 @@ define( function( require ) {
     sliderLayer.centerX = numericLayer.centerX + 5;
 
     this.controlIsotopeDispose = function(){
-      controller.quantityProperty.link( changedValue );
+      controller.quantityProperty.unlink( changedValue );
     };
   }
 

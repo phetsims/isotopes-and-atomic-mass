@@ -336,6 +336,7 @@ define( function( require ) {
     this.addChild( isotopeLayer );
     this.addChild( bucketFrontLayer );
 
+    // Doesn't need unlink as it stays through out the sim life
     mixIsotopesModel.showingNaturesMixProperty.link( function() {
       if ( mixIsotopesModel.showingNaturesMixProperty.get() === true ) {
         interactivityModeSelectionNode.visible = false;
@@ -354,6 +355,7 @@ define( function( require ) {
       }
     } );
 
+    // Doesn't need unlink as it stays through out the sim life
     mixIsotopesModel.interactivityModeProperty.link( function() {
       if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
         self.isotopesLayer.visible = false;
@@ -364,6 +366,7 @@ define( function( require ) {
       }
     } );
 
+    // Doesn't need unlink as it stays through out the sim life
     mixIsotopesModel.testChamber.isotopeCountProperty.link( function( isotopeCount ) {
       self.updatePieChart = true;
     } );
