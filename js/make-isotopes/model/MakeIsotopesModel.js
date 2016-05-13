@@ -192,7 +192,7 @@ define( function( require ) {
       }
       neutron.userControlledPropertyUnlink = function(){
         neutron.userControlledProperty.unlink( userControlledLink );
-      }
+      };
     },
 
     // @public
