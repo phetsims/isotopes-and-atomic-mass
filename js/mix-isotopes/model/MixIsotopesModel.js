@@ -80,6 +80,7 @@ define( function( require ) {
 
   /**
    * Constructor for the Mix Isotopes Model
+   * @constructor
    **/
   function MixIsotopesModel() {
 
