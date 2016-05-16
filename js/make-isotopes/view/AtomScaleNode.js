@@ -43,7 +43,6 @@ define( function( require ) {
    *
    * @param {NumberAtom} atom
    * @param {Property} displayModeProperty
-   * @constructor
    */
   function ScaleReadoutNode( atom, displayModeProperty ) {
     this.atom = atom;
@@ -91,7 +90,7 @@ define( function( require ) {
   }
 
   /**
-   * This object contains the radio buttons that allow the user to select the display mode for the scale.
+   * Creates and return a node containing the radio buttons that allow the user to select the display mode for the scale.
    *
    * @param {Property} displayModeProperty
    */

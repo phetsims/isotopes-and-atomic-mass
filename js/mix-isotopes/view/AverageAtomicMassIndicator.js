@@ -73,7 +73,7 @@ define( function( require ) {
    * This node is set up such that the (0,0) point is at the top center of the node, which is where the point of the
    * pointer exists. This is done to make it easy to position the node under the mass indication line.
    *
-   * @ param {MixIsotopeModel} model
+   * @param {MixIsotopeModel} model
    */
   function ReadoutPointer( model ) {
     var node = new Node();

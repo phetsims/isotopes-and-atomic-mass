@@ -54,6 +54,7 @@ define( function( require ) {
      * the right middle. A value of PI/2 would start at the bottom of the pie.  And so on.
      *
      * @param initialAngle - In radians.
+     * @public
      */
     setInitialAngle: function( initialAngle ) {
       this.initialAngle = initialAngle;
@@ -65,6 +66,7 @@ define( function( require ) {
      *
      * @param {number} centerX
      * @param {number} centerY
+     * @public
      */
     setCenter: function( centerX, centerY ) {
       this.centerXCord = centerX;
@@ -77,6 +79,7 @@ define( function( require ) {
      *
      * @param initialAngle - In radians.
      * @param {Array.<Object>} slices Each slice is described by object literal which looks like { value: x, color: color }
+     * @public
      */
     setAngleAndValues: function( initialAngle, slices ) {
       this.initialAngle = initialAngle;
@@ -84,6 +87,12 @@ define( function( require ) {
       this.update();
     },
 
+    /**
+     * Returns the total of each slice value
+     *
+     * @returns {number} total
+     * @public
+     */
     getTotal: function() {
       var total = 0;
       this.slices.forEach( function( slice ) {
@@ -148,6 +157,7 @@ define( function( require ) {
 
     /**
      * @param {Array.<Object>} slices Each slice is described by object literal which looks like { value: x, color: color }
+     * @public
      */
     setPieValues: function( slices ) {
       this.slices = slices;
@@ -156,6 +166,7 @@ define( function( require ) {
 
     /**
      * @param {number} radius
+     * @public
      */
     setRadius: function( radius ) {
       this.radius = radius;
@@ -167,7 +178,7 @@ define( function( require ) {
      * the specified slice.  This is useful for adding labels that are outside of the chart.
      *
      * @param {number} sliceNumber
-     *
+     * @public
      */
     getCenterEdgePtForSlice: function( sliceNumber ) {
     if ( sliceNumber < this.sliceEdgeCenterPoints.length ) {

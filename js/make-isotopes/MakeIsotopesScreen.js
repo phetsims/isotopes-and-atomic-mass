@@ -24,8 +24,7 @@ define( function( require ) {
   var makeIsotopesIcon = require( 'mipmap!ISOTOPES_AND_ATOMIC_MASS/make-isotopes-icon.png' );
 
   /**
-   *
-   * @param tandem
+   * @param {Tandem} tandem
    * @constructor
    */
   function MakeIsotopesScreen( tandem ) {

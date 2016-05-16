@@ -66,6 +66,7 @@ define( function( require ) {
       updateOtherIsotopeLabel(myIsotopeAbundance);
     }
 
+    // Don't need to off lives through out sim life
     makeIsotopesModel.on( 'atomReconfigured', function() {
       updatePieChart();
     } );
@@ -94,7 +95,7 @@ define( function( require ) {
       readoutMyIsotopeAbundanceText.text = ( Util.toFixedNumber( myIsotopeAbundance * 100, 4 ) ).toString() + '%';
       myIsotopeAbundancePanel.centerX = pieChartBoundingRectangle.left - 50; // empirically determined
       myIsotopeLabel.centerX = myIsotopeAbundancePanel.centerX;
-      if (myIsotopeAbundance === 0){
+      if ( myIsotopeAbundance === 0 ){
         leftConnectingLine.visible = false;
       }
       else {
@@ -126,7 +127,7 @@ define( function( require ) {
     } );
 
     // Attach otherIsotopeLabel with protonCountProperty to change element name on proton count change
-    function updateOtherIsotopeLabel(myIsotopeAbundance) {
+    function updateOtherIsotopeLabel( myIsotopeAbundance ) {
       var name = AtomIdentifier.getName( makeIsotopesModel.particleAtom.protonCount );
       if ( makeIsotopesModel.particleAtom.protonCount > 0 && myIsotopeAbundance < 1 ){
         otherIsotopeLabel.text = StringUtils.format( otherIsotopesPatternString, name );

@@ -54,6 +54,10 @@ define( function( require ) {
   // constants
   var MAX_SLIDER_WIDTH = 99.75; //empirically determined
 
+  /**
+   * Created a node containing radio buttons to select My Mix or Nature's Mix
+   * @param {Property} isotopeMixtureProperty
+   */
   function IsotopeMixtureSelectionNode( isotopeMixtureProperty ) {
     var radioButtonRadius = 6;
     var LABEL_FONT = new PhetFont( 14 );
@@ -82,6 +86,11 @@ define( function( require ) {
     return displayButtonGroup;
   }
 
+  /**
+   * Created a node containing radio buttons to select Buckets or Sliders in My Mix
+   * @param {MixIsotopesModel} model
+   * @param {ModelViewTransform2} modelViewTransform
+   */
   function InteractivityModeSelectionNode( model, modelViewTransform ) {
     var bucketNode = new Node();
     var bucket = new Bucket( {
@@ -118,7 +127,7 @@ define( function( require ) {
 
   /**
    * @param {MixIsotopesModel} mixIsotopesModel
-   * @param tandem
+   * @param {Tandem} tandem
    * @constructor
    */
   function MixIsotopesScreenView( mixIsotopesModel, tandem ) {
