@@ -34,7 +34,7 @@ define( function( require ) {
     this.addChild( numericLayer );
 
     var range = new Range( minRange, maxRange );
-    var tickLabelOptions = { font: new PhetFont( 12 ) };
+    var tickLabelOptions = { font: new PhetFont( 12 ), pickable: false };
     var slider = new HSlider( controller.quantityProperty, range, {
       trackSize: new Dimension2( 80, 5 ),
       thumbSize: new Dimension2( 15, 30 ),

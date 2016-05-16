@@ -112,13 +112,11 @@ define( function( require ) {
     },
 
     /**
-     * Add the specified isotope to the chamber.  This method requires
-     * that the position of the isotope be within the chamber rectangle,
-     * or the isotope will not be added.
+     * Add the specified isotope to the chamber. This method requires that the position of the isotope be within the
+     * chamber rectangle, or the isotope will not be added.
      *
-     * In cases where an isotope is in a position where the center is
-     * within the chamber but the edges are not, the isotope will be moved
-     * so that it is fully contained within the chamber.
+     * In cases where an isotope is in a position where the center is within the chamber but the edges are not, the
+     * isotope will be moved so that it is fully contained within the chamber.
      *
      * @param {MovableAtom} isotope
      * @param {boolean} performUpdates - Flag that can be set be used to suppress updates.
@@ -166,7 +164,7 @@ define( function( require ) {
         }
       } else {
         // This isotope is not positioned correctly.
-        console.error( ' - Warning: Ignoring attempt to add incorrectly located isotope to test chamber. ' );
+        assert && assert( false, 'Ignoring attempt to add incorrectly located isotope to test chamber.' );
       }
     },
 

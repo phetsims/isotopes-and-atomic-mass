@@ -44,10 +44,11 @@ define( function( require ) {
 
   /**
    * @param {MakeIsotopesModel} makeIsotopesModel
+   * @param {Tandem} tandem
    * @constructor
    */
   function MakeIsotopesScreenView( makeIsotopesModel, tandem ) {
-    // supertype constructor
+    // super type constructor
     ScreenView.call( this, { layoutBounds: SharedConstants.LAYOUT_BOUNDS } );
 
     // Set up the model-canvas transform.  IMPORTANT NOTES: The multiplier factors for the point in the view can be

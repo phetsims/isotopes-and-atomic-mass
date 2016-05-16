@@ -233,6 +233,7 @@ define( function( require ) {
 
         var bucket = this.getBucketForIsotope( isotopeConfig );
         bucket.addIsotopeInstanceFirstOpen( newIsotope, animate );
+        // Does not require Unlink
         newIsotope.userControlledProperty.link( function( userControlled ) {
           if ( !userControlled && !bucket.containsParticle( newIsotope ) ) {
             self.placeIsotope( newIsotope, bucket, self.testChamber );

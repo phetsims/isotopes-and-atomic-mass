@@ -67,6 +67,7 @@ define( function( require ) {
       updateOtherIsotopeLabel( myIsotopeAbundance );
     }
 
+    // Don't need to off lives through out sim life
     makeIsotopesModel.on( 'atomReconfigured', function() {
       updatePieChart();
     } );

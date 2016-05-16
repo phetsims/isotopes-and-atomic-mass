@@ -74,7 +74,6 @@ define( function( require ) {
    * @param {number} isotopePercentage
    * @param {boolean} labelOnLeft
    * @param {number} numberOfDecimals
-   * @returns {*}
    */
   function sliceLabelNode( isotopeConfig, isotopePercentage, labelOnLeft, numberOfDecimals ) {
     var node = new Node();
