@@ -61,14 +61,12 @@ define( function( require ) {
     var myMixButton = new AquaRadioButton(
       isotopeMixtureProperty,
       false,
-      new Text( myMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ),
-      { radius: radioButtonRadius }
+      new Text( myMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ), { radius: radioButtonRadius }
     );
     var naturesMixButton = new AquaRadioButton(
       isotopeMixtureProperty,
       true,
-      new Text( natureMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ),
-      { radius: radioButtonRadius }
+      new Text( natureMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ), { radius: radioButtonRadius }
     );
     var label = new Text( isotopeMixtureString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } );
     var displayButtonGroup = new Node();
@@ -177,12 +175,12 @@ define( function( require ) {
       var isotopeView = new ParticleView( addedIsotope, self.modelViewTransform );
       isotopeView.center = self.modelViewTransform.modelToViewPosition( addedIsotope.position );
       isotopeView.pickable = ( mixIsotopesModel.interactivityModeProperty.get() ===
-                               MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS );
+        MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS );
 
       isotopeLayer.addChild( isotopeView );
 
-      var moveToFront = function ( value ) {
-        if ( value ){
+      var moveToFront = function( value ) {
+        if ( value ) {
           isotopeView.moveToFront();
         }
       };
@@ -201,10 +199,9 @@ define( function( require ) {
 
     mixIsotopesModel.isotopesList.addItemAddedListener( function( addedIsotope ) {
       if ( mixIsotopesModel.interactivityModeProperty.get() ===
-           MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
+        MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
         addIsotopeView( addedIsotope );
-      }
-      else {
+      } else {
         self.isotopesLayer.setIsotopes( self.model.isotopesList );
         mixIsotopesModel.isotopesList.addItemRemovedListener( function removalListener( removedIsotope ) {
           if ( removedIsotope === addedIsotope ) {
@@ -291,21 +288,20 @@ define( function( require ) {
     this.addChild( compositionBox );
 
     var averageAtomicMassBox = new AccordionBox( new AverageAtomicMassIndicator( this.model ), {
-        titleNode: new Text( averageAtomicMassString, {
-          font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
-          maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
-        } ),
-        fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
-        expandedProperty: new Property( true ),
-        minWidth: periodicTableNode.width,
-        maxWidth: periodicTableNode.width,
-        contentAlign: 'center',
-        titleAlignX: 'left',
-        buttonAlign: 'right',
-        buttonTouchAreaXDilation: 16,
-        buttonTouchAreaYDilation: 16
-      }
-    );
+      titleNode: new Text( averageAtomicMassString, {
+        font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
+        maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
+      } ),
+      fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
+      expandedProperty: new Property( true ),
+      minWidth: periodicTableNode.width,
+      maxWidth: periodicTableNode.width,
+      contentAlign: 'center',
+      titleAlignX: 'left',
+      buttonAlign: 'right',
+      buttonTouchAreaXDilation: 16,
+      buttonTouchAreaYDilation: 16
+    } );
     averageAtomicMassBox.left = compositionBox.left;
     averageAtomicMassBox.top = compositionBox.bottom + 10;
     this.addChild( averageAtomicMassBox );
@@ -342,14 +338,12 @@ define( function( require ) {
         interactivityModeSelectionNode.visible = false;
         clearBoxButton.visible = false;
         self.isotopesLayer.visible = true;
-      }
-      else {
+      } else {
         interactivityModeSelectionNode.visible = true;
         clearBoxButton.visible = true;
         self.isotopesLayer.visible = false;
       }
-      if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS
-           && mixIsotopesModel.showingNaturesMixProperty.get() === false ) {
+      if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS && mixIsotopesModel.showingNaturesMixProperty.get() === false ) {
         self.isotopesLayer.visible = true;
         self.isotopesLayer.setIsotopes( self.model.isotopesList );
       }
@@ -359,8 +353,7 @@ define( function( require ) {
     mixIsotopesModel.interactivityModeProperty.link( function() {
       if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
         self.isotopesLayer.visible = false;
-      }
-      else {
+      } else {
         self.isotopesLayer.visible = true;
         self.isotopesLayer.setIsotopes( self.model.isotopesList );
       }
@@ -385,3 +378,4 @@ define( function( require ) {
 
   } );
 } );
+

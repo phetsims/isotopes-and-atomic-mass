@@ -38,11 +38,12 @@ define( function( require ) {
     this.atomConfiguration = new NumberAtom( {
       protonCount: numProtons,
       neutronCount: numNeutrons,
-      electronCount: numProtons } );
+      electronCount: numProtons
+    } );
     this.showLabel = true; // @public
     this.instanceCount = instanceCount++;
   }
   isotopesAndAtomicMass.register( 'MovableAtom', MovableAtom );
-  return inherit( Particle, MovableAtom, {
-  } );
+  return inherit( Particle, MovableAtom, {} );
 } );
+

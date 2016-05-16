@@ -45,7 +45,7 @@ define( function( require ) {
     this.containedIsotopes = new ObservableArray();
     model.containedIsotopes.forEach( function( isotope ) {
       self.containedIsotopes.add( isotope );
-    });
+    } );
   }
 
   /**
@@ -142,8 +142,7 @@ define( function( require ) {
         var protrusion = isotope.position.x + isotope.radius - TEST_CHAMBER_RECT.maxX + BUFFER;
         if ( protrusion >= 0 ) {
           isotope.setPositionAndDestination( new Vector2( isotope.position.x - protrusion, isotope.position.y ) );
-        }
-        else {
+        } else {
           protrusion = TEST_CHAMBER_RECT.minX + BUFFER - ( isotope.position.x - isotope.radius );
           if ( protrusion >= 0 ) {
             isotope.setPositionAndDestination( new Vector2( isotope.position.x + protrusion, isotope.position.y ) );
@@ -152,8 +151,7 @@ define( function( require ) {
         protrusion = isotope.position.y + isotope.radius - TEST_CHAMBER_RECT.maxY + BUFFER;
         if ( protrusion >= 0 ) {
           isotope.setPositionAndDestination( new Vector2( isotope.position.x, isotope.position.y - protrusion ) );
-        }
-        else {
+        } else {
           protrusion = TEST_CHAMBER_RECT.minY + BUFFER - ( isotope.position.y - isotope.radius );
           if ( protrusion >= 0 ) {
             isotope.setPositionAndDestination( new Vector2( isotope.position.x, isotope.position.y + protrusion ) );
@@ -164,10 +162,9 @@ define( function( require ) {
           this.updateCountProperty();
           // Update the average atomic mass.
           this.averageAtomicMass = ( ( this.averageAtomicMass * ( this.isotopeCount - 1 ) ) +
-                                     isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCount;
+            isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCount;
         }
-      }
-      else {
+      } else {
         // This isotope is not positioned correctly.
         console.error( ' - Warning: Ignoring attempt to add incorrectly located isotope to test chamber. ' );
       }
@@ -208,8 +205,7 @@ define( function( require ) {
         } );
 
         this.averageAtomicMass = totalMass / this.containedIsotopes.length;
-      }
-      else {
+      } else {
         this.averageAtomicMass = 0;
       }
     },
@@ -225,9 +221,8 @@ define( function( require ) {
       // Update the average atomic mass.
       if ( this.isotopeCount > 0 ) {
         this.averageAtomicMass = ( this.averageAtomicMass * ( this.isotopeCount + 1 ) -
-                                   isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCount;
-      }
-      else {
+          isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCount;
+      } else {
         this.averageAtomicMass = 0;
       }
     },
@@ -261,7 +256,7 @@ define( function( require ) {
      *
      * @public
      */
-    removeAllIsotopes: function( ) {
+    removeAllIsotopes: function() {
       this.containedIsotopes.clear();
       this.updateCountProperty();
       this.averageAtomicMass = 0;
@@ -317,8 +312,8 @@ define( function( require ) {
      */
     adjustForOverlap: function() {
       // Bounds checking.  The threshold is pretty much arbitrary.
-      assert && assert(this.getTotalIsotopeCount() <= 100,
-        'Ignoring request to adjust for overlap - too many particles in the chamber for that');
+      assert && assert( this.getTotalIsotopeCount() <= 100,
+        'Ignoring request to adjust for overlap - too many particles in the chamber for that' );
 
       // Check for overlap and adjust particle positions until none exists.
       var maxIterations = 10000; // Empirically determined
@@ -349,8 +344,7 @@ define( function( require ) {
               // Add the max amount of inter-particle force in a random direction.
               forceFromIsotope.setPolar( interParticleForceConst / ( minInterParticleDistance * minInterParticleDistance ),
                 this.random.random() * 2 * Math.PI );
-            }
-            else if ( distanceBetweenIsotopes < isotope1.radius + isotope2.radius ) {
+            } else if ( distanceBetweenIsotopes < isotope1.radius + isotope2.radius ) {
               // calculate the repulsive force based on the distance.
               forceFromIsotope.x = isotope1.position.x - isotope2.position.x;
               forceFromIsotope.y = isotope1.position.y - isotope2.position.y;
@@ -365,16 +359,14 @@ define( function( require ) {
           if ( isotope1.position.x + isotope1.radius >= TEST_CHAMBER_RECT.maxX ) {
             var distanceFromRightWall = TEST_CHAMBER_RECT.maxX - isotope1.position.x;
             totalForce.add( new Vector2( -wallForceConst / ( distanceFromRightWall * distanceFromRightWall ), 0 ) );
-          }
-          else if ( isotope1.position.x - isotope1.radius <= TEST_CHAMBER_RECT.minX ) {
+          } else if ( isotope1.position.x - isotope1.radius <= TEST_CHAMBER_RECT.minX ) {
             var distanceFromLeftWall = isotope1.position.x - TEST_CHAMBER_RECT.minX;
             totalForce.add( new Vector2( wallForceConst / ( distanceFromLeftWall * distanceFromLeftWall ), 0 ) );
           }
           if ( isotope1.position.y + isotope1.radius >= TEST_CHAMBER_RECT.maxY ) {
             var distanceFromTopWall = TEST_CHAMBER_RECT.maxY - isotope1.position.y;
             totalForce.add( new Vector2( 0, -wallForceConst / ( distanceFromTopWall * distanceFromTopWall ) ) );
-          }
-          else if ( isotope1.position.y - isotope1.radius <= TEST_CHAMBER_RECT.minY ) {
+          } else if ( isotope1.position.y - isotope1.radius <= TEST_CHAMBER_RECT.minY ) {
             var distanceFromBottomWall = isotope1.position.y - TEST_CHAMBER_RECT.minY;
             totalForce.add( new Vector2( 0, wallForceConst / ( distanceFromBottomWall * distanceFromBottomWall ) ) );
           }
@@ -457,3 +449,4 @@ define( function( require ) {
     }
   } );
 } );
+

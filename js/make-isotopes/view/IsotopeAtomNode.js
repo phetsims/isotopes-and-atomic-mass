@@ -40,9 +40,8 @@ define( function( require ) {
     // Add the handler that keeps the bottom of the atom in one place. This was added due to a request to make the atom
     // get larger and smaller but to stay on the scale.
     var updateAtomPosition = function( numProtons ) {
-      var newCenter = new Vector2( bottomPoint.x, bottomPoint.y
-                                                  - modelViewTransform.modelToViewDeltaX(
-          isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2 ) * 1.2 ); // empirically determined
+      var newCenter = new Vector2( bottomPoint.x, bottomPoint.y - modelViewTransform.modelToViewDeltaX(
+        isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2 ) * 1.2 ); // empirically determined
       particleAtom.position = modelViewTransform.viewToModelPosition( newCenter );
       isotopeElectronCloud.center = newCenter;
     };
@@ -50,10 +49,11 @@ define( function( require ) {
     // Doesn't need unlink as it stays through out the sim life
     particleAtom.protonCountProperty.link( function( numProtons ) {
       updateAtomPosition( numProtons );
-    });
+    } );
   }
 
   isotopesAndAtomicMass.register( 'IsotopeAtomNode', IsotopeAtomNode );
   // Inherit from Node.
   return inherit( Node, IsotopeAtomNode );
 } );
+

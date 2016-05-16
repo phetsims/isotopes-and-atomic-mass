@@ -30,13 +30,16 @@ define( function( require ) {
   function MixIsotopesScreen( tandem ) {
 
     Screen.call( this, mixIsotopesModuleTitleString, new Image( mixIsotopesIcon ),
-      function() { return new MixIsotopesModel(); },
-      function( model ) { return new MixIsotopesScreenView( model, tandem ); }, {
+      function() {
+        return new MixIsotopesModel(); },
+      function( model ) {
+        return new MixIsotopesScreenView( model, tandem ); }, {
         tandem: tandem
       }
     );
   }
 
-  isotopesAndAtomicMass.register( 'MixIsotopesScreen', MixIsotopesScreen);
+  isotopesAndAtomicMass.register( 'MixIsotopesScreen', MixIsotopesScreen );
   return inherit( Screen, MixIsotopesScreen );
 } );
+

@@ -31,8 +31,10 @@ define( function( require ) {
   function MakeIsotopesScreen( tandem ) {
 
     Screen.call( this, makeIsotopesModuleTitleString, new Image( makeIsotopesIcon ),
-      function() { return new MakeIsotopesModel(); },
-      function( model ) { return new MakeIsotopesScreenView( model, tandem ); }, {
+      function() {
+        return new MakeIsotopesModel(); },
+      function( model ) {
+        return new MakeIsotopesScreenView( model, tandem ); }, {
         tandem: tandem
       }
     );

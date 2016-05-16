@@ -57,8 +57,7 @@ define( function( require ) {
     function updateReadout() {
       if ( displayModeProperty.get() === DISPLAY_MODE.MASS_NUMBER ) {
         readoutText.setText( atom.massNumber.toString() );
-      }
-      else {
+      } else {
         var isotopeAtomicMass = atom.getIsotopeAtomicMass();
         readoutText.setText( isotopeAtomicMass > 0 ? Util.toFixed( isotopeAtomicMass, 5 ) : '--' );
       }
@@ -145,7 +144,7 @@ define( function( require ) {
     // Add the display mode selector to the scale base.
     var displayModeSelectionNode = new DisplayModeSelectionNode( this.displayModeProperty );
     // Position the selector next to the readout.
-    displayModeSelectionNode.centerX = (scaleReadoutNode.right + weighScaleImage.width - 5) / 2; // empirically determined
+    displayModeSelectionNode.centerX = ( scaleReadoutNode.right + weighScaleImage.width - 5 ) / 2; // empirically determined
     displayModeSelectionNode.centerY = weighScaleImage.height * 0.7; // empirically determined
     this.addChild( displayModeSelectionNode );
   }
@@ -161,3 +160,4 @@ define( function( require ) {
     }
   } );
 } );
+

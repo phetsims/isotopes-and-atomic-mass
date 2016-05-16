@@ -25,8 +25,8 @@ define( function( require ) {
       leadDesign: 'Kelly Lancaster',
       softwareDevelopment: 'John Blanco, Jesse Greenberg, Aadish Gupta, Sam Reid, James Smith',
       team: 'Jack Barbera, Suzanne Brahmia, Sue Doubler, Amy Hanson,\n' +
-            'Loretta Jones, Kelly Lancaster, Trish Loeblein, Emily B. Moore,\n' +
-            'Robert Parson, Ariel Paul, Kathy Perkins',
+        'Loretta Jones, Kelly Lancaster, Trish Loeblein, Emily B. Moore,\n' +
+        'Robert Parson, Ariel Paul, Kathy Perkins',
       qualityAssurance: 'Steele Dalton, Bryce Griebenow, Elise Morgan, Ben Roberts'
     },
     tandem: tandem

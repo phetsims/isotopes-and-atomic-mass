@@ -57,7 +57,7 @@ define( function( require ) {
       centerX: isotopeAtomNode.centerX,
       maxWidth: 100
     } );
-    this.addChild(myIsotopeLabel);
+    this.addChild( myIsotopeLabel );
     myIsotopeLabel.bottom = isotopeAtomNode.top - 5;
 
     // Add the bucket components that hold the neutrons.
@@ -127,8 +127,8 @@ define( function( require ) {
       // Add a listener that adjusts a nucleon's z-order layering.
       addedParticle.zLayerProperty.link( adjustZLayerLink );
 
-      var moveParticleToFront = function( value ){
-        if ( value ){
+      var moveParticleToFront = function( value ) {
+        if ( value ) {
           particleView.moveToFront();
         }
       };
@@ -137,8 +137,7 @@ define( function( require ) {
       var temp;
       if ( addedParticle.type === 'proton' ) {
         temp = makeIsotopesModel.protons;
-      }
-      else if ( addedParticle.type === 'neutron' ) {
+      } else if ( addedParticle.type === 'neutron' ) {
         temp = makeIsotopesModel.neutrons;
       }
 
@@ -158,10 +157,10 @@ define( function( require ) {
     makeIsotopesModel.neutrons.forEach( function( neutron ) { addParticleView( neutron ); } );
 
     // add the item added listeners for particles of this isotope
-    makeIsotopesModel.protons.addItemAddedListener( function( addedAtom ) { addParticleView( addedAtom );} );
+    makeIsotopesModel.protons.addItemAddedListener( function( addedAtom ) { addParticleView( addedAtom ); } );
 
     // add the item added listeners for particles of this isotope
-    makeIsotopesModel.neutrons.addItemAddedListener( function( addedAtom ) { addParticleView( addedAtom );} );
+    makeIsotopesModel.neutrons.addItemAddedListener( function( addedAtom ) { addParticleView( addedAtom ); } );
 
     // Create the textual readout for the element name.
     var elementName = new Text( '', { font: new PhetFont( { size: ELEMENT_NAME_FONT_SIZE, weight: 'bold' } ) } );
@@ -191,8 +190,8 @@ define( function( require ) {
       elementName.text = name;
       var isotopeAtomNodeRadius = isotopeAtomNode.centerY - isotopeAtomNode.top;
       var elementNameMaxWidth = 2 * Math.sqrt(
-          ( isotopeAtomNodeRadius * isotopeAtomNodeRadius) -
-          ( mapElementToPosition[ numProtons ] * mapElementToPosition[ numProtons ]  ) );
+        ( isotopeAtomNodeRadius * isotopeAtomNodeRadius ) -
+        ( mapElementToPosition[ numProtons ] * mapElementToPosition[ numProtons ] ) );
       elementName.maxWidth = elementNameMaxWidth;
       elementName.center = new Vector2( isotopeAtomNode.centerX,
         isotopeAtomNode.centerY - mapElementToPosition[ numProtons ] );
@@ -222,17 +221,15 @@ define( function( require ) {
         isotopeAtomNode.centerY + mapStableUnstableToPosition[ numProtons ] );
       var isotopeAtomNodeRadius = isotopeAtomNode.centerY - isotopeAtomNode.top;
       var stabilityIndicatorMaxWidth = 2 * Math.sqrt(
-          ( isotopeAtomNodeRadius * isotopeAtomNodeRadius) -
-          ( mapStableUnstableToPosition[ numProtons ] * mapStableUnstableToPosition[ numProtons ]  ) );
+        ( isotopeAtomNodeRadius * isotopeAtomNodeRadius ) -
+        ( mapStableUnstableToPosition[ numProtons ] * mapStableUnstableToPosition[ numProtons ] ) );
       if ( numProtons > 0 ) {
         if ( AtomIdentifier.isStable( numProtons, numNeutrons ) ) {
           stabilityIndicator.text = stableString;
-        }
-        else {
+        } else {
           stabilityIndicator.text = unstableString;
         }
-      }
-      else {
+      } else {
         stabilityIndicator.text = '';
       }
       stabilityIndicator.maxWidth = stabilityIndicatorMaxWidth;
@@ -257,3 +254,4 @@ define( function( require ) {
   isotopesAndAtomicMass.register( 'InteractiveIsotopeNode', InteractiveIsotopeNode );
   return inherit( Node, InteractiveIsotopeNode, {} );
 } );
+

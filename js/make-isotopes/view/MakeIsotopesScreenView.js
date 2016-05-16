@@ -184,22 +184,21 @@ define( function( require ) {
     this.addChild( symbolBox );
 
     var abundanceBox = new AccordionBox( new TwoItemPieChartNode( makeIsotopesModel ), {
-        titleNode: new Text( abundanceTitleString, {
-          font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
-          maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
-        } ),
-        fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
-        expandedProperty: new Property( false ),
-        minWidth: periodicTableNode.visibleBounds.width,
-        maxWidth: periodicTableNode.visibleBounds.width,
-        contentAlign: 'center',
-        contentXMargin: 0,
-        titleAlignX: 'left',
-        buttonAlign: 'right',
-        buttonTouchAreaXDilation: 16,
-        buttonTouchAreaYDilation: 16
-      }
-    );
+      titleNode: new Text( abundanceTitleString, {
+        font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
+        maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
+      } ),
+      fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
+      expandedProperty: new Property( false ),
+      minWidth: periodicTableNode.visibleBounds.width,
+      maxWidth: periodicTableNode.visibleBounds.width,
+      contentAlign: 'center',
+      contentXMargin: 0,
+      titleAlignX: 'left',
+      buttonAlign: 'right',
+      buttonTouchAreaXDilation: 16,
+      buttonTouchAreaYDilation: 16
+    } );
     abundanceBox.left = symbolBox.left;
     abundanceBox.top = symbolBox.bottom + 10;
     this.addChild( abundanceBox );
@@ -209,3 +208,4 @@ define( function( require ) {
   isotopesAndAtomicMass.register( 'MakeIsotopesScreenView', MakeIsotopesScreenView );
   return inherit( ScreenView, MakeIsotopesScreenView );
 } );
+

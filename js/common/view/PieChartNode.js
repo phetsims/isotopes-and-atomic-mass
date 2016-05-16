@@ -96,7 +96,7 @@ define( function( require ) {
     update: function() {
       var self = this;
       this.removeAllChildren();
-      this.sliceEdgeCenterPoints = [ ];
+      this.sliceEdgeCenterPoints = [];
 
       var total = this.getTotal();
 
@@ -120,25 +120,23 @@ define( function( require ) {
         // If the slice has a non-zero value, set the color and draw a filled arc.
         var shape = new Shape();
         if ( slice.value > 0 ) {
-          if ( slice.value === total){
+          if ( slice.value === total ) {
             var circle = new Circle( self.radius, { fill: slice.color, stroke: slice.stroke } );
             self.addChild( circle );
             circle.centerX = self.centerXCord;
             circle.centerY = self.centerYCord;
             // Assume, arbitrarily, that the center point is on the left side.
             self.sliceEdgeCenterPoints.push( new Vector2( self.centerXCord - self.radius, circle.centerY ) );
-          }
-          else {
+          } else {
             shape.moveTo( self.centerXCord, self.centerYCord );
             shape.arc( self.centerXCord, self.centerYCord, self.radius, startAngle, endAngle );
             shape.close();
             self.addChild( new Path( shape, { fill: slice.color, stroke: slice.stroke, lineWidth: slice.lineWidth } ) );
-            var angle = startAngle + (endAngle - startAngle) / 2 ;
+            var angle = startAngle + ( endAngle - startAngle ) / 2;
             self.sliceEdgeCenterPoints.push( new Vector2( Math.cos( angle ) * self.radius + self.centerXCord,
               Math.sin( angle ) * self.radius + self.centerYCord ) );
           }
-        }
-        else {
+        } else {
           // No slice drawn, so add null to indicate that there is no center point.
           self.sliceEdgeCenterPoints.push( null );
         }
@@ -170,12 +168,12 @@ define( function( require ) {
      *
      */
     getCenterEdgePtForSlice: function( sliceNumber ) {
-    if ( sliceNumber < this.sliceEdgeCenterPoints.length ) {
-      return this.sliceEdgeCenterPoints[ sliceNumber ];
+      if ( sliceNumber < this.sliceEdgeCenterPoints.length ) {
+        return this.sliceEdgeCenterPoints[ sliceNumber ];
+      } else {
+        return null;
+      }
     }
-    else {
-      return null;
-    }
-  }
   } );
 } );
+
