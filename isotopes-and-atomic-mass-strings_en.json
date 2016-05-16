@@ -2,25 +2,25 @@
   "isotopes-and-atomic-mass.title": {
     "value": "Isotopes and Atomic Mass"
   },
-  "make-isotopes-module.title": {
+  "isotopes": {
     "value": "Isotopes"
   },
-  "mix-isotopes-module.title": {
+  "mixtures": {
     "value": "Mixtures"
   },
-  "neutrons.title": {
+  "neutrons": {
     "value": "Neutrons"
   },
-  "mass-number.title": {
+  "massNumber": {
     "value": "Mass Number"
   },
-  "atomic-mass.title": {
+  "atomicMass": {
     "value": "Atomic Mass (amu)"
   },
-  "symbol.title": {
+  "symbol": {
     "value": "Symbol"
   },
-  "abundance.title": {
+  "abundanceInNature": {
     "value": "Abundance in Nature"
   },
   "myIsotope": {
@@ -38,7 +38,7 @@
   "myMix": {
     "value": "My Mix"
   },
-  "natureMix": {
+  "naturesMix": {
     "value": "Nature's Mix"
   },
   "isotopeMixture": {

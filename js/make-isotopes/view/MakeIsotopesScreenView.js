@@ -39,8 +39,8 @@ define( function( require ) {
   var SYMBOL_BOX_HEIGHT = 300; // In screen coords, which are roughly pixels.
 
   // strings
-  var symbolTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/symbol.title' );
-  var abundanceTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/abundance.title' );
+  var symbolString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/symbol' );
+  var abundanceinNatureString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/abundanceInNature' );
 
   /**
    * @param {MakeIsotopesModel} makeIsotopesModel
@@ -166,7 +166,7 @@ define( function( require ) {
 
     symbolRectangle.scale( 0.20 );
     var symbolBox = new AccordionBox( symbolRectangle, {
-      titleNode: new Text( symbolTitleString, {
+      titleNode: new Text( symbolString, {
         font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
         maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
       } ),
@@ -185,7 +185,7 @@ define( function( require ) {
     this.addChild( symbolBox );
 
     var abundanceBox = new AccordionBox( new TwoItemPieChartNode( makeIsotopesModel ), {
-      titleNode: new Text( abundanceTitleString, {
+      titleNode: new Text( abundanceinNatureString, {
         font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
         maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
       } ),
