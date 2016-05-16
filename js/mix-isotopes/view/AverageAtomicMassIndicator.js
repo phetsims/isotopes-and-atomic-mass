@@ -57,9 +57,9 @@ define( function( require ) {
 
     // Create the label that goes above the tick mark.
     var label = new SubSupText( ' <sup>' + isotopeConfig.massNumber + '</sup>' +
-                                AtomIdentifier.getSymbol( isotopeConfig.protonCount ), {
-      font: new PhetFont(12)
-    } );
+      AtomIdentifier.getSymbol( isotopeConfig.protonCount ), {
+        font: new PhetFont( 12 )
+      } );
     label.centerX = shape.centerX;
     label.bottom = shape.top;
     node.addChild( label );
@@ -83,13 +83,14 @@ define( function( require ) {
 
     var vertices = [ new Vector2( -TRIANGULAR_POINTER_WIDTH / 2, TRIANGULAR_POINTER_HEIGHT ),
       new Vector2( TRIANGULAR_POINTER_WIDTH / 2, TRIANGULAR_POINTER_HEIGHT ),
-      new Vector2( 0, 0 ) ];
+      new Vector2( 0, 0 )
+    ];
 
     var triangle = new Path( Shape.polygon( vertices ), {
       fill: new Color( 0, 143, 212 ),
       lineWidth: 1
     } );
-    node.addChild(  triangle );
+    node.addChild( triangle );
 
     var readoutText = new Text( '', {
       font: new PhetFont( 14 ),
@@ -115,11 +116,10 @@ define( function( require ) {
       var weight;
       if ( model.showingNaturesMix ) {
         weight = AtomIdentifier.getStandardAtomicMass( model.numberAtom.protonCount );
-      }
-      else {
+      } else {
         weight = averageAtomicMass;
       }
-      readoutText.setText( Util.toFixed( weight, NUMBER_DECIMALS ) + amuString ) ;
+      readoutText.setText( Util.toFixed( weight, NUMBER_DECIMALS ) + amuString );
       readoutText.centerX = SIZE.width / 2;
     }
 
@@ -201,8 +201,7 @@ define( function( require ) {
       if ( model.testChamber.isotopeCount > 0 ) {
         readoutPointer.centerX = self.calcXOffsetFromAtomicMass( averageAtomicMass );
         readoutPointer.setVisible( true );
-      }
-      else {
+      } else {
         readoutPointer.setVisible( false );
       }
     } );
@@ -223,6 +222,4 @@ define( function( require ) {
   } );
 
 } );
-
-
 

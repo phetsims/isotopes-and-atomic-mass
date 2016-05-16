@@ -57,9 +57,9 @@ define( function( require ) {
       centerY: symbol.top
     } );
     massNumber.right = symbol.left;
-    node.addChild(massNumber);
+    node.addChild( massNumber );
 
-    var atomicNumber = new Text( isotopeConfig.protonCount , {
+    var atomicNumber = new Text( isotopeConfig.protonCount, {
       font: SUPERSCRIPT_SUBSCRIPT_FONT,
       centerY: symbol.bottom
     } );
@@ -87,7 +87,7 @@ define( function( require ) {
     var symbol = chemSymbolWithNumbersNode( isotopeConfig );
     node.addChild( symbol );
 
-    var readoutText = new Text( Util.toFixedNumber( isotopePercentage, numberOfDecimals )+ ' %', {
+    var readoutText = new Text( Util.toFixedNumber( isotopePercentage, numberOfDecimals ) + ' %', {
       font: READOUT_FONT,
       maxWidth: 0.9 * SIZE.width,
       maxHeight: 0.9 * SIZE.height
@@ -108,8 +108,7 @@ define( function( require ) {
     // Make the two portions of the label line up on the horizontal axis
     if ( symbol.height > readoutPanel.height ) {
       readoutPanel.centerY = symbol.centerY;
-    }
-    else {
+    } else {
       symbol.centerY = readoutPanel.centerY;
     }
 
@@ -117,8 +116,7 @@ define( function( require ) {
     if ( labelOnLeft ) {
       readoutPanel.left = symbol.right + 5;
       readoutText.centerX = readoutPanel.width / 2;
-    }
-    else {
+    } else {
       symbol.left = readoutPanel.right + 5;
     }
     return node;
@@ -135,15 +133,15 @@ define( function( require ) {
     this.labelLayer = new Node();
     this.addChild( this.labelLayer );
     this.pieChartBoundingRectangle = new Rectangle( -OVERALL_HEIGHT / 2, -OVERALL_HEIGHT / 2,
-      OVERALL_HEIGHT, OVERALL_HEIGHT, 0, 0);
+      OVERALL_HEIGHT, OVERALL_HEIGHT, 0, 0 );
     this.emptyCircle = new Circle( PIE_CHART_RADIUS, { stroke: 'black', lineDash: [ 3, 1 ] } );
     this.emptyCircle.centerX = 0;
     this.emptyCircle.centerY = 0;
     this.pieChartBoundingRectangle.addChild( this.emptyCircle );
 
     // default slices this will be updated based on possible isotopes
-    this.slices = [ ];
-    this.sliceLabels = [ ];
+    this.slices = [];
+    this.sliceLabels = [];
     this.pieChart = new PieChartNode( this.slices, PIE_CHART_RADIUS );
     this.pieChartBoundingRectangle.addChild( this.pieChart );
 
@@ -154,28 +152,27 @@ define( function( require ) {
 
   return inherit( Node, IsotopeProportionsPieChart, {
 
-    update: function(){
+    update: function() {
       if ( this.model.testChamber.isotopeCountProperty.get() > 0 ) {
         this.emptyCircle.setVisible( false );
         this.updatePieChart();
         this.pieChart.setVisible( true );
         this.labelLayer.setVisible( true );
-      }
-      else {
+      } else {
         this.emptyCircle.setVisible( true );
         this.pieChart.setVisible( false );
         this.labelLayer.setVisible( false );
       }
     },
 
-    updatePieChart: function(){
+    updatePieChart: function() {
       var self = this;
-      this.slices = [ ];
+      this.slices = [];
       var i = 0;
       this.model.possibleIsotopes.forEach( function( isotope ) {
         var value = self.model.testChamber.getIsotopeCount( isotope );
         var color = self.model.getColorForIsotope( isotope );
-        self.slices[ i ] = { value:value, color:color, stroke:'black', lineWidth: 0.5 };
+        self.slices[ i ] = { value: value, color: color, stroke: 'black', lineWidth: 0.5 };
         i += 1;
       } );
       var lightestIsotopeProportion = this.slices[ 0 ].value / this.model.testChamber.isotopeCount;
@@ -192,8 +189,7 @@ define( function( require ) {
         var proportion;
         if ( self.model.showingNaturesMix ) {
           proportion = AtomIdentifier.getNaturalAbundancePreciseDecimal( isotope );
-        }
-        else {
+        } else {
           proportion = self.model.testChamber.getIsotopeProportion( isotope );
         }
 
@@ -218,8 +214,7 @@ define( function( require ) {
           if ( positionVector.y < minY ) {
             positionVector.x = xSign * Math.sqrt( positionVector.magnitudeSquared() - minY * minY );
             positionVector.y = minY;
-          }
-          else if ( positionVector.y > maxY ) {
+          } else if ( positionVector.y > maxY ) {
             positionVector.x = xSign * Math.sqrt( positionVector.magnitudeSquared() - maxY * maxY );
             positionVector.y = maxY;
           }
@@ -229,8 +224,7 @@ define( function( require ) {
           if ( labelOnLeft ) {
             labelNode.centerX = positionVector.x - labelNode.width / 2;
             labelNode.centerY = positionVector.y;
-          }
-          else {
+          } else {
             labelNode.centerX = positionVector.x + labelNode.width / 2;
             labelNode.centerY = positionVector.y;
           }
@@ -254,8 +248,7 @@ define( function( require ) {
             // Label is on right, so connect point should be on left.
             labelConnectPt.x = label.left;
             labelConnectPt.y = label.centerY;
-          }
-          else {
+          } else {
             // Label is on left, so connect point should be on right.
             labelConnectPt.x = label.right;
             labelConnectPt.y = label.centerY;
@@ -299,8 +292,7 @@ define( function( require ) {
               overlapDetected = true;
               if ( label.unconstrainedPos.y > comparisonLabel.unconstrainedPos.y && label.bottom < maxY ) {
                 moveUp = true;
-              }
-              else if ( label.unconstrainedPos.y < comparisonLabel.unconstrainedPos.y && label.top > minY ) {
+              } else if ( label.unconstrainedPos.y < comparisonLabel.unconstrainedPos.y && label.top > minY ) {
                 moveDown = true;
               }
             }
@@ -317,23 +309,20 @@ define( function( require ) {
               label.centerX = posVector.x - label.width / 2;
               label.centerY = posVector.y - label.height / 2;
 
-            }
-            else {
+            } else {
               posVector = new Vector2( label.centerX, label.centerY + label.height / 2 );
               posVector.rotate( rotationIncrement );
               label.centerX = posVector.x;
               label.centerY = posVector.y - label.height / 2;
             }
-          }
-          else if ( moveDown && !moveUp ) {
+          } else if ( moveDown && !moveUp ) {
             if ( label.labelOnLeft ) {
               posVector = new Vector2( label.right, label.centerY + label.height / 2 );
               posVector.rotate( rotationIncrement );
               label.centerX = posVector.x - label.width / 2;
               label.centerY = posVector.y - label.height / 2;
 
-            }
-            else {
+            } else {
               posVector = new Vector2( label.centerX, label.centerY + label.height / 2 );
               posVector.rotate( -rotationIncrement );
               label.centerX = posVector.x;
@@ -349,3 +338,4 @@ define( function( require ) {
     }
   } );
 } );
+

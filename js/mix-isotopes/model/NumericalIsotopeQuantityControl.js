@@ -66,8 +66,7 @@ define( function( require ) {
           this.model.testChamber.addIsotopeToChamber( newIsotope, true );
           this.model.isotopesList.add( newIsotope );
         }
-      }
-      else if ( changeAmount < 0 ) {
+      } else if ( changeAmount < 0 ) {
         for ( var j = 0; j < -changeAmount; j++ ) {
           var isotope = this.model.testChamber.removeIsotopeMatchingConfig( this.isotopeConfig );
           if ( isotope !== null ) {
@@ -91,3 +90,4 @@ define( function( require ) {
     }
   } );
 } );
+

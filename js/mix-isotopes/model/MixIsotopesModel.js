@@ -63,7 +63,7 @@ define( function( require ) {
       protonCount: model.prototypeIsotope.protonCount,
       neutronCount: model.prototypeIsotope.neutronCount,
       electronCount: model.prototypeIsotope.electronCount
-    });
+    } );
     this.isotopeTestChamberState = model.testChamber.getState();
     this.interactivityMode = model.interactivityMode;
     this.showingNaturesMix = model.showingNaturesMix;
@@ -73,13 +73,14 @@ define( function( require ) {
       newBucket.particles = [];
       bucket._particles.forEach( function( particle ) {
         newBucket.particles.push( particle );
-      });
+      } );
       self.bucketList.add( newBucket );
-    });
+    } );
   }
 
   /**
    * Constructor for the Mix Isotopes Model
+   * @constructor
    **/
   function MixIsotopesModel() {
 
@@ -124,7 +125,7 @@ define( function( require ) {
 
     this.numberAtom.on( 'atomUpdated', function() {
       self.setAtomConfiguration( self.numberAtom );
-    });
+    } );
 
     // Set the initial atom configuration.
     this.setAtomConfiguration( this.numberAtom );
@@ -138,54 +139,48 @@ define( function( require ) {
         // Tweak the users mix state. This is necessary since the state is being saved inside a property change observer.
         usersMixState.showingNaturesMix = false;
         // Save the user's mix state.
-        if ( self.mapIsotopeConfigToUserMixState.hasOwnProperty( self.prototypeIsotope.protonCount ) ){
+        if ( self.mapIsotopeConfigToUserMixState.hasOwnProperty( self.prototypeIsotope.protonCount ) ) {
           self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ][ self.interactivityMode ] =
             usersMixState;
-        }
-        else{
+        } else {
           self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ] = {};
           self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ][ self.interactivityMode ] =
             usersMixState;
         }
         // Display nature's mix.
         self.showNaturesMix();
-      }
-      else {
+      } else {
         self.naturesIsotopesList.clear();
         if ( self.mapIsotopeConfigToUserMixState.hasOwnProperty( self.prototypeIsotope.protonCount ) ) {
           if ( self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ]
-              .hasOwnProperty( self.interactivityMode ) ) {
+            .hasOwnProperty( self.interactivityMode ) ) {
             self.setState(
               self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ][ self.interactivityMode ]
             );
-          }
-          else{
+          } else {
             self.setUpInitialUsersMix();
           }
-        }
-        else {
+        } else {
           self.setUpInitialUsersMix();
         }
       }
     } );
 
     // Doesn't need unlink as it stays through out the sim life
-    this.interactivityModeProperty.lazyLink( function( value, oldValue) {
+    this.interactivityModeProperty.lazyLink( function( value, oldValue ) {
       var usersMixState = self.getState();
       usersMixState.interactivityMode = oldValue;
-      if ( self.mapIsotopeConfigToUserMixState.hasOwnProperty( self.prototypeIsotope.protonCount ) ){
+      if ( self.mapIsotopeConfigToUserMixState.hasOwnProperty( self.prototypeIsotope.protonCount ) ) {
         self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ][ oldValue ] = usersMixState;
-      }
-      else{
+      } else {
         self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ] = {};
         self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ][ oldValue ] = usersMixState;
       }
 
-      if ( self.mapIsotopeConfigToUserMixState.hasOwnProperty( self.prototypeIsotope.protonCount ) ){
-        if ( self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ].hasOwnProperty( value ) ){
+      if ( self.mapIsotopeConfigToUserMixState.hasOwnProperty( self.prototypeIsotope.protonCount ) ) {
+        if ( self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ].hasOwnProperty( value ) ) {
           self.setState( self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCount ][ value ] );
-        }
-        else{
+        } else {
           self.removeAllIsotopesFromTestChamberAndModel();
           self.addIsotopeControllers();
         }
@@ -220,8 +215,7 @@ define( function( require ) {
       if ( testChamber.isIsotopePositionedOverChamber( isotope ) ) {
         testChamber.addIsotopeToChamber( isotope, true );
         testChamber.adjustForOverlap();
-      }
-      else {
+      } else {
         bucket.addIsotopeInstanceNearestOpen( isotope, true );
       }
     },
@@ -246,7 +240,7 @@ define( function( require ) {
             self.placeIsotope( newIsotope, bucket, self.testChamber );
           }
         } );
-        this.isotopesList.add(newIsotope);
+        this.isotopesList.add( newIsotope );
       }
       return newIsotope;
     },
@@ -330,12 +324,12 @@ define( function( require ) {
       var thisModel = this;
 
       assert && assert( modelState.showingNaturesMix === this.showingNaturesMix );
-      this.showingNaturesMix =  modelState.showingNaturesMix;
+      this.showingNaturesMix = modelState.showingNaturesMix;
 
       // Add any particles that were in the test chamber.
       this.testChamber.setState( modelState.isotopeTestChamberState );
       this.testChamber.containedIsotopes.forEach( function( isotope ) {
-        thisModel.isotopesList.add(isotope);
+        thisModel.isotopesList.add( isotope );
       } );
 
       // Add the appropriate isotope controllers. This will create the controllers in their initial states.
@@ -348,11 +342,11 @@ define( function( require ) {
         thisModel.removeBuckets();
         modelState.bucketList.forEach( function( bucket ) {
           thisModel.bucketList.add( bucket );
-          bucket.particles.forEach( function( isotope ){
+          bucket.particles.forEach( function( isotope ) {
             bucket.addParticleFirstOpen( isotope, false );
             thisModel.isotopesList.add( isotope );
-          });
-        });
+          } );
+        } );
       }
     },
 
@@ -384,15 +378,13 @@ define( function( require ) {
         this.prototypeIsotope.electronCount = atom.electronCount;
         this.updatePossibleIsotopesList();
         this.showNaturesMix();
-      }
-      else {
+      } else {
         // Save the user's mix state for the current element before transitioning to the new one.
         if ( this.prototypeIsotope !== atom ) {
-          if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( this.prototypeIsotope.protonCount ) ){
+          if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( this.prototypeIsotope.protonCount ) ) {
             this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ][ this.interactivityMode ] =
               this.getState();
-          }
-          else{
+          } else {
             this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ] = {};
             this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ][ this.interactivityMode ] =
               this.getState();
@@ -402,8 +394,7 @@ define( function( require ) {
           if ( this.mapIsotopeConfigToUserMixState[ atom.protonCount ].hasOwnProperty( this.interactivityMode ) ) {
             // Restore the previously saved state for this element.
             this.setState( this.mapIsotopeConfigToUserMixState[ atom.protonCount ][ this.interactivityMode ] );
-          }
-          else{
+          } else {
             // Clean up any previous isotopes.
             this.removeAllIsotopesFromTestChamberAndModel();
 
@@ -415,8 +406,7 @@ define( function( require ) {
             // Set all model elements for the first time this element's user mix is shown.
             this.setUpInitialUsersMix();
           }
-        }
-        else{
+        } else {
           // Clean up any previous isotopes.
           this.removeAllIsotopesFromTestChamberAndModel();
 
@@ -468,9 +458,9 @@ define( function( require ) {
     removeBuckets: function() {
       var self = this;
       this.bucketList.forEach( function( bucket ) {
-        bucket._particles.forEach( function( isotope ){
+        bucket._particles.forEach( function( isotope ) {
           self.isotopesList.remove( isotope );
-        });
+        } );
         bucket.reset();
       } );
       this.bucketList.clear();
@@ -491,20 +481,19 @@ define( function( require ) {
 
       var buckets = this.interactivityMode === InteractivityMode.BUCKETS_AND_LARGE_ATOMS || this.showingNaturesMix;
       // Set up layout variables.
-      var controllerYOffsetBucket = -250 ; //emprically determined
-      var controllerYOffsetSlider = -238 ; //empirically determined
+      var controllerYOffsetBucket = -250; //emprically determined
+      var controllerYOffsetSlider = -238; //empirically determined
       var interControllerDistanceX;
       var controllerXOffset;
       if ( this.possibleIsotopes.length < 4 ) {
         // We can fit 3 or less cleanly under the test chamber.
         interControllerDistanceX = this.testChamber.getTestChamberRect().getWidth() / this.possibleIsotopes.length;
         controllerXOffset = this.testChamber.getTestChamberRect().minX + interControllerDistanceX / 2;
-      }
-      else {
+      } else {
         // Four controllers don't fit well under the chamber, so use a positioning algorithm where they are extended
         // a bit to the right.
         interControllerDistanceX = ( this.testChamber.getTestChamberRect().getWidth() * 1.10 ) /
-                                   this.possibleIsotopes.length;
+          this.possibleIsotopes.length;
         controllerXOffset = -180;
       }
       // Add the controllers.
@@ -513,21 +502,20 @@ define( function( require ) {
         var isotopeCaption = AtomIdentifier.getName( isotopeConfig.protonCount ) + '-' + isotopeConfig.massNumber;
         if ( buckets ) {
           var newBucket = new MonoIsotopeBucket( isotopeConfig.protonCount, isotopeConfig.neutronCount, {
-              position: new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetBucket ),
-              size: BUCKET_SIZE,
-              baseColor: this.getColorForIsotope( isotopeConfig ),
-              caption: isotopeCaption,
-              sphereRadius: LARGE_ISOTOPE_RADIUS
-            } );
+            position: new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetBucket ),
+            size: BUCKET_SIZE,
+            baseColor: this.getColorForIsotope( isotopeConfig ),
+            caption: isotopeCaption,
+            sphereRadius: LARGE_ISOTOPE_RADIUS
+          } );
           this.addBucket( newBucket );
           if ( !this.showingNaturesMix ) {
             // Create and add initial isotopes to the new bucket.
             _.times( NUM_LARGE_ISOTOPES_PER_BUCKET, function() {
               self.createAndAddIsotope( isotopeConfig, false );
-            });
+            } );
           }
-        }
-        else {
+        } else {
           // Assume a numerical controller.
           var newController = new NumericalIsotopeQuantityControl( this, isotopeConfig,
             new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetSlider ),
@@ -592,7 +580,7 @@ define( function( require ) {
       } );
 
       // Add the isotopes.
-      possibleIsotopesCopy.forEach( function (isotopeConfig) {
+      possibleIsotopesCopy.forEach( function( isotopeConfig ) {
         var numToCreate = Util.roundSymmetric( NUM_NATURES_MIX_ATOMS * AtomIdentifier.getNaturalAbundance( isotopeConfig ) );
         if ( numToCreate === 0 ) {
           // The calculated quantity was 0, but we don't want to have no instances of this isotope in the chamber, so
@@ -612,7 +600,7 @@ define( function( require ) {
           self.naturesIsotopesList.push( newIsotope );
         }
         self.testChamber.bulkAddIsotopesToChamber( isotopesToAdd );
-      });
+      } );
       this.trigger( 'naturesIsotopeUpdated' );
 
       // Add the isotope controllers (i.e. the buckets).
@@ -643,14 +631,14 @@ define( function( require ) {
 
     // @private
     clearState: function( state ) {
-      if ( state[ InteractivityMode.BUCKETS_AND_LARGE_ATOMS ] ){
+      if ( state[ InteractivityMode.BUCKETS_AND_LARGE_ATOMS ] ) {
         state[ InteractivityMode.BUCKETS_AND_LARGE_ATOMS ].bucketList.forEach( function( bucket ) {
           bucket.reset();
         } );
         state[ InteractivityMode.BUCKETS_AND_LARGE_ATOMS ].bucketList.clear();
         state[ InteractivityMode.BUCKETS_AND_LARGE_ATOMS ].isotopeTestChamberState.containedIsotopes.clear();
       }
-      if ( state[ InteractivityMode.SLIDERS_AND_SMALL_ATOMS ] ){
+      if ( state[ InteractivityMode.SLIDERS_AND_SMALL_ATOMS ] ) {
         state[ InteractivityMode.SLIDERS_AND_SMALL_ATOMS ].isotopeTestChamberState.containedIsotopes.clear();
       }
     },
@@ -665,7 +653,7 @@ define( function( require ) {
 
       // Remove any stored state for the default atom.
       // before clearing up the state clearing all the observable array stored in it
-      for ( var key in this.mapIsotopeConfigToUserMixState ){
+      for ( var key in this.mapIsotopeConfigToUserMixState ) {
         this.clearState( this.mapIsotopeConfigToUserMixState[ key ] );
       }
       this.mapIsotopeConfigToUserMixState = {};
@@ -682,5 +670,7 @@ define( function( require ) {
       this.mapIsotopeConfigToUserMixState = {};
     }
   }, { // statics
-    InteractivityMode: InteractivityMode });
+    InteractivityMode: InteractivityMode
+  } );
 } );
+

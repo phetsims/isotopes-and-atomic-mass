@@ -23,7 +23,7 @@ define( function( require ) {
   var ObservableArray = require( 'AXON/ObservableArray' );
   var Particle = require( 'SHRED/model/Particle' );
   var ParticleAtom = require( 'SHRED/model/ParticleAtom' );
-  var PropertySet = require('AXON/PropertySet');
+  var PropertySet = require( 'AXON/PropertySet' );
   var SharedConstants = require( 'SHRED/SharedConstants' );
   var SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
   var Vector2 = require( 'DOT/Vector2' );
@@ -73,7 +73,7 @@ define( function( require ) {
     // Unlink in not required here as it is used through out the sim life
     self.particleAtom.massNumberProperty.link( function( massNumber ) {
       var stable = massNumber > 0 ?
-                   AtomIdentifier.isStable( self.particleAtom.protonCount, self.particleAtom.neutronCount ) : true;
+        AtomIdentifier.isStable( self.particleAtom.protonCount, self.particleAtom.neutronCount ) : true;
       if ( self.nucleusStable !== stable ) {
         // Stability has changed.
         self.nucleusStable = stable;
@@ -106,7 +106,7 @@ define( function( require ) {
 
     this.numberAtom.on( 'atomUpdated', function() {
       self.setAtomConfiguration( self.numberAtom );
-    });
+    } );
 
     // Set the initial atom configuration.
     this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
@@ -137,8 +137,7 @@ define( function( require ) {
             var angle = JUMP_ANGLES[ this._nucleusJumpCount % JUMP_ANGLES.length ];
             var distance = JUMP_DISTANCES[ this._nucleusJumpCount % JUMP_DISTANCES.length ];
             this.particleAtom.nucleusOffset = new Vector2( Math.cos( angle ) * distance, Math.sin( angle ) * distance );
-          }
-          else {
+          } else {
             this.particleAtom.nucleusOffset = Vector2.ZERO;
           }
         }
@@ -163,8 +162,7 @@ define( function( require ) {
     placeNucleon: function( particle, bucket, atom ) {
       if ( particle.position.distance( atom.position ) < NUCLEON_CAPTURE_RADIUS ) {
         atom.addParticle( particle );
-      }
-      else {
+      } else {
         bucket.addParticleNearestOpen( particle, true );
       }
     },
@@ -175,7 +173,7 @@ define( function( require ) {
      * @param {boolean} lazyLink whether the linking has to be lazy or not
      * @private
      */
-    linkNeutron: function( neutron, lazyLink ){
+    linkNeutron: function( neutron, lazyLink ) {
       var self = this;
       var userControlledLink = function( userControlled ) {
         self.trigger( 'atomReconfigured' );
@@ -184,19 +182,18 @@ define( function( require ) {
           self.trigger( 'atomReconfigured' );
         }
       };
-      if( lazyLink ){
+      if ( lazyLink ) {
         neutron.userControlledProperty.lazyLink( userControlledLink );
-      }
-      else{
+      } else {
         neutron.userControlledProperty.link( userControlledLink );
       }
-      neutron.userControlledPropertyUnlink = function(){
+      neutron.userControlledPropertyUnlink = function() {
         neutron.userControlledProperty.unlink( userControlledLink );
       };
     },
 
     // @public
-    setNeutronBucketConfiguration: function () {
+    setNeutronBucketConfiguration: function() {
       var self = this;
       // Add the neutrons to the neutron bucket.
       _.times( DEFAULT_NUM_NEUTRONS_IN_BUCKET, function() {
@@ -248,7 +245,7 @@ define( function( require ) {
         self.particleAtom.addParticle( neutron );
         self.neutrons.add( neutron );
         self.linkNeutron( neutron, true );
-      });
+      } );
       this.particleAtom.moveAllParticlesToDestination();
       this.setNeutronBucketConfiguration();
       this.trigger( 'atomReconfigured' );
@@ -276,3 +273,4 @@ define( function( require ) {
 
   } );
 } );
+

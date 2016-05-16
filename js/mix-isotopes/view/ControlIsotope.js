@@ -45,16 +45,16 @@ define( function( require ) {
     // major ticks
     slider.addMajorTick( range.min, new Text( range.min, tickLabelOptions ) );
     slider.addMajorTick( range.max, new Text( range.max, tickLabelOptions ) );
-    sliderLayer.addChild(slider);
+    sliderLayer.addChild( slider );
 
     var plusButton = new ArrowButton( 'right', function propertyPlus() {
-      controller.quantityProperty.set( Math.floor( controller.quantityProperty.get() ) + 1 ) ;
-    }, {arrowHeight: 10, arrowWidth: 10 });
+      controller.quantityProperty.set( Math.floor( controller.quantityProperty.get() ) + 1 );
+    }, { arrowHeight: 10, arrowWidth: 10 } );
     var minusButton = new ArrowButton( 'left', function propertyMinus() {
-      controller.quantityProperty.set( Math.floor( controller.quantityProperty.get() ) - 1 ) ;
-    }, {arrowHeight: 10, arrowWidth: 10 });
-    numericLayer.addChild(plusButton);
-    numericLayer.addChild(minusButton);
+      controller.quantityProperty.set( Math.floor( controller.quantityProperty.get() ) - 1 );
+    }, { arrowHeight: 10, arrowWidth: 10 } );
+    numericLayer.addChild( plusButton );
+    numericLayer.addChild( minusButton );
 
     var isotopeText = new Text( '', {
       font: new PhetFont( 20 ),
@@ -79,21 +79,21 @@ define( function( require ) {
     minusButton.centerY = panel.centerY;
     //slider.left = minusButton.left;
 
-    var changedValue = function( value ){
-      isotopeText.setText( Math.floor( value) );
+    var changedValue = function( value ) {
+      isotopeText.setText( Math.floor( value ) );
       isotopeText.centerX = READOUT_SIZE.width / 2;
       isotopeText.centerY = READOUT_SIZE.height * 0.75;
 
-      minusButton.enabled = !(Math.floor( value ) === minRange);
-      plusButton.enabled = !(Math.floor( value ) === maxRange);
-      controller.setIsotopeQuantity( Math.floor( value) );
+      minusButton.enabled = !( Math.floor( value ) === minRange );
+      plusButton.enabled = !( Math.floor( value ) === maxRange );
+      controller.setIsotopeQuantity( Math.floor( value ) );
     };
 
     controller.quantityProperty.link( changedValue );
 
     var isotopeNode = new IsotopeNode( controller.controllerIsotope, 6, {
       showLabel: false
-    });
+    } );
     labelLayer.addChild( isotopeNode );
     var captionLabel = new Text( controller.caption, {
       font: new PhetFont( { size: 14 } ),
@@ -108,7 +108,7 @@ define( function( require ) {
     labelLayer.centerX = numericLayer.centerX;
     sliderLayer.centerX = numericLayer.centerX + 5;
 
-    this.controlIsotopeDispose = function(){
+    this.controlIsotopeDispose = function() {
       controller.quantityProperty.unlink( changedValue );
     };
   }
@@ -116,8 +116,9 @@ define( function( require ) {
   isotopesAndAtomicMass.register( 'ControlIsotope', ControlIsotope );
 
   return inherit( Node, ControlIsotope, {
-    dispose: function(){
+    dispose: function() {
       this.controlIsotopeDispose();
     }
   } );
 } );
+

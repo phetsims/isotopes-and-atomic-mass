@@ -15,7 +15,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var Line = require( 'SCENERY/nodes/Line' );
-  var MultiLineText = require( 'SCENERY_PHET/MultiLineText');
+  var MultiLineText = require( 'SCENERY_PHET/MultiLineText' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Panel = require( 'SUN/Panel' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
@@ -47,15 +47,16 @@ define( function( require ) {
     var pieChartBoundingRectangle = new Rectangle( 150, 0, PIE_CHART_RADIUS * 2, PIE_CHART_RADIUS * 2, 0, 0 );
 
     // default slices and color coding, first slice is for my isotope and second slice is for other isotope
-    var slices = [ { value:0, color:FIRST_SLICE_COLOR, stroke:'black', lineWidth: 0.5 },
-      { value:0, color:SECOND_SLICE_COLOR, stroke:'black', lineWidth: 0.5 } ];
+    var slices = [ { value: 0, color: FIRST_SLICE_COLOR, stroke: 'black', lineWidth: 0.5 },
+      { value: 0, color: SECOND_SLICE_COLOR, stroke: 'black', lineWidth: 0.5 }
+    ];
 
     var pieChart = new PieChartNode( slices, PIE_CHART_RADIUS );
     // center point of of bounding rectangle
     pieChart.setCenter( pieChartBoundingRectangle.width / 2 + 150, pieChartBoundingRectangle.height / 2 );
     pieChartBoundingRectangle.addChild( pieChart );
 
-    function updatePieChart(){
+    function updatePieChart() {
       var myIsotopeAbundance = AtomIdentifier.getNaturalAbundance( makeIsotopesModel.particleAtom );
       var otherIsotopeAbundance = 1 - myIsotopeAbundance;
       slices[ 0 ].value = myIsotopeAbundance;
@@ -63,7 +64,7 @@ define( function( require ) {
       pieChart.setAngleAndValues( Math.PI * 2 * slices[ 1 ].value / ( slices[ 0 ].value + slices[ 1 ].value ) / 2,
         slices );
       updateReadout( myIsotopeAbundance );
-      updateOtherIsotopeLabel(myIsotopeAbundance);
+      updateOtherIsotopeLabel( myIsotopeAbundance );
     }
 
     // Don't need to off lives through out sim life
@@ -71,7 +72,7 @@ define( function( require ) {
       updatePieChart();
     } );
 
-    pieChartBoundingRectangle.scale(0.6);
+    pieChartBoundingRectangle.scale( 0.6 );
     this.addChild( pieChartBoundingRectangle );
 
     var readoutMyIsotopeAbundanceText = new Text( '', {
@@ -95,10 +96,9 @@ define( function( require ) {
       readoutMyIsotopeAbundanceText.text = ( Util.toFixedNumber( myIsotopeAbundance * 100, 4 ) ).toString() + '%';
       myIsotopeAbundancePanel.centerX = pieChartBoundingRectangle.left - 50; // empirically determined
       myIsotopeLabel.centerX = myIsotopeAbundancePanel.centerX;
-      if ( myIsotopeAbundance === 0 ){
+      if ( myIsotopeAbundance === 0 ) {
         leftConnectingLine.visible = false;
-      }
-      else {
+      } else {
         leftConnectingLine.visible = true;
       }
     }
@@ -115,7 +115,7 @@ define( function( require ) {
       pieChartBoundingRectangle.centerX, pieChartBoundingRectangle.centerY, {
         stroke: FIRST_SLICE_COLOR,
         lineDash: [ 3, 1 ]
-      });
+      } );
     this.addChild( leftConnectingLine );
     leftConnectingLine.moveToBack();
 
@@ -129,12 +129,11 @@ define( function( require ) {
     // Attach otherIsotopeLabel with protonCountProperty to change element name on proton count change
     function updateOtherIsotopeLabel( myIsotopeAbundance ) {
       var name = AtomIdentifier.getName( makeIsotopesModel.particleAtom.protonCount );
-      if ( makeIsotopesModel.particleAtom.protonCount > 0 && myIsotopeAbundance < 1 ){
+      if ( makeIsotopesModel.particleAtom.protonCount > 0 && myIsotopeAbundance < 1 ) {
         otherIsotopeLabel.text = StringUtils.format( otherIsotopesPatternString, name );
         otherIsotopeLabel.visible = true;
         rightConnectingLine.visible = true;
-      }
-      else{
+      } else {
         otherIsotopeLabel.visible = false;
         rightConnectingLine.visible = false;
       }
@@ -149,7 +148,7 @@ define( function( require ) {
       pieChartBoundingRectangle.right + 20, pieChartBoundingRectangle.centerY, {
         stroke: SECOND_SLICE_COLOR,
         lineDash: [ 3, 1 ]
-      });
+      } );
     this.addChild( rightConnectingLine );
     rightConnectingLine.moveToBack();
 
@@ -158,7 +157,7 @@ define( function( require ) {
   }
 
   isotopesAndAtomicMass.register( 'TwoItemPieChartNode', TwoItemPieChartNode );
-  return inherit( Node, TwoItemPieChartNode, {
-  } );
+  return inherit( Node, TwoItemPieChartNode, {} );
 
 } );
+
