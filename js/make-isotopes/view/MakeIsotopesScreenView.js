@@ -40,7 +40,7 @@ define( function( require ) {
 
   // strings
   var symbolString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/symbol' );
-  var abundanceinNatureString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/abundanceInNature' );
+  var abundanceInNatureString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/abundanceInNature' );
 
   /**
    * @param {MakeIsotopesModel} makeIsotopesModel
@@ -185,7 +185,7 @@ define( function( require ) {
     this.addChild( symbolBox );
 
     var abundanceBox = new AccordionBox( new TwoItemPieChartNode( makeIsotopesModel ), {
-      titleNode: new Text( abundanceinNatureString, {
+      titleNode: new Text( abundanceInNatureString, {
         font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
         maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
       } ),
