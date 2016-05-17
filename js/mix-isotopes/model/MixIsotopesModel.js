@@ -629,20 +629,6 @@ define( function( require ) {
       this.addIsotopeControllers();
     },
 
-    // @private
-    clearState: function( state ) {
-      if ( state[ InteractivityMode.BUCKETS_AND_LARGE_ATOMS ] ) {
-        state[ InteractivityMode.BUCKETS_AND_LARGE_ATOMS ].bucketList.forEach( function( bucket ) {
-          bucket.reset();
-        } );
-        state[ InteractivityMode.BUCKETS_AND_LARGE_ATOMS ].bucketList.clear();
-        state[ InteractivityMode.BUCKETS_AND_LARGE_ATOMS ].isotopeTestChamberState.containedIsotopes.clear();
-      }
-      if ( state[ InteractivityMode.SLIDERS_AND_SMALL_ATOMS ] ) {
-        state[ InteractivityMode.SLIDERS_AND_SMALL_ATOMS ].isotopeTestChamberState.containedIsotopes.clear();
-      }
-    },
-
     /**
      * Resets the model. Returns the default settings.
      *
@@ -653,15 +639,14 @@ define( function( require ) {
 
       // Remove any stored state for the default atom.
       // before clearing up the state clearing all the observable array stored in it
-      for ( var key in this.mapIsotopeConfigToUserMixState ) {
-        this.clearState( this.mapIsotopeConfigToUserMixState[ key ] );
-      }
+
       this.mapIsotopeConfigToUserMixState = {};
 
       this.naturesIsotopesList.clear();
 
       PropertySet.prototype.reset.call( this );
 
+      this.prototypeIsotope = new NumberAtom();
       // Set the default element
       this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
 
