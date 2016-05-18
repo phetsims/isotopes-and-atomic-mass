@@ -29,7 +29,7 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
 
   // strings
-  var neutronsTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons.title' );
+  var neutronsString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons' );
 
   // constants
   var DEFAULT_NUM_NEUTRONS_IN_BUCKET = 4;
@@ -100,7 +100,7 @@ define( function( require ) {
       position: NEUTRON_BUCKET_POSITION,
       size: BUCKET_SIZE,
       baseColor: Color.gray,
-      caption: neutronsTitleString,
+      caption: neutronsString,
       sphereRadius: SharedConstants.NUCLEON_RADIUS
     } );
 

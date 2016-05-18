@@ -19,7 +19,7 @@ define( function( require ) {
   var Screen = require( 'JOIST/Screen' );
 
   // strings
-  var mixIsotopesModuleTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/mix-isotopes-module.title' );
+  var mixturesString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/mixtures' );
 
   // images
   var mixIsotopesIcon = require( 'mipmap!ISOTOPES_AND_ATOMIC_MASS/mix-isotopes-icon.png' );
@@ -30,7 +30,7 @@ define( function( require ) {
    */
   function MixIsotopesScreen( tandem ) {
 
-    Screen.call( this, mixIsotopesModuleTitleString, new Image( mixIsotopesIcon ),
+    Screen.call( this, mixturesString, new Image( mixIsotopesIcon ),
       function() {
         return new MixIsotopesModel(); },
       function( model ) {

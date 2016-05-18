@@ -123,7 +123,6 @@ define( function( require ) {
   }
 
   /**
-   *
    * @param {MixIsotopesModel} model
    * @constructor
    */
@@ -152,6 +151,10 @@ define( function( require ) {
 
   return inherit( Node, IsotopeProportionsPieChart, {
 
+    /**
+     * Update the complete node based on isotopeCount
+     * @public
+     */
     update: function() {
       if ( this.model.testChamber.isotopeCountProperty.get() > 0 ) {
         this.emptyCircle.setVisible( false );
@@ -165,6 +168,10 @@ define( function( require ) {
       }
     },
 
+    /**
+     * Update the pie chart
+     * @public
+     */
     updatePieChart: function() {
       var self = this;
       this.slices = [];
@@ -180,6 +187,10 @@ define( function( require ) {
       this.updateLabels( this.model.possibleIsotopes );
     },
 
+    /**
+     * @param {Array.<Object>} possibleIsotopes
+     * @private
+     */
     updateLabels: function( possibleIsotopes ) {
       var self = this;
       this.labelLayer.removeAllChildren();
@@ -274,6 +285,12 @@ define( function( require ) {
       } );
     },
 
+    /**
+     * @param {Array.<Object>} sliceLabels
+     * @param {Number} minY
+     * @param {Number} maxY
+     * @private
+     */
     adjustLabelPositionsForOverlap: function( sliceLabels, minY, maxY ) {
       var rotationIncrement = Math.PI / 200; // Empirically chosen.
       for ( var i = 1; i < 50; i++ ) { // Number of iterations empirically chosen.

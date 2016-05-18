@@ -46,7 +46,7 @@ define( function( require ) {
 
   // strings
   var myMixString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/myMix' );
-  var natureMixString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/natureMix' );
+  var naturesMixString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/naturesMix' );
   var isotopeMixtureString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopeMixture' );
   var percentCompositionString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/percentComposition' );
   var averageAtomicMassString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/averageAtomicMass' );
@@ -70,7 +70,7 @@ define( function( require ) {
     var naturesMixButton = new AquaRadioButton(
       isotopeMixtureProperty,
       true,
-      new Text( natureMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ), { radius: radioButtonRadius }
+      new Text( naturesMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ), { radius: radioButtonRadius }
     );
     var label = new Text( isotopeMixtureString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } );
     var displayButtonGroup = new Node();
@@ -285,7 +285,6 @@ define( function( require ) {
       fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
       expandedProperty: new Property( true ),
       minWidth: periodicTableNode.width,
-      maxWidth: periodicTableNode.width,
       contentAlign: 'center',
       titleAlignX: 'left',
       buttonAlign: 'right',
@@ -304,7 +303,6 @@ define( function( require ) {
       fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
       expandedProperty: new Property( true ),
       minWidth: periodicTableNode.width,
-      maxWidth: periodicTableNode.width,
       contentAlign: 'center',
       titleAlignX: 'left',
       buttonAlign: 'right',

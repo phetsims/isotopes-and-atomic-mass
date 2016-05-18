@@ -18,7 +18,7 @@ define( function( require ) {
   var Screen = require( 'JOIST/Screen' );
 
   // strings
-  var makeIsotopesModuleTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/make-isotopes-module.title' );
+  var isotopesString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopes' );
 
   // images
   var makeIsotopesIcon = require( 'mipmap!ISOTOPES_AND_ATOMIC_MASS/make-isotopes-icon.png' );
@@ -29,7 +29,7 @@ define( function( require ) {
    */
   function MakeIsotopesScreen( tandem ) {
 
-    Screen.call( this, makeIsotopesModuleTitleString, new Image( makeIsotopesIcon ),
+    Screen.call( this, isotopesString, new Image( makeIsotopesIcon ),
       function() {
         return new MakeIsotopesModel(); },
       function( model ) {
