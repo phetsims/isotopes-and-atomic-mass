@@ -67,7 +67,7 @@ define( function( require ) {
       updateOtherIsotopeLabel( myIsotopeAbundance );
     }
 
-    // Does not require to off looking for this trigger as this is observed through out the sim life
+    // No call to off() required since this exists for the lifetime of the sim
     makeIsotopesModel.on( 'atomReconfigured', function() {
       updatePieChart();
     } );
