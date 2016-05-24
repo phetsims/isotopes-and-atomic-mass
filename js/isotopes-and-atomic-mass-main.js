@@ -22,11 +22,11 @@ define( function( require ) {
 
   var simOptions = {
     credits: {
-      leadDesign: 'Kelly Lancaster',
-      softwareDevelopment: 'John Blanco, Jesse Greenberg, Aadish Gupta, Sam Reid, James Smith',
-      team: 'Jack Barbera, Suzanne Brahmia, Sue Doubler, Amy Hanson,\n' +
-        'Loretta Jones, Kelly Lancaster, Trish Loeblein, Emily B. Moore,\n' +
-        'Robert Parson, Ariel Paul, Kathy Perkins',
+      leadDesign: 'Amy Hanson, Kelly Lancaster',
+      softwareDevelopment: 'John Blanco, Jesse Greenberg, Aadish Gupta, \n' +
+        'Sam Reid, James Smith',
+      team: 'Jack Barbera, Suzanne Brahmia, Sue Doubler, Loretta Jones, \n' +
+        'Trish Loeblein, Emily B. Moore, Robert Parson, Ariel Paul, Kathy Perkins',
       qualityAssurance: 'Steele Dalton, Bryce Griebenow, Elise Morgan, Ben Roberts'
     },
     tandem: tandem
