@@ -61,7 +61,7 @@ define( function( require ) {
   function IsotopeMixtureSelectionNode( isotopeMixtureProperty ) {
     var radioButtonRadius = 6;
     var LABEL_FONT = new PhetFont( 14 );
-    var MAX_WIDTH = 80;
+    var MAX_WIDTH = 160;
     var myMixButton = new AquaRadioButton(
       isotopeMixtureProperty,
       false,
