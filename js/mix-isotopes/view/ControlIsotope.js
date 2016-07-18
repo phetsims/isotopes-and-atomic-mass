@@ -13,7 +13,7 @@ define( function( require ) {
   var Node = require( 'SCENERY/nodes/Node' );
   var Panel = require( 'SUN/Panel' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var Range = require( 'DOT/Range' );
+  var RangeWithValue = require( 'DOT/RangeWithValue' );
   var Text = require( 'SCENERY/nodes/Text' );
 
   var READOUT_SIZE = new Dimension2( 30, 15 );
@@ -33,7 +33,7 @@ define( function( require ) {
     var numericLayer = new Node();
     this.addChild( numericLayer );
 
-    var range = new Range( minRange, maxRange );
+    var range = new RangeWithValue( minRange, maxRange );
     var tickLabelOptions = { font: new PhetFont( 12 ), pickable: false };
     var slider = new HSlider( controller.quantityProperty, range, {
       trackSize: new Dimension2( 80, 5 ),

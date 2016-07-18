@@ -34,7 +34,7 @@ define( function( require ) {
   var ParticleView = require( 'SHRED/view/ParticleView' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Property = require( 'AXON/Property' );
-  var Range = require( 'DOT/Range' );
+  var RangeWithValue = require( 'DOT/RangeWithValue' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var RadioButtonGroup = require( 'SUN/buttons/RadioButtonGroup' );
   var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
@@ -99,7 +99,7 @@ define( function( require ) {
     bucketNode.addChild( new BucketFront( bucket, modelViewTransform ) );
     bucketNode.scale( 0.5 );
 
-    var range = new Range( 0, 100 );
+    var range = new RangeWithValue( 0, 100 );
     var slider = new HSlider( new Property( 50 ), range, {
       trackSize: new Dimension2( 50, 5 ),
       thumbSize: new Dimension2( 15, 30 ),
