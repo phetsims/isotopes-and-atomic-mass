@@ -28,8 +28,7 @@ define( function( require ) {
       team: 'Jack Barbera, Suzanne Brahmia, Sue Doubler, Loretta Jones, \n' +
         'Trish Loeblein, Emily B. Moore, Robert Parson, Ariel Paul, Kathy Perkins',
       qualityAssurance: 'Steele Dalton, Bryce Griebenow, Elise Morgan, Ben Roberts'
-    },
-    tandem: tandem
+    }
   };
 
   // Appending '?dev' to the URL will enable developer-only features.
