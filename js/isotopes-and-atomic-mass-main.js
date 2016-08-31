@@ -31,13 +31,6 @@ define( function( require ) {
     }
   };
 
-  // Appending '?dev' to the URL will enable developer-only features.
-  if ( phet.chipper.getQueryParameter( 'dev' ) ) {
-    simOptions = _.extend( {
-      // add dev-specific options here
-    }, simOptions );
-  }
-
   SimLauncher.launch( function() {
     var makeIsotopeScreenTandem = tandem.createTandem( 'makeIsotopeScreen' );
     var mixIsotopeScreenTandem = tandem.createTandem( 'mixIsotopeScreen' );
