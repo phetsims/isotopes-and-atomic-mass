@@ -25,22 +25,25 @@ define( function( require ) {
   var mixIsotopesIcon = require( 'mipmap!ISOTOPES_AND_ATOMIC_MASS/mix-isotopes-icon.png' );
 
   /**
-   * @constructor
    * @param {Tandem} tandem
+   * @constructor
    */
   function MixIsotopesScreen( tandem ) {
 
-    Screen.call( this, mixturesString, new Image( mixIsotopesIcon ),
-      function() {
-        return new MixIsotopesModel(); },
-      function( model ) {
-        return new MixIsotopesScreenView( model, tandem ); }, {
-        tandem: tandem
-      }
-    );
+    var options = {
+      name: mixturesString,
+      homeScreenIcon: new Image( mixIsotopesIcon ),
+      tandem: tandem
+    };
+
+    Screen.call( this,
+      function() { return new MixIsotopesModel(); },
+      function( model ) { return new MixIsotopesScreenView( model, tandem ); },
+      options );
   }
 
   isotopesAndAtomicMass.register( 'MixIsotopesScreen', MixIsotopesScreen );
+
   return inherit( Screen, MixIsotopesScreen );
 } );
 

@@ -29,16 +29,19 @@ define( function( require ) {
    */
   function MakeIsotopesScreen( tandem ) {
 
-    Screen.call( this, isotopesString, new Image( makeIsotopesIcon ),
-      function() {
-        return new MakeIsotopesModel(); },
-      function( model ) {
-        return new MakeIsotopesScreenView( model, tandem ); }, {
-        tandem: tandem
-      }
-    );
+    var options = {
+      name: isotopesString,
+      homeScreenIcon: new Image( makeIsotopesIcon ),
+      tandem: tandem
+    };
+
+    Screen.call( this,
+      function() { return new MakeIsotopesModel(); },
+      function( model ) { return new MakeIsotopesScreenView( model, tandem ); },
+      options );
   }
 
   isotopesAndAtomicMass.register( 'MakeIsotopesScreen', MakeIsotopesScreen );
+
   return inherit( Screen, MakeIsotopesScreen );
 } );
