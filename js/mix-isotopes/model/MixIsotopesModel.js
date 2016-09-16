@@ -321,7 +321,7 @@ define( function( require ) {
       this.prototypeIsotope = modelState.elementConfig;
       this.updatePossibleIsotopesList();
 
-      var thisModel = this;
+      var self = this;
 
       assert && assert( modelState.showingNaturesMix === this.showingNaturesMix );
       this.showingNaturesMix = modelState.showingNaturesMix;
@@ -329,7 +329,7 @@ define( function( require ) {
       // Add any particles that were in the test chamber.
       this.testChamber.setState( modelState.isotopeTestChamberState );
       this.testChamber.containedIsotopes.forEach( function( isotope ) {
-        thisModel.isotopesList.add( isotope );
+        self.isotopesList.add( isotope );
       } );
 
       // Add the appropriate isotope controllers. This will create the controllers in their initial states.
@@ -339,12 +339,12 @@ define( function( require ) {
       if ( this.interactivityMode === InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
         // Remove isotopes from buckets based on the number in the test chamber. This makes sense because in this mode,
         // any isotopes in the chamber must have come from the buckets.
-        thisModel.removeBuckets();
+        self.removeBuckets();
         modelState.bucketList.forEach( function( bucket ) {
-          thisModel.bucketList.add( bucket );
+          self.bucketList.add( bucket );
           bucket.particles.forEach( function( isotope ) {
             bucket.addParticleFirstOpen( isotope, false );
-            thisModel.isotopesList.add( isotope );
+            self.isotopesList.add( isotope );
           } );
         } );
       }
