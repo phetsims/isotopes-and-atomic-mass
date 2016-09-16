@@ -45,7 +45,7 @@ define( function( require ) {
    */
   function InteractiveIsotopeNode( makeIsotopesModel, modelViewTransform, bottomPoint ) {
     Node.call( this );
-    var thisNode = this;
+    var self = this;
     this.modelViewTransform = modelViewTransform; // extend scope of modelViewTransform.
 
     // Add the node that shows the textual labels and electron cloud.
@@ -114,8 +114,8 @@ define( function( require ) {
       assert && assert( addedParticle.type === 'proton' || addedParticle.type === 'neutron',
         'unrecognized particle type' );
 
-      var particleView = new ParticleView( addedParticle, thisNode.modelViewTransform );
-      particleView.center = thisNode.modelViewTransform.modelToViewPosition( addedParticle.position );
+      var particleView = new ParticleView( addedParticle, self.modelViewTransform );
+      particleView.center = self.modelViewTransform.modelToViewPosition( addedParticle.position );
       particleView.pickable = addedParticle.type === 'neutron';
 
       // add particle view to correct z layer.
@@ -236,7 +236,7 @@ define( function( require ) {
       stabilityIndicator.center = stabilityIndicatorCenterPos;
     };
 
-    thisNode.addChild( nucleonLayersNode );
+    self.addChild( nucleonLayersNode );
     // Add the neutron bucket child here for proper layering with neutrons.
     this.addChild( neutronBucketFront );
 

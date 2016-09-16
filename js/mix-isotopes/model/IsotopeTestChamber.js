@@ -323,14 +323,14 @@ define( function( require ) {
         var mapIsotopesToForces = {};
         var mapIsotopesIDToIsotope = {};
 
-        var thisChamber = this; //Prevents any scope error when using this.
+        var self = this; //Prevents any scope error when using this.
 
         this.containedIsotopes.forEach( function( isotope1 ) {
 
           var totalForce = new Vector2( 0, 0 );
           //Calculate the force due to other isotopes
-          for ( var j = 0; j < thisChamber.containedIsotopes.length; j++ ) {
-            var isotope2 = thisChamber.containedIsotopes.get( j );
+          for ( var j = 0; j < self.containedIsotopes.length; j++ ) {
+            var isotope2 = self.containedIsotopes.get( j );
             if ( isotope1 === isotope2 ) {
               continue;
 
@@ -393,12 +393,12 @@ define( function( require ) {
      * //@private
      */
     checkForParticleOverlap: function() {
-      var thisChamber = this;
+      var self = this;
       var overlapCheck = false;
 
-      thisChamber.containedIsotopes.forEach( function( isotope1 ) {
-        for ( var i = 0; i < thisChamber.containedIsotopes.length; i++ ) {
-          var isotope2 = thisChamber.containedIsotopes.get( i );
+      self.containedIsotopes.forEach( function( isotope1 ) {
+        for ( var i = 0; i < self.containedIsotopes.length; i++ ) {
+          var isotope2 = self.containedIsotopes.get( i );
           if ( isotope1 === isotope2 ) {
             // Same isotope so skip it!
             continue;
