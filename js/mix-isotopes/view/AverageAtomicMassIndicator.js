@@ -119,7 +119,7 @@ define( function( require ) {
       } else {
         weight = averageAtomicMass;
       }
-      readoutText.setText( Util.toFixed( weight, NUMBER_DECIMALS ) + amuString );
+      readoutText.setText( Util.toFixed( weight, NUMBER_DECIMALS ) + ' ' + amuString );
       readoutText.centerX = SIZE.width / 2;
     }
 

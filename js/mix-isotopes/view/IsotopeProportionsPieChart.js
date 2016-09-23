@@ -87,7 +87,7 @@ define( function( require ) {
     var symbol = chemSymbolWithNumbersNode( isotopeConfig );
     node.addChild( symbol );
 
-    var readoutText = new Text( Util.toFixedNumber( isotopePercentage, numberOfDecimals ) + ' %', {
+    var readoutText = new Text( Util.toFixedNumber( isotopePercentage, numberOfDecimals ) + '%', {
       font: READOUT_FONT,
       maxWidth: 0.9 * SIZE.width,
       maxHeight: 0.9 * SIZE.height
