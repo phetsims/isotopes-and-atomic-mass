@@ -39,7 +39,7 @@ define( function( require ) {
   var RadioButtonGroup = require( 'SUN/buttons/RadioButtonGroup' );
   var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   var ScreenView = require( 'JOIST/ScreenView' );
-  var SharedConstants = require( 'SHRED/SharedConstants' );
+  var ShredConstants = require( 'SHRED/ShredConstants' );
   var Text = require( 'SCENERY/nodes/Text' );
   var Util = require( 'DOT/Util' );
   var Vector2 = require( 'DOT/Vector2' );
@@ -129,7 +129,7 @@ define( function( require ) {
    * @constructor
    */
   function MixIsotopesScreenView( mixIsotopesModel, tandem ) {
-    ScreenView.call( this, { layoutBounds: SharedConstants.LAYOUT_BOUNDS } );
+    ScreenView.call( this, { layoutBounds: ShredConstants.LAYOUT_BOUNDS } );
 
     this.model = mixIsotopesModel;
     var self = this;
@@ -255,7 +255,7 @@ define( function( require ) {
     } );
 
     var clearBoxButton = new EraserButton( {
-      baseColor: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
+      baseColor: ShredConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
       listener: function() {
         mixIsotopesModel.clearBox();
       }
@@ -279,10 +279,10 @@ define( function( require ) {
     this.isotopeProportionsPieChart.centerX = this.isotopeProportionsPieChart.centerX + 150; // Empirically determined
     var compositionBox = new AccordionBox( this.isotopeProportionsPieChart, {
       titleNode: new Text( percentCompositionString, {
-        font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
-        maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
+        font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
+        maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
       } ),
-      fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
+      fill: ShredConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
       expandedProperty: new Property( true ),
       minWidth: periodicTableNode.width,
       contentAlign: 'center',
@@ -297,10 +297,10 @@ define( function( require ) {
 
     var averageAtomicMassBox = new AccordionBox( new AverageAtomicMassIndicator( this.model ), {
       titleNode: new Text( averageAtomicMassString, {
-        font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
-        maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
+        font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
+        maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
       } ),
-      fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
+      fill: ShredConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
       expandedProperty: new Property( true ),
       minWidth: periodicTableNode.width,
       contentAlign: 'center',

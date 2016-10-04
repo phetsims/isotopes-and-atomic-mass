@@ -24,7 +24,7 @@ define( function( require ) {
   var Particle = require( 'SHRED/model/Particle' );
   var ParticleAtom = require( 'SHRED/model/ParticleAtom' );
   var PropertySet = require( 'AXON/PropertySet' );
-  var SharedConstants = require( 'SHRED/SharedConstants' );
+  var ShredConstants = require( 'SHRED/ShredConstants' );
   var SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
   var Vector2 = require( 'DOT/Vector2' );
 
@@ -34,7 +34,7 @@ define( function( require ) {
   // constants
   var DEFAULT_NUM_NEUTRONS_IN_BUCKET = 4;
   var NUCLEUS_JUMP_PERIOD = 0.1; // In seconds
-  var MAX_NUCLEUS_JUMP = SharedConstants.NUCLEON_RADIUS * 0.5;
+  var MAX_NUCLEUS_JUMP = ShredConstants.NUCLEON_RADIUS * 0.5;
   var JUMP_ANGLES = [ Math.PI * 0.1, Math.PI * 1.6, Math.PI * 0.7, Math.PI * 1.1, Math.PI * 0.3 ];
   var JUMP_DISTANCES = [ MAX_NUCLEUS_JUMP * 0.4, MAX_NUCLEUS_JUMP * 0.8, MAX_NUCLEUS_JUMP * 0.2, MAX_NUCLEUS_JUMP * 0.9 ];
   var NUCLEON_CAPTURE_RADIUS = 100; // maximum drop distance for a nucleon to be considered part of the particle
@@ -101,7 +101,7 @@ define( function( require ) {
       size: BUCKET_SIZE,
       baseColor: Color.gray,
       caption: neutronsString,
-      sphereRadius: SharedConstants.NUCLEON_RADIUS
+      sphereRadius: ShredConstants.NUCLEON_RADIUS
     } );
 
     this.numberAtom.on( 'atomUpdated', function() {

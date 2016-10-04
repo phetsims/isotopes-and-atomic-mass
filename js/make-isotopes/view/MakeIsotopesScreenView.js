@@ -26,7 +26,7 @@ define( function( require ) {
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
   var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   var ScreenView = require( 'JOIST/ScreenView' );
-  var SharedConstants = require( 'SHRED/SharedConstants' );
+  var ShredConstants = require( 'SHRED/ShredConstants' );
   var Text = require( 'SCENERY/nodes/Text' );
   var TwoItemPieChartNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/TwoItemPieChartNode' );
   var Util = require( 'DOT/Util' );
@@ -49,7 +49,7 @@ define( function( require ) {
    */
   function MakeIsotopesScreenView( makeIsotopesModel, tandem ) {
     // super type constructor
-    ScreenView.call( this, { layoutBounds: SharedConstants.LAYOUT_BOUNDS } );
+    ScreenView.call( this, { layoutBounds: ShredConstants.LAYOUT_BOUNDS } );
 
     // Set up the model-canvas transform.  IMPORTANT NOTES: The multiplier factors for the point in the view can be
     // adjusted to shift the center right or left, and the scale factor can be adjusted to zoom in or out (smaller
@@ -167,10 +167,10 @@ define( function( require ) {
     symbolRectangle.scale( 0.20 );
     var symbolBox = new AccordionBox( symbolRectangle, {
       titleNode: new Text( symbolString, {
-        font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
-        maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
+        font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
+        maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
       } ),
-      fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
+      fill: ShredConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
       expandedProperty: new Property( false ),
       minWidth: periodicTableNode.visibleBounds.width,
       contentAlign: 'center',
@@ -185,10 +185,10 @@ define( function( require ) {
 
     var abundanceBox = new AccordionBox( new TwoItemPieChartNode( makeIsotopesModel ), {
       titleNode: new Text( abundanceInNatureString, {
-        font: SharedConstants.ACCORDION_BOX_TITLE_FONT,
-        maxWidth: SharedConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
+        font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
+        maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
       } ),
-      fill: SharedConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
+      fill: ShredConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
       expandedProperty: new Property( false ),
       minWidth: periodicTableNode.visibleBounds.width,
       contentAlign: 'center',
