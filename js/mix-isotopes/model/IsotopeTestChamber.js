@@ -18,7 +18,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var ObservableArray = require( 'AXON/ObservableArray' );
-  var PropertySet = require( 'AXON/PropertySet' );
+  var Property = require( 'AXON/Property' );
   var Random = require( 'DOT/Random' );
   var Rectangle = require( 'DOT/Rectangle' );
   var Vector2 = require( 'DOT/Vector2' );
@@ -63,16 +63,14 @@ define( function( require ) {
     // @public
     this.containedIsotopes = new ObservableArray();
 
-    PropertySet.call( this, {
-      // @public {Read-Only}
-      isotopeCount: 0,
-      averageAtomicMass: 0
-    } );
+    // @public {Read-Only}
+    this.isotopeCountProperty = new Property( 0 );
+    this.averageAtomicMassProperty = new Property( 0 );
 
   }
 
   isotopesAndAtomicMass.register( 'IsotopeTestChamber', IsotopeTestChamber );
-  return inherit( PropertySet, IsotopeTestChamber, {
+  return inherit( Object, IsotopeTestChamber, {
     /**
      * Get the number of isotopes currently in the chamber that match the specified configuration.
      *
@@ -163,8 +161,9 @@ define( function( require ) {
           // Update the isotope count.
           this.updateCountProperty();
           // Update the average atomic mass.
-          this.averageAtomicMass = ( ( this.averageAtomicMass * ( this.isotopeCount - 1 ) ) +
-            isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCount;
+          this.averageAtomicMassProperty.set( ( ( this.averageAtomicMassProperty.get() *
+                                                  ( this.isotopeCountProperty.get() - 1 ) ) +
+            isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCountProperty.get() );
         }
       } else {
         // This isotope is not positioned correctly.
@@ -195,7 +194,7 @@ define( function( require ) {
      * @private
      */
     updateCountProperty: function() {
-      this.isotopeCount = this.containedIsotopes.length;
+      this.isotopeCountProperty.set( this.containedIsotopes.length );
     },
 
     // @private
@@ -206,9 +205,9 @@ define( function( require ) {
           totalMass += isotope.atomConfiguration.getIsotopeAtomicMass();
         } );
 
-        this.averageAtomicMass = totalMass / this.containedIsotopes.length;
+        this.averageAtomicMassProperty.set( totalMass / this.containedIsotopes.length );
       } else {
-        this.averageAtomicMass = 0;
+        this.averageAtomicMassProperty.set( 0 );
       }
     },
 
@@ -221,11 +220,11 @@ define( function( require ) {
       this.containedIsotopes.remove( isotope );
       this.updateCountProperty();
       // Update the average atomic mass.
-      if ( this.isotopeCount > 0 ) {
-        this.averageAtomicMass = ( this.averageAtomicMass * ( this.isotopeCount + 1 ) -
-          isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCount;
+      if ( this.isotopeCountProperty.get() > 0 ) {
+        this.averageAtomicMassProperty.set( ( this.averageAtomicMassProperty.get() * ( this.isotopeCountProperty.get() + 1 ) -
+          isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCountProperty.get() );
       } else {
-        this.averageAtomicMass = 0;
+        this.averageAtomicMassProperty.set( 0 );
       }
     },
 
@@ -261,7 +260,7 @@ define( function( require ) {
     removeAllIsotopes: function() {
       this.containedIsotopes.clear();
       this.updateCountProperty();
-      this.averageAtomicMass = 0;
+      this.averageAtomicMassProperty.set( 0 );
     },
 
     /**
@@ -280,7 +279,7 @@ define( function( require ) {
      * @public
      */
     getTotalIsotopeCount: function() {
-      return this.isotopeCount;
+      return this.isotopeCountProperty.get();
     },
 
     /**

@@ -182,7 +182,7 @@ define( function( require ) {
         self.slices[ i ] = { value: value, color: color, stroke: 'black', lineWidth: 0.5 };
         i += 1;
       } );
-      var lightestIsotopeProportion = this.slices[ 0 ].value / this.model.testChamber.isotopeCount;
+      var lightestIsotopeProportion = this.slices[ 0 ].value / this.model.testChamber.isotopeCountProperty.get();
       this.pieChart.setAngleAndValues( Math.PI - ( lightestIsotopeProportion * Math.PI ), this.slices );
       this.updateLabels( this.model.possibleIsotopesProperty.get() );
     },

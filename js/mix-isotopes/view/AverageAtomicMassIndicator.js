@@ -198,7 +198,7 @@ define( function( require ) {
 
     // Doesn't need unlink as it stays through out the sim life
     model.testChamber.averageAtomicMassProperty.link( function( averageAtomicMass ) {
-      if ( model.testChamber.isotopeCount > 0 ) {
+      if ( model.testChamber.isotopeCountProperty.get() > 0 ) {
         readoutPointer.centerX = self.calcXOffsetFromAtomicMass( averageAtomicMass );
         readoutPointer.setVisible( true );
       } else {
