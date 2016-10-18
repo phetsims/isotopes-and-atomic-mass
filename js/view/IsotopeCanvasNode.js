@@ -39,7 +39,7 @@ define( function( require ) {
       var i;
       for ( i = 0; i < this.isotopes.length; i++ ) {
         isotope = this.isotopes.get( i );
-        var radius = this.modelViewTransform.modelToViewDeltaX( isotope.radius );
+        var radius = this.modelViewTransform.modelToViewDeltaX( isotope.radiusProperty.get() );
         var x = this.modelViewTransform.modelToViewX( isotope.positionProperty.get().x );
         var y = this.modelViewTransform.modelToViewY( isotope.positionProperty.get().y );
         context.fillStyle = isotope.color.toCSS();
