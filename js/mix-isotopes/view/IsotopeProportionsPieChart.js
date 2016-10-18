@@ -45,21 +45,21 @@ define( function( require ) {
   function chemSymbolWithNumbersNode( isotopeConfig ) {
     var node = new Node();
 
-    var symbol = new Text( AtomIdentifier.getSymbol( isotopeConfig.protonCount ), {
+    var symbol = new Text( AtomIdentifier.getSymbol( isotopeConfig.protonCountProperty.get() ), {
       font: CHEMICAL_SYMBOL_FONT,
       centerX: 0,
       centerY: 0
     } );
     node.addChild( symbol );
 
-    var massNumber = new Text( isotopeConfig.massNumber, {
+    var massNumber = new Text( isotopeConfig.massNumberProperty.get(), {
       font: SUPERSCRIPT_SUBSCRIPT_FONT,
       centerY: symbol.top
     } );
     massNumber.right = symbol.left;
     node.addChild( massNumber );
 
-    var atomicNumber = new Text( isotopeConfig.protonCount, {
+    var atomicNumber = new Text( isotopeConfig.protonCountProperty.get(), {
       font: SUPERSCRIPT_SUBSCRIPT_FONT,
       centerY: symbol.bottom
     } );
