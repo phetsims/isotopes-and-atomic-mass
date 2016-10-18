@@ -111,15 +111,15 @@ define( function( require ) {
 
     // function to add the view for a nucleon, i.e. a proton or neutron
     function addParticleView( addedParticle ) {
-      assert && assert( addedParticle.type === 'proton' || addedParticle.type === 'neutron',
+      assert && assert( addedParticle.typeProperty.get() === 'proton' || addedParticle.typeProperty.get() === 'neutron',
         'unrecognized particle type' );
 
       var particleView = new ParticleView( addedParticle, self.modelViewTransform );
-      particleView.center = self.modelViewTransform.modelToViewPosition( addedParticle.position );
-      particleView.pickable = addedParticle.type === 'neutron';
+      particleView.center = self.modelViewTransform.modelToViewPosition( addedParticle.positionProperty.get() );
+      particleView.pickable = addedParticle.typeProperty.get() === 'neutron';
 
       // add particle view to correct z layer.
-      nucleonLayers[ addedParticle.zLayer ].addChild( particleView );
+      nucleonLayers[ addedParticle.zLayerProperty.get() ].addChild( particleView );
 
       var adjustZLayerLink = function( zLayer ) {
         adjustZLayer( addedParticle, zLayer );
@@ -135,15 +135,15 @@ define( function( require ) {
       addedParticle.userControlledProperty.link( moveParticleToFront );
       // Add the item removed listener.
       var temp;
-      if ( addedParticle.type === 'proton' ) {
+      if ( addedParticle.typeProperty.get() === 'proton' ) {
         temp = makeIsotopesModel.protons;
-      } else if ( addedParticle.type === 'neutron' ) {
+      } else if ( addedParticle.typeProperty.get() === 'neutron' ) {
         temp = makeIsotopesModel.neutrons;
       }
 
       temp.addItemRemovedListener( function removalListener( removedAtom ) {
         if ( removedAtom === addedParticle ) {
-          nucleonLayers[ addedParticle.zLayer ].removeChild( particleView );
+          nucleonLayers[ addedParticle.zLayerProperty.get() ].removeChild( particleView );
           particleView.dispose();
           addedParticle.zLayerProperty.unlink( adjustZLayerLink );
           addedParticle.userControlledProperty.unlink( moveParticleToFront );
@@ -240,15 +240,19 @@ define( function( require ) {
     // Add the neutron bucket child here for proper layering with neutrons.
     this.addChild( neutronBucketFront );
 
-    makeIsotopesModel.on( 'atomReconfigured', function() {
-      updateElementName( makeIsotopesModel.particleAtom.protonCount, makeIsotopesModel.particleAtom.neutronCount );
-      updateStabilityIndicator( makeIsotopesModel.particleAtom.protonCount, makeIsotopesModel.particleAtom.neutronCount );
+    makeIsotopesModel.atomReconfigured.addListener( function() {
+      updateElementName( makeIsotopesModel.particleAtom.protonCountProperty.get(),
+        makeIsotopesModel.particleAtom.neutronCountProperty.get() );
+      updateStabilityIndicator( makeIsotopesModel.particleAtom.protonCountProperty.get(),
+        makeIsotopesModel.particleAtom.neutronCountProperty.get() );
       myIsotopeLabel.bottom = isotopeAtomNode.top - 5;
     } );
 
     // initial update
-    updateElementName( makeIsotopesModel.particleAtom.protonCount, makeIsotopesModel.particleAtom.neutronCount );
-    updateStabilityIndicator( makeIsotopesModel.particleAtom.protonCount, makeIsotopesModel.particleAtom.neutronCount );
+    updateElementName( makeIsotopesModel.particleAtom.protonCountProperty.get(),
+      makeIsotopesModel.particleAtom.neutronCountProperty.get() );
+    updateStabilityIndicator( makeIsotopesModel.particleAtom.protonCountProperty.get(),
+      makeIsotopesModel.particleAtom.neutronCountProperty.get() );
   }
 
   isotopesAndAtomicMass.register( 'InteractiveIsotopeNode', InteractiveIsotopeNode );

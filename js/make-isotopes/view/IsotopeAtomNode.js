@@ -42,7 +42,7 @@ define( function( require ) {
     var updateAtomPosition = function( numProtons ) {
       var newCenter = new Vector2( bottomPoint.x, bottomPoint.y - modelViewTransform.modelToViewDeltaX(
         isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2 ) * 1.2 ); // empirically determined
-      particleAtom.position = modelViewTransform.viewToModelPosition( newCenter );
+      particleAtom.positionProperty.set( modelViewTransform.viewToModelPosition( newCenter ) );
       isotopeElectronCloud.center = newCenter;
     };
 

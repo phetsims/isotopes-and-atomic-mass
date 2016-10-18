@@ -56,12 +56,13 @@ define( function( require ) {
 
       if ( changeAmount > 0 ) {
         for ( var i = 0; i < changeAmount; i++ ) {
-          var newIsotope = new MovableAtom( this.isotopeConfig.protonCount, this.isotopeConfig.neutronCount,
+          var newIsotope = new MovableAtom( this.isotopeConfig.protonCountProperty.get(),
+            this.isotopeConfig.neutronCountProperty.get(),
             this.model.testChamber.generateRandomLocation() );
           newIsotope.color = this.model.getColorForIsotope( this.isotopeConfig );
-          newIsotope.massNumber = this.isotopeConfig.massNumber;
-          newIsotope.protonCount = this.isotopeConfig.protonCount;
-          newIsotope.radius = 4;
+          newIsotope.massNumber = this.isotopeConfig.massNumberProperty.get();
+          newIsotope.protonCount = this.isotopeConfig.protonCountProperty.get();
+          newIsotope.radiusProperty.set( 4 );
           newIsotope.showLabel = false;
           this.model.testChamber.addIsotopeToChamber( newIsotope, true );
           this.model.isotopesList.add( newIsotope );

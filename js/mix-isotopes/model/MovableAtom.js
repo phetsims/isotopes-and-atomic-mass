@@ -32,8 +32,8 @@ define( function( require ) {
    */
   function MovableAtom( numProtons, numNeutrons, initialPosition ) {
     Particle.call( this, 'Isotope' );
-    this.position = initialPosition; // @public
-    this.destination = initialPosition; // @public
+    this.positionProperty.set( initialPosition ); // @public
+    this.destinationProperty.set( initialPosition ); // @public
     // @public
     this.atomConfiguration = new NumberAtom( {
       protonCount: numProtons,

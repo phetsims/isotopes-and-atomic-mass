@@ -55,7 +55,7 @@ define( function( require ) {
 
     function updateReadout() {
       if ( displayModeProperty.get() === DISPLAY_MODE.MASS_NUMBER ) {
-        readoutText.setText( atom.massNumber.toString() );
+        readoutText.setText( atom.massNumberProperty.get().toString() );
       } else {
         var isotopeAtomicMass = atom.getIsotopeAtomicMass();
         readoutText.setText( isotopeAtomicMass > 0 ? Util.toFixed( isotopeAtomicMass, 5 ) : '--' );

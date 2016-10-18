@@ -56,8 +56,8 @@ define( function( require ) {
     node.addChild( shape );
 
     // Create the label that goes above the tick mark.
-    var label = new SubSupText( ' <sup>' + isotopeConfig.massNumber + '</sup>' +
-      AtomIdentifier.getSymbol( isotopeConfig.protonCount ), {
+    var label = new SubSupText( ' <sup>' + isotopeConfig.massNumberProperty.get() + '</sup>' +
+      AtomIdentifier.getSymbol( isotopeConfig.protonCountProperty.get() ), {
         font: new PhetFont( 12 )
       } );
     label.centerX = shape.centerX;
@@ -114,8 +114,8 @@ define( function( require ) {
 
     function updateReadout( averageAtomicMass ) {
       var weight;
-      if ( model.showingNaturesMix ) {
-        weight = AtomIdentifier.getStandardAtomicMass( model.numberAtom.protonCount );
+      if ( model.showingNaturesMixProperty.get() ) {
+        weight = AtomIdentifier.getStandardAtomicMass( model.numberAtom.protonCountProperty.get() );
       } else {
         weight = averageAtomicMass;
       }
@@ -159,7 +159,7 @@ define( function( require ) {
     model.possibleIsotopesProperty.link( function() {
 
       tickMarkLayer.removeAllChildren();
-      var possibleIsotopesList = model.possibleIsotopes;
+      var possibleIsotopesList = model.possibleIsotopesProperty.get();
       var lightestIsotopeMass = Number.POSITIVE_INFINITY;
       var heaviestIsotopeMass = 0;
       self.minMass = Number.POSITIVE_INFINITY;
@@ -182,7 +182,7 @@ define( function( require ) {
       self.minMass = ( heaviestIsotopeMass + lightestIsotopeMass ) / 2 - self.massSpan / 2;
 
       // Add the new tick marks.
-      model.possibleIsotopes.forEach( function( isotope ) {
+      model.possibleIsotopesProperty.get().forEach( function( isotope ) {
         var tickMark = new IsotopeTickMark( isotope );
         tickMark.centerX = self.calcXOffsetFromAtomicMass( isotope.getIsotopeAtomicMass() );
         tickMarkLayer.addChild( tickMark );

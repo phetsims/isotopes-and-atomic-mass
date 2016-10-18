@@ -176,7 +176,7 @@ define( function( require ) {
       var self = this;
       this.slices = [];
       var i = 0;
-      this.model.possibleIsotopes.forEach( function( isotope ) {
+      this.model.possibleIsotopesProperty.get().forEach( function( isotope ) {
         var value = self.model.testChamber.getIsotopeCount( isotope );
         var color = self.model.getColorForIsotope( isotope );
         self.slices[ i ] = { value: value, color: color, stroke: 'black', lineWidth: 0.5 };
@@ -184,7 +184,7 @@ define( function( require ) {
       } );
       var lightestIsotopeProportion = this.slices[ 0 ].value / this.model.testChamber.isotopeCount;
       this.pieChart.setAngleAndValues( Math.PI - ( lightestIsotopeProportion * Math.PI ), this.slices );
-      this.updateLabels( this.model.possibleIsotopes );
+      this.updateLabels( this.model.possibleIsotopesProperty.get() );
     },
 
     /**
@@ -198,7 +198,7 @@ define( function( require ) {
       var i = 0;
       possibleIsotopes.forEach( function( isotope ) {
         var proportion;
-        if ( self.model.showingNaturesMix ) {
+        if ( self.model.showingNaturesMixProperty.get() ) {
           proportion = AtomIdentifier.getNaturalAbundancePreciseDecimal( isotope );
         } else {
           proportion = self.model.testChamber.getIsotopeProportion( isotope );
@@ -207,7 +207,7 @@ define( function( require ) {
         var centerEdgeOfPieSlice = self.pieChart.getCenterEdgePtForSlice( i );
         if ( centerEdgeOfPieSlice ) {
           var labelOnLeft = centerEdgeOfPieSlice.x <= self.pieChart.centerXCord;
-          var numberOfDecimals = self.model.showingNaturesMix ? NUMBER_DECIMALS : 1;
+          var numberOfDecimals = self.model.showingNaturesMixProperty.get() ? NUMBER_DECIMALS : 1;
           var labelNode = sliceLabelNode( isotope, proportion * 100, labelOnLeft, numberOfDecimals );
 
           // Determine the "unconstrained" target position for the label, meaning a position that is directly out from

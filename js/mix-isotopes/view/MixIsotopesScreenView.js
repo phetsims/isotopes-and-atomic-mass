@@ -182,7 +182,7 @@ define( function( require ) {
     // Adding Isotopes
     function addIsotopeView( addedIsotope ) {
       var isotopeView = new ParticleView( addedIsotope, self.modelViewTransform );
-      isotopeView.center = self.modelViewTransform.modelToViewPosition( addedIsotope.position );
+      isotopeView.center = self.modelViewTransform.modelToViewPosition( addedIsotope.positionProperty.get() );
       isotopeView.pickable = ( mixIsotopesModel.interactivityModeProperty.get() ===
         MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS );
 
@@ -250,7 +250,7 @@ define( function( require ) {
     } );
     this.addChild( this.isotopesLayer );
     this.isotopesLayer.visible = false;
-    this.model.on( 'naturesIsotopeUpdated', function() {
+    this.model.naturesIsotopeUpdated.addListener( function() {
       self.isotopesLayer.setIsotopes( self.model.naturesIsotopesList );
     } );
 

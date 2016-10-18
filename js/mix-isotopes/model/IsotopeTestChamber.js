@@ -81,7 +81,7 @@ define( function( require ) {
      * @public
      */
     getIsotopeCount: function( isotopeConfig ) {
-      assert && assert( isotopeConfig.protonCount === isotopeConfig.electronCount ); // Should always be neutral atom.
+      assert && assert( isotopeConfig.protonCountProperty.get() === isotopeConfig.electronCountProperty.get() ); // Should always be neutral atom.
       var isotopeCount = 0;
       this.containedIsotopes.forEach( function( isotope ) {
         if ( isotope.atomConfiguration.equals( isotopeConfig ) ) {
@@ -108,7 +108,7 @@ define( function( require ) {
      * @public
      */
     isIsotopePositionedOverChamber: function( isotope ) {
-      return TEST_CHAMBER_RECT.containsPoint( isotope.position );
+      return TEST_CHAMBER_RECT.containsPoint( isotope.positionProperty.get() );
     },
 
     /**
@@ -137,22 +137,26 @@ define( function( require ) {
         isotope.userControlledProperty.lazyLink( isotopeRemovedListener );
 
         // If the edges of the isotope are outside of the container, move it to be fully inside.
-        var protrusion = isotope.position.x + isotope.radius - TEST_CHAMBER_RECT.maxX + BUFFER;
+        var protrusion = isotope.positionProperty.get().x + isotope.radiusProperty.get() - TEST_CHAMBER_RECT.maxX + BUFFER;
         if ( protrusion >= 0 ) {
-          isotope.setPositionAndDestination( new Vector2( isotope.position.x - protrusion, isotope.position.y ) );
+          isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x - protrusion,
+            isotope.positionProperty.get().y ) );
         } else {
-          protrusion = TEST_CHAMBER_RECT.minX + BUFFER - ( isotope.position.x - isotope.radius );
+          protrusion = TEST_CHAMBER_RECT.minX + BUFFER - ( isotope.positionProperty.get().x - isotope.radiusProperty.get() );
           if ( protrusion >= 0 ) {
-            isotope.setPositionAndDestination( new Vector2( isotope.position.x + protrusion, isotope.position.y ) );
+            isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x + protrusion,
+              isotope.positionProperty.get().y ) );
           }
         }
-        protrusion = isotope.position.y + isotope.radius - TEST_CHAMBER_RECT.maxY + BUFFER;
+        protrusion = isotope.positionProperty.get().y + isotope.radiusProperty.get() - TEST_CHAMBER_RECT.maxY + BUFFER;
         if ( protrusion >= 0 ) {
-          isotope.setPositionAndDestination( new Vector2( isotope.position.x, isotope.position.y - protrusion ) );
+          isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x,
+            isotope.positionProperty.get().y - protrusion ) );
         } else {
-          protrusion = TEST_CHAMBER_RECT.minY + BUFFER - ( isotope.position.y - isotope.radius );
+          protrusion = TEST_CHAMBER_RECT.minY + BUFFER - ( isotope.positionProperty.get().y - isotope.radiusProperty.get() );
           if ( protrusion >= 0 ) {
-            isotope.setPositionAndDestination( new Vector2( isotope.position.x, isotope.position.y + protrusion ) );
+            isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x,
+              isotope.positionProperty.get().y + protrusion ) );
           }
         }
         if ( performUpdates ) {
@@ -235,7 +239,7 @@ define( function( require ) {
      * @public
      */
     removeIsotopeMatchingConfig: function( isotopeConfig ) {
-      assert && assert( ( isotopeConfig.protonCount - isotopeConfig.electronCount ) === 0 );
+      assert && assert( ( isotopeConfig.protonCountProperty.get() - isotopeConfig.electronCountProperty.get() ) === 0 );
 
       // Locate and remove a matching isotope.
       var removedIsotope = null;
@@ -289,7 +293,7 @@ define( function( require ) {
      */
     getIsotopeProportion: function( isotopeConfig ) {
       // Calculates charge to ensure that isotopes are neutral.
-      assert && assert( isotopeConfig.protonCount - isotopeConfig.electronCount === 0 );
+      assert && assert( isotopeConfig.protonCountProperty.get() - isotopeConfig.electronCountProperty.get() === 0 );
       var isotopeCount = 0;
 
       this.containedIsotopes.forEach( function( isotope ) {
@@ -336,16 +340,16 @@ define( function( require ) {
 
             }
             var forceFromIsotope = new Vector2( 0, 0 );
-            var distanceBetweenIsotopes = isotope1.position.distance( isotope2.position );
+            var distanceBetweenIsotopes = isotope1.positionProperty.get().distance( isotope2.positionProperty.get() );
             if ( distanceBetweenIsotopes === 0 ) {
               // These isotopes are sitting right on top of one another.
               // Add the max amount of inter-particle force in a random direction.
               forceFromIsotope.setPolar( interParticleForceConst / ( minInterParticleDistance * minInterParticleDistance ),
-                this.random.random() * 2 * Math.PI );
-            } else if ( distanceBetweenIsotopes < isotope1.radius + isotope2.radius ) {
+                self.random.random() * 2 * Math.PI );
+            } else if ( distanceBetweenIsotopes < isotope1.radiusProperty.get() + isotope2.radiusProperty.get() ) {
               // calculate the repulsive force based on the distance.
-              forceFromIsotope.x = isotope1.position.x - isotope2.position.x;
-              forceFromIsotope.y = isotope1.position.y - isotope2.position.y;
+              forceFromIsotope.x = isotope1.positionProperty.get().x - isotope2.positionProperty.get().x;
+              forceFromIsotope.y = isotope1.positionProperty.get().y - isotope2.positionProperty.get().y;
               var distance = Math.max( forceFromIsotope.magnitude(), minInterParticleDistance );
               forceFromIsotope.normalize();
               forceFromIsotope.multiply( interParticleForceConst / ( distance * distance ) );
@@ -354,18 +358,18 @@ define( function( require ) {
           }
 
           // Calculate the force due to the walls. This prevents particles from being pushed out of the bounds of the chamber.
-          if ( isotope1.position.x + isotope1.radius >= TEST_CHAMBER_RECT.maxX ) {
-            var distanceFromRightWall = TEST_CHAMBER_RECT.maxX - isotope1.position.x;
+          if ( isotope1.positionProperty.get().x + isotope1.radiusProperty.get() >= TEST_CHAMBER_RECT.maxX ) {
+            var distanceFromRightWall = TEST_CHAMBER_RECT.maxX - isotope1.positionProperty.get().x;
             totalForce.add( new Vector2( -wallForceConst / ( distanceFromRightWall * distanceFromRightWall ), 0 ) );
-          } else if ( isotope1.position.x - isotope1.radius <= TEST_CHAMBER_RECT.minX ) {
-            var distanceFromLeftWall = isotope1.position.x - TEST_CHAMBER_RECT.minX;
+          } else if ( isotope1.positionProperty.get().x - isotope1.radius <= TEST_CHAMBER_RECT.minX ) {
+            var distanceFromLeftWall = isotope1.positionProperty.get().x - TEST_CHAMBER_RECT.minX;
             totalForce.add( new Vector2( wallForceConst / ( distanceFromLeftWall * distanceFromLeftWall ), 0 ) );
           }
-          if ( isotope1.position.y + isotope1.radius >= TEST_CHAMBER_RECT.maxY ) {
-            var distanceFromTopWall = TEST_CHAMBER_RECT.maxY - isotope1.position.y;
+          if ( isotope1.positionProperty.get().y + isotope1.radiusProperty.get() >= TEST_CHAMBER_RECT.maxY ) {
+            var distanceFromTopWall = TEST_CHAMBER_RECT.maxY - isotope1.positionProperty.get().y;
             totalForce.add( new Vector2( 0, -wallForceConst / ( distanceFromTopWall * distanceFromTopWall ) ) );
-          } else if ( isotope1.position.y - isotope1.radius <= TEST_CHAMBER_RECT.minY ) {
-            var distanceFromBottomWall = isotope1.position.y - TEST_CHAMBER_RECT.minY;
+          } else if ( isotope1.positionProperty.get().y - isotope1.radiusProperty.get() <= TEST_CHAMBER_RECT.minY ) {
+            var distanceFromBottomWall = isotope1.positionProperty.get().y - TEST_CHAMBER_RECT.minY;
             totalForce.add( new Vector2( 0, wallForceConst / ( distanceFromBottomWall * distanceFromBottomWall ) ) );
           }
           // Put the calculated repulsive force into the map.
@@ -378,7 +382,7 @@ define( function( require ) {
           if ( mapIsotopesToForces.hasOwnProperty( isotopeID ) ) {
             // Sets the position of the isotope to the corresponding Vector2 from mapIsotopesToForces
             mapIsotopesIDToIsotope[ isotopeID ]
-              .setPositionAndDestination( mapIsotopesToForces[ isotopeID ].add( mapIsotopesIDToIsotope[ isotopeID ].position ) );
+              .setPositionAndDestination( mapIsotopesToForces[ isotopeID ].add( mapIsotopesIDToIsotope[ isotopeID ].positionProperty.get() ) );
           }
 
         }
@@ -404,8 +408,8 @@ define( function( require ) {
             continue;
           }
 
-          var distance = isotope1.position.distance( isotope2.position );
-          if ( distance < isotope1.radius + isotope2.radius ) {
+          var distance = isotope1.positionProperty.get().distance( isotope2.positionProperty.get() );
+          if ( distance < isotope1.radiusProperty.get() + isotope2.radiusProperty.get() ) {
             overlapCheck = true;
             return overlapCheck;
           }

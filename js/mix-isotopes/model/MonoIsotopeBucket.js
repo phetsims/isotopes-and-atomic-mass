@@ -42,7 +42,8 @@ define( function( require ) {
      * @public
      */
     addIsotopeInstanceFirstOpen: function( isotope, moveImmediately ) {
-      if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount ) ) {
+      if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCountProperty.get(),
+          isotope.atomConfiguration.neutronCountProperty.get() ) ) {
         this.addParticleFirstOpen( isotope, moveImmediately );
       }
     },
@@ -69,7 +70,8 @@ define( function( require ) {
      * @public
      */
     addIsotopeInstanceNearestOpen: function( isotope, animate ) {
-      if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount ) ) {
+      if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCountProperty.get(),
+          isotope.atomConfiguration.neutronCountProperty.get() ) ) {
         this.addParticleNearestOpen( isotope, animate );
       }
     },

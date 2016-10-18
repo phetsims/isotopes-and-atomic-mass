@@ -68,7 +68,7 @@ define( function( require ) {
     }
 
     // No call to off() required since this exists for the lifetime of the sim
-    makeIsotopesModel.on( 'atomReconfigured', function() {
+    makeIsotopesModel.atomReconfigured.addListener( function() {
       updatePieChart();
     } );
 
@@ -128,8 +128,8 @@ define( function( require ) {
 
     // Attach otherIsotopeLabel with protonCountProperty to change element name on proton count change
     function updateOtherIsotopeLabel( myIsotopeAbundance ) {
-      var name = AtomIdentifier.getName( makeIsotopesModel.particleAtom.protonCount );
-      if ( makeIsotopesModel.particleAtom.protonCount > 0 && myIsotopeAbundance < 1 ) {
+      var name = AtomIdentifier.getName( makeIsotopesModel.particleAtom.protonCountProperty.get() );
+      if ( makeIsotopesModel.particleAtom.protonCountProperty.get() > 0 && myIsotopeAbundance < 1 ) {
         otherIsotopeLabel.text = StringUtils.format( otherIsotopesPatternString, name );
         otherIsotopeLabel.visible = true;
         rightConnectingLine.visible = true;

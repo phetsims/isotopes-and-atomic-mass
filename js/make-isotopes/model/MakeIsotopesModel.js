@@ -17,13 +17,13 @@ define( function( require ) {
   var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
   var Color = require( 'SCENERY/util/Color' );
   var Dimension2 = require( 'DOT/Dimension2' );
+  var Emitter = require( 'AXON/Emitter' );
   var inherit = require( 'PHET_CORE/inherit' );
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var NumberAtom = require( 'SHRED/model/NumberAtom' );
   var ObservableArray = require( 'AXON/ObservableArray' );
   var Particle = require( 'SHRED/model/Particle' );
   var ParticleAtom = require( 'SHRED/model/ParticleAtom' );
-  var PropertySet = require( 'AXON/PropertySet' );
   var ShredConstants = require( 'SHRED/ShredConstants' );
   var SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
   var Vector2 = require( 'DOT/Vector2' );
@@ -49,9 +49,6 @@ define( function( require ) {
    */
   function MakeIsotopesModel() {
 
-    // Supertype constructor
-    PropertySet.call( this, {} );
-
     // carry through scope
     var self = this;
 
@@ -61,10 +58,13 @@ define( function( require ) {
     // Make available a 'number atom' that tracks the state of the particle atom.
     // @public
     this.numberAtom = new NumberAtom( {
-      protonCount: DEFAULT_ATOM_CONFIG.protonCount,
-      neutronCount: DEFAULT_ATOM_CONFIG.neutronCount,
-      electronCount: DEFAULT_ATOM_CONFIG.electronCount
+      protonCount: DEFAULT_ATOM_CONFIG.protonCountProperty.get(),
+      neutronCount: DEFAULT_ATOM_CONFIG.neutronCountProperty.get(),
+      electronCount: DEFAULT_ATOM_CONFIG.electronCountProperty.get()
     } );
+
+    // @public - events emitted by instances of this type
+    this.atomReconfigured = new Emitter();
 
     // Update the stability state and counter on changes.
     self.nucleusStable = true; // @public
@@ -73,17 +73,18 @@ define( function( require ) {
     // Unlink in not required here as it is used through out the sim life
     self.particleAtom.massNumberProperty.link( function( massNumber ) {
       var stable = massNumber > 0 ?
-        AtomIdentifier.isStable( self.particleAtom.protonCount, self.particleAtom.neutronCount ) : true;
+        AtomIdentifier.isStable( self.particleAtom.protonCountProperty.get(),
+          self.particleAtom.neutronCountProperty.get() ) : true;
       if ( self.nucleusStable !== stable ) {
         // Stability has changed.
         self.nucleusStable = stable;
         if ( stable ) {
           self.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
-          self.particleAtom.nucleusOffset = Vector2.ZERO;
+          self.particleAtom.nucleusOffsetProperty.set( Vector2.ZERO );
         }
       }
-      if ( self.particleAtom.protonCount > 0 && self.particleAtom.neutronCount > 0 ) {
-        self.trigger( 'atomReconfigured' );
+      if ( self.particleAtom.protonCountProperty.get() > 0 && self.particleAtom.neutronCountProperty.get() > 0 ) {
+        self.atomReconfigured.emit();
       }
     } );
 
@@ -104,7 +105,7 @@ define( function( require ) {
       sphereRadius: ShredConstants.NUCLEON_RADIUS
     } );
 
-    this.numberAtom.on( 'atomUpdated', function() {
+    this.numberAtom.atomUpdated.addListener( function() {
       self.setAtomConfiguration( self.numberAtom );
     } );
 
@@ -114,7 +115,7 @@ define( function( require ) {
   }
 
   isotopesAndAtomicMass.register( 'MakeIsotopesModel', MakeIsotopesModel );
-  return inherit( PropertySet, MakeIsotopesModel, {
+  return inherit( Object, MakeIsotopesModel, {
     _nucleusJumpCount: 0,
     // Main model step function, called by the framework.
     // @public
@@ -132,13 +133,14 @@ define( function( require ) {
         this.nucleusJumpCountdown -= dt;
         if ( this.nucleusJumpCountdown <= 0 ) {
           this.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
-          if ( this.particleAtom.nucleusOffset === Vector2.ZERO ) {
+          if ( this.particleAtom.nucleusOffsetProperty.get() === Vector2.ZERO ) {
             this._nucleusJumpCount++;
             var angle = JUMP_ANGLES[ this._nucleusJumpCount % JUMP_ANGLES.length ];
             var distance = JUMP_DISTANCES[ this._nucleusJumpCount % JUMP_DISTANCES.length ];
-            this.particleAtom.nucleusOffset = new Vector2( Math.cos( angle ) * distance, Math.sin( angle ) * distance );
+            this.particleAtom.nucleusOffsetProperty.set(
+              new Vector2( Math.cos( angle ) * distance, Math.sin( angle ) * distance ) );
           } else {
-            this.particleAtom.nucleusOffset = Vector2.ZERO;
+            this.particleAtom.nucleusOffsetProperty.set( Vector2.ZERO );
           }
         }
       }
@@ -160,7 +162,7 @@ define( function( require ) {
      * @public
      */
     placeNucleon: function( particle, bucket, atom ) {
-      if ( particle.position.distance( atom.position ) < NUCLEON_CAPTURE_RADIUS ) {
+      if ( particle.positionProperty.get().distance( atom.positionProperty.get() ) < NUCLEON_CAPTURE_RADIUS ) {
         atom.addParticle( particle );
       } else {
         bucket.addParticleNearestOpen( particle, true );
@@ -176,10 +178,10 @@ define( function( require ) {
     linkNeutron: function( neutron, lazyLink ) {
       var self = this;
       var userControlledLink = function( userControlled ) {
-        self.trigger( 'atomReconfigured' );
+        self.atomReconfigured.emit();
         if ( !userControlled && !self.neutronBucket.containsParticle( neutron ) ) {
           self.placeNucleon( neutron, self.neutronBucket, self.particleAtom );
-          self.trigger( 'atomReconfigured' );
+          self.atomReconfigured.emit();
         }
       };
       if ( lazyLink ) {
@@ -224,23 +226,23 @@ define( function( require ) {
       this.neutrons.clear();
       this.neutronBucket.reset();
       if ( this.numberAtom !== numberAtom ) {
-        this.numberAtom.protonCount = numberAtom.protonCount;
-        this.numberAtom.electronCount = numberAtom.electronCount;
-        this.numberAtom.neutronCount = numberAtom.neutronCount;
+        this.numberAtom.protonCountProperty.set( numberAtom.protonCountProperty.get() );
+        this.numberAtom.electronCountProperty.set( numberAtom.electronCountProperty.get() );
+        this.numberAtom.neutronCountProperty.set( numberAtom.neutronCountProperty.get() );
       }
 
       // Add the particles.
-      for ( var i = 0; i < numberAtom.electronCount; i++ ) {
+      for ( var i = 0; i < numberAtom.electronCountProperty.get(); i++ ) {
         var electron = new Particle( 'electron' );
         this.particleAtom.addParticle( electron );
         this.electrons.add( electron );
       }
-      for ( var j = 0; j < numberAtom.protonCount; j++ ) {
+      for ( var j = 0; j < numberAtom.protonCountProperty.get(); j++ ) {
         var proton = new Particle( 'proton' );
         this.particleAtom.addParticle( proton );
         this.protons.add( proton );
       }
-      _.times( numberAtom.neutronCount, function() {
+      _.times( numberAtom.neutronCountProperty.get(), function() {
         var neutron = new Particle( 'neutron' );
         self.particleAtom.addParticle( neutron );
         self.neutrons.add( neutron );
@@ -248,7 +250,7 @@ define( function( require ) {
       } );
       this.particleAtom.moveAllParticlesToDestination();
       this.setNeutronBucketConfiguration();
-      this.trigger( 'atomReconfigured' );
+      this.atomReconfigured.emit();
     },
 
     /**
