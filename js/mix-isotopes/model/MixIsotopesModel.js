@@ -384,12 +384,10 @@ define( function( require ) {
         // Save the user's mix state for the current element before transitioning to the new one.
         if ( this.prototypeIsotope !== atom ) {
           if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( this.prototypeIsotope.protonCountProperty.get() ) ) {
-            this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCountProperty.get() ]
-              [ this.interactivityModeProperty.get() ] = this.getState();
+            this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCountProperty.get() ][ this.interactivityModeProperty.get() ] = this.getState();
           } else {
             this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCountProperty.get() ] = {};
-            this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCountProperty.get() ]
-              [ this.interactivityModeProperty.get() ] = this.getState();
+            this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCountProperty.get() ][ this.interactivityModeProperty.get() ] = this.getState();
           }
         }
         if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( atom.protonCountProperty.get() ) ) {
