@@ -28,7 +28,7 @@ define( function( require ) {
    * @param {MixIsotopesModel} model
    * @param {NumberAtom} isotopeConfig
    * @param {Vector2} position
-   * @param {String} caption
+   * @param {string} caption
    * @constructor
    */
   function NumericalIsotopeQuantityControl( model, isotopeConfig, position, caption ) {

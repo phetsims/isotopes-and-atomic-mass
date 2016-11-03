@@ -287,8 +287,8 @@ define( function( require ) {
 
     /**
      * @param {Array.<Object>} sliceLabels
-     * @param {Number} minY
-     * @param {Number} maxY
+     * @param {number} minY
+     * @param {number} maxY
      * @private
      */
     adjustLabelPositionsForOverlap: function( sliceLabels, minY, maxY ) {
