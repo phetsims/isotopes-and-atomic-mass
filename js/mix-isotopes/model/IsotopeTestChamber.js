@@ -341,7 +341,7 @@ define( function( require ) {
               // These isotopes are sitting right on top of one another.
               // Add the max amount of inter-particle force in a random direction.
               forceFromIsotope.setPolar( interParticleForceConst / ( minInterParticleDistance * minInterParticleDistance ),
-                self.phet.joist.random.random() * 2 * Math.PI );
+                phet.joist.random.nextDouble() * 2 * Math.PI );
             } else if ( distanceBetweenIsotopes < isotope1.radiusProperty.get() + isotope2.radiusProperty.get() ) {
               // calculate the repulsive force based on the distance.
               forceFromIsotope.x = isotope1.positionProperty.get().x - isotope2.positionProperty.get().x;
@@ -425,8 +425,8 @@ define( function( require ) {
      */
     generateRandomLocation: function() {
       return new Vector2(
-        TEST_CHAMBER_RECT.minX + phet.joist.random.random() * TEST_CHAMBER_RECT.width,
-        TEST_CHAMBER_RECT.minY + phet.joist.random.random() * TEST_CHAMBER_RECT.height );
+        TEST_CHAMBER_RECT.minX + phet.joist.random.nextDouble() * TEST_CHAMBER_RECT.width,
+        TEST_CHAMBER_RECT.minY + phet.joist.random.nextDouble() * TEST_CHAMBER_RECT.height );
     },
 
     // @public
