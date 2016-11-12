@@ -110,7 +110,7 @@ define( function( require ) {
     labelLayer.centerX = numericLayer.centerX;
     sliderLayer.centerX = numericLayer.centerX + 5;
 
-    this.controlIsotopeDispose = function() {
+    this.disposeControlIsotope = function() {
       controller.quantityProperty.unlink( changedValue );
     };
   }
@@ -119,7 +119,7 @@ define( function( require ) {
 
   return inherit( Node, ControlIsotope, {
     dispose: function() {
-      this.controlIsotopeDispose();
+      this.disposeControlIsotope();
     }
   } );
 } );
