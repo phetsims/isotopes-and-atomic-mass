@@ -120,6 +120,7 @@ define( function( require ) {
   return inherit( Node, ControlIsotope, {
     dispose: function() {
       this.disposeControlIsotope();
+      Node.prototype.dispose.call( this );
     }
   } );
 } );
