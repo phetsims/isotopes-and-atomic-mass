@@ -83,7 +83,7 @@ define( function( require ) {
           self.particleAtom.nucleusOffsetProperty.set( Vector2.ZERO );
         }
       }
-      if ( self.particleAtom.protonCountProperty.get() > 0 && self.particleAtom.neutronCountProperty.get() > 0 ) {
+      if ( self.particleAtom.protonCountProperty.get() > 0 && self.particleAtom.neutronCountProperty.get() >= 0 ) {
         self.atomReconfigured.emit();
       }
     } );
