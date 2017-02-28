@@ -111,12 +111,12 @@ define( function( require ) {
 
     // function to add the view for a nucleon, i.e. a proton or neutron
     function addParticleView( addedParticle ) {
-      assert && assert( addedParticle.typeProperty.get() === 'proton' || addedParticle.typeProperty.get() === 'neutron',
+      assert && assert( addedParticle.type === 'proton' || addedParticle.type === 'neutron',
         'unrecognized particle type' );
 
       var particleView = new ParticleView( addedParticle, self.modelViewTransform );
       particleView.center = self.modelViewTransform.modelToViewPosition( addedParticle.positionProperty.get() );
-      particleView.pickable = addedParticle.typeProperty.get() === 'neutron';
+      particleView.pickable = addedParticle.type === 'neutron';
 
       // add particle view to correct z layer.
       nucleonLayers[ addedParticle.zLayerProperty.get() ].addChild( particleView );
@@ -135,9 +135,10 @@ define( function( require ) {
       addedParticle.userControlledProperty.link( moveParticleToFront );
       // Add the item removed listener.
       var temp;
-      if ( addedParticle.typeProperty.get() === 'proton' ) {
+      if ( addedParticle.type === 'proton' ) {
         temp = makeIsotopesModel.protons;
-      } else if ( addedParticle.typeProperty.get() === 'neutron' ) {
+      }
+      else if ( addedParticle.type === 'neutron' ) {
         temp = makeIsotopesModel.neutrons;
       }
 
