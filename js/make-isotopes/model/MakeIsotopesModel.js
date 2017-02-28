@@ -82,7 +82,7 @@ define( function( require ) {
           self.particleAtom.nucleusOffset = Vector2.ZERO;
         }
       }
-      if ( self.particleAtom.protonCount > 0 && self.particleAtom.neutronCount > 0 ) {
+      if ( self.particleAtom.protonCount > 0 && self.particleAtom.neutronCount >= 0 ) {
         self.trigger( 'atomReconfigured' );
       }
     } );
