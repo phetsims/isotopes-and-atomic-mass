@@ -53,7 +53,7 @@ define( function( require ) {
   }
 
   isotopesAndAtomicMass.register( 'IsotopeAtomNode', IsotopeAtomNode );
-  // Inherit from Node.
+
   return inherit( Node, IsotopeAtomNode );
 } );
 
