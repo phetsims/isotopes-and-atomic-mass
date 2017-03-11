@@ -19,10 +19,8 @@ define( function( require ) {
   var NumberAtom = require( 'SHRED/model/NumberAtom' );
   var Particle = require( 'SHRED/model/Particle' );
 
-
   // class variables
   var instanceCount = 0;
-
 
   /**
    * @param {number} numProtons

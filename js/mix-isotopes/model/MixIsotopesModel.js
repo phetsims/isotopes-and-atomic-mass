@@ -228,8 +228,10 @@ define( function( require ) {
       var newIsotope;
       if ( this.interactivityModeProperty.get()=== InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
         // Create the specified isotope and add it to the appropriate bucket.
-        newIsotope = new MovableAtom( isotopeConfig.protonCountProperty.get(),
-          isotopeConfig.neutronCountProperty.get(), new Vector2( 0, 0 ) );
+        newIsotope = new MovableAtom(
+          isotopeConfig.protonCountProperty.get(),
+          isotopeConfig.neutronCountProperty.get(), new Vector2( 0, 0 )
+        );
         newIsotope.color = this.getColorForIsotope( isotopeConfig );
         newIsotope.massNumber = isotopeConfig.massNumberProperty.get();
         newIsotope.protonCount = isotopeConfig.protonCountProperty.get();
