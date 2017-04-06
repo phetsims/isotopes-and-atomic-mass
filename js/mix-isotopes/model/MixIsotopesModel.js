@@ -252,7 +252,7 @@ define( function( require ) {
     /**
      * Get the bucket where the given isotope can be placed.
      * @param {NumberAtom} isotope
-     * @return {MonoIsotopeBucket} A bucket that can hold the isotope if one exists, null if not.
+     * @returns {MonoIsotopeBucket} A bucket that can hold the isotope if one exists, null if not.
      *
      * @public
      */
@@ -544,7 +544,7 @@ define( function( require ) {
 
     /**
      * @param {MovableAtom} isotope
-     * @return {NumericalIsotopeQuantityControl} isotopeController
+     * @returns {NumericalIsotopeQuantityControl} isotopeController
      *
      * @public
      */

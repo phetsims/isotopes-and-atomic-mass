@@ -72,7 +72,7 @@ define( function( require ) {
      * Get the number of isotopes currently in the chamber that match the specified configuration.
      *
      * @param {NumberAtom} isotopeConfig
-     * @return {number} isotopeCount
+     * @returns {number} isotopeCount
      * @public
      */
     getIsotopeCount: function( isotopeConfig ) {
@@ -99,7 +99,7 @@ define( function( require ) {
      * position and determines if it is within the bounds of the chamber rectangle.
      *
      * @param {MovableAtom} isotope
-     * @return {boolean}
+     * @returns {boolean}
      * @public
      */
     isIsotopePositionedOverChamber: function( isotope ) {
@@ -230,7 +230,7 @@ define( function( require ) {
      * Remove an isotope from the chamber that matches the specified atom configuration. Note that electrons are ignored.
      *
      * @param {NumberAtom} isotopeConfig
-     * @return {MovableAtom} removedIsotope
+     * @returns {MovableAtom} removedIsotope
      *
      * @public
      */
@@ -272,7 +272,7 @@ define( function( require ) {
 
     /**
      * Get a count of the total number of isotopes in the chamber.
-     * @return {number}
+     * @returns {number}
      * @public
      */
     getTotalIsotopeCount: function() {
@@ -283,7 +283,7 @@ define( function( require ) {
      * Get the proportion of isotopes currently within the chamber that match the specified configuration.
      *
      * @param {NumberAtom} isotopeConfig
-     * @return {number} isotopeProportion
+     * @returns {number} isotopeProportion
      *
      * @public
      */
@@ -419,7 +419,7 @@ define( function( require ) {
     /**
      * Generate a random location within the test chamber.
      *
-     * @return {Vector2}
+     * @returns {Vector2}
      *
      * @public
      */

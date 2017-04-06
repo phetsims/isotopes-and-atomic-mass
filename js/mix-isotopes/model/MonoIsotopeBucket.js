@@ -78,7 +78,7 @@ define( function( require ) {
 
     /**
      * Get a list of all isotopes contained within this bucket.
-     * @return {ObservableArray} containedIsotopes
+     * @returns {ObservableArray} containedIsotopes
      *
      * @public
      */
