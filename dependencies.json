@@ -1,5 +1,5 @@
 {
-  "comment": "# isotopes-and-atomic-mass 1.0.6 Tue Feb 28 2017 15:20:35 GMT-0700 (Mountain Standard Time)",
+  "comment": "# isotopes-and-atomic-mass 1.0.6 Wed Apr 05 2017 23:20:27 GMT-0600 (MDT)",
   "assert": {
     "sha": "7d27130a4d27da15aa7f8a21bbfb9245288c1b44",
     "branch": "HEAD"
@@ -21,7 +21,7 @@
     "branch": "HEAD"
   },
   "isotopes-and-atomic-mass": {
-    "sha": "930e86589603ac357c5321bb8be2d0d0aa28b47a",
+    "sha": "1cf85c079cc60b052bf6df79020b8c1bc8071491",
     "branch": "1.0"
   },
   "joist": {
@@ -41,8 +41,8 @@
     "branch": "HEAD"
   },
   "scenery": {
-    "sha": "12bb4bd8fafd173c47691dd717c5b0b545ca2395",
-    "branch": "HEAD"
+    "sha": "4e4154171c4705f91f875f2c448bc8fb2b95f15e",
+    "branch": "isotopes-and-atomic-mass-1.0"
   },
   "scenery-phet": {
     "sha": "436bf61deca586ec23aaffa4811bf0333d262f4c",
