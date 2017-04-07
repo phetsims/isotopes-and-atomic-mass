@@ -1,5 +1,5 @@
 {
-  "comment": "# isotopes-and-atomic-mass 1.0.7-rc.1 Thu Apr 06 2017 01:35:07 GMT-0600 (MDT)",
+  "comment": "# isotopes-and-atomic-mass 1.0.7 Fri Apr 07 2017 17:23:42 GMT-0600 (MDT)",
   "assert": {
     "sha": "7d27130a4d27da15aa7f8a21bbfb9245288c1b44",
     "branch": "HEAD"
@@ -21,7 +21,7 @@
     "branch": "HEAD"
   },
   "isotopes-and-atomic-mass": {
-    "sha": "380f6dc9e228d78239b57698b73235c62d689084",
+    "sha": "b7eaa5279719ea921cd163af258d27e54ae37380",
     "branch": "1.0"
   },
   "joist": {
