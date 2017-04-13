@@ -1,5 +1,5 @@
 {
-  "comment": "# isotopes-and-atomic-mass 1.0.7 Fri Apr 07 2017 17:23:42 GMT-0600 (MDT)",
+  "comment": "# isotopes-and-atomic-mass 1.0.7 Thu Apr 13 2017 13:27:45 GMT-0600 (MDT)",
   "assert": {
     "sha": "7d27130a4d27da15aa7f8a21bbfb9245288c1b44",
     "branch": "HEAD"
@@ -9,19 +9,19 @@
     "branch": "HEAD"
   },
   "brand": {
-    "sha": "bb1cfcc63c3d007d800ede089994d8705db6d47b",
-    "branch": "HEAD"
+    "sha": "52e37060bafa6a0921e7ae4f4828e2de1fc487da",
+    "branch": "isotopes-and-atomic-mass-1.0"
   },
   "chipper": {
     "sha": "64ea5afc89b2a56851fd6fd751398bd1824fa6a7",
-    "branch": "HEAD"
+    "branch": "isotopes-and-atomic-mass-1.0"
   },
   "dot": {
     "sha": "bf6f038bca1ea87f23a51c670474438ae282ac2c",
     "branch": "HEAD"
   },
   "isotopes-and-atomic-mass": {
-    "sha": "b7eaa5279719ea921cd163af258d27e54ae37380",
+    "sha": "8aa3af32933239f387ac99603962b3551f6e5979",
     "branch": "1.0"
   },
   "joist": {
@@ -37,8 +37,8 @@
     "branch": "HEAD"
   },
   "phetcommon": {
-    "sha": "ad7c016cfb0085a48a80a508b11cc3e332021ded",
-    "branch": "HEAD"
+    "sha": "42fd44d296e4ff96d65cc0a64866314632474c69",
+    "branch": "isotopes-and-atomic-mass-1.0"
   },
   "scenery": {
     "sha": "4e4154171c4705f91f875f2c448bc8fb2b95f15e",
