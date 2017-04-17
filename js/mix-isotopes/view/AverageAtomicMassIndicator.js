@@ -24,7 +24,7 @@ define( function( require ) {
   var Path = require( 'SCENERY/nodes/Path' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Shape = require( 'KITE/Shape' );
-  var SubSupText = require( 'SCENERY_PHET/SubSupText' );
+  var RichText = require( 'SCENERY_PHET/RichText' );
   var Text = require( 'SCENERY/nodes/Text' );
   var Util = require( 'DOT/Util' );
   var Vector2 = require( 'DOT/Vector2' );
@@ -56,7 +56,7 @@ define( function( require ) {
     node.addChild( shape );
 
     // Create the label that goes above the tick mark.
-    var label = new SubSupText( ' <sup>' + isotopeConfig.massNumberProperty.get() + '</sup>' +
+    var label = new RichText( ' <sup>' + isotopeConfig.massNumberProperty.get() + '</sup>' +
       AtomIdentifier.getSymbol( isotopeConfig.protonCountProperty.get() ), {
         font: new PhetFont( 12 )
       } );
