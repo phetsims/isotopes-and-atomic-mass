@@ -101,7 +101,7 @@ define( function( require ) {
       position: NEUTRON_BUCKET_POSITION,
       size: BUCKET_SIZE,
       baseColor: Color.gray,
-      caption: neutronsString,
+      captionText: neutronsString,
       sphereRadius: ShredConstants.NUCLEON_RADIUS
     } );
 

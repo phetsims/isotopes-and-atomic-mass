@@ -511,7 +511,7 @@ define( function( require ) {
             position: new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetBucket ),
             size: BUCKET_SIZE,
             baseColor: this.getColorForIsotope( isotopeConfig ),
-            caption: isotopeCaption,
+              captionText: isotopeCaption,
             sphereRadius: LARGE_ISOTOPE_RADIUS
           } );
           this.addBucket( newBucket );
