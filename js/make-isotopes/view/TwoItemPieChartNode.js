@@ -31,8 +31,8 @@ define( function( require ) {
   var SECOND_SLICE_COLOR = ' #d3d3d3';
 
   // strings
-  var thisIsotopeString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/thisIsotope' );
   var otherIsotopesPatternString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/otherIsotopesPattern' );
+  var thisIsotopeString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/thisIsotope' );
 
   /**
    * Constructor for an TwoItemPieChartNode.

@@ -14,8 +14,8 @@ define( function( require ) {
   // modules
   var AquaRadioButton = require( 'SUN/AquaRadioButton' );
   var Dimension2 = require( 'DOT/Dimension2' );
-  var inherit = require( 'PHET_CORE/inherit' );
   var Image = require( 'SCENERY/nodes/Image' );
+  var inherit = require( 'PHET_CORE/inherit' );
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Panel = require( 'SUN/Panel' );
@@ -28,8 +28,8 @@ define( function( require ) {
   var scaleImage = require( 'mipmap!ISOTOPES_AND_ATOMIC_MASS/scale.png' );
 
   // strings
-  var massNumberString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/massNumber' );
   var atomicMassString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/atomicMass' );
+  var massNumberString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/massNumber' );
 
   // class data
   var DISPLAY_MODE = { MASS_NUMBER: 'mass number', ATOMIC_MASS: 'atomic mass' };

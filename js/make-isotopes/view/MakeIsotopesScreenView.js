@@ -39,8 +39,8 @@ define( function( require ) {
   var SYMBOL_BOX_HEIGHT = 300; // In screen coords, which are roughly pixels.
 
   // strings
-  var symbolString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/symbol' );
   var abundanceInNatureString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/abundanceInNature' );
+  var symbolString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/symbol' );
 
   /**
    * @param {MakeIsotopesModel} makeIsotopesModel

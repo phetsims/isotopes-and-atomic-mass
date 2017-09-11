@@ -19,8 +19,8 @@ define( function( require ) {
   var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
   var BucketHole = require( 'SCENERY_PHET/bucket/BucketHole' );
   var inherit = require( 'PHET_CORE/inherit' );
-  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var IsotopeAtomNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/IsotopeAtomNode' );
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var Node = require( 'SCENERY/nodes/Node' );
   var ParticleView = require( 'SHRED/view/ParticleView' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
@@ -28,9 +28,9 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
 
   // strings
+  var myIsotopeString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/myIsotope' );
   var stableString = require( 'string!SHRED/stable' );
   var unstableString = require( 'string!SHRED/unstable' );
-  var myIsotopeString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/myIsotope' );
 
   // constants
   var NUM_NUCLEON_LAYERS = 5; // This is based on max number of particles, may need adjustment if that changes.

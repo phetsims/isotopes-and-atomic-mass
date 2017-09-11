@@ -11,8 +11,8 @@ define( function( require ) {
   'use strict';
 
   // modules
-  var AquaRadioButton = require( 'SUN/AquaRadioButton' );
   var AccordionBox = require( 'SUN/AccordionBox' );
+  var AquaRadioButton = require( 'SUN/AquaRadioButton' );
   var AverageAtomicMassIndicator = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/AverageAtomicMassIndicator' );
   var Bucket = require( 'PHETCOMMON/model/Bucket' );
   var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
@@ -25,18 +25,18 @@ define( function( require ) {
   var ExpandedPeriodicTableNode = require( 'SHRED/view/ExpandedPeriodicTableNode' );
   var HSlider = require( 'SUN/HSlider' );
   var inherit = require( 'PHET_CORE/inherit' );
-  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var IsotopeCanvasNode = require( 'SHRED/view/IsotopeCanvasNode' );
   var IsotopeProportionsPieChart = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/IsotopeProportionsPieChart' );
+  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var MixIsotopesModel = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MixIsotopesModel' );
   var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
   var Node = require( 'SCENERY/nodes/Node' );
   var ParticleView = require( 'SHRED/view/ParticleView' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
   var Property = require( 'AXON/Property' );
+  var RadioButtonGroup = require( 'SUN/buttons/RadioButtonGroup' );
   var RangeWithValue = require( 'DOT/RangeWithValue' );
   var Rectangle = require( 'SCENERY/nodes/Rectangle' );
-  var RadioButtonGroup = require( 'SUN/buttons/RadioButtonGroup' );
   var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
   var ScreenView = require( 'JOIST/ScreenView' );
   var ShredConstants = require( 'SHRED/ShredConstants' );
@@ -45,11 +45,11 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
 
   // strings
+  var averageAtomicMassString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/averageAtomicMass' );
+  var isotopeMixtureString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopeMixture' );
   var myMixString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/myMix' );
   var naturesMixString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/naturesMix' );
-  var isotopeMixtureString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopeMixture' );
   var percentCompositionString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/percentComposition' );
-  var averageAtomicMassString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/averageAtomicMass' );
 
   // constants
   var MAX_SLIDER_WIDTH = 99.75; //empirically determined
