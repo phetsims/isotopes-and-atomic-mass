@@ -278,6 +278,7 @@ define( function( require ) {
     this.isotopeProportionsPieChart.scale( 0.6 );
     this.isotopeProportionsPieChart.centerX = this.isotopeProportionsPieChart.centerX + 150; // Empirically determined
     var compositionBox = new AccordionBox( this.isotopeProportionsPieChart, {
+      cornerRadius: 3,
       titleNode: new Text( percentCompositionString, {
         font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
         maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
@@ -296,6 +297,7 @@ define( function( require ) {
     this.addChild( compositionBox );
 
     var averageAtomicMassBox = new AccordionBox( new AverageAtomicMassIndicator( this.model ), {
+      cornerRadius: 3,
       titleNode: new Text( averageAtomicMassString, {
         font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
         maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH

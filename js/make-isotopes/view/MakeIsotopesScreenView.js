@@ -166,6 +166,7 @@ define( function( require ) {
 
     symbolRectangle.scale( 0.20 );
     var symbolBox = new AccordionBox( symbolRectangle, {
+      cornerRadius: 3,
       titleNode: new Text( symbolString, {
         font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
         maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
@@ -184,6 +185,7 @@ define( function( require ) {
     this.addChild( symbolBox );
 
     var abundanceBox = new AccordionBox( new TwoItemPieChartNode( makeIsotopesModel ), {
+      cornerRadius: 3,
       titleNode: new Text( abundanceInNatureString, {
         font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
         maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
