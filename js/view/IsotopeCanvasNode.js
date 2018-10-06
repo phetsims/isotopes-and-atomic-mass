@@ -45,7 +45,7 @@ define( function( require ) {
         context.fillStyle = isotope.color.toCSS();
         context.strokeStyle = 'black';
         context.beginPath();
-        context.arc( x , y, radius, 0, 2 * Math.PI, true );
+        context.arc( x, y, radius, 0, 2 * Math.PI, true );
         context.fill();
         context.stroke();
       }
