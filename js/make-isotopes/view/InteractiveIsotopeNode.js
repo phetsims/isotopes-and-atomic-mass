@@ -63,8 +63,11 @@ define( function( require ) {
     // Add the bucket components that hold the neutrons.
     var neutronBucketHole = new BucketHole( makeIsotopesModel.neutronBucket, modelViewTransform );
     var neutronBucketFront = new BucketFront( makeIsotopesModel.neutronBucket, modelViewTransform );
-    neutronBucketFront.addInputListener( new BucketDragHandler( makeIsotopesModel.neutronBucket, neutronBucketFront,
-      modelViewTransform ) );
+    neutronBucketFront.addInputListener( new BucketDragHandler(
+      makeIsotopesModel.neutronBucket,
+      neutronBucketFront,
+      modelViewTransform
+    ) );
 
     // Bucket hole is first item added to view for proper layering.
     this.addChild( neutronBucketHole );
@@ -78,7 +81,6 @@ define( function( require ) {
       nucleonLayersNode.addChild( nucleonLayer );
     } );
     nucleonLayers.reverse(); // Set up the nucleon layers so that layer 0 is in front.
-
 
     // Function to adjust z-layer ordering for a particle. This is to be linked to the particle's zLayer property.
     var adjustZLayer = function( addedAtom, zLayer ) {
@@ -111,8 +113,10 @@ define( function( require ) {
 
     // function to add the view for a nucleon, i.e. a proton or neutron
     function addParticleView( addedParticle ) {
-      assert && assert( addedParticle.type === 'proton' || addedParticle.type === 'neutron',
-        'unrecognized particle type' );
+      assert && assert(
+        addedParticle.type === 'proton' || addedParticle.type === 'neutron',
+        'unrecognized particle type'
+      );
 
       var particleView = new ParticleView( addedParticle, self.modelViewTransform );
       particleView.center = self.modelViewTransform.modelToViewPosition( addedParticle.positionProperty.get() );
@@ -124,6 +128,7 @@ define( function( require ) {
       var adjustZLayerLink = function( zLayer ) {
         adjustZLayer( addedParticle, zLayer );
       };
+
       // Add a listener that adjusts a nucleon's z-order layering.
       addedParticle.zLayerProperty.link( adjustZLayerLink );
 
@@ -133,6 +138,7 @@ define( function( require ) {
         }
       };
       addedParticle.userControlledProperty.link( moveParticleToFront );
+
       // Add the item removed listener.
       var temp;
       if ( addedParticle.type === 'proton' ) {
@@ -169,8 +175,10 @@ define( function( require ) {
 
     // Define the update function for the element name.
     var updateElementName = function( numProtons, numNeutrons ) {
-      // This data structure maps the position of element name with respect to center of nucleus so that label don't
-      // overlap with nucleons in the nucleus. These values have been empirically determined
+
+      // This data structure maps the vertical distance of element name from the nucleus center for each supported
+      // number of nucleons.  These values were empirically determined, and are set so that the label looks good and
+      // doesn't overlap with the nucleus.
       var mapElementToPosition = {
         1: 35,
         2: 35,
@@ -183,6 +191,7 @@ define( function( require ) {
         9: 50,
         10: 50
       };
+
       // get element name and append mass number to identify isotope
       var name = AtomIdentifier.getName( numProtons ) + '-' + ( numProtons + numNeutrons );
       if ( name.length === 0 ) {
@@ -190,12 +199,25 @@ define( function( require ) {
       }
       elementName.text = name;
       var isotopeAtomNodeRadius = isotopeAtomNode.centerY - isotopeAtomNode.top;
-      var elementNameMaxWidth = 2 * Math.sqrt(
-        ( isotopeAtomNodeRadius * isotopeAtomNodeRadius ) -
-        ( mapElementToPosition[ numProtons ] * mapElementToPosition[ numProtons ] ) );
+      var elementNameMaxWidth;
+      if ( isotopeAtomNodeRadius > mapElementToPosition[ numProtons ] ) {
+
+        // limit the width of the element name to fit in the electron cloud
+        elementNameMaxWidth = 2 * Math.sqrt(
+          ( isotopeAtomNodeRadius * isotopeAtomNodeRadius ) -
+          ( mapElementToPosition[ numProtons ] * mapElementToPosition[ numProtons ] )
+        );
+      }
+      else {
+
+        // This else clause can occur if there are no electrons.  In that case, use an empirically determined max width.
+        elementNameMaxWidth = 30;
+      }
       elementName.maxWidth = elementNameMaxWidth;
-      elementName.center = new Vector2( isotopeAtomNode.centerX,
-        isotopeAtomNode.centerY - mapElementToPosition[ numProtons ] );
+      elementName.center = new Vector2(
+        isotopeAtomNode.centerX,
+        isotopeAtomNode.centerY - mapElementToPosition[ numProtons ]
+      );
     };
 
     // Create the textual readout for the stability indicator.
@@ -204,8 +226,9 @@ define( function( require ) {
 
     // Define the update function for the stability indicator.
     var updateStabilityIndicator = function( numProtons, numNeutrons ) {
-      // This data structure maps the position of stable/unstable with respect to center of nucleus so that label don't
-      // overlap with nucleons in the nucleus. These values have been empirically determined
+
+      // This data structure maps the vertical distance of stable/unstable label to the center of nucleus so that labels
+      // look good and don't overlap with nucleons in the nucleus. These values have been empirically determined
       var mapStableUnstableToPosition = {
         1: 30,
         2: 35,
@@ -218,21 +241,40 @@ define( function( require ) {
         9: 50,
         10: 50
       };
-      var stabilityIndicatorCenterPos = new Vector2( isotopeAtomNode.centerX,
-        isotopeAtomNode.centerY + mapStableUnstableToPosition[ numProtons ] );
+      var stabilityIndicatorCenterPos = new Vector2(
+        isotopeAtomNode.centerX,
+        isotopeAtomNode.centerY + mapStableUnstableToPosition[ numProtons ]
+      );
       var isotopeAtomNodeRadius = isotopeAtomNode.centerY - isotopeAtomNode.top;
-      var stabilityIndicatorMaxWidth = 2 * Math.sqrt(
-        ( isotopeAtomNodeRadius * isotopeAtomNodeRadius ) -
-        ( mapStableUnstableToPosition[ numProtons ] * mapStableUnstableToPosition[ numProtons ] ) );
+      var stabilityIndicatorMaxWidth;
+      if ( isotopeAtomNodeRadius > mapStableUnstableToPosition[ numProtons ] ) {
+
+        // limit stability indicator label to fit inside the electron cloud
+        stabilityIndicatorMaxWidth = 2 * Math.sqrt(
+          ( isotopeAtomNodeRadius * isotopeAtomNodeRadius ) -
+          ( mapStableUnstableToPosition[ numProtons ] * mapStableUnstableToPosition[ numProtons ] )
+        );
+      }
+      else {
+
+        // This else clause can occur if there are no electrons.  In that case, use an empirically determined max width.
+        stabilityIndicatorMaxWidth = 30;
+      }
+
+      // set the text of the stability indicator
       if ( numProtons > 0 ) {
         if ( AtomIdentifier.isStable( numProtons, numNeutrons ) ) {
           stabilityIndicator.text = stableString;
-        } else {
+        }
+        else {
           stabilityIndicator.text = unstableString;
         }
-      } else {
+      }
+      else {
         stabilityIndicator.text = '';
       }
+
+      // position and limit the width
       stabilityIndicator.maxWidth = stabilityIndicatorMaxWidth;
       stabilityIndicator.center = stabilityIndicatorCenterPos;
     };
@@ -242,18 +284,26 @@ define( function( require ) {
     this.addChild( neutronBucketFront );
 
     makeIsotopesModel.atomReconfigured.addListener( function() {
-      updateElementName( makeIsotopesModel.particleAtom.protonCountProperty.get(),
-        makeIsotopesModel.particleAtom.neutronCountProperty.get() );
-      updateStabilityIndicator( makeIsotopesModel.particleAtom.protonCountProperty.get(),
-        makeIsotopesModel.particleAtom.neutronCountProperty.get() );
+      updateElementName(
+        makeIsotopesModel.particleAtom.protonCountProperty.get(),
+        makeIsotopesModel.particleAtom.neutronCountProperty.get()
+      );
+      updateStabilityIndicator(
+        makeIsotopesModel.particleAtom.protonCountProperty.get(),
+        makeIsotopesModel.particleAtom.neutronCountProperty.get()
+      );
       myIsotopeLabel.bottom = isotopeAtomNode.top - 5;
     } );
 
     // initial update
-    updateElementName( makeIsotopesModel.particleAtom.protonCountProperty.get(),
-      makeIsotopesModel.particleAtom.neutronCountProperty.get() );
-    updateStabilityIndicator( makeIsotopesModel.particleAtom.protonCountProperty.get(),
-      makeIsotopesModel.particleAtom.neutronCountProperty.get() );
+    updateElementName(
+      makeIsotopesModel.particleAtom.protonCountProperty.get(),
+      makeIsotopesModel.particleAtom.neutronCountProperty.get()
+    );
+    updateStabilityIndicator(
+      makeIsotopesModel.particleAtom.protonCountProperty.get(),
+      makeIsotopesModel.particleAtom.neutronCountProperty.get()
+    );
   }
 
   isotopesAndAtomicMass.register( 'InteractiveIsotopeNode', InteractiveIsotopeNode );
