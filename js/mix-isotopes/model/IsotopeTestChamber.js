@@ -346,7 +346,7 @@ define( function( require ) {
               // calculate the repulsive force based on the distance.
               forceFromIsotope.x = isotope1.positionProperty.get().x - isotope2.positionProperty.get().x;
               forceFromIsotope.y = isotope1.positionProperty.get().y - isotope2.positionProperty.get().y;
-              var distance = Math.max( forceFromIsotope.magnitude(), minInterParticleDistance );
+              var distance = Math.max( forceFromIsotope.magnitude, minInterParticleDistance );
               forceFromIsotope.normalize();
               forceFromIsotope.multiply( interParticleForceConst / ( distance * distance ) );
             }
