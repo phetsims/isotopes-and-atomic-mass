@@ -289,8 +289,10 @@ define( function( require ) {
       contentAlign: 'center',
       titleAlignX: 'left',
       buttonAlign: 'right',
-      buttonTouchAreaXDilation: 16,
-      buttonTouchAreaYDilation: 16
+      expandCollapseButtonOptions: {
+        touchAreaXDilation: 16,
+        touchAreaYDilation: 16
+      }
     } );
     compositionBox.left = periodicTableNode.left;
     compositionBox.top = periodicTableNode.bottom + 15;
@@ -308,8 +310,10 @@ define( function( require ) {
       contentAlign: 'center',
       titleAlignX: 'left',
       buttonAlign: 'right',
-      buttonTouchAreaXDilation: 16,
-      buttonTouchAreaYDilation: 16
+      expandCollapseButtonOptions: {
+        touchAreaXDilation: 16,
+        touchAreaYDilation: 16
+      }
     } );
     averageAtomicMassBox.left = compositionBox.left;
     averageAtomicMassBox.top = compositionBox.bottom + 10;
