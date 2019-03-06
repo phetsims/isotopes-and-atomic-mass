@@ -223,10 +223,10 @@ define( function( require ) {
           var maxY = OVERALL_HEIGHT / 2 - labelNode.height / 2;
           var xSign = labelOnLeft ? -1 : 1;
           if ( positionVector.y < minY ) {
-            positionVector.x = xSign * Math.sqrt( positionVector.magnitudeSquared() - minY * minY );
+            positionVector.x = xSign * Math.sqrt( positionVector.magnitudeSquared - minY * minY );
             positionVector.y = minY;
           } else if ( positionVector.y > maxY ) {
-            positionVector.x = xSign * Math.sqrt( positionVector.magnitudeSquared() - maxY * maxY );
+            positionVector.x = xSign * Math.sqrt( positionVector.magnitudeSquared - maxY * maxY );
             positionVector.y = maxY;
           }
           labelNode.unconstrainedPos.x = positionVector.x;
