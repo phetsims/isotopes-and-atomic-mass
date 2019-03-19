@@ -1,5 +1,5 @@
 {
-  "comment": "# isotopes-and-atomic-mass 1.0.14 Fri Mar 08 2019 13:38:37 GMT-0500 (EST)",
+  "comment": "# isotopes-and-atomic-mass 1.0.14 Tue Mar 19 2019 16:53:49 GMT-0400 (EDT)",
   "assert": {
     "sha": "7d27130a4d27da15aa7f8a21bbfb9245288c1b44",
     "branch": "HEAD"
@@ -10,23 +10,23 @@
   },
   "brand": {
     "sha": "77ebcb36de84626429ab71fbd3768a9d97151bb2",
-    "branch": "isotopes-and-atomic-mass-1.0"
+    "branch": "HEAD"
   },
   "chipper": {
-    "sha": "20f2bdc8b67e3fb615ebdcff9f6253aafae54340",
-    "branch": "HEAD"
+    "sha": "0925cad25eed132e30226e23693bb5b99e40a36c",
+    "branch": "isotopes-and-atomic-mass-1.0"
   },
   "dot": {
     "sha": "bf6f038bca1ea87f23a51c670474438ae282ac2c",
     "branch": "HEAD"
   },
   "isotopes-and-atomic-mass": {
-    "sha": "5a92a1842c15909a1bfbdb01b00103608c4a50fe",
+    "sha": "5d3971998f6e142c84ca3a814dadc9207485ef86",
     "branch": "1.0"
   },
   "joist": {
     "sha": "db6ba24a096c089dc0eee9b1467a9a699d127cfe",
-    "branch": "isotopes-and-atomic-mass-1.0"
+    "branch": "HEAD"
   },
   "kite": {
     "sha": "dce9765e6fcb535970ef17c1a1bcb8db95599b08",
@@ -38,6 +38,10 @@
   },
   "phetcommon": {
     "sha": "01351e29b929b2d7eba6fa392249d3a5782ebb46",
+    "branch": "HEAD"
+  },
+  "phetmarks": {
+    "sha": "3fdfece0fe0262594bb06856833b8b16be25deb8",
     "branch": "HEAD"
   },
   "scenery": {
@@ -63,9 +67,5 @@
   "tandem": {
     "sha": "0ad35fb75928d18ecc1a429587bed4c605878e89",
     "branch": "HEAD"
-  },
-  "phetmarks": {
-    "branch": "master",
-    "sha": "3fdfece0fe0262594bb06856833b8b16be25deb8"
   }
 }
