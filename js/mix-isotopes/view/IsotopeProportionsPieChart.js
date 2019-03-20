@@ -199,7 +199,7 @@ define( function( require ) {
       possibleIsotopes.forEach( function( isotope ) {
         var proportion;
         if ( self.model.showingNaturesMixProperty.get() ) {
-          proportion = AtomIdentifier.getNaturalAbundancePreciseDecimal( isotope );
+          proportion = AtomIdentifier.getNaturalAbundance( isotope );
         } else {
           proportion = self.model.testChamber.getIsotopeProportion( isotope );
         }

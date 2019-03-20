@@ -49,5 +49,8 @@
   },
   "averageAtomicMass": {
     "value": "Average Atomic Mass"
+  },
+  "trace": {
+    "value": "trace"
   }
 }

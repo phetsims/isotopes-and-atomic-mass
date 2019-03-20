@@ -29,10 +29,12 @@ define( function( require ) {
   var PIE_CHART_RADIUS = 60;
   var FIRST_SLICE_COLOR = ' rgb( 134, 102, 172 ) ';
   var SECOND_SLICE_COLOR = ' #d3d3d3';
+  var TRACE_ABUNDANCE_IN_PIE_CHART = 1E-6; // empirically chosen value used to represent trace abundance in the pie chart
 
   // strings
   var otherIsotopesPatternString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/otherIsotopesPattern' );
   var thisIsotopeString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/thisIsotope' );
+  var traceString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/trace' );
 
   /**
    * Constructor for an TwoItemPieChartNode.
@@ -57,14 +59,27 @@ define( function( require ) {
     pieChartBoundingRectangle.addChild( pieChart );
 
     function updatePieChart() {
-      var myIsotopeAbundance = AtomIdentifier.getNaturalAbundance( makeIsotopesModel.particleAtom );
-      var otherIsotopeAbundance = 1 - myIsotopeAbundance;
-      slices[ 0 ].value = myIsotopeAbundance;
-      slices[ 1 ].value = otherIsotopeAbundance;
-      pieChart.setAngleAndValues( Math.PI * 2 * slices[ 1 ].value / ( slices[ 0 ].value + slices[ 1 ].value ) / 2,
-        slices );
-      updateReadout( myIsotopeAbundance );
-      updateOtherIsotopeLabel( myIsotopeAbundance );
+      var thisIsotopeAbundanceTo6Digits = AtomIdentifier.getNaturalAbundance( makeIsotopesModel.particleAtom, 6 );
+      var otherIsotopesAbundance = 1 - thisIsotopeAbundanceTo6Digits;
+
+      // set the slice value for the current isotope
+      if ( thisIsotopeAbundanceTo6Digits === 0 && AtomIdentifier.existsInTraceAmounts( makeIsotopesModel.particleAtom ) ) {
+        slices[ 0 ].value = TRACE_ABUNDANCE_IN_PIE_CHART;
+      }
+      else {
+        slices[ 0 ].value = thisIsotopeAbundanceTo6Digits;
+      }
+
+      // set up the slice value for all other isotopes
+      slices[ 1 ].value = otherIsotopesAbundance;
+
+      // update the pie and the labels
+      pieChart.setAngleAndValues(
+        Math.PI * 2 * slices[ 1 ].value / ( slices[ 0 ].value + slices[ 1 ].value ) / 2,
+        slices
+      );
+      updateThisIsotopeAbundanceReadout( makeIsotopesModel.particleAtom );
+      updateOtherIsotopeLabel( makeIsotopesModel.particleAtom );
     }
 
     // No call to off() required since this exists for the lifetime of the sim
@@ -79,7 +94,7 @@ define( function( require ) {
       font: new PhetFont( 14 )
     } );
 
-    var myIsotopeAbundancePanel = new Panel( readoutMyIsotopeAbundanceText, {
+    var thisIsotopeAbundancePanel = new Panel( readoutMyIsotopeAbundanceText, {
       minWidth: 60,
       minHeight: 20,
       resize: true,
@@ -90,28 +105,31 @@ define( function( require ) {
       centerY: pieChartBoundingRectangle.centerY
     } );
 
-    this.addChild( myIsotopeAbundancePanel );
+    this.addChild( thisIsotopeAbundancePanel );
 
-    function updateReadout( myIsotopeAbundance ) {
-      readoutMyIsotopeAbundanceText.text = ( Util.toFixedNumber( myIsotopeAbundance * 100, 4 ) ).toString() + '%';
-      myIsotopeAbundancePanel.centerX = pieChartBoundingRectangle.left - 50; // empirically determined
-      myIsotopeLabel.centerX = myIsotopeAbundancePanel.centerX;
-      if ( myIsotopeAbundance === 0 ) {
-        leftConnectingLine.visible = false;
-      } else {
-        leftConnectingLine.visible = true;
+    function updateThisIsotopeAbundanceReadout( isotope ) {
+      var thisIsotopeAbundanceTo6Digits = AtomIdentifier.getNaturalAbundance( isotope, 6 );
+      var existsInTraceAmounts = AtomIdentifier.existsInTraceAmounts( isotope );
+      if ( thisIsotopeAbundanceTo6Digits === 0 && existsInTraceAmounts ) {
+        readoutMyIsotopeAbundanceText.text = traceString;
       }
+      else {
+        readoutMyIsotopeAbundanceText.text = ( Util.toFixedNumber( thisIsotopeAbundanceTo6Digits * 100, 6 ) ).toString() + '%';
+      }
+      thisIsotopeAbundancePanel.centerX = pieChartBoundingRectangle.left - 50; // empirically determined
+      thisIsotopeLabel.centerX = thisIsotopeAbundancePanel.centerX;
+      leftConnectingLine.visible = thisIsotopeAbundanceTo6Digits > 0 || existsInTraceAmounts;
     }
 
-    var myIsotopeLabel = new Text( thisIsotopeString, {
+    var thisIsotopeLabel = new Text( thisIsotopeString, {
       font: new PhetFont( { size: 12 } ),
       fill: 'black',
       maxWidth: 60
     } );
-    myIsotopeLabel.bottom = myIsotopeAbundancePanel.top - 5;
-    this.addChild( myIsotopeLabel );
+    thisIsotopeLabel.bottom = thisIsotopeAbundancePanel.top - 5;
+    this.addChild( thisIsotopeLabel );
 
-    var leftConnectingLine = new Line( myIsotopeAbundancePanel.centerX, myIsotopeAbundancePanel.centerY,
+    var leftConnectingLine = new Line( thisIsotopeAbundancePanel.centerX, thisIsotopeAbundancePanel.centerY,
       pieChartBoundingRectangle.centerX, pieChartBoundingRectangle.centerY, {
         stroke: FIRST_SLICE_COLOR,
         lineDash: [ 3, 1 ]
@@ -127,9 +145,10 @@ define( function( require ) {
     } );
 
     // Attach otherIsotopeLabel with protonCountProperty to change element name on proton count change
-    function updateOtherIsotopeLabel( myIsotopeAbundance ) {
+    function updateOtherIsotopeLabel( isotope ) {
+      var abundanceTo6Digits = AtomIdentifier.getNaturalAbundance( isotope, 6 );
       var name = AtomIdentifier.getName( makeIsotopesModel.particleAtom.protonCountProperty.get() );
-      if ( makeIsotopesModel.particleAtom.protonCountProperty.get() > 0 && myIsotopeAbundance < 1 ) {
+      if ( makeIsotopesModel.particleAtom.protonCountProperty.get() > 0 && abundanceTo6Digits < 1 ) {
         otherIsotopeLabel.text = StringUtils.format( otherIsotopesPatternString, name );
         otherIsotopeLabel.visible = true;
         rightConnectingLine.visible = true;

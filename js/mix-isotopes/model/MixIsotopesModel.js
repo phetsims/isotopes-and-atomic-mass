@@ -582,13 +582,17 @@ define( function( require ) {
       // Get the list of possible isotopes and then sort it by abundance so that the least abundant are added last, thus
       // assuring that they will be visible.
       var possibleIsotopesCopy = this.possibleIsotopesProperty.get().slice( 0 );
+      var numDigitsForComparison = 10;
       possibleIsotopesCopy.sort( function( atom1, atom2 ) {
-        return AtomIdentifier.getNaturalAbundance( atom2 ) - AtomIdentifier.getNaturalAbundance( atom1 );
+        return AtomIdentifier.getNaturalAbundance( atom2, numDigitsForComparison ) -
+               AtomIdentifier.getNaturalAbundance( atom1, numDigitsForComparison );
       } );
 
       // Add the isotopes.
       possibleIsotopesCopy.forEach( function( isotopeConfig ) {
-        var numToCreate = Util.roundSymmetric( NUM_NATURES_MIX_ATOMS * AtomIdentifier.getNaturalAbundance( isotopeConfig ) );
+        var numToCreate = Util.roundSymmetric(
+          NUM_NATURES_MIX_ATOMS * AtomIdentifier.getNaturalAbundance( isotopeConfig, 5 )
+        );
         if ( numToCreate === 0 ) {
           // The calculated quantity was 0, but we don't want to have no instances of this isotope in the chamber, so
           // add only one. This behavior was requested by the design team.
