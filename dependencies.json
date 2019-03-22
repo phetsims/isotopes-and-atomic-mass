@@ -1,99 +1,99 @@
 {
-  "comment": "# isotopes-and-atomic-mass 1.1.0-rc.0 Fri Mar 22 2019 15:36:30 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# isotopes-and-atomic-mass 1.1.0-rc.1 Fri Mar 22 2019 15:38:13 GMT-0600 (Mountain Daylight Time)",
   "assert": {
     "sha": "d8a2e8992420327ff72a6fc4bb93ec76549ded0e",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "axon": {
     "sha": "795d47dbd18ea4a1023336daab2231f18b7185c2",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "brand": {
     "sha": "eab5236cde285d9ad689fbc335ebcc7ab0a14bfa",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "chipper": {
     "sha": "8bb209dd4d18381ba887114adba07890595f82aa",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "dot": {
     "sha": "dba21987a05470f2da00ea0314020ff0581bea60",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "isotopes-and-atomic-mass": {
-    "sha": "6024ddea264f4095d91fa42029a22ce717317f60",
+    "sha": "db06f5b8c78d71a1c3a9b4a454ae774972888491",
     "branch": "1.1"
   },
   "joist": {
     "sha": "1d3e7051dd25af0ca28c601258b304f1be7fb9b3",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "kite": {
     "sha": "95999b737aad44dde813fee32661ea196fc400b9",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "phet-core": {
     "sha": "4600255759a8cf1769b7c7dde146fa13ad15d054",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "phet-io": {
     "sha": "6d6b353b6035719573531eaa2a7c7e99b6eea9f7",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "phet-io-wrapper-classroom-activity": {
     "sha": "248958109c8d3b73b5f9d6c31015b2c8b5016571",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "phet-io-wrapper-hookes-law-energy": {
     "sha": "3ea0d43712de26832a841086365544fa930fe458",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "phet-io-wrapper-lab-book": {
     "sha": "cdb2698695aba22b25571a4330386346378ff7d2",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "phet-io-wrappers": {
     "sha": "814124ed64d4e38960da4e8426aa15dadf98d445",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "phetcommon": {
     "sha": "e495149bda019d002b373304235b8bc90edee617",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "phetmarks": {
     "sha": "7a10df2547c10e82261cb03b96db77c11c032eef",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "query-string-machine": {
     "sha": "f20a2b06972ed330c2cd5a7c3f2321935718ee92",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "scenery": {
     "sha": "8bdb07369911641d5b22d9f54e41faecf0a7b2af",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "scenery-phet": {
     "sha": "1ec7967dbef52ad35b55387f746e4a89ab216cb6",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "sherpa": {
     "sha": "d52196c927f1c284384eb8fbb2b84f040e613aaa",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "shred": {
     "sha": "47cab013301cb33b81573d90be538f0ccfe1415a",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "sun": {
     "sha": "77896f7fbedc9fcf288f9fd33c1d1edca6cdd067",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "tambo": {
     "sha": "841813db3e548ec43b84ca6abc6d3eaef03c09c2",
-    "branch": "master"
+    "branch": "HEAD"
   },
   "tandem": {
     "sha": "63b067aa8e2c2cae6ba9b3d9997db3466dd02b7f",
-    "branch": "master"
+    "branch": "HEAD"
   }
 }
