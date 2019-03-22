@@ -1,11 +1,11 @@
 {
-  "comment": "# isotopes-and-atomic-mass 1.1.0-dev.1 Wed Mar 20 2019 13:44:31 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# isotopes-and-atomic-mass 1.1.0-rc.0 Fri Mar 22 2019 15:36:30 GMT-0600 (Mountain Daylight Time)",
   "assert": {
     "sha": "d8a2e8992420327ff72a6fc4bb93ec76549ded0e",
     "branch": "master"
   },
   "axon": {
-    "sha": "1d00083818bee6c6fbdc746527523d80c626938e",
+    "sha": "795d47dbd18ea4a1023336daab2231f18b7185c2",
     "branch": "master"
   },
   "brand": {
@@ -13,7 +13,7 @@
     "branch": "master"
   },
   "chipper": {
-    "sha": "8d5a7027a51fa2871fd1150443072f421f8c44c1",
+    "sha": "8bb209dd4d18381ba887114adba07890595f82aa",
     "branch": "master"
   },
   "dot": {
@@ -21,8 +21,8 @@
     "branch": "master"
   },
   "isotopes-and-atomic-mass": {
-    "sha": "e74096c27f65e75d59a9a9159863b0dae107839a",
-    "branch": "master"
+    "sha": "6024ddea264f4095d91fa42029a22ce717317f60",
+    "branch": "1.1"
   },
   "joist": {
     "sha": "1d3e7051dd25af0ca28c601258b304f1be7fb9b3",
@@ -37,7 +37,7 @@
     "branch": "master"
   },
   "phet-io": {
-    "sha": "9d446f9ddc2a8aa9213310fa4a87a6ad52fba6f6",
+    "sha": "6d6b353b6035719573531eaa2a7c7e99b6eea9f7",
     "branch": "master"
   },
   "phet-io-wrapper-classroom-activity": {
@@ -53,7 +53,7 @@
     "branch": "master"
   },
   "phet-io-wrappers": {
-    "sha": "5c641663a815315f723a9f1569b33c8b3cb7d437",
+    "sha": "814124ed64d4e38960da4e8426aa15dadf98d445",
     "branch": "master"
   },
   "phetcommon": {
@@ -73,7 +73,7 @@
     "branch": "master"
   },
   "scenery-phet": {
-    "sha": "10183e93c32ad3c052d6a5d0e110e09af4028d21",
+    "sha": "1ec7967dbef52ad35b55387f746e4a89ab216cb6",
     "branch": "master"
   },
   "sherpa": {
@@ -89,11 +89,11 @@
     "branch": "master"
   },
   "tambo": {
-    "sha": "007aa9f0cf8d4300172011ea5fc065f86e61d58e",
+    "sha": "841813db3e548ec43b84ca6abc6d3eaef03c09c2",
     "branch": "master"
   },
   "tandem": {
-    "sha": "856aa5fb9000526b153b6fbef5019387e0461b79",
+    "sha": "63b067aa8e2c2cae6ba9b3d9997db3466dd02b7f",
     "branch": "master"
   }
 }
