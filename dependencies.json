@@ -1,5 +1,5 @@
 {
-  "comment": "# isotopes-and-atomic-mass 1.1.0-rc.1 Fri Mar 29 2019 14:17:05 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# isotopes-and-atomic-mass 1.1.0-rc.1 Fri Mar 29 2019 14:44:19 GMT-0600 (Mountain Daylight Time)",
   "assert": {
     "sha": "d8a2e8992420327ff72a6fc4bb93ec76549ded0e",
     "branch": "HEAD"
@@ -10,10 +10,10 @@
   },
   "brand": {
     "sha": "468f55d044234f9bbc2b4139a7836d8ce676a796",
-    "branch": "isotopes-and-atomic-mass-1.1"
+    "branch": "HEAD"
   },
   "chipper": {
-    "sha": "1efe72f66d5636ca00bc2b762df112bb7db791a5",
+    "sha": "c516c7a886407b017552f70581271ea52bfbe70e",
     "branch": "isotopes-and-atomic-mass-1.1"
   },
   "dot": {
@@ -21,7 +21,7 @@
     "branch": "HEAD"
   },
   "isotopes-and-atomic-mass": {
-    "sha": "f31abee1b47ee3fe4ccbebc1cce3dae4e6dc60c1",
+    "sha": "79058a079e4763f827136d440d0ea5f525a9a6ca",
     "branch": "1.1"
   },
   "joist": {
