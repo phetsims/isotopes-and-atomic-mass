@@ -37,6 +37,7 @@ define( function( require ) {
   var NUMBER_INSET = 20; // In screen coords, which are roughly pixels.
   var SYMBOL_BOX_WIDTH = 275; // In screen coords, which are roughly pixels.
   var SYMBOL_BOX_HEIGHT = 300; // In screen coords, which are roughly pixels.
+  var OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION = 12;
 
   // strings
   var abundanceInNatureString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/abundanceInNature' );
@@ -178,8 +179,8 @@ define( function( require ) {
       titleAlignX: 'left',
       buttonAlign: 'right',
       expandCollapseButtonOptions: {
-        touchAreaXDilation: 16,
-        touchAreaYDilation: 16
+        touchAreaXDilation: OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION,
+        touchAreaYDilation: OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION
       }
     } );
     symbolBox.left = periodicTableNode.visibleBounds.minX;
@@ -200,8 +201,8 @@ define( function( require ) {
       titleAlignX: 'left',
       buttonAlign: 'right',
       expandCollapseButtonOptions: {
-        touchAreaXDilation: 16,
-        touchAreaYDilation: 16
+        touchAreaXDilation: OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION,
+        touchAreaYDilation: OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION
       }
     } );
     abundanceBox.left = symbolBox.left;
