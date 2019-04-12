@@ -90,8 +90,10 @@ define( function( require ) {
     pieChartBoundingRectangle.scale( 0.6 );
     this.addChild( pieChartBoundingRectangle );
 
+    // create the readout that will display the abundance in terms of percentage
     var readoutMyIsotopeAbundanceText = new Text( '', {
-      font: new PhetFont( 14 )
+      font: new PhetFont( 14 ),
+      maxWidth: 80
     } );
 
     var thisIsotopeAbundancePanel = new Panel( readoutMyIsotopeAbundanceText, {
@@ -117,6 +119,7 @@ define( function( require ) {
         readoutMyIsotopeAbundanceText.text = ( Util.toFixedNumber( thisIsotopeAbundanceTo6Digits * 100, 6 ) ).toString() + '%';
       }
       thisIsotopeAbundancePanel.centerX = pieChartBoundingRectangle.left - 50; // empirically determined
+      thisIsotopeAbundancePanel.centerY = pieChartBoundingRectangle.centerY;
       thisIsotopeLabel.centerX = thisIsotopeAbundancePanel.centerX;
       leftConnectingLine.visible = thisIsotopeAbundanceTo6Digits > 0 || existsInTraceAmounts;
     }
