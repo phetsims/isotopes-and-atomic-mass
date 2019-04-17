@@ -116,7 +116,7 @@ define( function( require ) {
     // List of the isotope buckets.
     this.bucketList = new ObservableArray(); // @public
     this.isotopesList = new ObservableArray(); // @public
-    this.naturesIsotopesList = []; // @public
+    this.naturesIsotopesList = new ObservableArray(); // @public
 
     // List of the numerical controls that, when present, can be used to add or remove isotopes to/from the test chamber.
     this.numericalControllerList = new ObservableArray(); // @public
@@ -152,7 +152,7 @@ define( function( require ) {
         // Display nature's mix.
         self.showNaturesMix();
       } else {
-        self.naturesIsotopesList.length = 0;
+        self.naturesIsotopesList.clear();
         if ( self.mapIsotopeConfigToUserMixState.hasOwnProperty( self.prototypeIsotope.protonCountProperty.get() ) ) {
           if ( self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCountProperty.get() ]
             .hasOwnProperty( self.interactivityModeProperty.get() ) ) {
@@ -577,7 +577,7 @@ define( function( require ) {
 
       // Clear out anything that is in the test chamber. If anything needed to be stored, it should have been done by now.
       this.removeAllIsotopesFromTestChamberAndModel();
-      self.naturesIsotopesList.length = 0;
+      self.naturesIsotopesList.clear();
 
       // Get the list of possible isotopes and then sort it by abundance so that the least abundant are added last, thus
       // assuring that they will be visible.
@@ -653,7 +653,7 @@ define( function( require ) {
 
       this.mapIsotopeConfigToUserMixState = {};
 
-      this.naturesIsotopesList.length = 0;
+      this.naturesIsotopesList.clear();
 
       this.interactivityModeProperty.reset();
       this.possibleIsotopesProperty.reset();
