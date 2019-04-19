@@ -18,6 +18,7 @@ define( function( require ) {
   var Color = require( 'SCENERY/util/Color' );
   var Dimension2 = require( 'DOT/Dimension2' );
   var Emitter = require( 'AXON/Emitter' );
+  var ImmutableAtomConfig = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/ImmutableAtomConfig' );
   var inherit = require( 'PHET_CORE/inherit' );
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var IsotopeTestChamber = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/IsotopeTestChamber' );
@@ -31,7 +32,7 @@ define( function( require ) {
   var Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  var DEFAULT_ATOM_CONFIG = new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } ); // Hydrogen.
+  var DEFAULT_ATOM_CONFIG = new ImmutableAtomConfig( 1, 0, 1 ); // Hydrogen.
   var BUCKET_SIZE = new Dimension2( 120, 50 ); // Size of the buckets that will hold the isotopes.
 
   // Within this model, the isotopes come in two sizes, small and large, and atoms are either one size or another,
@@ -102,10 +103,10 @@ define( function( require ) {
     this.naturesIsotopeUpdated = new Emitter();
 
     // @public
-    this.numberAtom = new NumberAtom( {
-      protonCount: DEFAULT_ATOM_CONFIG.protonCountProperty.get(),
-      neutronCount: DEFAULT_ATOM_CONFIG.neutronCountProperty.get(),
-      electronCount: DEFAULT_ATOM_CONFIG.electronCountProperty.get()
+    this.selectedAtomConfig = new NumberAtom( {
+      protonCount: DEFAULT_ATOM_CONFIG.protonCount,
+      neutronCount: DEFAULT_ATOM_CONFIG.neutronCount,
+      electronCount: DEFAULT_ATOM_CONFIG.electronCount
     } );
 
     // The test chamber into and out of which the isotopes can be moved.
@@ -125,12 +126,13 @@ define( function( require ) {
     this.mapIsotopeConfigToUserMixState = {}; // @private
     this.updatePossibleIsotopesList();
 
-    this.numberAtom.atomUpdated.addListener( function() {
-      self.setAtomConfiguration( self.numberAtom );
+    // watch for external updates to the configuration and match them (the periodic table can cause this)
+    this.selectedAtomConfig.atomUpdated.addListener( function() {
+      self.setAtomConfiguration( self.selectedAtomConfig );
     } );
 
     // Set the initial atom configuration.
-    this.setAtomConfiguration( this.numberAtom );
+    this.setAtomConfiguration( this.selectedAtomConfig );
 
     // Listen to "showing nature's mix" property and show/hide the appropriate isotopes when the value changes.
     // Doesn't need unlink as it stays through out the sim life
@@ -144,14 +146,16 @@ define( function( require ) {
         if ( self.mapIsotopeConfigToUserMixState.hasOwnProperty( self.prototypeIsotope.protonCountProperty.get() ) ) {
           self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCountProperty.get() ][ self.interactivityModeProperty.get() ] =
             usersMixState;
-        } else {
+        }
+        else {
           self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCountProperty.get() ] = {};
           self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCountProperty.get() ][ self.interactivityModeProperty.get() ] =
             usersMixState;
         }
         // Display nature's mix.
         self.showNaturesMix();
-      } else {
+      }
+      else {
         self.naturesIsotopesList.clear();
         if ( self.mapIsotopeConfigToUserMixState.hasOwnProperty( self.prototypeIsotope.protonCountProperty.get() ) ) {
           if ( self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCountProperty.get() ]
@@ -159,10 +163,12 @@ define( function( require ) {
             self.setState(
               self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCountProperty.get() ][ self.interactivityModeProperty.get() ]
             );
-          } else {
+          }
+          else {
             self.setUpInitialUsersMix();
           }
-        } else {
+        }
+        else {
           self.setUpInitialUsersMix();
         }
       }
@@ -174,7 +180,8 @@ define( function( require ) {
       usersMixState.interactivityMode = oldValue;
       if ( self.mapIsotopeConfigToUserMixState.hasOwnProperty( self.prototypeIsotope.protonCountProperty.get() ) ) {
         self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCountProperty.get() ][ oldValue ] = usersMixState;
-      } else {
+      }
+      else {
         self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCountProperty.get() ] = {};
         self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCountProperty.get() ][ oldValue ] = usersMixState;
       }
@@ -182,7 +189,8 @@ define( function( require ) {
       if ( self.mapIsotopeConfigToUserMixState.hasOwnProperty( self.prototypeIsotope.protonCountProperty.get() ) ) {
         if ( self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCountProperty.get() ].hasOwnProperty( value ) ) {
           self.setState( self.mapIsotopeConfigToUserMixState[ self.prototypeIsotope.protonCountProperty.get() ][ value ] );
-        } else {
+        }
+        else {
           self.removeAllIsotopesFromTestChamberAndModel();
           self.addIsotopeControllers();
         }
@@ -217,7 +225,8 @@ define( function( require ) {
       if ( testChamber.isIsotopePositionedOverChamber( isotope ) ) {
         testChamber.addIsotopeToChamber( isotope, true );
         testChamber.adjustForOverlap();
-      } else {
+      }
+      else {
         bucket.addIsotopeInstanceNearestOpen( isotope, true );
       }
     },
@@ -226,7 +235,7 @@ define( function( require ) {
     createAndAddIsotope: function( isotopeConfig, animate ) {
       var self = this;
       var newIsotope;
-      if ( this.interactivityModeProperty.get()=== InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
+      if ( this.interactivityModeProperty.get() === InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
         // Create the specified isotope and add it to the appropriate bucket.
         newIsotope = new MovableAtom(
           isotopeConfig.protonCountProperty.get(),
@@ -360,62 +369,65 @@ define( function( require ) {
      * number, it is so that this will play well with the existing controllers that already existed at the time this
      * class was created.
      *
-     * @param {NumberAtom} atom
+     * For the sake of efficiency, clients should be careful not to call this when it isn't needed.
      *
+     * @param {NumberAtom} atom
      * @public
      */
     setAtomConfiguration: function( atom ) {
-      // This method does NOT check if the specified atom is already the current configuration. This allows it to be as
-      // a sort of reset routine.
-      // For the sake of efficiency, callers should be careful not to call this when it isn't needed.
 
-      if ( this.numberAtom !== atom ) {
-        this.numberAtom.protonCountProperty.set( atom.protonCountProperty.get() );
-        this.numberAtom.electronCountProperty.set( atom.electronCountProperty.get() );
-        this.numberAtom.neutronCountProperty.set( atom.neutronCountProperty.get() );
+      if ( this.selectedAtomConfig !== atom ) {
+        this.selectedAtomConfig.protonCountProperty.set( atom.protonCount );
+        this.selectedAtomConfig.electronCountProperty.set( atom.electronCount );
+        this.selectedAtomConfig.neutronCountProperty.set( atom.neutronCount );
       }
 
       if ( this.showingNaturesMixProperty.get() ) {
         this.removeAllIsotopesFromTestChamberAndModel();
-        this.prototypeIsotope.protonCountProperty.set( atom.protonCountProperty.get() );
-        this.prototypeIsotope.neutronCountProperty.set( atom.neutronCountProperty.get() );
-        this.prototypeIsotope.electronCountProperty.set( atom.electronCountProperty.get() );
+        this.prototypeIsotope.protonCountProperty.set( atom.protonCount );
+        this.prototypeIsotope.neutronCountProperty.set( atom.neutronCount );
+        this.prototypeIsotope.electronCountProperty.set( atom.electronCount );
         this.updatePossibleIsotopesList();
         this.showNaturesMix();
-      } else {
+      }
+      else {
+
         // Save the user's mix state for the current element before transitioning to the new one.
         if ( this.prototypeIsotope !== atom ) {
-          if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( this.prototypeIsotope.protonCountProperty.get() ) ) {
-            this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCountProperty.get() ][ this.interactivityModeProperty.get() ] = this.getState();
-          } else {
-            this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCountProperty.get() ] = {};
-            this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCountProperty.get() ][ this.interactivityModeProperty.get() ] = this.getState();
+          if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( this.prototypeIsotope.protonCount ) ) {
+            this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ][ this.interactivityModeProperty.get() ] = this.getState();
+          }
+          else {
+            this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ] = {};
+            this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ][ this.interactivityModeProperty.get() ] = this.getState();
           }
         }
-        if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( atom.protonCountProperty.get() ) ) {
-          if ( this.mapIsotopeConfigToUserMixState[ atom.protonCountProperty.get() ].hasOwnProperty(
-              this.interactivityModeProperty.get() ) ) {
+        if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( atom.protonCount ) ) {
+          if ( this.mapIsotopeConfigToUserMixState[ atom.protonCount ].hasOwnProperty(
+            this.interactivityModeProperty.get() ) ) {
             // Restore the previously saved state for this element.
-            this.setState( this.mapIsotopeConfigToUserMixState[ atom.protonCountProperty.get() ][ this.interactivityModeProperty.get() ] );
-          } else {
+            this.setState( this.mapIsotopeConfigToUserMixState[ atom.protonCount ][ this.interactivityModeProperty.get() ] );
+          }
+          else {
             // Clean up any previous isotopes.
             this.removeAllIsotopesFromTestChamberAndModel();
 
-            this.prototypeIsotope.protonCountProperty.set( atom.protonCountProperty.get() );
-            this.prototypeIsotope.neutronCountProperty.set( atom.neutronCountProperty.get() );
-            this.prototypeIsotope.electronCountProperty.set( atom.electronCountProperty.get() );
+            this.prototypeIsotope.protonCountProperty.set( atom.protonCount );
+            this.prototypeIsotope.neutronCountProperty.set( atom.neutronCount );
+            this.prototypeIsotope.electronCountProperty.set( atom.electronCount );
             this.updatePossibleIsotopesList();
 
             // Set all model elements for the first time this element's user mix is shown.
             this.setUpInitialUsersMix();
           }
-        } else {
+        }
+        else {
           // Clean up any previous isotopes.
           this.removeAllIsotopesFromTestChamberAndModel();
 
-          this.prototypeIsotope.protonCountProperty.set( atom.protonCountProperty.get() );
-          this.prototypeIsotope.neutronCountProperty.set( atom.neutronCountProperty.get() );
-          this.prototypeIsotope.electronCountProperty.set( atom.electronCountProperty.get() );
+          this.prototypeIsotope.protonCountProperty.set( atom.protonCount );
+          this.prototypeIsotope.neutronCountProperty.set( atom.neutronCount );
+          this.prototypeIsotope.electronCountProperty.set( atom.electronCount );
           this.updatePossibleIsotopesList();
 
           // Set all model elements for the first time this element's user mix is shown.
@@ -423,7 +435,6 @@ define( function( require ) {
         }
       }
     },
-
 
     /**
      * Get a list of the possible isotopes, sorted from lightest to heaviest.
@@ -493,11 +504,12 @@ define( function( require ) {
         // We can fit 3 or less cleanly under the test chamber.
         interControllerDistanceX = this.testChamber.getTestChamberRect().getWidth() / this.possibleIsotopesProperty.get().length;
         controllerXOffset = this.testChamber.getTestChamberRect().minX + interControllerDistanceX / 2;
-      } else {
+      }
+      else {
         // Four controllers don't fit well under the chamber, so use a positioning algorithm where they are extended
         // a bit to the right.
         interControllerDistanceX = ( this.testChamber.getTestChamberRect().getWidth() * 1.10 ) /
-          this.possibleIsotopesProperty.get().length;
+                                   this.possibleIsotopesProperty.get().length;
         controllerXOffset = -180;
       }
       // Add the controllers.
@@ -508,12 +520,12 @@ define( function( require ) {
         if ( buckets ) {
           var newBucket = new MonoIsotopeBucket( isotopeConfig.protonCountProperty.get(),
             isotopeConfig.neutronCountProperty.get(), {
-            position: new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetBucket ),
-            size: BUCKET_SIZE,
-            baseColor: this.getColorForIsotope( isotopeConfig ),
+              position: new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetBucket ),
+              size: BUCKET_SIZE,
+              baseColor: this.getColorForIsotope( isotopeConfig ),
               captionText: isotopeCaption,
-            sphereRadius: LARGE_ISOTOPE_RADIUS
-          } );
+              sphereRadius: LARGE_ISOTOPE_RADIUS
+            } );
           this.addBucket( newBucket );
           if ( !this.showingNaturesMixProperty.get() ) {
             // Create and add initial isotopes to the new bucket.
@@ -521,7 +533,8 @@ define( function( require ) {
               self.createAndAddIsotope( isotopeConfig, false );
             } );
           }
-        } else {
+        }
+        else {
           // Assume a numerical controller.
           var newController = new NumericalIsotopeQuantityControl( this, isotopeConfig,
             new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetSlider ),

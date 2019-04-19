@@ -115,7 +115,7 @@ define( function( require ) {
     function updateReadout( averageAtomicMass ) {
       var weight;
       if ( model.showingNaturesMixProperty.get() ) {
-        weight = AtomIdentifier.getStandardAtomicMass( model.numberAtom.protonCountProperty.get() );
+        weight = AtomIdentifier.getStandardAtomicMass( model.selectedAtomConfig.protonCount );
       } else {
         weight = averageAtomicMass;
       }

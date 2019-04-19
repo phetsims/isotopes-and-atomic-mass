@@ -32,7 +32,6 @@ define( function( require ) {
   var TEST_CHAMBER_RECT = new Rectangle( -SIZE.width / 2, -SIZE.height / 2, SIZE.width, SIZE.height );
   var BUFFER = 1; // isotopes stroke doesn't cross the wall, empirically determined
 
-
   /**
    * Utility Function that contains the state of the isotope test chamber, and can be used for saving and later restoring
    * the state.
@@ -53,17 +52,18 @@ define( function( require ) {
    *
    */
   function IsotopeTestChamber( model ) {
-    // Isotope Mixtures Model that contains this test chamber.
-    this.model = model; // @private
 
-    // {MovableAtom} Observable array that keeps track of the isotopes in the chamber and is updated as isotopes come and go.
+    // @private - Isotope Mixtures Model that contains this test chamber.
+    this.model = model;
+
+    // {ObservableArray<MovableAtom>} Observable array that keeps track of the isotopes in the chamber and is updated as
+    // isotopes come and go.
     // @public
     this.containedIsotopes = new ObservableArray();
 
     // @public {Read-Only}
     this.isotopeCountProperty = new Property( 0 );
     this.averageAtomicMassProperty = new Property( 0 );
-
   }
 
   isotopesAndAtomicMass.register( 'IsotopeTestChamber', IsotopeTestChamber );
