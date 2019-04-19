@@ -16,7 +16,7 @@ define( function( require ) {
   //modules
   var inherit = require( 'PHET_CORE/inherit' );
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
-  var NumberAtom = require( 'SHRED/model/NumberAtom' );
+  var ImmutableAtomConfig = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/ImmutableAtomConfig' );
   var Particle = require( 'SHRED/model/Particle' );
 
   // class variables
@@ -32,15 +32,13 @@ define( function( require ) {
     Particle.call( this, 'Isotope' );
     this.positionProperty.set( initialPosition ); // @public
     this.destinationProperty.set( initialPosition ); // @public
+
     // @public
-    this.atomConfiguration = new NumberAtom( {
-      protonCount: numProtons,
-      neutronCount: numNeutrons,
-      electronCount: numProtons
-    } );
+    this.atomConfiguration = new ImmutableAtomConfig( numProtons, numNeutrons, numProtons );
     this.showLabel = true; // @public
     this.instanceCount = instanceCount++;
   }
+
   isotopesAndAtomicMass.register( 'MovableAtom', MovableAtom );
   return inherit( Particle, MovableAtom, {} );
 } );
