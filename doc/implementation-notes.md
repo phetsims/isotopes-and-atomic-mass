@@ -14,14 +14,21 @@ Java/Piccolo days.
 
 There are two main ways of representing an atom in the model, one where it is represented only by a set of numbers for
 each type of constituent particle, and one that contains and manages references to constituent particles.  The former is
-called "NumberAtom" and the latter is "ParticleAtom".  These are both pretty pervasive in the code, particularly in the
-game.
+called "NumberAtom" and the latter is "ParticleAtom".  These are both pretty pervasive in the code.
 
 Both NumberAtom and ParticleAtom end up having a number of derived properties that are important to know, such as
 charge, atomic number, and atomic mass.  The types themselves generally track this information and make it available in
 the form of DerivedProperty.
 
-Movable Atom is derived from Number Atom is used to describe isotopes in the second screen and store the colors for that
-isotope of the element. Maximum number of isotopes for an element is 4 which if for sulpur. 4 colors have been used to
-distinguish between different isotopes of an element across the sim. The number of movable atoms of various isotopes in
-the test chamber determines the composition for that element
+The "Mixtures" screen needed to have a movable version of the isotopes, and initially this used NumberAtom to define the
+atom configuration.  However, this turned out to lead to excessive memory use after the PhET-iO features were added, so
+the code was revamped to use a way of defining atom configurations called ImmutableAtomConfig.  Both ImmutableAtomConfig
+and NumberAtom have ES5 getters for protonCount, neutronCount, and electronCount, and this polymorphism is important to
+the operation of the "Mixtures" screen.
+
+MovableAtom also stores the colors for that isotopes of an element. Maximum number of isotopes for an element is 4, and
+sulfur is the only element in the sim that reaches this max. Four colors have been used to distinguish between different
+isotopes of an element.
+
+The number of movable atoms of various isotopes in the test chamber determines the percent composition and average
+atomic mass for that element.
