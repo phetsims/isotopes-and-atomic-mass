@@ -1,5 +1,5 @@
 {
-  "comment": "# isotopes-and-atomic-mass 1.1.0 Wed May 01 2019 13:20:52 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# isotopes-and-atomic-mass 1.1.0 Fri May 24 2019 14:53:16 GMT-0600 (Mountain Daylight Time)",
   "assert": {
     "sha": "d8a2e8992420327ff72a6fc4bb93ec76549ded0e",
     "branch": "HEAD"
@@ -13,15 +13,15 @@
     "branch": "HEAD"
   },
   "chipper": {
-    "sha": "e81aa7eab8647e01722e30f84e00fabf3b002af4",
-    "branch": "HEAD"
+    "sha": "9bb64f5ce3ef15a4f7f0491065faca980f9ecb55",
+    "branch": "isotopes-and-atomic-mass-1.1"
   },
   "dot": {
     "sha": "dba21987a05470f2da00ea0314020ff0581bea60",
     "branch": "HEAD"
   },
   "isotopes-and-atomic-mass": {
-    "sha": "e06be4d4729d778330e17564c79c9700b9bc71bf",
+    "sha": "7aed611b4b3a9196f90d236727768dd4c9a6b2a7",
     "branch": "1.1"
   },
   "joist": {
@@ -38,18 +38,6 @@
   },
   "phet-io": {
     "sha": "6d6b353b6035719573531eaa2a7c7e99b6eea9f7",
-    "branch": "HEAD"
-  },
-  "phet-io-wrapper-classroom-activity": {
-    "sha": "248958109c8d3b73b5f9d6c31015b2c8b5016571",
-    "branch": "HEAD"
-  },
-  "phet-io-wrapper-hookes-law-energy": {
-    "sha": "3ea0d43712de26832a841086365544fa930fe458",
-    "branch": "HEAD"
-  },
-  "phet-io-wrapper-lab-book": {
-    "sha": "cdb2698695aba22b25571a4330386346378ff7d2",
     "branch": "HEAD"
   },
   "phet-io-wrappers": {
