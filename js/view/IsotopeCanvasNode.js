@@ -5,13 +5,13 @@
  *
  * @author Aadish Gupta
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var shred = require( 'SHRED/shred' );
+  const CanvasNode = require( 'SCENERY/nodes/CanvasNode' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const shred = require( 'SHRED/shred' );
 
   /**
    * A particle layer rendered on canvas
