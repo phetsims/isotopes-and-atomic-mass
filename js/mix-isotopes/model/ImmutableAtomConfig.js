@@ -6,13 +6,13 @@
  * @author John Blanco
  */
 
-define( function( require ) {
+define( require => {
   'use strict';
 
   //modules
-  var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
+  const AtomIdentifier = require( 'SHRED/AtomIdentifier' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
 
   /**
    * @param {number} numProtons

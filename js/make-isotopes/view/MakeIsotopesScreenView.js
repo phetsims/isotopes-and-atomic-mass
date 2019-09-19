@@ -7,30 +7,30 @@
  * @author Jesse Greenberg
  * @author Aadish Gupta
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var AccordionBox = require( 'SUN/AccordionBox' );
-  var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
-  var AtomScaleNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/AtomScaleNode' );
-  var ExpandedPeriodicTableNode = require( 'SHRED/view/ExpandedPeriodicTableNode' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var InteractiveIsotopeNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/InteractiveIsotopeNode' );
-  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
-  var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
-  var Node = require( 'SCENERY/nodes/Node' );
-  var ParticleCountDisplay = require( 'SHRED/view/ParticleCountDisplay' );
-  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var Property = require( 'AXON/Property' );
-  var Rectangle = require( 'SCENERY/nodes/Rectangle' );
-  var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
-  var ScreenView = require( 'JOIST/ScreenView' );
-  var ShredConstants = require( 'SHRED/ShredConstants' );
-  var Text = require( 'SCENERY/nodes/Text' );
-  var TwoItemPieChartNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/TwoItemPieChartNode' );
-  var Util = require( 'DOT/Util' );
-  var Vector2 = require( 'DOT/Vector2' );
+  const AccordionBox = require( 'SUN/AccordionBox' );
+  const AtomIdentifier = require( 'SHRED/AtomIdentifier' );
+  const AtomScaleNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/AtomScaleNode' );
+  const ExpandedPeriodicTableNode = require( 'SHRED/view/ExpandedPeriodicTableNode' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const InteractiveIsotopeNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/InteractiveIsotopeNode' );
+  const isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
+  const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
+  const Node = require( 'SCENERY/nodes/Node' );
+  const ParticleCountDisplay = require( 'SHRED/view/ParticleCountDisplay' );
+  const PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  const Property = require( 'AXON/Property' );
+  const Rectangle = require( 'SCENERY/nodes/Rectangle' );
+  const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
+  const ScreenView = require( 'JOIST/ScreenView' );
+  const ShredConstants = require( 'SHRED/ShredConstants' );
+  const Text = require( 'SCENERY/nodes/Text' );
+  const TwoItemPieChartNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/TwoItemPieChartNode' );
+  const Util = require( 'DOT/Util' );
+  const Vector2 = require( 'DOT/Vector2' );
 
   // constants
   var NUMBER_FONT = new PhetFont( 70 );
@@ -40,8 +40,8 @@ define( function( require ) {
   var OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION = 12;
 
   // strings
-  var abundanceInNatureString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/abundanceInNature' );
-  var symbolString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/symbol' );
+  const abundanceInNatureString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/abundanceInNature' );
+  const symbolString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/symbol' );
 
   /**
    * @param {MakeIsotopesModel} makeIsotopesModel

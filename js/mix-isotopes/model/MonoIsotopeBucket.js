@@ -9,14 +9,14 @@
  * @author James Smith
  */
 
-define( function( require ) {
+define( require => {
   'use strict';
 
-  var inherit = require( 'PHET_CORE/inherit' );
-  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
-  var MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
-  var ObservableArray = require( 'AXON/ObservableArray' );
-  var SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
+  const MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
+  const ObservableArray = require( 'AXON/ObservableArray' );
+  const SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
 
   /**
    * Constructor.

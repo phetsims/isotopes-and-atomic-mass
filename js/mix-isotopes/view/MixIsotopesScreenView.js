@@ -7,49 +7,49 @@
  * @author Jesse Greenberg
  * @author James Smith
  */
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var AccordionBox = require( 'SUN/AccordionBox' );
-  var AquaRadioButton = require( 'SUN/AquaRadioButton' );
-  var AverageAtomicMassIndicator = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/AverageAtomicMassIndicator' );
-  var Bucket = require( 'PHETCOMMON/model/Bucket' );
-  var BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
-  var BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
-  var BucketHole = require( 'SCENERY_PHET/bucket/BucketHole' );
-  var Color = require( 'SCENERY/util/Color' );
-  var ControlIsotope = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/ControlIsotope' );
-  var Dimension2 = require( 'DOT/Dimension2' );
-  var EraserButton = require( 'SCENERY_PHET/buttons/EraserButton' );
-  var ExpandedPeriodicTableNode = require( 'SHRED/view/ExpandedPeriodicTableNode' );
-  var HSlider = require( 'SUN/HSlider' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var IsotopeCanvasNode = require( 'SHRED/view/IsotopeCanvasNode' );
-  var IsotopeProportionsPieChart = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/IsotopeProportionsPieChart' );
-  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
-  var MixIsotopesModel = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MixIsotopesModel' );
-  var ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
-  var Node = require( 'SCENERY/nodes/Node' );
-  var ParticleView = require( 'SHRED/view/ParticleView' );
-  var PhetFont = require( 'SCENERY_PHET/PhetFont' );
-  var Property = require( 'AXON/Property' );
-  var RadioButtonGroup = require( 'SUN/buttons/RadioButtonGroup' );
-  var Range = require( 'DOT/Range' );
-  var Rectangle = require( 'SCENERY/nodes/Rectangle' );
-  var ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
-  var ScreenView = require( 'JOIST/ScreenView' );
-  var ShredConstants = require( 'SHRED/ShredConstants' );
-  var Text = require( 'SCENERY/nodes/Text' );
-  var Util = require( 'DOT/Util' );
-  var Vector2 = require( 'DOT/Vector2' );
+  const AccordionBox = require( 'SUN/AccordionBox' );
+  const AquaRadioButton = require( 'SUN/AquaRadioButton' );
+  const AverageAtomicMassIndicator = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/AverageAtomicMassIndicator' );
+  const Bucket = require( 'PHETCOMMON/model/Bucket' );
+  const BucketDragHandler = require( 'SHRED/view/BucketDragHandler' );
+  const BucketFront = require( 'SCENERY_PHET/bucket/BucketFront' );
+  const BucketHole = require( 'SCENERY_PHET/bucket/BucketHole' );
+  const Color = require( 'SCENERY/util/Color' );
+  const ControlIsotope = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/ControlIsotope' );
+  const Dimension2 = require( 'DOT/Dimension2' );
+  const EraserButton = require( 'SCENERY_PHET/buttons/EraserButton' );
+  const ExpandedPeriodicTableNode = require( 'SHRED/view/ExpandedPeriodicTableNode' );
+  const HSlider = require( 'SUN/HSlider' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const IsotopeCanvasNode = require( 'SHRED/view/IsotopeCanvasNode' );
+  const IsotopeProportionsPieChart = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/view/IsotopeProportionsPieChart' );
+  const isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
+  const MixIsotopesModel = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MixIsotopesModel' );
+  const ModelViewTransform2 = require( 'PHETCOMMON/view/ModelViewTransform2' );
+  const Node = require( 'SCENERY/nodes/Node' );
+  const ParticleView = require( 'SHRED/view/ParticleView' );
+  const PhetFont = require( 'SCENERY_PHET/PhetFont' );
+  const Property = require( 'AXON/Property' );
+  const RadioButtonGroup = require( 'SUN/buttons/RadioButtonGroup' );
+  const Range = require( 'DOT/Range' );
+  const Rectangle = require( 'SCENERY/nodes/Rectangle' );
+  const ResetAllButton = require( 'SCENERY_PHET/buttons/ResetAllButton' );
+  const ScreenView = require( 'JOIST/ScreenView' );
+  const ShredConstants = require( 'SHRED/ShredConstants' );
+  const Text = require( 'SCENERY/nodes/Text' );
+  const Util = require( 'DOT/Util' );
+  const Vector2 = require( 'DOT/Vector2' );
 
   // strings
-  var averageAtomicMassString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/averageAtomicMass' );
-  var isotopeMixtureString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopeMixture' );
-  var myMixString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/myMix' );
-  var naturesMixString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/naturesMix' );
-  var percentCompositionString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/percentComposition' );
+  const averageAtomicMassString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/averageAtomicMass' );
+  const isotopeMixtureString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopeMixture' );
+  const myMixString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/myMix' );
+  const naturesMixString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/naturesMix' );
+  const percentCompositionString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/percentComposition' );
 
   // constants
   var MAX_SLIDER_WIDTH = 99.75; //empirically determined

@@ -10,26 +10,26 @@
  * @author Aadish Gupta
  */
 
-define( function( require ) {
+define( require => {
   'use strict';
 
   // modules
-  var AtomIdentifier = require( 'SHRED/AtomIdentifier' );
-  var Color = require( 'SCENERY/util/Color' );
-  var Dimension2 = require( 'DOT/Dimension2' );
-  var Emitter = require( 'AXON/Emitter' );
-  var inherit = require( 'PHET_CORE/inherit' );
-  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
-  var NumberAtom = require( 'SHRED/model/NumberAtom' );
-  var ObservableArray = require( 'AXON/ObservableArray' );
-  var Particle = require( 'SHRED/model/Particle' );
-  var ParticleAtom = require( 'SHRED/model/ParticleAtom' );
-  var ShredConstants = require( 'SHRED/ShredConstants' );
-  var SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
-  var Vector2 = require( 'DOT/Vector2' );
+  const AtomIdentifier = require( 'SHRED/AtomIdentifier' );
+  const Color = require( 'SCENERY/util/Color' );
+  const Dimension2 = require( 'DOT/Dimension2' );
+  const Emitter = require( 'AXON/Emitter' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
+  const NumberAtom = require( 'SHRED/model/NumberAtom' );
+  const ObservableArray = require( 'AXON/ObservableArray' );
+  const Particle = require( 'SHRED/model/Particle' );
+  const ParticleAtom = require( 'SHRED/model/ParticleAtom' );
+  const ShredConstants = require( 'SHRED/ShredConstants' );
+  const SphereBucket = require( 'PHETCOMMON/model/SphereBucket' );
+  const Vector2 = require( 'DOT/Vector2' );
 
   // strings
-  var neutronsString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons' );
+  const neutronsString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons' );
 
   // constants
   var DEFAULT_NUM_NEUTRONS_IN_BUCKET = 4;

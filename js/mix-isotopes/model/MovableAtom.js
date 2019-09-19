@@ -10,14 +10,14 @@
  * @author James Smith
  */
 
-define( function( require ) {
+define( require => {
   'use strict';
 
   //modules
-  var inherit = require( 'PHET_CORE/inherit' );
-  var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
-  var ImmutableAtomConfig = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/ImmutableAtomConfig' );
-  var Particle = require( 'SHRED/model/Particle' );
+  const inherit = require( 'PHET_CORE/inherit' );
+  const isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
+  const ImmutableAtomConfig = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/ImmutableAtomConfig' );
+  const Particle = require( 'SHRED/model/Particle' );
 
   // class variables
   var instanceCount = 0;
