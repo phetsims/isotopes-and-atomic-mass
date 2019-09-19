@@ -35,20 +35,20 @@ define( require => {
      * @param {CanvasRenderingContext2D} context
      */
     paintCanvas: function( context ) {
-      var isotope;
-      var i;
-      var numIsotopes = this.isotopes.length;
+      let isotope;
+      let i;
+      const numIsotopes = this.isotopes.length;
       if ( numIsotopes > 0 ) {
 
         // only calculate the radius once to save time, assumes they are all the same
-        var radius = this.modelViewTransform.modelToViewDeltaX( this.isotopes.get( 0 ).radiusProperty.get() );
+        const radius = this.modelViewTransform.modelToViewDeltaX( this.isotopes.get( 0 ).radiusProperty.get() );
         context.strokeStyle = 'black';
 
         for ( i = 0; i < this.isotopes.length; i++ ) {
           isotope = this.isotopes.get( i );
-          var position = isotope.positionProperty.get();
-          var x = this.modelViewTransform.modelToViewX( position.x );
-          var y = this.modelViewTransform.modelToViewY( position.y );
+          const position = isotope.positionProperty.get();
+          const x = this.modelViewTransform.modelToViewX( position.x );
+          const y = this.modelViewTransform.modelToViewY( position.y );
           context.fillStyle = isotope.color.toCSS();
           context.beginPath();
           context.arc( x, y, radius, 0, 2 * Math.PI, true );
