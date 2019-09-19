@@ -22,7 +22,7 @@ define( require => {
   const Property = require( 'AXON/Property' );
 
   // constants
-  var CAPACITY = 100;
+  const CAPACITY = 100;
 
   /**
    * @param {MixIsotopesModel} model
@@ -52,11 +52,11 @@ define( require => {
      */
     setIsotopeQuantity: function( targetQuantity ) {
       assert && assert( targetQuantity <= CAPACITY );
-      var changeAmount = targetQuantity - this.model.testChamber.getIsotopeCount( this.isotopeConfig );
+      const changeAmount = targetQuantity - this.model.testChamber.getIsotopeCount( this.isotopeConfig );
 
       if ( changeAmount > 0 ) {
-        for ( var i = 0; i < changeAmount; i++ ) {
-          var newIsotope = new MovableAtom( this.isotopeConfig.protonCountProperty.get(),
+        for ( let i = 0; i < changeAmount; i++ ) {
+          const newIsotope = new MovableAtom( this.isotopeConfig.protonCountProperty.get(),
             this.isotopeConfig.neutronCountProperty.get(),
             this.model.testChamber.generateRandomLocation() );
           newIsotope.color = this.model.getColorForIsotope( this.isotopeConfig );
@@ -68,8 +68,8 @@ define( require => {
           this.model.isotopesList.add( newIsotope );
         }
       } else if ( changeAmount < 0 ) {
-        for ( var j = 0; j < -changeAmount; j++ ) {
-          var isotope = this.model.testChamber.removeIsotopeMatchingConfig( this.isotopeConfig );
+        for ( let j = 0; j < -changeAmount; j++ ) {
+          const isotope = this.model.testChamber.removeIsotopeMatchingConfig( this.isotopeConfig );
           if ( isotope !== null ) {
             this.model.isotopesList.remove( isotope );
           }

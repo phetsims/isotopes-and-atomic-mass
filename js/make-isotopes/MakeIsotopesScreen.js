@@ -29,7 +29,7 @@ define( require => {
    */
   function MakeIsotopesScreen( tandem ) {
 
-    var options = {
+    const options = {
       name: isotopesString,
       homeScreenIcon: new Image( makeIsotopesIcon ),
       tandem: tandem

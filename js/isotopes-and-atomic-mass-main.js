@@ -18,9 +18,9 @@ define( require => {
   // strings
   const isotopesAndAtomicMassTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopes-and-atomic-mass.title' );
 
-  var tandem = Tandem.rootTandem;
+  const tandem = Tandem.rootTandem;
 
-  var simOptions = {
+  const simOptions = {
     credits: {
       leadDesign: 'Amy Hanson, Kelly Lancaster',
       softwareDevelopment: 'John Blanco, Jesse Greenberg, Aadish Gupta, Sam Reid, James Smith',
@@ -31,10 +31,10 @@ define( require => {
   };
 
   SimLauncher.launch( function() {
-    var makeIsotopeScreenTandem = tandem.createTandem( 'makeIsotopeScreen' );
-    var mixIsotopeScreenTandem = tandem.createTandem( 'mixIsotopeScreen' );
+    const makeIsotopeScreenTandem = tandem.createTandem( 'makeIsotopeScreen' );
+    const mixIsotopeScreenTandem = tandem.createTandem( 'mixIsotopeScreen' );
 
-    var sim = new Sim( isotopesAndAtomicMassTitleString, [ new MakeIsotopesScreen( makeIsotopeScreenTandem ), new MixIsotopesScreen( mixIsotopeScreenTandem ) ], simOptions );
+    const sim = new Sim( isotopesAndAtomicMassTitleString, [ new MakeIsotopesScreen( makeIsotopeScreenTandem ), new MixIsotopesScreen( mixIsotopeScreenTandem ) ], simOptions );
     sim.start();
   } );
 } );

@@ -20,7 +20,7 @@ define( require => {
   const Particle = require( 'SHRED/model/Particle' );
 
   // class variables
-  var instanceCount = 0;
+  let instanceCount = 0;
 
   /**
    * @param {number} numProtons

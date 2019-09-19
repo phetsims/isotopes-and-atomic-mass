@@ -52,28 +52,28 @@ define( require => {
   const percentCompositionString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/percentComposition' );
 
   // constants
-  var MAX_SLIDER_WIDTH = 99.75; //empirically determined
+  const MAX_SLIDER_WIDTH = 99.75; //empirically determined
 
   /**
    * Created a node containing radio buttons to select My Mix or Nature's Mix
    * @param {Property} isotopeMixtureProperty
    */
   function IsotopeMixtureSelectionNode( isotopeMixtureProperty ) {
-    var radioButtonRadius = 6;
-    var LABEL_FONT = new PhetFont( 14 );
-    var MAX_WIDTH = 160;
-    var myMixButton = new AquaRadioButton(
+    const radioButtonRadius = 6;
+    const LABEL_FONT = new PhetFont( 14 );
+    const MAX_WIDTH = 160;
+    const myMixButton = new AquaRadioButton(
       isotopeMixtureProperty,
       false,
       new Text( myMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ), { radius: radioButtonRadius }
     );
-    var naturesMixButton = new AquaRadioButton(
+    const naturesMixButton = new AquaRadioButton(
       isotopeMixtureProperty,
       true,
       new Text( naturesMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ), { radius: radioButtonRadius }
     );
-    var label = new Text( isotopeMixtureString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } );
-    var displayButtonGroup = new Node();
+    const label = new Text( isotopeMixtureString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } );
+    const displayButtonGroup = new Node();
     displayButtonGroup.addChild( label );
     myMixButton.top = label.bottom + 3;
     myMixButton.left = displayButtonGroup.left;
@@ -90,8 +90,8 @@ define( require => {
    * @param {ModelViewTransform2} modelViewTransform
    */
   function InteractivityModeSelectionNode( model, modelViewTransform ) {
-    var bucketNode = new Node();
-    var bucket = new Bucket( {
+    const bucketNode = new Node();
+    const bucket = new Bucket( {
       baseColor: Color.gray,
       size: new Dimension2( 50, 30 )
     } );
@@ -99,8 +99,8 @@ define( require => {
     bucketNode.addChild( new BucketFront( bucket, modelViewTransform ) );
     bucketNode.scale( 0.5 );
 
-    var range = new Range( 0, 100 );
-    var slider = new HSlider( new Property( 50 ), range, {
+    const range = new Range( 0, 100 );
+    const slider = new HSlider( new Property( 50 ), range, {
       trackSize: new Dimension2( 50, 5 ),
       thumbSize: new Dimension2( 15, 30 ),
       majorTickLength: 15
@@ -109,7 +109,7 @@ define( require => {
     slider.addMajorTick( 100 );
     slider.scale( 0.5 );
 
-    var radioButtonContent = [
+    const radioButtonContent = [
       { value: MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS, node: bucketNode },
       { value: MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS, node: slider }
     ];
@@ -132,7 +132,7 @@ define( require => {
     ScreenView.call( this, { layoutBounds: ShredConstants.LAYOUT_BOUNDS } );
 
     this.model = mixIsotopesModel;
-    var self = this;
+    const self = this;
     this.updatePieChart = true; // track when to update pie chart in the animation frame
 
     // Set up the model view transform. The test chamber is centered at (0, 0) in model space, and this transform is set
@@ -146,20 +146,20 @@ define( require => {
     );
 
     // Add the nodes that will allow the canvas to be layered.
-    var controlsLayer = new Node();
+    const controlsLayer = new Node();
     this.addChild( controlsLayer );
-    var bucketHoleLayer = new Node();
+    const bucketHoleLayer = new Node();
     this.addChild( bucketHoleLayer );
-    var chamberLayer = new Node();
+    const chamberLayer = new Node();
     this.addChild( chamberLayer );
     // rendering these two nodes at last so that isotopes are at the over everything but behind the bucket
-    var isotopeLayer = new Node();
-    var bucketFrontLayer = new Node();
+    const isotopeLayer = new Node();
+    const bucketFrontLayer = new Node();
 
     // Adding Buckets
     function addBucketView( addedBucket ) {
-      var bucketHole = new BucketHole( addedBucket, self.modelViewTransform );
-      var bucketFront = new BucketFront( addedBucket, self.modelViewTransform );
+      const bucketHole = new BucketHole( addedBucket, self.modelViewTransform );
+      const bucketFront = new BucketFront( addedBucket, self.modelViewTransform );
       bucketFront.addInputListener( new BucketDragHandler( addedBucket, bucketFront, self.modelViewTransform ) );
 
       // Bucket hole is first item added to view for proper layering.
@@ -181,14 +181,14 @@ define( require => {
 
     // Adding Isotopes
     function addIsotopeView( addedIsotope ) {
-      var isotopeView = new ParticleView( addedIsotope, self.modelViewTransform );
+      const isotopeView = new ParticleView( addedIsotope, self.modelViewTransform );
       isotopeView.center = self.modelViewTransform.modelToViewPosition( addedIsotope.positionProperty.get() );
       isotopeView.pickable = ( mixIsotopesModel.interactivityModeProperty.get() ===
         MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS );
 
       isotopeLayer.addChild( isotopeView );
 
-      var moveToFront = function( value ) {
+      const moveToFront = function( value ) {
         if ( value ) {
           isotopeView.moveToFront();
         }
@@ -223,8 +223,8 @@ define( require => {
 
     // Adding Numeric Controllers
     mixIsotopesModel.numericalControllerList.addItemAddedListener( function( addedController ) {
-      var controllerView = new ControlIsotope( addedController, 0, 100 );
-      var center_pos = self.modelViewTransform.modelToViewPosition( addedController.centerPosition );
+      const controllerView = new ControlIsotope( addedController, 0, 100 );
+      const center_pos = self.modelViewTransform.modelToViewPosition( addedController.centerPosition );
       controllerView.centerY = center_pos.y;
       // if the width of slider decreases due to thumb position, keep the left position fixed
       controllerView.left = center_pos.x - ( MAX_SLIDER_WIDTH / 2 );
@@ -239,7 +239,7 @@ define( require => {
       } );
     } );
 
-    var testChamberNode = new Rectangle( this.modelViewTransform.modelToViewBounds(
+    const testChamberNode = new Rectangle( this.modelViewTransform.modelToViewBounds(
       this.model.testChamber.getTestChamberRect() ), {
       fill: 'black',
       lineWidth: 1
@@ -254,7 +254,7 @@ define( require => {
       self.isotopesLayer.setIsotopes( self.model.naturesIsotopesList );
     } );
 
-    var clearBoxButton = new EraserButton( {
+    const clearBoxButton = new EraserButton( {
       baseColor: ShredConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
       listener: function() {
         mixIsotopesModel.clearBox();
@@ -266,7 +266,7 @@ define( require => {
 
     // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
     // element is Neon for this sim.
-    var periodicTableNode = new ExpandedPeriodicTableNode( mixIsotopesModel.selectedAtomConfig, 18, {
+    const periodicTableNode = new ExpandedPeriodicTableNode( mixIsotopesModel.selectedAtomConfig, 18, {
       tandem: tandem
     } );
     periodicTableNode.scale( 0.55 );
@@ -277,7 +277,7 @@ define( require => {
     this.isotopeProportionsPieChart = new IsotopeProportionsPieChart( this.model );
     this.isotopeProportionsPieChart.scale( 0.6 );
     this.isotopeProportionsPieChart.centerX = this.isotopeProportionsPieChart.centerX + 150; // Empirically determined
-    var compositionBox = new AccordionBox( this.isotopeProportionsPieChart, {
+    const compositionBox = new AccordionBox( this.isotopeProportionsPieChart, {
       cornerRadius: 3,
       titleNode: new Text( percentCompositionString, {
         font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
@@ -299,7 +299,7 @@ define( require => {
     compositionBox.top = periodicTableNode.bottom + 15;
     this.addChild( compositionBox );
 
-    var averageAtomicMassBox = new AccordionBox( new AverageAtomicMassIndicator( this.model ), {
+    const averageAtomicMassBox = new AccordionBox( new AverageAtomicMassIndicator( this.model ), {
       cornerRadius: 3,
       titleNode: new Text( averageAtomicMassString, {
         font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
@@ -321,18 +321,18 @@ define( require => {
     averageAtomicMassBox.top = compositionBox.bottom + 10;
     this.addChild( averageAtomicMassBox );
 
-    var interactivityModeSelectionNode = new InteractivityModeSelectionNode( mixIsotopesModel, this.modelViewTransform );
+    const interactivityModeSelectionNode = new InteractivityModeSelectionNode( mixIsotopesModel, this.modelViewTransform );
     interactivityModeSelectionNode.right = testChamberNode.right;
     interactivityModeSelectionNode.top = testChamberNode.bottom + 5;
     this.addChild( interactivityModeSelectionNode );
 
-    var isotopeMixtureSelectionNode = new IsotopeMixtureSelectionNode( mixIsotopesModel.showingNaturesMixProperty );
+    const isotopeMixtureSelectionNode = new IsotopeMixtureSelectionNode( mixIsotopesModel.showingNaturesMixProperty );
     isotopeMixtureSelectionNode.top = averageAtomicMassBox.bottom + 10;
     isotopeMixtureSelectionNode.left = averageAtomicMassBox.left;
     this.addChild( isotopeMixtureSelectionNode );
 
     // Create and add the Reset All Button in the bottom right, which resets the model
-    var resetAllButton = new ResetAllButton( {
+    const resetAllButton = new ResetAllButton( {
       listener: function() {
         mixIsotopesModel.reset();
         compositionBox.expandedProperty.reset();

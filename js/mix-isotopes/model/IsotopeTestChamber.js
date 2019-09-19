@@ -25,12 +25,12 @@ define( require => {
   // constants
   // Size of the "test chamber", which is the area in model space into which the isotopes can be dragged in order to
   // contribute to the current average atomic weight.
-  var SIZE = new Dimension2( 450, 280 ); // In picometers.
+  const SIZE = new Dimension2( 450, 280 ); // In picometers.
 
   // Rectangle that defines the location of the test chamber. This is set up so that the center of the test chamber is
   // at (0, 0) in model space.
-  var TEST_CHAMBER_RECT = new Rectangle( -SIZE.width / 2, -SIZE.height / 2, SIZE.width, SIZE.height );
-  var BUFFER = 1; // isotopes stroke doesn't cross the wall, empirically determined
+  const TEST_CHAMBER_RECT = new Rectangle( -SIZE.width / 2, -SIZE.height / 2, SIZE.width, SIZE.height );
+  const BUFFER = 1; // isotopes stroke doesn't cross the wall, empirically determined
 
   /**
    * Utility Function that contains the state of the isotope test chamber, and can be used for saving and later restoring
@@ -39,7 +39,7 @@ define( require => {
    * @param {IsotopeTestChamber} model
    */
   function State( model ) {
-    var self = this;
+    const self = this;
     this.containedIsotopes = new ObservableArray();
     model.containedIsotopes.forEach( function( isotope ) {
       self.containedIsotopes.add( isotope );
@@ -77,7 +77,7 @@ define( require => {
      */
     getIsotopeCount: function( isotopeConfig ) {
       assert && assert( isotopeConfig.protonCountProperty.get() === isotopeConfig.electronCountProperty.get() ); // Should always be neutral atom.
-      var isotopeCount = 0;
+      let isotopeCount = 0;
       this.containedIsotopes.forEach( function( isotope ) {
         if ( isotope.atomConfiguration.equals( isotopeConfig ) ) {
           isotopeCount++;
@@ -119,7 +119,7 @@ define( require => {
      * @public
      */
     addIsotopeToChamber: function( isotope, performUpdates ) {
-      var self = this;
+      const self = this;
       if ( this.isIsotopePositionedOverChamber( isotope ) ) {
         this.containedIsotopes.push( isotope );
 
@@ -132,7 +132,7 @@ define( require => {
         isotope.userControlledProperty.lazyLink( isotopeRemovedListener );
 
         // If the edges of the isotope are outside of the container, move it to be fully inside.
-        var protrusion = isotope.positionProperty.get().x + isotope.radiusProperty.get() - TEST_CHAMBER_RECT.maxX + BUFFER;
+        let protrusion = isotope.positionProperty.get().x + isotope.radiusProperty.get() - TEST_CHAMBER_RECT.maxX + BUFFER;
         if ( protrusion >= 0 ) {
           isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x - protrusion,
             isotope.positionProperty.get().y ) );
@@ -177,7 +177,7 @@ define( require => {
      * @public
      */
     bulkAddIsotopesToChamber: function( isotopeList ) {
-      var self = this;
+      const self = this;
       isotopeList.forEach( function( isotope ) {
         self.addIsotopeToChamber( isotope, false );
       } );
@@ -197,7 +197,7 @@ define( require => {
     // @private
     updateAverageAtomicMassProperty: function() {
       if ( this.containedIsotopes.length > 0 ) {
-        var totalMass = 0;
+        let totalMass = 0;
         this.containedIsotopes.forEach( function( isotope ) {
           totalMass += isotope.atomConfiguration.getIsotopeAtomicMass();
         } );
@@ -238,7 +238,7 @@ define( require => {
       assert && assert( ( isotopeConfig.protonCountProperty.get() - isotopeConfig.electronCountProperty.get() ) === 0 );
 
       // Locate and remove a matching isotope.
-      var removedIsotope = null;
+      let removedIsotope = null;
       this.containedIsotopes.forEach( function( isotope ) {
         if ( isotope.atomConfiguration.equals( isotopeConfig ) ) {
           removedIsotope = isotope;
@@ -290,7 +290,7 @@ define( require => {
     getIsotopeProportion: function( isotopeConfig ) {
       // Calculates charge to ensure that isotopes are neutral.
       assert && assert( isotopeConfig.protonCountProperty.get() - isotopeConfig.electronCountProperty.get() === 0 );
-      var isotopeCount = 0;
+      let isotopeCount = 0;
 
       this.containedIsotopes.forEach( function( isotope ) {
         if ( isotopeConfig.equals( isotope.atomConfiguration ) ) {
@@ -314,8 +314,8 @@ define( require => {
         'Ignoring request to adjust for overlap - too many particles in the chamber for that' );
 
       // Check for overlap and adjust particle positions until none exists.
-      var maxIterations = 10000; // Empirically determined
-      for ( var i = 0; this.checkForParticleOverlap() && i < maxIterations; i++ ) {
+      const maxIterations = 10000; // Empirically determined
+      for ( let i = 0; this.checkForParticleOverlap() && i < maxIterations; i++ ) {
         // Adjustment factors for the repositioning algorithm, these can be adjusted for different behaviour.
         var interParticleForceConst = 200;
         var wallForceConst = interParticleForceConst * 10;
@@ -327,16 +327,16 @@ define( require => {
 
         this.containedIsotopes.forEach( function( isotope1 ) {
 
-          var totalForce = new Vector2( 0, 0 );
+          const totalForce = new Vector2( 0, 0 );
           //Calculate the force due to other isotopes
-          for ( var j = 0; j < self.containedIsotopes.length; j++ ) {
-            var isotope2 = self.containedIsotopes.get( j );
+          for ( let j = 0; j < self.containedIsotopes.length; j++ ) {
+            const isotope2 = self.containedIsotopes.get( j );
             if ( isotope1 === isotope2 ) {
               continue;
 
             }
-            var forceFromIsotope = new Vector2( 0, 0 );
-            var distanceBetweenIsotopes = isotope1.positionProperty.get().distance( isotope2.positionProperty.get() );
+            const forceFromIsotope = new Vector2( 0, 0 );
+            const distanceBetweenIsotopes = isotope1.positionProperty.get().distance( isotope2.positionProperty.get() );
             if ( distanceBetweenIsotopes === 0 ) {
               // These isotopes are sitting right on top of one another.
               // Add the max amount of inter-particle force in a random direction.
@@ -346,7 +346,7 @@ define( require => {
               // calculate the repulsive force based on the distance.
               forceFromIsotope.x = isotope1.positionProperty.get().x - isotope2.positionProperty.get().x;
               forceFromIsotope.y = isotope1.positionProperty.get().y - isotope2.positionProperty.get().y;
-              var distance = Math.max( forceFromIsotope.magnitude, minInterParticleDistance );
+              const distance = Math.max( forceFromIsotope.magnitude, minInterParticleDistance );
               forceFromIsotope.normalize();
               forceFromIsotope.multiply( interParticleForceConst / ( distance * distance ) );
             }
@@ -355,17 +355,17 @@ define( require => {
 
           // Calculate the force due to the walls. This prevents particles from being pushed out of the bounds of the chamber.
           if ( isotope1.positionProperty.get().x + isotope1.radiusProperty.get() >= TEST_CHAMBER_RECT.maxX ) {
-            var distanceFromRightWall = TEST_CHAMBER_RECT.maxX - isotope1.positionProperty.get().x;
+            const distanceFromRightWall = TEST_CHAMBER_RECT.maxX - isotope1.positionProperty.get().x;
             totalForce.add( new Vector2( -wallForceConst / ( distanceFromRightWall * distanceFromRightWall ), 0 ) );
           } else if ( isotope1.positionProperty.get().x - isotope1.radius <= TEST_CHAMBER_RECT.minX ) {
-            var distanceFromLeftWall = isotope1.positionProperty.get().x - TEST_CHAMBER_RECT.minX;
+            const distanceFromLeftWall = isotope1.positionProperty.get().x - TEST_CHAMBER_RECT.minX;
             totalForce.add( new Vector2( wallForceConst / ( distanceFromLeftWall * distanceFromLeftWall ), 0 ) );
           }
           if ( isotope1.positionProperty.get().y + isotope1.radiusProperty.get() >= TEST_CHAMBER_RECT.maxY ) {
-            var distanceFromTopWall = TEST_CHAMBER_RECT.maxY - isotope1.positionProperty.get().y;
+            const distanceFromTopWall = TEST_CHAMBER_RECT.maxY - isotope1.positionProperty.get().y;
             totalForce.add( new Vector2( 0, -wallForceConst / ( distanceFromTopWall * distanceFromTopWall ) ) );
           } else if ( isotope1.positionProperty.get().y - isotope1.radiusProperty.get() <= TEST_CHAMBER_RECT.minY ) {
-            var distanceFromBottomWall = isotope1.positionProperty.get().y - TEST_CHAMBER_RECT.minY;
+            const distanceFromBottomWall = isotope1.positionProperty.get().y - TEST_CHAMBER_RECT.minY;
             totalForce.add( new Vector2( 0, wallForceConst / ( distanceFromBottomWall * distanceFromBottomWall ) ) );
           }
           // Put the calculated repulsive force into the map.
@@ -374,7 +374,7 @@ define( require => {
         } );
 
         // Adjust the particle positions based on forces.
-        for ( var isotopeID in mapIsotopesToForces ) {
+        for ( const isotopeID in mapIsotopesToForces ) {
           if ( mapIsotopesToForces.hasOwnProperty( isotopeID ) ) {
             // Sets the position of the isotope to the corresponding Vector2 from mapIsotopesToForces
             mapIsotopesIDToIsotope[ isotopeID ]
@@ -393,18 +393,18 @@ define( require => {
      * //@private
      */
     checkForParticleOverlap: function() {
-      var self = this;
-      var overlapCheck = false;
+      const self = this;
+      let overlapCheck = false;
 
       self.containedIsotopes.forEach( function( isotope1 ) {
-        for ( var i = 0; i < self.containedIsotopes.length; i++ ) {
-          var isotope2 = self.containedIsotopes.get( i );
+        for ( let i = 0; i < self.containedIsotopes.length; i++ ) {
+          const isotope2 = self.containedIsotopes.get( i );
           if ( isotope1 === isotope2 ) {
             // Same isotope so skip it!
             continue;
           }
 
-          var distance = isotope1.positionProperty.get().distance( isotope2.positionProperty.get() );
+          const distance = isotope1.positionProperty.get().distance( isotope2.positionProperty.get() );
           if ( distance < isotope1.radiusProperty.get() + isotope2.radiusProperty.get() ) {
             overlapCheck = true;
             return overlapCheck;

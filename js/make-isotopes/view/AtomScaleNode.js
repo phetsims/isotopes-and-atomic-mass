@@ -32,9 +32,9 @@ define( require => {
   const massNumberString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/massNumber' );
 
   // class data
-  var DISPLAY_MODE = { MASS_NUMBER: 'mass number', ATOMIC_MASS: 'atomic mass' };
-  var SCALE_WIDTH = 275; //This is the width Aspect Ratio will control height
-  var READOUT_SIZE = new Dimension2( 80, 50 );
+  const DISPLAY_MODE = { MASS_NUMBER: 'mass number', ATOMIC_MASS: 'atomic mass' };
+  const SCALE_WIDTH = 275; //This is the width Aspect Ratio will control height
+  const READOUT_SIZE = new Dimension2( 80, 50 );
 
   /**
    * Utility function that defines the readout on the front of the scale. This readout can display an atom's mass as
@@ -47,7 +47,7 @@ define( require => {
   function ScaleReadoutNode( atom, displayModeProperty ) {
     this.atom = atom;
 
-    var readoutText = new Text( '', {
+    const readoutText = new Text( '', {
       font: new PhetFont( 20 ),
       maxWidth: 0.9 * READOUT_SIZE.width,
       maxHeight: 0.9 * READOUT_SIZE.height
@@ -57,7 +57,7 @@ define( require => {
       if ( displayModeProperty.get() === DISPLAY_MODE.MASS_NUMBER ) {
         readoutText.setText( atom.massNumberProperty.get().toString() );
       } else {
-        var isotopeAtomicMass = atom.getIsotopeAtomicMass();
+        const isotopeAtomicMass = atom.getIsotopeAtomicMass();
         readoutText.setText( isotopeAtomicMass > 0 ? Util.toFixed( isotopeAtomicMass, 5 ) : '--' );
       }
 
@@ -94,21 +94,21 @@ define( require => {
    * @param {Property} displayModeProperty
    */
   function DisplayModeSelectionNode( displayModeProperty ) {
-    var radioButtonRadius = 6;
-    var LABEL_FONT = new PhetFont( 14 );
-    var massNumberButton = new AquaRadioButton( displayModeProperty, DISPLAY_MODE.MASS_NUMBER,
+    const radioButtonRadius = 6;
+    const LABEL_FONT = new PhetFont( 14 );
+    const massNumberButton = new AquaRadioButton( displayModeProperty, DISPLAY_MODE.MASS_NUMBER,
       new Text( massNumberString, {
         font: LABEL_FONT,
         maxWidth: 125,
         fill: 'white'
       } ), { radius: radioButtonRadius } );
-    var atomicMassButton = new AquaRadioButton( displayModeProperty, DISPLAY_MODE.ATOMIC_MASS,
+    const atomicMassButton = new AquaRadioButton( displayModeProperty, DISPLAY_MODE.ATOMIC_MASS,
       new Text( atomicMassString, {
         font: LABEL_FONT,
         maxWidth: 125,
         fill: 'white'
       } ), { radius: radioButtonRadius } );
-    var displayButtonGroup = new Node();
+    const displayButtonGroup = new Node();
     displayButtonGroup.addChild( massNumberButton );
     atomicMassButton.top = massNumberButton.bottom + 8;
     atomicMassButton.left = displayButtonGroup.left;
@@ -129,19 +129,19 @@ define( require => {
     this.displayModeProperty = new Property( DISPLAY_MODE.MASS_NUMBER );
 
     // This is Loading the scale image and scaling it to desired width and adding to the node
-    var weighScaleImage = new Image( scaleImage );
+    const weighScaleImage = new Image( scaleImage );
     weighScaleImage.scale( SCALE_WIDTH / weighScaleImage.width );
     this.addChild( weighScaleImage );
 
     // Add the scale readout node which displays either atomic mass or number.
-    var scaleReadoutNode = new ScaleReadoutNode( atom, this.displayModeProperty );
+    const scaleReadoutNode = new ScaleReadoutNode( atom, this.displayModeProperty );
     scaleReadoutNode.left = SCALE_WIDTH * 0.075; // empirically determined
     scaleReadoutNode.centerY = weighScaleImage.height * 0.7; // empirically determined
 
     this.addChild( scaleReadoutNode );
 
     // Add the display mode selector to the scale base.
-    var displayModeSelectionNode = new DisplayModeSelectionNode( this.displayModeProperty );
+    const displayModeSelectionNode = new DisplayModeSelectionNode( this.displayModeProperty );
     // Position the selector next to the readout.
     displayModeSelectionNode.centerX = ( scaleReadoutNode.right + weighScaleImage.width - 5 ) / 2; // empirically determined
     displayModeSelectionNode.centerY = weighScaleImage.height * 0.7; // empirically determined

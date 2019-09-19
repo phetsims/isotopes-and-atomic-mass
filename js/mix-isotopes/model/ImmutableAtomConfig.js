@@ -37,7 +37,7 @@ define( require => {
      */
     equals: function( atomConfig ) {
 
-      var configsAreEqual;
+      let configsAreEqual;
 
       // support comparision to mutable or immutable atom configurations
       if ( atomConfig.protonCountProperty ) {

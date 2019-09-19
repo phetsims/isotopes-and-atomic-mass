@@ -32,15 +32,15 @@ define( require => {
   const neutronsString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/neutrons' );
 
   // constants
-  var DEFAULT_NUM_NEUTRONS_IN_BUCKET = 4;
-  var NUCLEUS_JUMP_PERIOD = 0.1; // In seconds
-  var MAX_NUCLEUS_JUMP = ShredConstants.NUCLEON_RADIUS * 0.5;
-  var JUMP_ANGLES = [ Math.PI * 0.1, Math.PI * 1.6, Math.PI * 0.7, Math.PI * 1.1, Math.PI * 0.3 ];
-  var JUMP_DISTANCES = [ MAX_NUCLEUS_JUMP * 0.4, MAX_NUCLEUS_JUMP * 0.8, MAX_NUCLEUS_JUMP * 0.2, MAX_NUCLEUS_JUMP * 0.9 ];
-  var NUCLEON_CAPTURE_RADIUS = 100; // maximum drop distance for a nucleon to be considered part of the particle
-  var BUCKET_SIZE = new Dimension2( 130, 60 );
-  var NEUTRON_BUCKET_POSITION = new Vector2( -220, -180 );
-  var DEFAULT_ATOM_CONFIG = new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } ); // Hydrogen.
+  const DEFAULT_NUM_NEUTRONS_IN_BUCKET = 4;
+  const NUCLEUS_JUMP_PERIOD = 0.1; // In seconds
+  const MAX_NUCLEUS_JUMP = ShredConstants.NUCLEON_RADIUS * 0.5;
+  const JUMP_ANGLES = [ Math.PI * 0.1, Math.PI * 1.6, Math.PI * 0.7, Math.PI * 1.1, Math.PI * 0.3 ];
+  const JUMP_DISTANCES = [ MAX_NUCLEUS_JUMP * 0.4, MAX_NUCLEUS_JUMP * 0.8, MAX_NUCLEUS_JUMP * 0.2, MAX_NUCLEUS_JUMP * 0.9 ];
+  const NUCLEON_CAPTURE_RADIUS = 100; // maximum drop distance for a nucleon to be considered part of the particle
+  const BUCKET_SIZE = new Dimension2( 130, 60 );
+  const NEUTRON_BUCKET_POSITION = new Vector2( -220, -180 );
+  const DEFAULT_ATOM_CONFIG = new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } ); // Hydrogen.
 
   /**
    * Constructor for a make isotopes model.  This will construct the model with atoms initially in the bucket.
@@ -50,7 +50,7 @@ define( require => {
   function MakeIsotopesModel() {
 
     // carry through scope
-    var self = this;
+    const self = this;
 
     // create the atom.
     this.particleAtom = new ParticleAtom(); // @public
@@ -72,7 +72,7 @@ define( require => {
     self.nucleusOffset = Vector2.ZERO; // @private
     // Unlink in not required here as it is used through out the sim life
     self.particleAtom.massNumberProperty.link( function( massNumber ) {
-      var stable = massNumber > 0 ?
+      const stable = massNumber > 0 ?
         AtomIdentifier.isStable( self.particleAtom.protonCountProperty.get(),
           self.particleAtom.neutronCountProperty.get() ) : true;
       if ( self.nucleusStable !== stable ) {
@@ -135,8 +135,8 @@ define( require => {
           this.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
           if ( this.particleAtom.nucleusOffsetProperty.get() === Vector2.ZERO ) {
             this._nucleusJumpCount++;
-            var angle = JUMP_ANGLES[ this._nucleusJumpCount % JUMP_ANGLES.length ];
-            var distance = JUMP_DISTANCES[ this._nucleusJumpCount % JUMP_DISTANCES.length ];
+            const angle = JUMP_ANGLES[ this._nucleusJumpCount % JUMP_ANGLES.length ];
+            const distance = JUMP_DISTANCES[ this._nucleusJumpCount % JUMP_DISTANCES.length ];
             this.particleAtom.nucleusOffsetProperty.set(
               new Vector2( Math.cos( angle ) * distance, Math.sin( angle ) * distance ) );
           } else {
@@ -176,8 +176,8 @@ define( require => {
      * @private
      */
     linkNeutron: function( neutron, lazyLink ) {
-      var self = this;
-      var userControlledLink = function( userControlled ) {
+      const self = this;
+      const userControlledLink = function( userControlled ) {
         self.atomReconfigured.emit();
         if ( !userControlled && !self.neutronBucket.containsParticle( neutron ) ) {
           self.placeNucleon( neutron, self.neutronBucket, self.particleAtom );
@@ -196,10 +196,10 @@ define( require => {
 
     // @public
     setNeutronBucketConfiguration: function() {
-      var self = this;
+      const self = this;
       // Add the neutrons to the neutron bucket.
       _.times( DEFAULT_NUM_NEUTRONS_IN_BUCKET, function() {
-        var neutron = new Particle( 'neutron' );
+        const neutron = new Particle( 'neutron' );
         self.neutronBucket.addParticleFirstOpen( neutron, false );
         self.linkNeutron( neutron, false );
         self.neutrons.add( neutron );
@@ -216,7 +216,7 @@ define( require => {
      * @public
      */
     setAtomConfiguration: function( numberAtom ) {
-      var self = this;
+      const self = this;
       this.particleAtom.clear();
       this.protons.clear();
       this.electrons.clear();
@@ -232,18 +232,18 @@ define( require => {
       }
 
       // Add the particles.
-      for ( var i = 0; i < numberAtom.electronCountProperty.get(); i++ ) {
-        var electron = new Particle( 'electron' );
+      for ( let i = 0; i < numberAtom.electronCountProperty.get(); i++ ) {
+        const electron = new Particle( 'electron' );
         this.particleAtom.addParticle( electron );
         this.electrons.add( electron );
       }
-      for ( var j = 0; j < numberAtom.protonCountProperty.get(); j++ ) {
-        var proton = new Particle( 'proton' );
+      for ( let j = 0; j < numberAtom.protonCountProperty.get(); j++ ) {
+        const proton = new Particle( 'proton' );
         this.particleAtom.addParticle( proton );
         this.protons.add( proton );
       }
       _.times( numberAtom.neutronCountProperty.get(), function() {
-        var neutron = new Particle( 'neutron' );
+        const neutron = new Particle( 'neutron' );
         self.particleAtom.addParticle( neutron );
         self.neutrons.add( neutron );
         self.linkNeutron( neutron, true );

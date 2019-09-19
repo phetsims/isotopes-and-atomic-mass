@@ -26,10 +26,10 @@ define( require => {
   const Util = require( 'DOT/Util' );
 
   // constants
-  var PIE_CHART_RADIUS = 60;
-  var FIRST_SLICE_COLOR = ' rgb( 134, 102, 172 ) ';
-  var SECOND_SLICE_COLOR = ' #d3d3d3';
-  var TRACE_ABUNDANCE_IN_PIE_CHART = 1E-6; // empirically chosen value used to represent trace abundance in the pie chart
+  const PIE_CHART_RADIUS = 60;
+  const FIRST_SLICE_COLOR = ' rgb( 134, 102, 172 ) ';
+  const SECOND_SLICE_COLOR = ' #d3d3d3';
+  const TRACE_ABUNDANCE_IN_PIE_CHART = 1E-6; // empirically chosen value used to represent trace abundance in the pie chart
 
   // strings
   const otherIsotopesPatternString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/otherIsotopesPattern' );
@@ -46,21 +46,21 @@ define( require => {
 
     Node.call( this );
 
-    var pieChartBoundingRectangle = new Rectangle( 150, 0, PIE_CHART_RADIUS * 2, PIE_CHART_RADIUS * 2, 0, 0 );
+    const pieChartBoundingRectangle = new Rectangle( 150, 0, PIE_CHART_RADIUS * 2, PIE_CHART_RADIUS * 2, 0, 0 );
 
     // default slices and color coding, first slice is for my isotope and second slice is for other isotope
-    var slices = [ { value: 0, color: FIRST_SLICE_COLOR, stroke: 'black', lineWidth: 0.5 },
+    const slices = [ { value: 0, color: FIRST_SLICE_COLOR, stroke: 'black', lineWidth: 0.5 },
       { value: 0, color: SECOND_SLICE_COLOR, stroke: 'black', lineWidth: 0.5 }
     ];
 
-    var pieChart = new PieChartNode( slices, PIE_CHART_RADIUS );
+    const pieChart = new PieChartNode( slices, PIE_CHART_RADIUS );
     // center point of of bounding rectangle
     pieChart.setCenter( pieChartBoundingRectangle.width / 2 + 150, pieChartBoundingRectangle.height / 2 );
     pieChartBoundingRectangle.addChild( pieChart );
 
     function updatePieChart() {
-      var thisIsotopeAbundanceTo6Digits = AtomIdentifier.getNaturalAbundance( makeIsotopesModel.particleAtom, 6 );
-      var otherIsotopesAbundance = 1 - thisIsotopeAbundanceTo6Digits;
+      const thisIsotopeAbundanceTo6Digits = AtomIdentifier.getNaturalAbundance( makeIsotopesModel.particleAtom, 6 );
+      const otherIsotopesAbundance = 1 - thisIsotopeAbundanceTo6Digits;
 
       // set the slice value for the current isotope
       if ( thisIsotopeAbundanceTo6Digits === 0 && AtomIdentifier.existsInTraceAmounts( makeIsotopesModel.particleAtom ) ) {
@@ -91,12 +91,12 @@ define( require => {
     this.addChild( pieChartBoundingRectangle );
 
     // create the readout that will display the abundance in terms of percentage
-    var readoutMyIsotopeAbundanceText = new Text( '', {
+    const readoutMyIsotopeAbundanceText = new Text( '', {
       font: new PhetFont( 14 ),
       maxWidth: 80
     } );
 
-    var thisIsotopeAbundancePanel = new Panel( readoutMyIsotopeAbundanceText, {
+    const thisIsotopeAbundancePanel = new Panel( readoutMyIsotopeAbundanceText, {
       minWidth: 60,
       minHeight: 20,
       resize: true,
@@ -110,8 +110,8 @@ define( require => {
     this.addChild( thisIsotopeAbundancePanel );
 
     function updateThisIsotopeAbundanceReadout( isotope ) {
-      var thisIsotopeAbundanceTo6Digits = AtomIdentifier.getNaturalAbundance( isotope, 6 );
-      var existsInTraceAmounts = AtomIdentifier.existsInTraceAmounts( isotope );
+      const thisIsotopeAbundanceTo6Digits = AtomIdentifier.getNaturalAbundance( isotope, 6 );
+      const existsInTraceAmounts = AtomIdentifier.existsInTraceAmounts( isotope );
       if ( thisIsotopeAbundanceTo6Digits === 0 && existsInTraceAmounts ) {
         readoutMyIsotopeAbundanceText.text = traceString;
       }
@@ -140,7 +140,7 @@ define( require => {
     this.addChild( leftConnectingLine );
     leftConnectingLine.moveToBack();
 
-    var otherIsotopeLabel = new MultiLineText( '', {
+    const otherIsotopeLabel = new MultiLineText( '', {
       font: new PhetFont( { size: 12 } ),
       fill: 'black',
       maxWidth: 60,
@@ -149,8 +149,8 @@ define( require => {
 
     // Attach otherIsotopeLabel with protonCountProperty to change element name on proton count change
     function updateOtherIsotopeLabel( isotope ) {
-      var abundanceTo6Digits = AtomIdentifier.getNaturalAbundance( isotope, 6 );
-      var name = AtomIdentifier.getName( makeIsotopesModel.particleAtom.protonCountProperty.get() );
+      const abundanceTo6Digits = AtomIdentifier.getNaturalAbundance( isotope, 6 );
+      const name = AtomIdentifier.getName( makeIsotopesModel.particleAtom.protonCountProperty.get() );
       if ( makeIsotopesModel.particleAtom.protonCountProperty.get() > 0 && abundanceTo6Digits < 1 ) {
         otherIsotopeLabel.text = StringUtils.format( otherIsotopesPatternString, name );
         otherIsotopeLabel.visible = true;

@@ -34,13 +34,13 @@ define( require => {
     this.modelViewTransform = modelViewTransform;
 
     // Add the electron cloud.
-    var isotopeElectronCloud = new IsotopeElectronCloudView( particleAtom, modelViewTransform );
+    const isotopeElectronCloud = new IsotopeElectronCloudView( particleAtom, modelViewTransform );
     this.addChild( isotopeElectronCloud );
 
     // Add the handler that keeps the bottom of the atom in one place. This was added due to a request to make the atom
     // get larger and smaller but to stay on the scale.
-    var updateAtomPosition = function( numProtons ) {
-      var newCenter = new Vector2( bottomPoint.x, bottomPoint.y - modelViewTransform.modelToViewDeltaX(
+    const updateAtomPosition = function( numProtons ) {
+      const newCenter = new Vector2( bottomPoint.x, bottomPoint.y - modelViewTransform.modelToViewDeltaX(
         isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2 ) * 1.2 ); // empirically determined
       particleAtom.positionProperty.set( modelViewTransform.viewToModelPosition( newCenter ) );
       isotopeElectronCloud.center = newCenter;

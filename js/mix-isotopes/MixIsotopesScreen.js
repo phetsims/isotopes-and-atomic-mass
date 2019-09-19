@@ -30,7 +30,7 @@ define( require => {
    */
   function MixIsotopesScreen( tandem ) {
 
-    var options = {
+    const options = {
       name: mixturesString,
       homeScreenIcon: new Image( mixIsotopesIcon ),
       tandem: tandem

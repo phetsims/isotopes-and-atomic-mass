@@ -16,7 +16,7 @@ define( require => {
   const Range = require( 'DOT/Range' );
   const Text = require( 'SCENERY/nodes/Text' );
 
-  var READOUT_SIZE = new Dimension2( 30, 15 );
+  const READOUT_SIZE = new Dimension2( 30, 15 );
 
   /**
    * @param {Property.<number>} controller
@@ -26,16 +26,16 @@ define( require => {
    */
   function ControlIsotope( controller, minRange, maxRange ) {
     Node.call( this ); // Call super constructor.
-    var sliderLayer = new Node();
+    const sliderLayer = new Node();
     this.addChild( sliderLayer );
-    var labelLayer = new Node();
+    const labelLayer = new Node();
     this.addChild( labelLayer );
-    var numericLayer = new Node();
+    const numericLayer = new Node();
     this.addChild( numericLayer );
 
-    var range = new Range( minRange, maxRange );
-    var tickLabelOptions = { font: new PhetFont( 12 ), pickable: false };
-    var slider = new HSlider( controller.quantityProperty, range, {
+    const range = new Range( minRange, maxRange );
+    const tickLabelOptions = { font: new PhetFont( 12 ), pickable: false };
+    const slider = new HSlider( controller.quantityProperty, range, {
       trackSize: new Dimension2( 80, 5 ),
       thumbSize: new Dimension2( 15, 30 ),
       thumbTouchAreaXDilation: 8,
@@ -49,22 +49,22 @@ define( require => {
     slider.addMajorTick( range.max, new Text( range.max, tickLabelOptions ) );
     sliderLayer.addChild( slider );
 
-    var plusButton = new ArrowButton( 'right', function propertyPlus() {
+    const plusButton = new ArrowButton( 'right', function propertyPlus() {
       controller.quantityProperty.set( Math.floor( controller.quantityProperty.get() ) + 1 );
     }, { arrowHeight: 10, arrowWidth: 10 } );
-    var minusButton = new ArrowButton( 'left', function propertyMinus() {
+    const minusButton = new ArrowButton( 'left', function propertyMinus() {
       controller.quantityProperty.set( Math.floor( controller.quantityProperty.get() ) - 1 );
     }, { arrowHeight: 10, arrowWidth: 10 } );
     numericLayer.addChild( plusButton );
     numericLayer.addChild( minusButton );
 
-    var isotopeText = new Text( '', {
+    const isotopeText = new Text( '', {
       font: new PhetFont( 20 ),
       maxWidth: 0.9 * READOUT_SIZE.width,
       maxHeight: 0.9 * READOUT_SIZE.height
     } );
 
-    var panel = new Panel( isotopeText, {
+    const panel = new Panel( isotopeText, {
       minWidth: READOUT_SIZE.width,
       minHeight: READOUT_SIZE.height,
       resize: false,
@@ -81,7 +81,7 @@ define( require => {
     minusButton.centerY = panel.centerY;
     //slider.left = minusButton.left;
 
-    var changedValue = function( value ) {
+    const changedValue = function( value ) {
       isotopeText.setText( Math.floor( value ) );
       isotopeText.centerX = READOUT_SIZE.width / 2;
       isotopeText.centerY = READOUT_SIZE.height * 0.75;
@@ -93,11 +93,11 @@ define( require => {
 
     controller.quantityProperty.link( changedValue );
 
-    var isotopeNode = new IsotopeNode( controller.controllerIsotope, 6, {
+    const isotopeNode = new IsotopeNode( controller.controllerIsotope, 6, {
       showLabel: false
     } );
     labelLayer.addChild( isotopeNode );
-    var captionLabel = new Text( controller.caption, {
+    const captionLabel = new Text( controller.caption, {
       font: new PhetFont( { size: 14 } ),
       fill: 'black',
       maxWidth: 60

@@ -30,13 +30,13 @@ define( require => {
   const Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  var INDICATOR_WIDTH = 200;
-  var TICK_MARK_LINE_HEIGHT = 15;
-  var TICK_MARK_LINE_WIDTH = 5;
-  var SIZE = new Dimension2( 75, 25 );
-  var TRIANGULAR_POINTER_HEIGHT = 15;
-  var TRIANGULAR_POINTER_WIDTH = 20;
-  var NUMBER_DECIMALS = 5;
+  const INDICATOR_WIDTH = 200;
+  const TICK_MARK_LINE_HEIGHT = 15;
+  const TICK_MARK_LINE_WIDTH = 5;
+  const SIZE = new Dimension2( 75, 25 );
+  const TRIANGULAR_POINTER_HEIGHT = 15;
+  const TRIANGULAR_POINTER_WIDTH = 20;
+  const NUMBER_DECIMALS = 5;
 
   // strings
   const amuString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/amu' );
@@ -46,17 +46,17 @@ define( require => {
    * @param {NumberAtom} isotopeConfig
    */
   function IsotopeTickMark( isotopeConfig ) {
-    var node = new Node();
+    const node = new Node();
 
     // Create the tick mark itself.  It is positioned such that (0,0) is the center of the mark.
-    var shape = new Line( 0, -TICK_MARK_LINE_HEIGHT / 2, 0, TICK_MARK_LINE_HEIGHT / 2, {
+    const shape = new Line( 0, -TICK_MARK_LINE_HEIGHT / 2, 0, TICK_MARK_LINE_HEIGHT / 2, {
       lineWidth: TICK_MARK_LINE_WIDTH,
       stroke: 'black'
     } );
     node.addChild( shape );
 
     // Create the label that goes above the tick mark.
-    var label = new RichText( ' <sup>' + isotopeConfig.massNumberProperty.get() + '</sup>' +
+    const label = new RichText( ' <sup>' + isotopeConfig.massNumberProperty.get() + '</sup>' +
       AtomIdentifier.getSymbol( isotopeConfig.protonCountProperty.get() ), {
         font: new PhetFont( 12 )
       } );
@@ -76,29 +76,29 @@ define( require => {
    * @param {MixIsotopeModel} model
    */
   function ReadoutPointer( model ) {
-    var node = new Node();
+    const node = new Node();
 
     this.model = model;
     // Add the triangular pointer. This is created such that the point of the triangle is at (0,0) for this node.
 
-    var vertices = [ new Vector2( -TRIANGULAR_POINTER_WIDTH / 2, TRIANGULAR_POINTER_HEIGHT ),
+    const vertices = [ new Vector2( -TRIANGULAR_POINTER_WIDTH / 2, TRIANGULAR_POINTER_HEIGHT ),
       new Vector2( TRIANGULAR_POINTER_WIDTH / 2, TRIANGULAR_POINTER_HEIGHT ),
       new Vector2( 0, 0 )
     ];
 
-    var triangle = new Path( Shape.polygon( vertices ), {
+    const triangle = new Path( Shape.polygon( vertices ), {
       fill: new Color( 0, 143, 212 ),
       lineWidth: 1
     } );
     node.addChild( triangle );
 
-    var readoutText = new Text( '', {
+    const readoutText = new Text( '', {
       font: new PhetFont( 14 ),
       maxWidth: 0.9 * SIZE.width,
       maxHeight: 0.9 * SIZE.height
     } );
 
-    var readoutPanel = new Panel( readoutText, {
+    const readoutPanel = new Panel( readoutText, {
       minWidth: SIZE.width,
       minHeight: SIZE.height,
       resize: false,
@@ -113,7 +113,7 @@ define( require => {
     node.addChild( readoutPanel );
 
     function updateReadout( averageAtomicMass ) {
-      var weight;
+      let weight;
       if ( model.showingNaturesMixProperty.get() ) {
         weight = AtomIdentifier.getStandardAtomicMass( model.selectedAtomConfig.protonCount );
       } else {
@@ -138,20 +138,20 @@ define( require => {
    */
   function AverageAtomicMassIndicator( model ) {
     Node.call( this );
-    var self = this;
+    const self = this;
 
     // Root node onto which all other nodes are added.  This is done so that the root node can be offset at the end of
     // construction in such a way that the (0,0) location will be in the upper left corner.
 
     // Add the bar that makes up "spine" of the indicator.
-    var barNode = new Line( 0, 0, INDICATOR_WIDTH, 0, {
+    const barNode = new Line( 0, 0, INDICATOR_WIDTH, 0, {
       lineWidth: 3,
       stroke: 'black'
     } );
     this.addChild( barNode );
 
     // Add the layer where the tick marks will be maintained.
-    var tickMarkLayer = new Node();
+    const tickMarkLayer = new Node();
     this.addChild( tickMarkLayer );
 
     // Listen for changes to the list of possible isotopes and update the tick marks when changes occur.
@@ -159,9 +159,9 @@ define( require => {
     model.possibleIsotopesProperty.link( function() {
 
       tickMarkLayer.removeAllChildren();
-      var possibleIsotopesList = model.possibleIsotopesProperty.get();
-      var lightestIsotopeMass = Number.POSITIVE_INFINITY;
-      var heaviestIsotopeMass = 0;
+      const possibleIsotopesList = model.possibleIsotopesProperty.get();
+      let lightestIsotopeMass = Number.POSITIVE_INFINITY;
+      let heaviestIsotopeMass = 0;
       self.minMass = Number.POSITIVE_INFINITY;
       possibleIsotopesList.forEach( function( isotope ) {
         if ( isotope.getIsotopeAtomicMass() > heaviestIsotopeMass ) {
@@ -183,7 +183,7 @@ define( require => {
 
       // Add the new tick marks.
       model.possibleIsotopesProperty.get().forEach( function( isotope ) {
-        var tickMark = new IsotopeTickMark( isotope );
+        const tickMark = new IsotopeTickMark( isotope );
         tickMark.centerX = self.calcXOffsetFromAtomicMass( isotope.getIsotopeAtomicMass() );
         tickMarkLayer.addChild( tickMark );
       } );
@@ -191,7 +191,7 @@ define( require => {
     } );
 
     // Add the moving readout.
-    var readoutPointer = new ReadoutPointer( model );
+    const readoutPointer = new ReadoutPointer( model );
     readoutPointer.top = barNode.bottom;
     readoutPointer.centerX = barNode.centerX;
     this.addChild( readoutPointer );

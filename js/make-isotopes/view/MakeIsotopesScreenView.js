@@ -33,11 +33,11 @@ define( require => {
   const Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  var NUMBER_FONT = new PhetFont( 70 );
-  var NUMBER_INSET = 20; // In screen coords, which are roughly pixels.
-  var SYMBOL_BOX_WIDTH = 275; // In screen coords, which are roughly pixels.
-  var SYMBOL_BOX_HEIGHT = 300; // In screen coords, which are roughly pixels.
-  var OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION = 12;
+  const NUMBER_FONT = new PhetFont( 70 );
+  const NUMBER_INSET = 20; // In screen coords, which are roughly pixels.
+  const SYMBOL_BOX_WIDTH = 275; // In screen coords, which are roughly pixels.
+  const SYMBOL_BOX_HEIGHT = 300; // In screen coords, which are roughly pixels.
+  const OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION = 12;
 
   // strings
   const abundanceInNatureString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/abundanceInNature' );
@@ -62,13 +62,13 @@ define( require => {
     );
 
     // Layers upon which the various display elements are placed. This allows us to create the desired layering effects.
-    var indicatorLayer = new Node();
+    const indicatorLayer = new Node();
     this.addChild( indicatorLayer );
     //adding this layer later so that its on the top
-    var atomLayer = new Node();
+    const atomLayer = new Node();
 
     // Create and add the Reset All Button in the bottom right, which resets the model
-    var resetAllButton = new ResetAllButton( {
+    const resetAllButton = new ResetAllButton( {
       listener: function() {
         makeIsotopesModel.reset();
         scaleNode.reset();
@@ -90,14 +90,14 @@ define( require => {
     this.addChild( scaleNode );
 
     // Create the node that contains both the atom and the neutron bucket.
-    var bottomOfAtomPosition = new Vector2( scaleNode.centerX, scaleNode.top + 15 ); //empirically determined
+    const bottomOfAtomPosition = new Vector2( scaleNode.centerX, scaleNode.top + 15 ); //empirically determined
 
-    var atomAndBucketNode = new InteractiveIsotopeNode( makeIsotopesModel, this.modelViewTransform, bottomOfAtomPosition );
+    const atomAndBucketNode = new InteractiveIsotopeNode( makeIsotopesModel, this.modelViewTransform, bottomOfAtomPosition );
     atomLayer.addChild( atomAndBucketNode );
 
     // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
     // element is Neon for this sim.
-    var periodicTableNode = new ExpandedPeriodicTableNode( makeIsotopesModel.numberAtom, 10, {
+    const periodicTableNode = new ExpandedPeriodicTableNode( makeIsotopesModel.numberAtom, 10, {
       tandem: tandem
     } );
     periodicTableNode.scale( 0.65 );
@@ -106,37 +106,37 @@ define( require => {
     this.addChild( periodicTableNode );
 
     // Add the legend/particle count indicator.
-    var particleCountLegend = new ParticleCountDisplay( makeIsotopesModel.particleAtom, 13, 250 );
+    const particleCountLegend = new ParticleCountDisplay( makeIsotopesModel.particleAtom, 13, 250 );
     particleCountLegend.scale( 1.1 );
     particleCountLegend.left = 20;
     particleCountLegend.top = periodicTableNode.visibleBounds.minY;
     indicatorLayer.addChild( particleCountLegend );
 
-    var symbolRectangle = new Rectangle( 0, 0, SYMBOL_BOX_WIDTH, SYMBOL_BOX_HEIGHT, 0, 0, {
+    const symbolRectangle = new Rectangle( 0, 0, SYMBOL_BOX_WIDTH, SYMBOL_BOX_HEIGHT, 0, 0, {
       fill: 'white',
       stroke: 'black',
       lineWidth: 2
     } );
 
     // Add the symbol text.
-    var symbolText = new Text( '', {
+    const symbolText = new Text( '', {
       font: new PhetFont( 150 ),
       fill: 'black',
       center: new Vector2( symbolRectangle.width / 2, symbolRectangle.height / 2 )
     } );
 
     // Add the listener to update the symbol text.
-    var textCenter = new Vector2( symbolRectangle.width / 2, symbolRectangle.height / 2 );
+    const textCenter = new Vector2( symbolRectangle.width / 2, symbolRectangle.height / 2 );
     // Doesn't need unlink as it stays through out the sim life
     makeIsotopesModel.particleAtom.protonCountProperty.link( function( protonCount ) {
-      var symbol = AtomIdentifier.getSymbol( protonCount );
+      const symbol = AtomIdentifier.getSymbol( protonCount );
       symbolText.text = protonCount > 0 ? symbol : '';
       symbolText.center = textCenter;
     } );
     symbolRectangle.addChild( symbolText );
 
     // Add the proton count display.
-    var protonCountDisplay = new Text( '0', {
+    const protonCountDisplay = new Text( '0', {
       font: NUMBER_FONT,
       fill: 'red'
     } );
@@ -151,7 +151,7 @@ define( require => {
     } );
 
     // Add the mass number display.
-    var massNumberDisplay = new Text( '0', {
+    const massNumberDisplay = new Text( '0', {
       font: NUMBER_FONT,
       fill: 'black'
     } );

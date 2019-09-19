@@ -27,13 +27,13 @@ define( require => {
   const Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  var PIE_CHART_RADIUS = 40;
-  var OVERALL_HEIGHT = 120;
-  var READOUT_FONT = new PhetFont( 18 );
-  var SIZE = new Dimension2( 90, 20 );
-  var CHEMICAL_SYMBOL_FONT = new PhetFont( 16 );
-  var SUPERSCRIPT_SUBSCRIPT_FONT = new PhetFont( 14 );
-  var NUMBER_DECIMALS = 4;
+  const PIE_CHART_RADIUS = 40;
+  const OVERALL_HEIGHT = 120;
+  const READOUT_FONT = new PhetFont( 18 );
+  const SIZE = new Dimension2( 90, 20 );
+  const CHEMICAL_SYMBOL_FONT = new PhetFont( 16 );
+  const SUPERSCRIPT_SUBSCRIPT_FONT = new PhetFont( 14 );
+  const NUMBER_DECIMALS = 4;
 
   /**
    * Utility function to create a node which represents a chemical symbol, including the mass number(in front of the
@@ -43,23 +43,23 @@ define( require => {
    */
 
   function chemSymbolWithNumbersNode( isotopeConfig ) {
-    var node = new Node();
+    const node = new Node();
 
-    var symbol = new Text( AtomIdentifier.getSymbol( isotopeConfig.protonCountProperty.get() ), {
+    const symbol = new Text( AtomIdentifier.getSymbol( isotopeConfig.protonCountProperty.get() ), {
       font: CHEMICAL_SYMBOL_FONT,
       centerX: 0,
       centerY: 0
     } );
     node.addChild( symbol );
 
-    var massNumber = new Text( isotopeConfig.massNumberProperty.get(), {
+    const massNumber = new Text( isotopeConfig.massNumberProperty.get(), {
       font: SUPERSCRIPT_SUBSCRIPT_FONT,
       centerY: symbol.top
     } );
     massNumber.right = symbol.left;
     node.addChild( massNumber );
 
-    var atomicNumber = new Text( isotopeConfig.protonCountProperty.get(), {
+    const atomicNumber = new Text( isotopeConfig.protonCountProperty.get(), {
       font: SUPERSCRIPT_SUBSCRIPT_FONT,
       centerY: symbol.bottom
     } );
@@ -76,7 +76,7 @@ define( require => {
    * @param {number} numberOfDecimals
    */
   function sliceLabelNode( isotopeConfig, isotopePercentage, labelOnLeft, numberOfDecimals ) {
-    var node = new Node();
+    const node = new Node();
 
     // The "unconstrained position" is the position where this label would be placed if it didn't need to sit within the
     // upper and lower bounds of the pie chart and didn't have to worry about avoiding overlap with other labels.
@@ -84,16 +84,16 @@ define( require => {
     node.unconstrainedPos = new Vector2( 0, 0 );
 
     node.labelOnLeft = labelOnLeft;
-    var symbol = chemSymbolWithNumbersNode( isotopeConfig );
+    const symbol = chemSymbolWithNumbersNode( isotopeConfig );
     node.addChild( symbol );
 
-    var readoutText = new Text( Util.toFixedNumber( isotopePercentage, numberOfDecimals ) + '%', {
+    const readoutText = new Text( Util.toFixedNumber( isotopePercentage, numberOfDecimals ) + '%', {
       font: READOUT_FONT,
       maxWidth: 0.9 * SIZE.width,
       maxHeight: 0.9 * SIZE.height
     } );
 
-    var readoutPanel = new Panel( readoutText, {
+    const readoutPanel = new Panel( readoutText, {
       minWidth: SIZE.width,
       minHeight: SIZE.height,
       resize: false,
@@ -173,16 +173,16 @@ define( require => {
      * @public
      */
     updatePieChart: function() {
-      var self = this;
+      const self = this;
       this.slices = [];
-      var i = 0;
+      let i = 0;
       this.model.possibleIsotopesProperty.get().forEach( function( isotope ) {
-        var value = self.model.testChamber.getIsotopeCount( isotope );
-        var color = self.model.getColorForIsotope( isotope );
+        const value = self.model.testChamber.getIsotopeCount( isotope );
+        const color = self.model.getColorForIsotope( isotope );
         self.slices[ i ] = { value: value, color: color, stroke: 'black', lineWidth: 0.5 };
         i += 1;
       } );
-      var lightestIsotopeProportion = this.slices[ 0 ].value / this.model.testChamber.isotopeCountProperty.get();
+      const lightestIsotopeProportion = this.slices[ 0 ].value / this.model.testChamber.isotopeCountProperty.get();
       this.pieChart.setAngleAndValues( Math.PI - ( lightestIsotopeProportion * Math.PI ), this.slices );
       this.updateLabels( this.model.possibleIsotopesProperty.get() );
     },
@@ -192,36 +192,36 @@ define( require => {
      * @private
      */
     updateLabels: function( possibleIsotopes ) {
-      var self = this;
+      const self = this;
       this.labelLayer.removeAllChildren();
       this.sliceLabels = [];
-      var i = 0;
+      let i = 0;
       possibleIsotopes.forEach( function( isotope ) {
-        var proportion;
+        let proportion;
         if ( self.model.showingNaturesMixProperty.get() ) {
           proportion = AtomIdentifier.getNaturalAbundance( isotope, NUMBER_DECIMALS + 2 ); // 2 more digits since % is used
         } else {
           proportion = self.model.testChamber.getIsotopeProportion( isotope );
         }
 
-        var centerEdgeOfPieSlice = self.pieChart.getCenterEdgePtForSlice( i );
+        const centerEdgeOfPieSlice = self.pieChart.getCenterEdgePtForSlice( i );
         if ( centerEdgeOfPieSlice ) {
-          var labelOnLeft = centerEdgeOfPieSlice.x <= self.pieChart.centerXCord;
-          var numberOfDecimals = self.model.showingNaturesMixProperty.get() ? NUMBER_DECIMALS : 1;
-          var labelNode = sliceLabelNode( isotope, proportion * 100, labelOnLeft, numberOfDecimals );
+          const labelOnLeft = centerEdgeOfPieSlice.x <= self.pieChart.centerXCord;
+          const numberOfDecimals = self.model.showingNaturesMixProperty.get() ? NUMBER_DECIMALS : 1;
+          const labelNode = sliceLabelNode( isotope, proportion * 100, labelOnLeft, numberOfDecimals );
 
           // Determine the "unconstrained" target position for the label, meaning a position that is directly out from
           // the edge of the slice, but may be above or below the edges of the pie chart.
-          var posVector = centerEdgeOfPieSlice;
-          var positionVector = posVector.times( 1.6 ); // empirically determined for positioning
+          const posVector = centerEdgeOfPieSlice;
+          const positionVector = posVector.times( 1.6 ); // empirically determined for positioning
           labelNode.unconstrainedPos.x = positionVector.x;
           labelNode.unconstrainedPos.y = positionVector.y;
 
           // Constrain the position so that no part of the label goes above or below the upper and lower edges
           // of the pie chart.
-          var minY = -OVERALL_HEIGHT / 2 + labelNode.height / 2;
-          var maxY = OVERALL_HEIGHT / 2 - labelNode.height / 2;
-          var xSign = labelOnLeft ? -1 : 1;
+          const minY = -OVERALL_HEIGHT / 2 + labelNode.height / 2;
+          const maxY = OVERALL_HEIGHT / 2 - labelNode.height / 2;
+          const xSign = labelOnLeft ? -1 : 1;
           if ( positionVector.y < minY ) {
             positionVector.x = xSign * Math.sqrt( positionVector.magnitudeSquared - minY * minY );
             positionVector.y = minY;
@@ -248,13 +248,13 @@ define( require => {
 
       // The labels should now be all in reasonable positions, so draw a line from the edge of the label to the pie
       // slice to which it corresponds.
-      var j = 0;
-      var k = 0;
+      let j = 0;
+      let k = 0;
       possibleIsotopes.forEach( function( isotope ) {
-        var sliceConnectPt = self.pieChart.getCenterEdgePtForSlice( j );
+        const sliceConnectPt = self.pieChart.getCenterEdgePtForSlice( j );
         if ( sliceConnectPt ) {
-          var label = self.sliceLabels[ k ];
-          var labelConnectPt = new Vector2( 0, 0 );
+          const label = self.sliceLabels[ k ];
+          const labelConnectPt = new Vector2( 0, 0 );
           if ( label.centerX > self.pieChart.centerX ) {
             // Label is on right, so connect point should be on left.
             labelConnectPt.x = label.left;
@@ -266,11 +266,11 @@ define( require => {
           }
           // Find a point that is straight out from the center of the pie chart above the point that connects to the
           // slice. Note that these calculations assume that the center of the pie chart is at (0,0).
-          var connectingLineShape = new Shape().moveTo( sliceConnectPt.x, sliceConnectPt.y );
+          const connectingLineShape = new Shape().moveTo( sliceConnectPt.x, sliceConnectPt.y );
           if ( sliceConnectPt.y > OVERALL_HEIGHT * 0.25 || sliceConnectPt.y < -OVERALL_HEIGHT * 0.25 ) {
             // Add a "bend point" so that the line doesn't go under the pie chart.
-            var additionalLength = OVERALL_HEIGHT / ( PIE_CHART_RADIUS * 2 ) - 1;
-            var scaleFactor = 1 - Math.min( Math.abs( sliceConnectPt.x ) / ( PIE_CHART_RADIUS / 2.0 ), 1 );
+            const additionalLength = OVERALL_HEIGHT / ( PIE_CHART_RADIUS * 2 ) - 1;
+            const scaleFactor = 1 - Math.min( Math.abs( sliceConnectPt.x ) / ( PIE_CHART_RADIUS / 2.0 ), 1 );
             connectingLineShape.lineTo( sliceConnectPt.x * ( 1 + additionalLength * scaleFactor ),
               sliceConnectPt.y * ( 1 + additionalLength * scaleFactor ) );
           }
@@ -292,14 +292,14 @@ define( require => {
      * @private
      */
     adjustLabelPositionsForOverlap: function( sliceLabels, minY, maxY ) {
-      var rotationIncrement = Math.PI / 200; // Empirically chosen.
-      for ( var i = 1; i < 50; i++ ) { // Number of iterations empirically chosen.
+      const rotationIncrement = Math.PI / 200; // Empirically chosen.
+      for ( let i = 1; i < 50; i++ ) { // Number of iterations empirically chosen.
         var overlapDetected = false;
         sliceLabels.forEach( function( label ) {
-          var moveUp = false;
-          var moveDown = false;
-          for ( var j = 0; j < sliceLabels.length; j++ ) {
-            var comparisonLabel = sliceLabels[ j ];
+          let moveUp = false;
+          let moveDown = false;
+          for ( let j = 0; j < sliceLabels.length; j++ ) {
+            const comparisonLabel = sliceLabels[ j ];
             if ( label === comparisonLabel ) {
               // Same label, so ignore.
               continue;
@@ -318,7 +318,7 @@ define( require => {
           // is overlap in both directions, don't move.  If there is only overlap with a label that has a higher
           // unconstrained location, move down.  If there is only overlap with a label with a lower unconstrained
           // location, move down.
-          var posVector;
+          let posVector;
           if ( moveUp && !moveDown ) {
             if ( label.labelOnLeft ) {
               posVector = new Vector2( label.right, label.centerY + label.height / 2 );

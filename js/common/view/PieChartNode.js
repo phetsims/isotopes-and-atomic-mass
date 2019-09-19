@@ -16,9 +16,9 @@ define( require => {
   const Vector2 = require( 'DOT/Vector2' );
 
   // constants
-  var INITIAL_ANGLE = 0;
-  var DEFAULT_CENTER_X = 0;
-  var DEFAULT_CENTER_Y = 0;
+  const INITIAL_ANGLE = 0;
+  const DEFAULT_CENTER_X = 0;
+  const DEFAULT_CENTER_Y = 0;
   /**
    *
    * @param {Array.<Object>} slices Each slice is described by object literal which looks like { value: x, color: color }
@@ -39,7 +39,7 @@ define( require => {
     assert && assert( this.radius > 0, 'Pie Chart needs a non-negative radius' );
 
     // validate the slices value
-    for ( var i = 0; i < this.slices.length; i++ ) {
+    for ( let i = 0; i < this.slices.length; i++ ) {
       assert && assert( this.slices[ i ].value >= 0, 'Pie Chart Slice needs a non-negative value' );
     }
 
@@ -94,7 +94,7 @@ define( require => {
      * @public
      */
     getTotal: function() {
-      var total = 0;
+      let total = 0;
       this.slices.forEach( function( slice ) {
         total += slice.value;
       } );
@@ -103,11 +103,11 @@ define( require => {
 
     // @private
     update: function() {
-      var self = this;
+      const self = this;
       this.removeAllChildren();
       this.sliceEdgeCenterPoints = [];
 
-      var total = this.getTotal();
+      const total = this.getTotal();
 
       if ( total === 0 ) {
         // if there are no values then there is no chart
@@ -115,11 +115,11 @@ define( require => {
       }
 
       // Draw each pie slice
-      var curValue = 0.0;
+      let curValue = 0.0;
       this.slices.forEach( function( slice, index ) {
         // Compute the start and end angles
-        var startAngle = curValue * Math.PI * 2 / total + self.initialAngle;
-        var endAngle = slice.value * Math.PI * 2 / total + startAngle;
+        const startAngle = curValue * Math.PI * 2 / total + self.initialAngle;
+        let endAngle = slice.value * Math.PI * 2 / total + startAngle;
 
         // Ensure that rounding errors do not leave a gap between the first and last slice
         if ( index === self.slices.length - 1 ) {
@@ -127,10 +127,10 @@ define( require => {
         }
 
         // If the slice has a non-zero value, set the color and draw a filled arc.
-        var shape = new Shape();
+        const shape = new Shape();
         if ( slice.value > 0 ) {
           if ( slice.value === total ) {
-            var circle = new Circle( self.radius, { fill: slice.color, stroke: slice.stroke } );
+            const circle = new Circle( self.radius, { fill: slice.color, stroke: slice.stroke } );
             self.addChild( circle );
             circle.centerX = self.centerXCord;
             circle.centerY = self.centerYCord;
@@ -141,7 +141,7 @@ define( require => {
             shape.arc( self.centerXCord, self.centerYCord, self.radius, startAngle, endAngle );
             shape.close();
             self.addChild( new Path( shape, { fill: slice.color, stroke: slice.stroke, lineWidth: slice.lineWidth } ) );
-            var angle = startAngle + ( endAngle - startAngle ) / 2;
+            const angle = startAngle + ( endAngle - startAngle ) / 2;
             self.sliceEdgeCenterPoints.push( new Vector2( Math.cos( angle ) * self.radius + self.centerXCord,
               Math.sin( angle ) * self.radius + self.centerYCord ) );
           }

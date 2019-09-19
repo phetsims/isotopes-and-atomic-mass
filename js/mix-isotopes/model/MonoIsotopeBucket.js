@@ -81,7 +81,7 @@ define( require => {
      * @public
      */
     getContainedIsotopes: function() {
-      var containedIsotopes = new ObservableArray();
+      const containedIsotopes = new ObservableArray();
       this.getParticleList().forEach( function( isotope ) {
         assert && assert( isotope instanceof MovableAtom );
         containedIsotopes.push( isotope );
