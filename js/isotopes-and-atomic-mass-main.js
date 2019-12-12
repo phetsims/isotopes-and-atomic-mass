@@ -18,7 +18,7 @@ define( require => {
   // strings
   const isotopesAndAtomicMassTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopes-and-atomic-mass.title' );
 
-  const tandem = Tandem.rootTandem;
+  const tandem = Tandem.ROOT;
 
   const simOptions = {
     credits: {
