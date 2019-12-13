@@ -30,7 +30,7 @@
     "value": "This Isotope"
   },
   "otherIsotopesPattern": {
-    "value": "Other\n{0}\nIsotopes"
+    "value": "Other<br>{0}<br>Isotopes"
   },
   "amu": {
     "value": "amu"
