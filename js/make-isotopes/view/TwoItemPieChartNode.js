@@ -15,7 +15,7 @@ define( function( require ) {
   var inherit = require( 'PHET_CORE/inherit' );
   var isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   var Line = require( 'SCENERY/nodes/Line' );
-  var MultiLineText = require( 'SCENERY_PHET/MultiLineText' );
+  var RichText = require( 'SCENERY/nodes/RichText' );
   var Node = require( 'SCENERY/nodes/Node' );
   var Panel = require( 'SUN/Panel' );
   var PhetFont = require( 'SCENERY_PHET/PhetFont' );
@@ -140,7 +140,7 @@ define( function( require ) {
     this.addChild( leftConnectingLine );
     leftConnectingLine.moveToBack();
 
-    var otherIsotopeLabel = new MultiLineText( '', {
+    var otherIsotopeLabel = new RichText( '', {
       font: new PhetFont( { size: 12 } ),
       fill: 'black',
       maxWidth: 60,
