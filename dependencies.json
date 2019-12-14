@@ -1,5 +1,5 @@
 {
-  "comment": "# isotopes-and-atomic-mass 1.1.9-rc.5 Fri Dec 13 2019 20:29:12 GMT-0700 (Mountain Standard Time)",
+  "comment": "# isotopes-and-atomic-mass 1.1.9 Fri Dec 13 2019 20:56:17 GMT-0700 (Mountain Standard Time)",
   "assert": {
     "sha": "d8a2e8992420327ff72a6fc4bb93ec76549ded0e",
     "branch": "HEAD"
@@ -21,7 +21,7 @@
     "branch": "HEAD"
   },
   "isotopes-and-atomic-mass": {
-    "sha": "979d9f83496e22ac14bd8715c2d57a2e6ea65c26",
+    "sha": "9c5bc3a3aba46a6b5f5e0fb50da110f592986b67",
     "branch": "1.1"
   },
   "joist": {
