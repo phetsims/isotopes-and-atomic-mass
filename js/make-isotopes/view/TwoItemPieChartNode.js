@@ -15,12 +15,12 @@ define( require => {
   const inherit = require( 'PHET_CORE/inherit' );
   const isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
   const Line = require( 'SCENERY/nodes/Line' );
-  const MultiLineText = require( 'SCENERY_PHET/MultiLineText' );
   const Node = require( 'SCENERY/nodes/Node' );
   const Panel = require( 'SUN/Panel' );
   const PhetFont = require( 'SCENERY_PHET/PhetFont' );
   const PieChartNode = require( 'ISOTOPES_AND_ATOMIC_MASS/common/view/PieChartNode' );
   const Rectangle = require( 'SCENERY/nodes/Rectangle' );
+  const RichText = require( 'SCENERY/nodes/RichText' );
   const StringUtils = require( 'PHETCOMMON/util/StringUtils' );
   const Text = require( 'SCENERY/nodes/Text' );
   const Util = require( 'DOT/Util' );
@@ -140,7 +140,7 @@ define( require => {
     this.addChild( leftConnectingLine );
     leftConnectingLine.moveToBack();
 
-    const otherIsotopeLabel = new MultiLineText( '', {
+    const otherIsotopeLabel = new RichText( '', {
       font: new PhetFont( { size: 12 } ),
       fill: 'black',
       maxWidth: 60,
