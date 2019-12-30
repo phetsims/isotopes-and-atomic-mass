@@ -28,7 +28,7 @@ define( require => {
   const NumericalIsotopeQuantityControl = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/NumericalIsotopeQuantityControl' );
   const ObservableArray = require( 'AXON/ObservableArray' );
   const Property = require( 'AXON/Property' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
   const Vector2 = require( 'DOT/Vector2' );
 
   // constants
@@ -603,7 +603,7 @@ define( require => {
 
       // Add the isotopes.
       possibleIsotopesCopy.forEach( function( isotopeConfig ) {
-        let numToCreate = Util.roundSymmetric(
+        let numToCreate = Utils.roundSymmetric(
           NUM_NATURES_MIX_ATOMS * AtomIdentifier.getNaturalAbundance( isotopeConfig, 5 )
         );
         if ( numToCreate === 0 ) {

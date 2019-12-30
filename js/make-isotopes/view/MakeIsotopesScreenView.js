@@ -29,7 +29,7 @@ define( require => {
   const ShredConstants = require( 'SHRED/ShredConstants' );
   const Text = require( 'SCENERY/nodes/Text' );
   const TwoItemPieChartNode = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/TwoItemPieChartNode' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
   const Vector2 = require( 'DOT/Vector2' );
 
   // constants
@@ -56,8 +56,8 @@ define( require => {
     // adjusted to shift the center right or left, and the scale factor can be adjusted to zoom in or out (smaller
     // numbers zoom out, larger ones zoom in).
     this.modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping( Vector2.ZERO,
-      new Vector2( Util.roundSymmetric( this.layoutBounds.width * 0.4 ),
-        Util.roundSymmetric( this.layoutBounds.height * 0.49 ) ),
+      new Vector2( Utils.roundSymmetric( this.layoutBounds.width * 0.4 ),
+        Utils.roundSymmetric( this.layoutBounds.height * 0.49 ) ),
       1.0
     );
 

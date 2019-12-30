@@ -22,7 +22,7 @@ define( require => {
   const PhetFont = require( 'SCENERY_PHET/PhetFont' );
   const Property = require( 'AXON/Property' );
   const Text = require( 'SCENERY/nodes/Text' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
 
   // images
   const scaleImage = require( 'mipmap!ISOTOPES_AND_ATOMIC_MASS/scale.png' );
@@ -58,7 +58,7 @@ define( require => {
         readoutText.setText( atom.massNumberProperty.get().toString() );
       } else {
         const isotopeAtomicMass = atom.getIsotopeAtomicMass();
-        readoutText.setText( isotopeAtomicMass > 0 ? Util.toFixed( isotopeAtomicMass, 5 ) : '--' );
+        readoutText.setText( isotopeAtomicMass > 0 ? Utils.toFixed( isotopeAtomicMass, 5 ) : '--' );
       }
 
       // Center the text in the display.

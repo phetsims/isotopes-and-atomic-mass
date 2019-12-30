@@ -41,7 +41,7 @@ define( require => {
   const ScreenView = require( 'JOIST/ScreenView' );
   const ShredConstants = require( 'SHRED/ShredConstants' );
   const Text = require( 'SCENERY/nodes/Text' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
   const Vector2 = require( 'DOT/Vector2' );
 
   // strings
@@ -140,8 +140,8 @@ define( require => {
     // IMPORTANT NOTES: The multiplier factors for the 2nd point can be adjusted to shift the center right or left, and
     // the scale factor can be adjusted to zoom in or out (smaller numbers zoom out, larger ones zoom in).
     this.modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping( Vector2.ZERO,
-      new Vector2( Util.roundSymmetric( this.layoutBounds.width * 0.32 ),
-        Util.roundSymmetric( this.layoutBounds.height * 0.33 ) ),
+      new Vector2( Utils.roundSymmetric( this.layoutBounds.width * 0.32 ),
+        Utils.roundSymmetric( this.layoutBounds.height * 0.33 ) ),
       1.0
     );
 

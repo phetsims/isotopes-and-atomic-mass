@@ -26,7 +26,7 @@ define( require => {
   const RichText = require( 'SCENERY/nodes/RichText' );
   const Shape = require( 'KITE/Shape' );
   const Text = require( 'SCENERY/nodes/Text' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
   const Vector2 = require( 'DOT/Vector2' );
 
   // constants
@@ -119,7 +119,7 @@ define( require => {
       } else {
         weight = averageAtomicMass;
       }
-      readoutText.setText( Util.toFixed( weight, NUMBER_DECIMALS ) + ' ' + amuString );
+      readoutText.setText( Utils.toFixed( weight, NUMBER_DECIMALS ) + ' ' + amuString );
       readoutText.centerX = SIZE.width / 2;
     }
 

@@ -23,7 +23,7 @@ define( require => {
   const Rectangle = require( 'SCENERY/nodes/Rectangle' );
   const Shape = require( 'KITE/Shape' );
   const Text = require( 'SCENERY/nodes/Text' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
   const Vector2 = require( 'DOT/Vector2' );
 
   // constants
@@ -87,7 +87,7 @@ define( require => {
     const symbol = chemSymbolWithNumbersNode( isotopeConfig );
     node.addChild( symbol );
 
-    const readoutText = new Text( Util.toFixedNumber( isotopePercentage, numberOfDecimals ) + '%', {
+    const readoutText = new Text( Utils.toFixedNumber( isotopePercentage, numberOfDecimals ) + '%', {
       font: READOUT_FONT,
       maxWidth: 0.9 * SIZE.width,
       maxHeight: 0.9 * SIZE.height

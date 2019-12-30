@@ -23,7 +23,7 @@ define( require => {
   const RichText = require( 'SCENERY/nodes/RichText' );
   const StringUtils = require( 'PHETCOMMON/util/StringUtils' );
   const Text = require( 'SCENERY/nodes/Text' );
-  const Util = require( 'DOT/Util' );
+  const Utils = require( 'DOT/Utils' );
 
   // constants
   const PIE_CHART_RADIUS = 60;
@@ -116,7 +116,7 @@ define( require => {
         readoutMyIsotopeAbundanceText.text = traceString;
       }
       else {
-        readoutMyIsotopeAbundanceText.text = ( Util.toFixedNumber( thisIsotopeAbundanceTo6Digits * 100, 6 ) ).toString() + '%';
+        readoutMyIsotopeAbundanceText.text = ( Utils.toFixedNumber( thisIsotopeAbundanceTo6Digits * 100, 6 ) ).toString() + '%';
       }
       thisIsotopeAbundancePanel.centerX = pieChartBoundingRectangle.left - 50; // empirically determined
       thisIsotopeAbundancePanel.centerY = pieChartBoundingRectangle.centerY;
