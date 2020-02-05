@@ -22,7 +22,7 @@ define( require => {
    * Constructor.
    * @param {number} numProtonsInIsotope
    * @param {number} numNeutronsInIsotope
-   * @param {Object} options
+   * @param {Object} [options]
    */
   function MonoIsotopeBucket( numProtonsInIsotope, numNeutronsInIsotope, options ) {
     SphereBucket.call( this, options );
