@@ -6,42 +6,38 @@
  * @author John Blanco
  * @author Jesse Greenberg
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const Image = require( 'SCENERY/nodes/Image' );
-  const inherit = require( 'PHET_CORE/inherit' );
-  const isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
-  const MakeIsotopesModel = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/model/MakeIsotopesModel' );
-  const MakeIsotopesScreenView = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/view/MakeIsotopesScreenView' );
-  const Screen = require( 'JOIST/Screen' );
+import Screen from '../../../joist/js/Screen.js';
+import inherit from '../../../phet-core/js/inherit.js';
+import Image from '../../../scenery/js/nodes/Image.js';
+import makeIsotopesIcon from '../../mipmaps/make-isotopes-icon_png.js';
+import isotopesAndAtomicMassStrings from '../isotopes-and-atomic-mass-strings.js';
+import isotopesAndAtomicMass from '../isotopesAndAtomicMass.js';
+import MakeIsotopesModel from './model/MakeIsotopesModel.js';
+import MakeIsotopesScreenView from './view/MakeIsotopesScreenView.js';
 
-  // strings
-  const isotopesString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopes' );
+const isotopesString = isotopesAndAtomicMassStrings.isotopes;
 
-  // images
-  const makeIsotopesIcon = require( 'mipmap!ISOTOPES_AND_ATOMIC_MASS/make-isotopes-icon.png' );
 
-  /**
-   * @param {Tandem} tandem
-   * @constructor
-   */
-  function MakeIsotopesScreen( tandem ) {
+/**
+ * @param {Tandem} tandem
+ * @constructor
+ */
+function MakeIsotopesScreen( tandem ) {
 
-    const options = {
-      name: isotopesString,
-      homeScreenIcon: new Image( makeIsotopesIcon ),
-      tandem: tandem
-    };
+  const options = {
+    name: isotopesString,
+    homeScreenIcon: new Image( makeIsotopesIcon ),
+    tandem: tandem
+  };
 
-    Screen.call( this,
-      function() { return new MakeIsotopesModel(); },
-      function( model ) { return new MakeIsotopesScreenView( model, tandem ); },
-      options );
-  }
+  Screen.call( this,
+    function() { return new MakeIsotopesModel(); },
+    function( model ) { return new MakeIsotopesScreenView( model, tandem ); },
+    options );
+}
 
-  isotopesAndAtomicMass.register( 'MakeIsotopesScreen', MakeIsotopesScreen );
+isotopesAndAtomicMass.register( 'MakeIsotopesScreen', MakeIsotopesScreen );
 
-  return inherit( Screen, MakeIsotopesScreen );
-} );
+inherit( Screen, MakeIsotopesScreen );
+export default MakeIsotopesScreen;

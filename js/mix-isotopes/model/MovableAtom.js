@@ -10,36 +10,32 @@
  * @author James Smith
  */
 
-define( require => {
-  'use strict';
 
-  //modules
-  const inherit = require( 'PHET_CORE/inherit' );
-  const isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
-  const ImmutableAtomConfig = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/ImmutableAtomConfig' );
-  const Particle = require( 'SHRED/model/Particle' );
+//modules
+import inherit from '../../../../phet-core/js/inherit.js';
+import Particle from '../../../../shred/js/model/Particle.js';
+import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
+import ImmutableAtomConfig from './ImmutableAtomConfig.js';
 
-  // class variables
-  let instanceCount = 0;
+// class variables
+let instanceCount = 0;
 
-  /**
-   * @param {number} numProtons
-   * @param {number} numNeutrons
-   * @param {Vector2} initialPosition
-   * @constructor
-   */
-  function MovableAtom( numProtons, numNeutrons, initialPosition ) {
-    Particle.call( this, 'Isotope' );
-    this.positionProperty.set( initialPosition ); // @public
-    this.destinationProperty.set( initialPosition ); // @public
+/**
+ * @param {number} numProtons
+ * @param {number} numNeutrons
+ * @param {Vector2} initialPosition
+ * @constructor
+ */
+function MovableAtom( numProtons, numNeutrons, initialPosition ) {
+  Particle.call( this, 'Isotope' );
+  this.positionProperty.set( initialPosition ); // @public
+  this.destinationProperty.set( initialPosition ); // @public
 
-    // @public
-    this.atomConfiguration = new ImmutableAtomConfig( numProtons, numNeutrons, numProtons );
-    this.showLabel = true; // @public
-    this.instanceCount = instanceCount++;
-  }
+  // @public
+  this.atomConfiguration = new ImmutableAtomConfig( numProtons, numNeutrons, numProtons );
+  this.showLabel = true; // @public
+  this.instanceCount = instanceCount++;
+}
 
-  isotopesAndAtomicMass.register( 'MovableAtom', MovableAtom );
-  return inherit( Particle, MovableAtom, {} );
-} );
-
+isotopesAndAtomicMass.register( 'MovableAtom', MovableAtom );
+export default inherit( Particle, MovableAtom, {} );

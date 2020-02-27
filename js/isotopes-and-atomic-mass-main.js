@@ -5,36 +5,32 @@
  *
  * @author John Blanco
  */
-define( require => {
-  'use strict';
 
-  // modules
-  const MakeIsotopesScreen = require( 'ISOTOPES_AND_ATOMIC_MASS/make-isotopes/MakeIsotopesScreen' );
-  const MixIsotopesScreen = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/MixIsotopesScreen' );
-  const Sim = require( 'JOIST/Sim' );
-  const SimLauncher = require( 'JOIST/SimLauncher' );
-  const Tandem = require( 'TANDEM/Tandem' );
+import Sim from '../../joist/js/Sim.js';
+import SimLauncher from '../../joist/js/SimLauncher.js';
+import Tandem from '../../tandem/js/Tandem.js';
+import isotopesAndAtomicMassStrings from './isotopes-and-atomic-mass-strings.js';
+import MakeIsotopesScreen from './make-isotopes/MakeIsotopesScreen.js';
+import MixIsotopesScreen from './mix-isotopes/MixIsotopesScreen.js';
 
-  // strings
-  const isotopesAndAtomicMassTitleString = require( 'string!ISOTOPES_AND_ATOMIC_MASS/isotopes-and-atomic-mass.title' );
+const isotopesAndAtomicMassTitleString = isotopesAndAtomicMassStrings[ 'isotopes-and-atomic-mass' ].title;
 
-  const tandem = Tandem.ROOT;
+const tandem = Tandem.ROOT;
 
-  const simOptions = {
-    credits: {
-      leadDesign: 'Amy Hanson, Kelly Lancaster',
-      softwareDevelopment: 'John Blanco, Jesse Greenberg, Aadish Gupta, Sam Reid, James Smith',
-      team: 'Jack Barbera, Suzanne Brahmia, Sue Doubler, Loretta Jones, Trish Loeblein, Emily B. Moore, Robert Parson, ' +
-            'Ariel Paul, Kathy Perkins',
-      qualityAssurance: 'Steele Dalton, Bryce Griebenow, Elise Morgan, Ben Roberts'
-    }
-  };
+const simOptions = {
+  credits: {
+    leadDesign: 'Amy Hanson, Kelly Lancaster',
+    softwareDevelopment: 'John Blanco, Jesse Greenberg, Aadish Gupta, Sam Reid, James Smith',
+    team: 'Jack Barbera, Suzanne Brahmia, Sue Doubler, Loretta Jones, Trish Loeblein, Emily B. Moore, Robert Parson, ' +
+          'Ariel Paul, Kathy Perkins',
+    qualityAssurance: 'Steele Dalton, Bryce Griebenow, Elise Morgan, Ben Roberts'
+  }
+};
 
-  SimLauncher.launch( function() {
-    const makeIsotopeScreenTandem = tandem.createTandem( 'makeIsotopeScreen' );
-    const mixIsotopeScreenTandem = tandem.createTandem( 'mixIsotopeScreen' );
+SimLauncher.launch( function() {
+  const makeIsotopeScreenTandem = tandem.createTandem( 'makeIsotopeScreen' );
+  const mixIsotopeScreenTandem = tandem.createTandem( 'mixIsotopeScreen' );
 
-    const sim = new Sim( isotopesAndAtomicMassTitleString, [ new MakeIsotopesScreen( makeIsotopeScreenTandem ), new MixIsotopesScreen( mixIsotopeScreenTandem ) ], simOptions );
-    sim.start();
-  } );
+  const sim = new Sim( isotopesAndAtomicMassTitleString, [ new MakeIsotopesScreen( makeIsotopeScreenTandem ), new MixIsotopesScreen( mixIsotopeScreenTandem ) ], simOptions );
+  sim.start();
 } );

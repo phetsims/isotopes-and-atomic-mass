@@ -12,83 +12,78 @@
  * @author Jesse Greenberg
  */
 
+import Property from '../../../../axon/js/Property.js';
+import inherit from '../../../../phet-core/js/inherit.js';
+import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
+import MovableAtom from './MovableAtom.js';
 
-define( require => {
-  'use strict';
-  // modules
-  const inherit = require( 'PHET_CORE/inherit' );
-  const isotopesAndAtomicMass = require( 'ISOTOPES_AND_ATOMIC_MASS/isotopesAndAtomicMass' );
-  const MovableAtom = require( 'ISOTOPES_AND_ATOMIC_MASS/mix-isotopes/model/MovableAtom' );
-  const Property = require( 'AXON/Property' );
+// constants
+const CAPACITY = 100;
 
-  // constants
-  const CAPACITY = 100;
+/**
+ * @param {MixIsotopesModel} model
+ * @param {NumberAtom} isotopeConfig
+ * @param {Vector2} position
+ * @param {string} caption
+ * @constructor
+ */
+function NumericalIsotopeQuantityControl( model, isotopeConfig, position, caption ) {
+
+  this.quantityProperty = new Property( model.testChamber.getIsotopeCount( isotopeConfig ) ); // @public
+  this.model = model; // @private
+  this.isotopeConfig = isotopeConfig; // @public
+  this.centerPosition = position; // @public
+  this.caption = caption; // @public
+}
+
+isotopesAndAtomicMass.register( 'NumericalIsotopeQuantityControl', NumericalIsotopeQuantityControl );
+export default inherit( Object, NumericalIsotopeQuantityControl, {
 
   /**
-   * @param {MixIsotopesModel} model
-   * @param {NumberAtom} isotopeConfig
-   * @param {Vector2} position
-   * @param {string} caption
-   * @constructor
+   * Set the quantity of the isotope associated with this control to the specified value.
+   *
+   * @param {number} targetQuantity
+   *
+   * @public
    */
-  function NumericalIsotopeQuantityControl( model, isotopeConfig, position, caption ) {
+  setIsotopeQuantity: function( targetQuantity ) {
+    assert && assert( targetQuantity <= CAPACITY );
+    const changeAmount = targetQuantity - this.model.testChamber.getIsotopeCount( this.isotopeConfig );
 
-    this.quantityProperty = new Property( model.testChamber.getIsotopeCount( isotopeConfig ) ); // @public
-    this.model = model; // @private
-    this.isotopeConfig = isotopeConfig; // @public
-    this.centerPosition = position; // @public
-    this.caption = caption; // @public
-  }
-
-  isotopesAndAtomicMass.register( 'NumericalIsotopeQuantityControl', NumericalIsotopeQuantityControl );
-  return inherit( Object, NumericalIsotopeQuantityControl, {
-
-    /**
-     * Set the quantity of the isotope associated with this control to the specified value.
-     *
-     * @param {number} targetQuantity
-     *
-     * @public
-     */
-    setIsotopeQuantity: function( targetQuantity ) {
-      assert && assert( targetQuantity <= CAPACITY );
-      const changeAmount = targetQuantity - this.model.testChamber.getIsotopeCount( this.isotopeConfig );
-
-      if ( changeAmount > 0 ) {
-        for ( let i = 0; i < changeAmount; i++ ) {
-          const newIsotope = new MovableAtom( this.isotopeConfig.protonCountProperty.get(),
-            this.isotopeConfig.neutronCountProperty.get(),
-            this.model.testChamber.generateRandomLocation() );
-          newIsotope.color = this.model.getColorForIsotope( this.isotopeConfig );
-          newIsotope.massNumber = this.isotopeConfig.massNumberProperty.get();
-          newIsotope.protonCount = this.isotopeConfig.protonCountProperty.get();
-          newIsotope.radiusProperty.set( 4 );
-          newIsotope.showLabel = false;
-          this.model.testChamber.addIsotopeToChamber( newIsotope, true );
-          this.model.isotopesList.add( newIsotope );
-        }
-      } else if ( changeAmount < 0 ) {
-        for ( let j = 0; j < -changeAmount; j++ ) {
-          const isotope = this.model.testChamber.removeIsotopeMatchingConfig( this.isotopeConfig );
-          if ( isotope !== null ) {
-            this.model.isotopesList.remove( isotope );
-          }
+    if ( changeAmount > 0 ) {
+      for ( let i = 0; i < changeAmount; i++ ) {
+        const newIsotope = new MovableAtom( this.isotopeConfig.protonCountProperty.get(),
+          this.isotopeConfig.neutronCountProperty.get(),
+          this.model.testChamber.generateRandomLocation() );
+        newIsotope.color = this.model.getColorForIsotope( this.isotopeConfig );
+        newIsotope.massNumber = this.isotopeConfig.massNumberProperty.get();
+        newIsotope.protonCount = this.isotopeConfig.protonCountProperty.get();
+        newIsotope.radiusProperty.set( 4 );
+        newIsotope.showLabel = false;
+        this.model.testChamber.addIsotopeToChamber( newIsotope, true );
+        this.model.isotopesList.add( newIsotope );
+      }
+    }
+    else if ( changeAmount < 0 ) {
+      for ( let j = 0; j < -changeAmount; j++ ) {
+        const isotope = this.model.testChamber.removeIsotopeMatchingConfig( this.isotopeConfig );
+        if ( isotope !== null ) {
+          this.model.isotopesList.remove( isotope );
         }
       }
-    },
-
-    // @public
-    getBaseColor: function() {
-      return this.model.getColorForIsotope( this.isotopeConfig );
-    },
-
-    // @public
-    getQuantity: function() {
-      // Verify that the internal property matches that of the test chamber.
-      assert && assert( this.quantityProperty === this.model.testChamber.getIsotopeCount( this.isotopeConfig ) );
-      // Return the value.
-      return this.quantityProperty;
     }
-  } );
-} );
+  },
 
+  // @public
+  getBaseColor: function() {
+    return this.model.getColorForIsotope( this.isotopeConfig );
+  },
+
+  // @public
+  getQuantity: function() {
+    // Verify that the internal property matches that of the test chamber.
+    assert && assert( this.quantityProperty === this.model.testChamber.getIsotopeCount( this.isotopeConfig ) );
+    // Return the value.
+    return this.quantityProperty;
+  }
+} );
