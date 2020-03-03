@@ -7,7 +7,7 @@
   <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1"/>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="phet-sim-level" content="development">
-  
+
   <title>isotopes-and-atomic-mass</title>
 </head>
 
@@ -19,31 +19,61 @@
 
   window.phet = window.phet || {};
   window.phet.chipper = window.phet.chipper || {};
-  window.phet.chipper.packageObject = {
-    "name": "isotopes-and-atomic-mass",
-    "version": "1.2.0-dev.0",
-    "license": "GPL-3.0",
-    "repository": { "type": "git", "url": "https://github.com/phetsims/isotopes-and-atomic-mass.git" },
-    "devDependencies": { "grunt": "~1.0.0" },
-    "phet": {
-      "requirejsNamespace": "ISOTOPES_AND_ATOMIC_MASS",
-      "phetLibs": [ "shred" ],
-      "runnable": true,
-      "supportedBrands": [ "phet", "adapted-from-phet" ],
-      "simulation": true
-    },
-    "eslintConfig": { "extends": "../chipper/eslint/sim_eslintrc.js" }
-  };
-  window.phet.chipper.stringRepos = [ {
-    "repo": "isotopes-and-atomic-mass",
-    "requirejsNamespace": "ISOTOPES_AND_ATOMIC_MASS"
-  }, { "repo": "joist", "requirejsNamespace": "JOIST" }, {
-    "repo": "scenery-phet",
-    "requirejsNamespace": "SCENERY_PHET"
-  }, { "repo": "shred", "requirejsNamespace": "SHRED" }, {
-    "repo": "sun",
-    "requirejsNamespace": "SUN"
-  }, { "repo": "tambo", "requirejsNamespace": "TAMBO" } ];
+  window.phet.chipper.packageObject =
+    {
+      "name": "isotopes-and-atomic-mass",
+      "version": "1.2.0-dev.0",
+      "license": "GPL-3.0",
+      "repository": {
+        "type": "git",
+        "url": "https://github.com/phetsims/isotopes-and-atomic-mass.git"
+      },
+      "devDependencies": {
+        "grunt": "~1.0.0"
+      },
+      "phet": {
+        "requirejsNamespace": "ISOTOPES_AND_ATOMIC_MASS",
+        "phetLibs": [
+          "shred"
+        ],
+        "runnable": true,
+        "supportedBrands": [
+          "phet",
+          "adapted-from-phet"
+        ],
+        "simulation": true
+      },
+      "eslintConfig": {
+        "extends": "../chipper/eslint/sim_eslintrc.js"
+      }
+    };
+  window.phet.chipper.stringRepos =
+    [
+      {
+        "repo": "isotopes-and-atomic-mass",
+        "requirejsNamespace": "ISOTOPES_AND_ATOMIC_MASS"
+      },
+      {
+        "repo": "joist",
+        "requirejsNamespace": "JOIST"
+      },
+      {
+        "repo": "scenery-phet",
+        "requirejsNamespace": "SCENERY_PHET"
+      },
+      {
+        "repo": "shred",
+        "requirejsNamespace": "SHRED"
+      },
+      {
+        "repo": "sun",
+        "requirejsNamespace": "SUN"
+      },
+      {
+        "repo": "tambo",
+        "requirejsNamespace": "TAMBO"
+      }
+    ];
 
   // Identify the brand (assume generated brand if not provided with query parameters)
   const brandMatch = location.search.match( /brand=([^&]+)/ );
