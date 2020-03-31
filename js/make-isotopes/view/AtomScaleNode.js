@@ -19,7 +19,7 @@ import Text from '../../../../scenery/js/nodes/Text.js';
 import AquaRadioButton from '../../../../sun/js/AquaRadioButton.js';
 import Panel from '../../../../sun/js/Panel.js';
 import scaleImage from '../../../mipmaps/scale_png.js';
-import isotopesAndAtomicMassStrings from '../../isotopes-and-atomic-mass-strings.js';
+import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 
 const atomicMassString = isotopesAndAtomicMassStrings.atomicMass;

@@ -11,7 +11,7 @@ import Screen from '../../../joist/js/Screen.js';
 import inherit from '../../../phet-core/js/inherit.js';
 import Image from '../../../scenery/js/nodes/Image.js';
 import makeIsotopesIcon from '../../mipmaps/make-isotopes-icon_png.js';
-import isotopesAndAtomicMassStrings from '../isotopes-and-atomic-mass-strings.js';
+import isotopesAndAtomicMassStrings from '../isotopesAndAtomicMassStrings.js';
 import isotopesAndAtomicMass from '../isotopesAndAtomicMass.js';
 import MakeIsotopesModel from './model/MakeIsotopesModel.js';
 import MakeIsotopesScreenView from './view/MakeIsotopesScreenView.js';

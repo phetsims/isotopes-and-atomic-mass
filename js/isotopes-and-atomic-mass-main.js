@@ -9,7 +9,7 @@
 import Sim from '../../joist/js/Sim.js';
 import SimLauncher from '../../joist/js/SimLauncher.js';
 import Tandem from '../../tandem/js/Tandem.js';
-import isotopesAndAtomicMassStrings from './isotopes-and-atomic-mass-strings.js';
+import isotopesAndAtomicMassStrings from './isotopesAndAtomicMassStrings.js';
 import MakeIsotopesScreen from './make-isotopes/MakeIsotopesScreen.js';
 import MixIsotopesScreen from './mix-isotopes/MixIsotopesScreen.js';
 

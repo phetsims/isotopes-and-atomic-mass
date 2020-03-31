@@ -35,7 +35,7 @@ import AccordionBox from '../../../../sun/js/AccordionBox.js';
 import AquaRadioButton from '../../../../sun/js/AquaRadioButton.js';
 import RadioButtonGroup from '../../../../sun/js/buttons/RadioButtonGroup.js';
 import HSlider from '../../../../sun/js/HSlider.js';
-import isotopesAndAtomicMassStrings from '../../isotopes-and-atomic-mass-strings.js';
+import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import MixIsotopesModel from '../model/MixIsotopesModel.js';
 import AverageAtomicMassIndicator from './AverageAtomicMassIndicator.js';

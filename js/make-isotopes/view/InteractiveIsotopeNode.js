@@ -18,10 +18,10 @@ import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
-import shredStrings from '../../../../shred/js/shred-strings.js';
+import shredStrings from '../../../../shred/js/shredStrings.js';
 import BucketDragHandler from '../../../../shred/js/view/BucketDragHandler.js';
 import ParticleView from '../../../../shred/js/view/ParticleView.js';
-import isotopesAndAtomicMassStrings from '../../isotopes-and-atomic-mass-strings.js';
+import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopeAtomNode from './IsotopeAtomNode.js';
 

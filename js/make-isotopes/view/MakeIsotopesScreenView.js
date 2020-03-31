@@ -24,7 +24,7 @@ import ShredConstants from '../../../../shred/js/ShredConstants.js';
 import ExpandedPeriodicTableNode from '../../../../shred/js/view/ExpandedPeriodicTableNode.js';
 import ParticleCountDisplay from '../../../../shred/js/view/ParticleCountDisplay.js';
 import AccordionBox from '../../../../sun/js/AccordionBox.js';
-import isotopesAndAtomicMassStrings from '../../isotopes-and-atomic-mass-strings.js';
+import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import AtomScaleNode from './AtomScaleNode.js';
 import InteractiveIsotopeNode from './InteractiveIsotopeNode.js';

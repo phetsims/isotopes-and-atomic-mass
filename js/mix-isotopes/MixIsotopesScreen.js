@@ -12,7 +12,7 @@ import Screen from '../../../joist/js/Screen.js';
 import inherit from '../../../phet-core/js/inherit.js';
 import Image from '../../../scenery/js/nodes/Image.js';
 import mixIsotopesIcon from '../../mipmaps/mix-isotopes-icon_png.js';
-import isotopesAndAtomicMassStrings from '../isotopes-and-atomic-mass-strings.js';
+import isotopesAndAtomicMassStrings from '../isotopesAndAtomicMassStrings.js';
 import isotopesAndAtomicMass from '../isotopesAndAtomicMass.js';
 import MixIsotopesModel from './model/MixIsotopesModel.js';
 import MixIsotopesScreenView from './view/MixIsotopesScreenView.js';
