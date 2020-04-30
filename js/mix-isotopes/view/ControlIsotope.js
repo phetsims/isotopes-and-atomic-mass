@@ -114,9 +114,11 @@ function ControlIsotope( controller, minRange, maxRange ) {
 
 isotopesAndAtomicMass.register( 'ControlIsotope', ControlIsotope );
 
-export default inherit( Node, ControlIsotope, {
+inherit( Node, ControlIsotope, {
   dispose: function() {
     this.disposeControlIsotope();
     Node.prototype.dispose.call( this );
   }
 } );
+
+export default ControlIsotope;

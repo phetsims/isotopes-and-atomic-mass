@@ -45,7 +45,7 @@ function PieChartNode( slices, radius ) {
 }
 
 isotopesAndAtomicMass.register( 'PieChartNode', PieChartNode );
-export default inherit( Node, PieChartNode, {
+inherit( Node, PieChartNode, {
 
   /**
    * Set the initial angle for drawing the pie slices.  Zero (the default) means that the first slice will start at
@@ -187,3 +187,5 @@ export default inherit( Node, PieChartNode, {
     }
   }
 } );
+
+export default PieChartNode;

@@ -29,7 +29,7 @@ function MonoIsotopeBucket( numProtonsInIsotope, numNeutronsInIsotope, options )
 }
 
 isotopesAndAtomicMass.register( 'MonoIsotopeBucket', MonoIsotopeBucket );
-export default inherit( SphereBucket, MonoIsotopeBucket, {
+inherit( SphereBucket, MonoIsotopeBucket, {
   /**
    * Add an isotope to the first open location in the bucket.
    *
@@ -87,3 +87,5 @@ export default inherit( SphereBucket, MonoIsotopeBucket, {
     return containedIsotopes;
   }
 } );
+
+export default MonoIsotopeBucket;

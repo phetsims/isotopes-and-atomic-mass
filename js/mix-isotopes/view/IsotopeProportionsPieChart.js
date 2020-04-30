@@ -148,7 +148,7 @@ function IsotopeProportionsPieChart( model ) {
 
 isotopesAndAtomicMass.register( 'IsotopeProportionsPieChart', IsotopeProportionsPieChart );
 
-export default inherit( Node, IsotopeProportionsPieChart, {
+inherit( Node, IsotopeProportionsPieChart, {
 
   /**
    * Update the complete node based on isotopeCount
@@ -362,3 +362,5 @@ export default inherit( Node, IsotopeProportionsPieChart, {
     }
   }
 } );
+
+export default IsotopeProportionsPieChart;

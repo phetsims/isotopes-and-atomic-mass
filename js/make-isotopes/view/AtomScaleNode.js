@@ -144,7 +144,7 @@ function AtomScaleNode( atom ) {
 }
 
 isotopesAndAtomicMass.register( 'AtomScaleNode', AtomScaleNode );
-export default inherit( Node, AtomScaleNode, {
+inherit( Node, AtomScaleNode, {
 
   /**
    * Reset the atom scale node to its initial state by resetting the display mode property.
@@ -153,3 +153,5 @@ export default inherit( Node, AtomScaleNode, {
     this.displayModeProperty.reset();
   }
 } );
+
+export default AtomScaleNode;

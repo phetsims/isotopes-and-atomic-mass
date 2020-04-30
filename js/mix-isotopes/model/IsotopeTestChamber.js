@@ -63,7 +63,7 @@ function IsotopeTestChamber( model ) {
 }
 
 isotopesAndAtomicMass.register( 'IsotopeTestChamber', IsotopeTestChamber );
-export default inherit( Object, IsotopeTestChamber, {
+inherit( Object, IsotopeTestChamber, {
   /**
    * Get the number of isotopes currently in the chamber that match the specified configuration.
    *
@@ -450,3 +450,5 @@ export default inherit( Object, IsotopeTestChamber, {
     this.bulkAddIsotopesToChamber( state.containedIsotopes );
   }
 } );
+
+export default IsotopeTestChamber;

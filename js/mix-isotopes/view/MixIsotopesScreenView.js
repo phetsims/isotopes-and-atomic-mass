@@ -381,7 +381,7 @@ function MixIsotopesScreenView( mixIsotopesModel, tandem ) {
 }
 
 isotopesAndAtomicMass.register( 'MixIsotopesScreenView', MixIsotopesScreenView );
-export default inherit( ScreenView, MixIsotopesScreenView, {
+inherit( ScreenView, MixIsotopesScreenView, {
   step: function() {
     // as an optimization we would updating pie chart once every animation frame in place of updating it every time
     // isotope is added in the test chamber in single animation frame
@@ -392,3 +392,5 @@ export default inherit( ScreenView, MixIsotopesScreenView, {
   }
 
 } );
+
+export default MixIsotopesScreenView;

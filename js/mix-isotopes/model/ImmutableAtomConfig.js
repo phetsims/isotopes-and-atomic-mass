@@ -26,7 +26,7 @@ function ImmutableAtomConfig( numProtons, numNeutrons, numElectrons ) {
 
 isotopesAndAtomicMass.register( 'ImmutableAtomConfig', ImmutableAtomConfig );
 
-export default inherit( Object, ImmutableAtomConfig, {
+inherit( Object, ImmutableAtomConfig, {
 
   /**
    * compare two atom configurations, return true if the particle counts are the same
@@ -64,3 +64,5 @@ export default inherit( Object, ImmutableAtomConfig, {
     return AtomIdentifier.getIsotopeAtomicMass( this.protonCount, this.neutronCount );
   }
 } );
+
+export default ImmutableAtomConfig;

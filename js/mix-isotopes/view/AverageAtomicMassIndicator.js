@@ -206,7 +206,7 @@ function AverageAtomicMassIndicator( model ) {
 }
 
 isotopesAndAtomicMass.register( 'AverageAtomicMassIndicator', AverageAtomicMassIndicator );
-export default inherit( Node, AverageAtomicMassIndicator, {
+inherit( Node, AverageAtomicMassIndicator, {
   /**
    * Calculate the X offset on the bar given the atomic mass. This is clamped to never return a value less than 0.
    *
@@ -218,3 +218,5 @@ export default inherit( Node, AverageAtomicMassIndicator, {
   }
 
 } );
+
+export default AverageAtomicMassIndicator;

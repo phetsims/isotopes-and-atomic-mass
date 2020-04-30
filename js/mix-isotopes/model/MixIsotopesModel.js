@@ -196,7 +196,7 @@ function MixIsotopesModel() {
 
 isotopesAndAtomicMass.register( 'MixIsotopesModel', MixIsotopesModel );
 
-export default inherit( Object, MixIsotopesModel, {
+inherit( Object, MixIsotopesModel, {
 
   _nucleusJumpCount: 0,
   // Main model step function, called by the framework.
@@ -679,3 +679,5 @@ export default inherit( Object, MixIsotopesModel, {
 }, { // statics
   InteractivityMode: InteractivityMode
 } );
+
+export default MixIsotopesModel;

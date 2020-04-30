@@ -37,7 +37,7 @@ function NumericalIsotopeQuantityControl( model, isotopeConfig, position, captio
 }
 
 isotopesAndAtomicMass.register( 'NumericalIsotopeQuantityControl', NumericalIsotopeQuantityControl );
-export default inherit( Object, NumericalIsotopeQuantityControl, {
+inherit( Object, NumericalIsotopeQuantityControl, {
 
   /**
    * Set the quantity of the isotope associated with this control to the specified value.
@@ -87,3 +87,5 @@ export default inherit( Object, NumericalIsotopeQuantityControl, {
     return this.quantityProperty;
   }
 } );
+
+export default NumericalIsotopeQuantityControl;

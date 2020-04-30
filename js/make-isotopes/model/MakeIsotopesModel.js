@@ -111,7 +111,7 @@ function MakeIsotopesModel() {
 }
 
 isotopesAndAtomicMass.register( 'MakeIsotopesModel', MakeIsotopesModel );
-export default inherit( Object, MakeIsotopesModel, {
+inherit( Object, MakeIsotopesModel, {
   _nucleusJumpCount: 0,
   // Main model step function, called by the framework.
   // @public
@@ -273,3 +273,5 @@ export default inherit( Object, MakeIsotopesModel, {
   }
 
 } );
+
+export default MakeIsotopesModel;
