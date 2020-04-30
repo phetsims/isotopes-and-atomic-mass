@@ -25,7 +25,7 @@ function IsotopeCanvasNode( isotopes, modelViewTransform, options ) {
 
 shred.register( 'IsotopeCanvasNode', IsotopeCanvasNode );
 
-export default inherit( CanvasNode, IsotopeCanvasNode, {
+inherit( CanvasNode, IsotopeCanvasNode, {
 
   /**
    * Paints the particles on the canvas node.
@@ -65,3 +65,5 @@ export default inherit( CanvasNode, IsotopeCanvasNode, {
   }
 
 } );
+
+export default IsotopeCanvasNode;
