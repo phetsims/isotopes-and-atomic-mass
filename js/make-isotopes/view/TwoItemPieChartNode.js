@@ -176,4 +176,5 @@ function TwoItemPieChartNode( makeIsotopesModel ) {
 }
 
 isotopesAndAtomicMass.register( 'TwoItemPieChartNode', TwoItemPieChartNode );
-export default inherit( Node, TwoItemPieChartNode, {} );
+inherit( Node, TwoItemPieChartNode);
+export default TwoItemPieChartNode;

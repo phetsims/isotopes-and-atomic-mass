@@ -38,4 +38,5 @@ function MovableAtom( numProtons, numNeutrons, initialPosition ) {
 }
 
 isotopesAndAtomicMass.register( 'MovableAtom', MovableAtom );
-export default inherit( Particle, MovableAtom, {} );
+inherit( Particle, MovableAtom );
+export default MovableAtom;

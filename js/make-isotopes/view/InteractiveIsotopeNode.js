@@ -304,4 +304,5 @@ function InteractiveIsotopeNode( makeIsotopesModel, modelViewTransform, bottomPo
 }
 
 isotopesAndAtomicMass.register( 'InteractiveIsotopeNode', InteractiveIsotopeNode );
-export default inherit( Node, InteractiveIsotopeNode, {} );
+inherit( Node, InteractiveIsotopeNode );
+export default InteractiveIsotopeNode;
