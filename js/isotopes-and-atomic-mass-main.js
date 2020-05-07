@@ -7,7 +7,7 @@
  */
 
 import Sim from '../../joist/js/Sim.js';
-import SimLauncher from '../../joist/js/SimLauncher.js';
+import simLauncher from '../../joist/js/simLauncher.js';
 import Tandem from '../../tandem/js/Tandem.js';
 import isotopesAndAtomicMassStrings from './isotopesAndAtomicMassStrings.js';
 import MakeIsotopesScreen from './make-isotopes/MakeIsotopesScreen.js';
@@ -27,7 +27,7 @@ const simOptions = {
   }
 };
 
-SimLauncher.launch( function() {
+simLauncher.launch( function() {
   const makeIsotopeScreenTandem = tandem.createTandem( 'makeIsotopeScreen' );
   const mixIsotopeScreenTandem = tandem.createTandem( 'mixIsotopeScreen' );
 
