@@ -610,7 +610,7 @@ inherit( Object, MixIsotopesModel, {
       const isotopesToAdd = [];
       for ( let i = 0; i < numToCreate; i++ ) {
         const newIsotope = new MovableAtom( isotopeConfig.protonCountProperty.get(), isotopeConfig.neutronCountProperty.get(),
-          self.testChamber.generateRandomLocation() );
+          self.testChamber.generateRandomPosition() );
         newIsotope.color = self.getColorForIsotope( isotopeConfig );
         newIsotope.massNumber = isotopeConfig.massNumberProperty.get();
         newIsotope.protonCount = isotopeConfig.protonCountProperty.get();

@@ -23,7 +23,7 @@ import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 // contribute to the current average atomic weight.
 const SIZE = new Dimension2( 450, 280 ); // In picometers.
 
-// Rectangle that defines the location of the test chamber. This is set up so that the center of the test chamber is
+// Rectangle that defines the position of the test chamber. This is set up so that the center of the test chamber is
 // at (0, 0) in model space.
 const TEST_CHAMBER_RECT = new Rectangle( -SIZE.width / 2, -SIZE.height / 2, SIZE.width, SIZE.height );
 const BUFFER = 1; // isotopes stroke doesn't cross the wall, empirically determined
@@ -421,13 +421,13 @@ inherit( Object, IsotopeTestChamber, {
 
 
   /**
-   * Generate a random location within the test chamber.
+   * Generate a random position within the test chamber.
    *
    * @returns {Vector2}
    *
    * @public
    */
-  generateRandomLocation: function() {
+  generateRandomPosition: function() {
     return new Vector2(
       TEST_CHAMBER_RECT.minX + phet.joist.random.nextDouble() * TEST_CHAMBER_RECT.width,
       TEST_CHAMBER_RECT.minY + phet.joist.random.nextDouble() * TEST_CHAMBER_RECT.height );

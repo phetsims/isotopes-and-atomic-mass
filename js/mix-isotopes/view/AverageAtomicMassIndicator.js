@@ -138,7 +138,7 @@ function AverageAtomicMassIndicator( model ) {
   const self = this;
 
   // Root node onto which all other nodes are added.  This is done so that the root node can be offset at the end of
-  // construction in such a way that the (0,0) location will be in the upper left corner.
+  // construction in such a way that the (0,0) position will be in the upper left corner.
 
   // Add the bar that makes up "spine" of the indicator.
   const barNode = new Line( 0, 0, INDICATOR_WIDTH, 0, {

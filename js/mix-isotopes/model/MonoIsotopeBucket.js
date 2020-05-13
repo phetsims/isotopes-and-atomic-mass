@@ -31,7 +31,7 @@ function MonoIsotopeBucket( numProtonsInIsotope, numNeutronsInIsotope, options )
 isotopesAndAtomicMass.register( 'MonoIsotopeBucket', MonoIsotopeBucket );
 inherit( SphereBucket, MonoIsotopeBucket, {
   /**
-   * Add an isotope to the first open location in the bucket.
+   * Add an isotope to the first open position in the bucket.
    *
    * @param {MovableAtom} isotope
    * @param {boolean} moveImmediately
@@ -58,7 +58,7 @@ inherit( SphereBucket, MonoIsotopeBucket, {
   },
 
   /**
-   * Add an isotope to the nearest open location in the bucket.
+   * Add an isotope to the nearest open position in the bucket.
    *
    * @param {MovableAtom} isotope
    * @param {boolean} animate

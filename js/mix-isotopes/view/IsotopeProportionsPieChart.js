@@ -321,8 +321,8 @@ inherit( Node, IsotopeProportionsPieChart, {
         }
         // Adjust this label's position based upon any overlap that was detected.  The general idea is this: if there
         // is overlap in both directions, don't move.  If there is only overlap with a label that has a higher
-        // unconstrained location, move down.  If there is only overlap with a label with a lower unconstrained
-        // location, move down.
+        // unconstrained position, move down.  If there is only overlap with a label with a lower unconstrained
+        // position, move down.
         let posVector;
         if ( moveUp && !moveDown ) {
           if ( label.labelOnLeft ) {

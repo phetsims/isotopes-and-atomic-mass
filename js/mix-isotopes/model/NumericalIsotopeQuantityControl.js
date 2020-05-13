@@ -54,7 +54,7 @@ inherit( Object, NumericalIsotopeQuantityControl, {
       for ( let i = 0; i < changeAmount; i++ ) {
         const newIsotope = new MovableAtom( this.isotopeConfig.protonCountProperty.get(),
           this.isotopeConfig.neutronCountProperty.get(),
-          this.model.testChamber.generateRandomLocation() );
+          this.model.testChamber.generateRandomPosition() );
         newIsotope.color = this.model.getColorForIsotope( this.isotopeConfig );
         newIsotope.massNumber = this.isotopeConfig.massNumberProperty.get();
         newIsotope.protonCount = this.isotopeConfig.protonCountProperty.get();
