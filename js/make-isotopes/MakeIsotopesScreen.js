@@ -8,11 +8,12 @@
  */
 
 import Screen from '../../../joist/js/Screen.js';
+import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import inherit from '../../../phet-core/js/inherit.js';
 import Image from '../../../scenery/js/nodes/Image.js';
 import makeIsotopesIcon from '../../mipmaps/make-isotopes-icon_png.js';
-import isotopesAndAtomicMassStrings from '../isotopesAndAtomicMassStrings.js';
 import isotopesAndAtomicMass from '../isotopesAndAtomicMass.js';
+import isotopesAndAtomicMassStrings from '../isotopesAndAtomicMassStrings.js';
 import MakeIsotopesModel from './model/MakeIsotopesModel.js';
 import MakeIsotopesScreenView from './view/MakeIsotopesScreenView.js';
 
@@ -27,7 +28,10 @@ function MakeIsotopesScreen( tandem ) {
 
   const options = {
     name: isotopesString,
-    homeScreenIcon: new Image( makeIsotopesIcon ),
+    homeScreenIcon: new ScreenIcon( new Image( makeIsotopesIcon ), {
+      maxIconWidthProportion: 1,
+      maxIconHeightProportion: 1
+    } ),
     tandem: tandem
   };
 
