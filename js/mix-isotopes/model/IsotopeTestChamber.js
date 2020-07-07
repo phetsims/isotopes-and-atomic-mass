@@ -120,7 +120,7 @@ inherit( Object, IsotopeTestChamber, {
       this.containedIsotopes.push( isotope );
 
       var isotopeRemovedListener = function( userControlled ) {
-        if ( userControlled && self.containedIsotopes.contains( isotope ) ) {
+        if ( userControlled && self.containedIsotopes.includes( isotope ) ) {
           self.removeIsotopeFromChamber( isotope );
         }
         isotope.userControlledProperty.unlink( isotopeRemovedListener );
