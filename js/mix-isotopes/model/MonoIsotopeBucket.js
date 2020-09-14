@@ -10,26 +10,24 @@
  */
 
 import ObservableArray from '../../../../axon/js/ObservableArray.js';
-import inherit from '../../../../phet-core/js/inherit.js';
 import SphereBucket from '../../../../phetcommon/js/model/SphereBucket.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import MovableAtom from './MovableAtom.js';
 
-/**
- * Constructor.
- * @param {number} numProtonsInIsotope
- * @param {number} numNeutronsInIsotope
- * @param {Object} [options]
- */
-function MonoIsotopeBucket( numProtonsInIsotope, numNeutronsInIsotope, options ) {
-  SphereBucket.call( this, options );
+class MonoIsotopeBucket extends SphereBucket {
 
-  this.numProtonsInIsotope = numProtonsInIsotope; // @public
-  this.numNeutronsInIsotope = numNeutronsInIsotope; // @public
-}
+  /**
+   * @param {number} numProtonsInIsotope
+   * @param {number} numNeutronsInIsotope
+   * @param {Object} [options]
+   */
+  constructor( numProtonsInIsotope, numNeutronsInIsotope, options ) {
+    super( options );
 
-isotopesAndAtomicMass.register( 'MonoIsotopeBucket', MonoIsotopeBucket );
-inherit( SphereBucket, MonoIsotopeBucket, {
+    this.numProtonsInIsotope = numProtonsInIsotope; // @public
+    this.numNeutronsInIsotope = numNeutronsInIsotope; // @public
+  }
+
   /**
    * Add an isotope to the first open position in the bucket.
    *
@@ -38,11 +36,11 @@ inherit( SphereBucket, MonoIsotopeBucket, {
    *
    * @public
    */
-  addIsotopeInstanceFirstOpen: function( isotope, moveImmediately ) {
+  addIsotopeInstanceFirstOpen( isotope, moveImmediately ) {
     if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount ) ) {
       this.addParticleFirstOpen( isotope, moveImmediately );
     }
-  },
+  }
 
   /**
    * Tests to see if an isotope matches the MonoIsotopeBucket.
@@ -53,9 +51,9 @@ inherit( SphereBucket, MonoIsotopeBucket, {
    *
    * @public
    */
-  isIsotopeAllowed: function( numProtons, numNeutrons ) {
+  isIsotopeAllowed( numProtons, numNeutrons ) {
     return this.numProtonsInIsotope === numProtons && this.numNeutronsInIsotope === numNeutrons;
-  },
+  }
 
   /**
    * Add an isotope to the nearest open position in the bucket.
@@ -65,11 +63,11 @@ inherit( SphereBucket, MonoIsotopeBucket, {
    *
    * @public
    */
-  addIsotopeInstanceNearestOpen: function( isotope, animate ) {
+  addIsotopeInstanceNearestOpen( isotope, animate ) {
     if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount ) ) {
       this.addParticleNearestOpen( isotope, animate );
     }
-  },
+  }
 
   /**
    * Get a list of all isotopes contained within this bucket.
@@ -77,7 +75,7 @@ inherit( SphereBucket, MonoIsotopeBucket, {
    *
    * @public
    */
-  getContainedIsotopes: function() {
+  getContainedIsotopes() {
     const containedIsotopes = new ObservableArray();
     this.getParticleList().forEach( function( isotope ) {
       assert && assert( isotope instanceof MovableAtom );
@@ -86,6 +84,7 @@ inherit( SphereBucket, MonoIsotopeBucket, {
 
     return containedIsotopes;
   }
-} );
+}
 
+isotopesAndAtomicMass.register( 'MonoIsotopeBucket', MonoIsotopeBucket );
 export default MonoIsotopeBucket;
