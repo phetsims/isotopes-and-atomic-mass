@@ -27,7 +27,7 @@ import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import ShredConstants from '../../../../shred/js/ShredConstants.js';
-import BucketDragHandler from '../../../../shred/js/view/BucketDragHandler.js';
+import BucketDragListener from '../../../../shred/js/view/BucketDragListener.js';
 import ExpandedPeriodicTableNode from '../../../../shred/js/view/ExpandedPeriodicTableNode.js';
 import IsotopeCanvasNode from '../../../../shred/js/view/IsotopeCanvasNode.js';
 import ParticleView from '../../../../shred/js/view/ParticleView.js';
@@ -157,7 +157,7 @@ function MixIsotopesScreenView( mixIsotopesModel, tandem ) {
   function addBucketView( addedBucket ) {
     const bucketHole = new BucketHole( addedBucket, self.modelViewTransform );
     const bucketFront = new BucketFront( addedBucket, self.modelViewTransform );
-    bucketFront.addInputListener( new BucketDragHandler( addedBucket, bucketFront, self.modelViewTransform ) );
+    bucketFront.addInputListener( new BucketDragListener( addedBucket, bucketFront, self.modelViewTransform ) );
 
     // Bucket hole is first item added to view for proper layering.
     bucketHoleLayer.addChild( bucketHole );

@@ -19,7 +19,7 @@ import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
 import shredStrings from '../../../../shred/js/shredStrings.js';
-import BucketDragHandler from '../../../../shred/js/view/BucketDragHandler.js';
+import BucketDragListener from '../../../../shred/js/view/BucketDragListener.js';
 import ParticleView from '../../../../shred/js/view/ParticleView.js';
 import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
@@ -60,7 +60,7 @@ function InteractiveIsotopeNode( makeIsotopesModel, modelViewTransform, bottomPo
   // Add the bucket components that hold the neutrons.
   const neutronBucketHole = new BucketHole( makeIsotopesModel.neutronBucket, modelViewTransform );
   const neutronBucketFront = new BucketFront( makeIsotopesModel.neutronBucket, modelViewTransform );
-  neutronBucketFront.addInputListener( new BucketDragHandler(
+  neutronBucketFront.addInputListener( new BucketDragListener(
     makeIsotopesModel.neutronBucket,
     neutronBucketFront,
     modelViewTransform
