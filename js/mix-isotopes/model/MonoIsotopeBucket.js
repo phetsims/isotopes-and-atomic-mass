@@ -71,7 +71,7 @@ class MonoIsotopeBucket extends SphereBucket {
 
   /**
    * Get a list of all isotopes contained within this bucket.
-   * @returns {ObservableArray} containedIsotopes
+   * @returns {ObservableArrayDef} containedIsotopes
    *
    * @public
    */

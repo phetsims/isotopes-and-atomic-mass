@@ -52,8 +52,7 @@ function IsotopeTestChamber( model ) {
   // @private - Isotope Mixtures Model that contains this test chamber.
   this.model = model;
 
-  // {ObservableArray<MovableAtom>} Observable array that keeps track of the isotopes in the chamber and is updated as
-  // isotopes come and go.
+  // {ObservableArrayDef<MovableAtom>} Keeps track of the isotopes in the chamber and is updated as isotopes come and go
   // @public
   this.containedIsotopes = createObservableArray();
 
@@ -263,7 +262,7 @@ inherit( Object, IsotopeTestChamber, {
 
   /**
    * Returns the containedIsotopes.
-   * @returns {ObservableArray}
+   * @returns {ObservableArrayDef}
    *
    * @public
    */
