@@ -11,7 +11,7 @@
  */
 
 import Emitter from '../../../../axon/js/Emitter.js';
-import ObservableArray from '../../../../axon/js/ObservableArray.js';
+import createObservableArray from '../../../../axon/js/createObservableArray.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import inherit from '../../../../phet-core/js/inherit.js';
@@ -87,9 +87,9 @@ function MakeIsotopesModel() {
   // Arrays that contain the subatomic particles, whether they are in the  bucket or in the atom.  This is part of a
   // basic assumption about how the model works, which is that the model contains all the particles, and the particles
   // move back and forth from being in the bucket or in in the atom.
-  this.neutrons = new ObservableArray(); // @public
-  this.protons = new ObservableArray(); // @public
-  this.electrons = new ObservableArray(); // @public
+  this.neutrons = createObservableArray(); // @public
+  this.protons = createObservableArray(); // @public
+  this.electrons = createObservableArray(); // @public
 
   // The bucket that holds the neutrons that are not in the atom.
   // @public

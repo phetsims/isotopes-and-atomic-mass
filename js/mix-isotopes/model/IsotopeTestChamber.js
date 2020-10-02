@@ -10,7 +10,7 @@
  * @author Aadish Gupta
  */
 
-import ObservableArray from '../../../../axon/js/ObservableArray.js';
+import createObservableArray from '../../../../axon/js/createObservableArray.js';
 import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Rectangle from '../../../../dot/js/Rectangle.js';
@@ -36,7 +36,7 @@ const BUFFER = 1; // isotopes stroke doesn't cross the wall, empirically determi
  */
 function State( model ) {
   const self = this;
-  this.containedIsotopes = new ObservableArray();
+  this.containedIsotopes = createObservableArray();
   model.containedIsotopes.forEach( function( isotope ) {
     self.containedIsotopes.add( isotope );
   } );
@@ -55,7 +55,7 @@ function IsotopeTestChamber( model ) {
   // {ObservableArray<MovableAtom>} Observable array that keeps track of the isotopes in the chamber and is updated as
   // isotopes come and go.
   // @public
-  this.containedIsotopes = new ObservableArray();
+  this.containedIsotopes = createObservableArray();
 
   // @public {Read-Only}
   this.isotopeCountProperty = new Property( 0 );

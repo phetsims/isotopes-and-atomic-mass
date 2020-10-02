@@ -9,7 +9,7 @@
  * @author James Smith
  */
 
-import ObservableArray from '../../../../axon/js/ObservableArray.js';
+import createObservableArray from '../../../../axon/js/createObservableArray.js';
 import SphereBucket from '../../../../phetcommon/js/model/SphereBucket.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import MovableAtom from './MovableAtom.js';
@@ -76,7 +76,7 @@ class MonoIsotopeBucket extends SphereBucket {
    * @public
    */
   getContainedIsotopes() {
-    const containedIsotopes = new ObservableArray();
+    const containedIsotopes = createObservableArray();
     this.getParticleList().forEach( function( isotope ) {
       assert && assert( isotope instanceof MovableAtom );
       containedIsotopes.push( isotope );

@@ -11,7 +11,7 @@
  */
 
 import Emitter from '../../../../axon/js/Emitter.js';
-import ObservableArray from '../../../../axon/js/ObservableArray.js';
+import createObservableArray from '../../../../axon/js/createObservableArray.js';
 import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Utils from '../../../../dot/js/Utils.js';
@@ -65,7 +65,7 @@ function State( model ) {
   this.isotopeTestChamberState = model.testChamber.getState();
   this.interactivityMode = model.interactivityModeProperty.get();
   this.showingNaturesMix = model.showingNaturesMixProperty.get();
-  this.bucketList = new ObservableArray();
+  this.bucketList = createObservableArray();
   model.bucketList.forEach( function( bucket ) {
     const newBucket = bucket;
     newBucket.particles = [];
@@ -111,12 +111,12 @@ function MixIsotopesModel() {
   this.prototypeIsotope = new NumberAtom(); // @private
 
   // List of the isotope buckets.
-  this.bucketList = new ObservableArray(); // @public
-  this.isotopesList = new ObservableArray(); // @public
-  this.naturesIsotopesList = new ObservableArray(); // @public
+  this.bucketList = createObservableArray(); // @public
+  this.isotopesList = createObservableArray(); // @public
+  this.naturesIsotopesList = createObservableArray(); // @public
 
   // List of the numerical controls that, when present, can be used to add or remove isotopes to/from the test chamber.
-  this.numericalControllerList = new ObservableArray(); // @public
+  this.numericalControllerList = createObservableArray(); // @public
 
   // Map of elements to user mixes. These are restored when switching between elements.
   this.mapIsotopeConfigToUserMixState = {}; // @private
