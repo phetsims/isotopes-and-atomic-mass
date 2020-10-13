@@ -6,32 +6,30 @@
  * @author Aadish Gupta
  */
 
-import inherit from '../../../phet-core/js/inherit.js';
 import CanvasNode from '../../../scenery/js/nodes/CanvasNode.js';
 import shred from '../shred.js';
 
-/**
- * A particle layer rendered on canvas
- * @param {Array< movableAtom >} isotopes that need to be rendered on the canvas
- * @param {ModelViewTransform2} modelViewTransform to convert between model and view coordinate frames
- * @param {Object} [options] that can be passed on to the underlying node
- * @constructor
- */
-function IsotopeCanvasNode( isotopes, modelViewTransform, options ) {
-  this.isotopes = isotopes;
-  this.modelViewTransform = modelViewTransform;
-  CanvasNode.call( this, options );
-}
+class IsotopeCanvasNode extends CanvasNode {
 
-shred.register( 'IsotopeCanvasNode', IsotopeCanvasNode );
-
-inherit( CanvasNode, IsotopeCanvasNode, {
+  /**
+   * A particle layer rendered on canvas
+   * @param {Array< movableAtom >} isotopes that need to be rendered on the canvas
+   * @param {ModelViewTransform2} modelViewTransform to convert between model and view coordinate frames
+   * @param {Object} [options] that can be passed on to the underlying node
+   */
+  constructor( isotopes, modelViewTransform, options ) {
+    super( options );
+    this.isotopes = isotopes;
+    this.modelViewTransform = modelViewTransform;
+  }
 
   /**
    * Paints the particles on the canvas node.
    * @param {CanvasRenderingContext2D} context
+   * @public
+   * @override
    */
-  paintCanvas: function( context ) {
+  paintCanvas( context ) {
     let isotope;
     let i;
     const numIsotopes = this.isotopes.length;
@@ -53,17 +51,19 @@ inherit( CanvasNode, IsotopeCanvasNode, {
         context.stroke();
       }
     }
-  },
+  }
 
-  setIsotopes: function( isotopes ) {
+  // @public
+  setIsotopes( isotopes ) {
     this.isotopes = isotopes;
-    this.invalidatePaint();
-  },
-
-  step: function() {
     this.invalidatePaint();
   }
 
-} );
+  // @public
+  step() {
+    this.invalidatePaint();
+  }
+}
 
+shred.register( 'IsotopeCanvasNode', IsotopeCanvasNode );
 export default IsotopeCanvasNode;
