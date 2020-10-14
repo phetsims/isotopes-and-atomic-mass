@@ -12,7 +12,6 @@
 
 
 //modules
-import inherit from '../../../../phet-core/js/inherit.js';
 import Particle from '../../../../shred/js/model/Particle.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import ImmutableAtomConfig from './ImmutableAtomConfig.js';
@@ -20,23 +19,25 @@ import ImmutableAtomConfig from './ImmutableAtomConfig.js';
 // class variables
 let instanceCount = 0;
 
-/**
- * @param {number} numProtons
- * @param {number} numNeutrons
- * @param {Vector2} initialPosition
- * @constructor
- */
-function MovableAtom( numProtons, numNeutrons, initialPosition ) {
-  Particle.call( this, 'Isotope' );
-  this.positionProperty.set( initialPosition ); // @public
-  this.destinationProperty.set( initialPosition ); // @public
+class MovableAtom extends Particle {
 
-  // @public
-  this.atomConfiguration = new ImmutableAtomConfig( numProtons, numNeutrons, numProtons );
-  this.showLabel = true; // @public
-  this.instanceCount = instanceCount++;
+  /**
+   * @param {number} numProtons
+   * @param {number} numNeutrons
+   * @param {Vector2} initialPosition
+   * @constructor
+   */
+  constructor( numProtons, numNeutrons, initialPosition ) {
+    super( 'Isotope' );
+    this.positionProperty.set( initialPosition ); // @public
+    this.destinationProperty.set( initialPosition ); // @public
+
+    // @public
+    this.atomConfiguration = new ImmutableAtomConfig( numProtons, numNeutrons, numProtons );
+    this.showLabel = true; // @public
+    this.instanceCount = instanceCount++;
+  }
 }
 
 isotopesAndAtomicMass.register( 'MovableAtom', MovableAtom );
-inherit( Particle, MovableAtom );
 export default MovableAtom;
