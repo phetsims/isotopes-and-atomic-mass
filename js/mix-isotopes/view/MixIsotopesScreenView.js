@@ -32,7 +32,7 @@ import IsotopeCanvasNode from '../../../../shred/js/view/IsotopeCanvasNode.js';
 import ParticleView from '../../../../shred/js/view/ParticleView.js';
 import AccordionBox from '../../../../sun/js/AccordionBox.js';
 import AquaRadioButton from '../../../../sun/js/AquaRadioButton.js';
-import RadioButtonGroup from '../../../../sun/js/buttons/RadioButtonGroup.js';
+import RectangularRadioButtonGroup from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
 import HSlider from '../../../../sun/js/HSlider.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
@@ -109,7 +109,7 @@ function InteractivityModeSelectionNode( model, modelViewTransform ) {
     { value: MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS, node: bucketNode },
     { value: MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS, node: slider }
   ];
-  return new RadioButtonGroup( model.interactivityModeProperty, radioButtonContent, {
+  return new RectangularRadioButtonGroup( model.interactivityModeProperty, radioButtonContent, {
     orientation: 'horizontal',
     baseColor: Color.white,
     spacing: 5,
