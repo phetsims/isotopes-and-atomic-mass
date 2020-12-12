@@ -154,10 +154,10 @@ class MixIsotopesScreenView extends ScreenView {
     const bucketFrontLayer = new Node();
 
     // Adding Buckets
-    function addBucketView( addedBucket ) {
-      const bucketHole = new BucketHole( addedBucket, self.modelViewTransform );
-      const bucketFront = new BucketFront( addedBucket, self.modelViewTransform );
-      bucketFront.addInputListener( new BucketDragListener( addedBucket, bucketFront, self.modelViewTransform ) );
+    const addBucketView = addedBucket => {
+      const bucketHole = new BucketHole( addedBucket, this.modelViewTransform );
+      const bucketFront = new BucketFront( addedBucket, this.modelViewTransform );
+      bucketFront.addInputListener( new BucketDragListener( addedBucket, bucketFront, this.modelViewTransform ) );
 
       // Bucket hole is first item added to view for proper layering.
       bucketHoleLayer.addChild( bucketHole );
@@ -171,15 +171,15 @@ class MixIsotopesScreenView extends ScreenView {
           mixIsotopesModel.bucketList.removeItemRemovedListener( removalListener );
         }
       } );
-    }
+    };
 
     mixIsotopesModel.bucketList.addItemAddedListener( addedBucket => { addBucketView( addedBucket ); } );
     mixIsotopesModel.bucketList.forEach( addedBucket => { addBucketView( addedBucket ); } );
 
     // Adding Isotopes
-    function addIsotopeView( addedIsotope ) {
-      const isotopeView = new ParticleView( addedIsotope, self.modelViewTransform );
-      isotopeView.center = self.modelViewTransform.modelToViewPosition( addedIsotope.positionProperty.get() );
+    const addIsotopeView = addedIsotope => {
+      const isotopeView = new ParticleView( addedIsotope, this.modelViewTransform );
+      isotopeView.center = this.modelViewTransform.modelToViewPosition( addedIsotope.positionProperty.get() );
       isotopeView.pickable = ( mixIsotopesModel.interactivityModeProperty.get() ===
                                MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS );
 
@@ -199,7 +199,7 @@ class MixIsotopesScreenView extends ScreenView {
           mixIsotopesModel.isotopesList.removeItemRemovedListener( removalListener );
         }
       } );
-    }
+    };
 
     mixIsotopesModel.isotopesList.forEach( addedIsotope => { addIsotopeView( addedIsotope ); } );
 

@@ -235,7 +235,6 @@ class IsotopeTestChamber {
     this.containedIsotopes.forEach( isotope => {
       if ( isotope.atomConfiguration.equals( isotopeConfig ) ) {
         removedIsotope = isotope;
-        return;
       }
     } );
     this.removeIsotopeFromChamber( removedIsotope );
@@ -301,28 +300,31 @@ class IsotopeTestChamber {
    * @public
    */
   adjustForOverlap() {
+
     // Bounds checking.  The threshold is pretty much arbitrary.
-    assert && assert( this.getTotalIsotopeCount() <= 100,
-      'Ignoring request to adjust for overlap - too many particles in the chamber for that' );
+    assert && assert(
+      this.getTotalIsotopeCount() <= 100,
+      'Ignoring request to adjust for overlap - too many particles in the chamber for that'
+    );
 
     // Check for overlap and adjust particle positions until none exists.
     const maxIterations = 10000; // Empirically determined
     for ( let i = 0; this.checkForParticleOverlap() && i < maxIterations; i++ ) {
-      // Adjustment factors for the repositioning algorithm, these can be adjusted for different behaviour.
-      var interParticleForceConst = 200;
-      var wallForceConst = interParticleForceConst * 10;
-      var minInterParticleDistance = 5;
-      var mapIsotopesToForces = {};
-      var mapIsotopesIDToIsotope = {};
 
-      var self = this; //Prevents any scope error when using this.
+      // Adjustment factors for the repositioning algorithm, these can be changed for different behaviour.
+      const interParticleForceConst = 200;
+      const wallForceConst = interParticleForceConst * 10;
+      const minInterParticleDistance = 5;
+      const mapIsotopesToForces = {};
+      const mapIsotopesIDToIsotope = {};
 
       this.containedIsotopes.forEach( isotope1 => {
 
         const totalForce = new Vector2( 0, 0 );
-        //Calculate the force due to other isotopes
-        for ( let j = 0; j < self.containedIsotopes.length; j++ ) {
-          const isotope2 = self.containedIsotopes.get( j );
+
+        // Calculate the force due to other isotopes,
+        for ( let j = 0; j < this.containedIsotopes.length; j++ ) {
+          const isotope2 = this.containedIsotopes.get( j );
           if ( isotope1 === isotope2 ) {
             continue;
 

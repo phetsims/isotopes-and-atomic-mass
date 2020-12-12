@@ -42,7 +42,6 @@ class InteractiveIsotopeNode extends Node {
    */
   constructor( makeIsotopesModel, modelViewTransform, bottomPoint ) {
     super();
-    const self = this;
     this.modelViewTransform = modelViewTransform; // extend scope of modelViewTransform.
 
     // Add the node that shows the textual labels and electron cloud.
@@ -109,14 +108,14 @@ class InteractiveIsotopeNode extends Node {
     };
 
     // function to add the view for a nucleon, i.e. a proton or neutron
-    function addParticleView( addedParticle ) {
+    const addParticleView = addedParticle => {
       assert && assert(
         addedParticle.type === 'proton' || addedParticle.type === 'neutron',
         'unrecognized particle type'
       );
 
-      const particleView = new ParticleView( addedParticle, self.modelViewTransform );
-      particleView.center = self.modelViewTransform.modelToViewPosition( addedParticle.positionProperty.get() );
+      const particleView = new ParticleView( addedParticle, this.modelViewTransform );
+      particleView.center = this.modelViewTransform.modelToViewPosition( addedParticle.positionProperty.get() );
       particleView.pickable = addedParticle.type === 'neutron';
 
       // add particle view to correct z layer.
@@ -154,7 +153,7 @@ class InteractiveIsotopeNode extends Node {
           temp.removeItemRemovedListener( removalListener );
         }
       } );
-    }
+    };
 
     makeIsotopesModel.protons.forEach( proton => { addParticleView( proton ); } );
 
