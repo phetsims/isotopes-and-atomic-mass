@@ -13,7 +13,6 @@ import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Shape from '../../../../kite/js/Shape.js';
-import inherit from '../../../../phet-core/js/inherit.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Line from '../../../../scenery/js/nodes/Line.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
@@ -23,8 +22,8 @@ import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
 import Panel from '../../../../sun/js/Panel.js';
-import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
+import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
 
 // constants
 const INDICATOR_WIDTH = 200;
@@ -122,101 +121,99 @@ function ReadoutPointer( model ) {
 
   // Observe the average atomic weight property in the model and update the textual readout whenever it changes.
   // Doesn't need unlink as it stays through out the sim life
-  model.testChamber.averageAtomicMassProperty.link( function( averageAtomicMass ) {
+  model.testChamber.averageAtomicMassProperty.link( averageAtomicMass => {
     updateReadout( averageAtomicMass );
   } );
 
   return node;
 }
 
-/**
- * @param {MixIsotopesModel} model
- * @constructor
- */
-function AverageAtomicMassIndicator( model ) {
-  Node.call( this );
-  const self = this;
+class AverageAtomicMassIndicator extends Node {
 
-  // Root node onto which all other nodes are added.  This is done so that the root node can be offset at the end of
-  // construction in such a way that the (0,0) position will be in the upper left corner.
+  /**
+   * @param {MixIsotopesModel} model
+   */
+  constructor( model ) {
+    super();
 
-  // Add the bar that makes up "spine" of the indicator.
-  const barNode = new Line( 0, 0, INDICATOR_WIDTH, 0, {
-    lineWidth: 3,
-    stroke: 'black'
-  } );
-  this.addChild( barNode );
+    // Root node onto which all other nodes are added.  This is done so that the root node can be offset at the end of
+    // construction in such a way that the (0,0) position will be in the upper left corner.
 
-  // Add the layer where the tick marks will be maintained.
-  const tickMarkLayer = new Node();
-  this.addChild( tickMarkLayer );
+    // Add the bar that makes up "spine" of the indicator.
+    const barNode = new Line( 0, 0, INDICATOR_WIDTH, 0, {
+      lineWidth: 3,
+      stroke: 'black'
+    } );
+    this.addChild( barNode );
 
-  // Listen for changes to the list of possible isotopes and update the tick marks when changes occur.
-  // Doesn't need unlink as it stays through out the sim life
-  model.possibleIsotopesProperty.link( function() {
+    // Add the layer where the tick marks will be maintained.
+    const tickMarkLayer = new Node();
+    this.addChild( tickMarkLayer );
 
-    tickMarkLayer.removeAllChildren();
-    const possibleIsotopesList = model.possibleIsotopesProperty.get();
-    let lightestIsotopeMass = Number.POSITIVE_INFINITY;
-    let heaviestIsotopeMass = 0;
-    self.minMass = Number.POSITIVE_INFINITY;
-    possibleIsotopesList.forEach( function( isotope ) {
-      if ( isotope.getIsotopeAtomicMass() > heaviestIsotopeMass ) {
-        heaviestIsotopeMass = isotope.getIsotopeAtomicMass();
+    // Listen for changes to the list of possible isotopes and update the tick marks when changes occur.
+    // Doesn't need unlink as it stays through out the sim life
+    model.possibleIsotopesProperty.link( () => {
+
+      tickMarkLayer.removeAllChildren();
+      const possibleIsotopesList = model.possibleIsotopesProperty.get();
+      let lightestIsotopeMass = Number.POSITIVE_INFINITY;
+      let heaviestIsotopeMass = 0;
+      this.minMass = Number.POSITIVE_INFINITY;
+      possibleIsotopesList.forEach( isotope => {
+        if ( isotope.getIsotopeAtomicMass() > heaviestIsotopeMass ) {
+          heaviestIsotopeMass = isotope.getIsotopeAtomicMass();
+        }
+        if ( isotope.getIsotopeAtomicMass() < lightestIsotopeMass ) {
+          lightestIsotopeMass = isotope.getIsotopeAtomicMass();
+        }
+      } );
+
+      this.massSpan = heaviestIsotopeMass - lightestIsotopeMass;
+      if ( this.massSpan < 2 ) {
+        this.massSpan = 2; // Mass spa n must be at least 2 or the spacing doesn't look good.
       }
-      if ( isotope.getIsotopeAtomicMass() < lightestIsotopeMass ) {
-        lightestIsotopeMass = isotope.getIsotopeAtomicMass();
-      }
+      // Adjust the span so that there is some space at the ends of the line.
+      this.massSpan *= 1.2;
+      // Set the low end of the mass range, needed for positioning on line.
+      this.minMass = ( heaviestIsotopeMass + lightestIsotopeMass ) / 2 - this.massSpan / 2;
+
+      // Add the new tick marks.
+      model.possibleIsotopesProperty.get().forEach( isotope => {
+        const tickMark = new IsotopeTickMark( isotope );
+        tickMark.centerX = this.calcXOffsetFromAtomicMass( isotope.getIsotopeAtomicMass() );
+        tickMarkLayer.addChild( tickMark );
+      } );
+
     } );
 
-    self.massSpan = heaviestIsotopeMass - lightestIsotopeMass;
-    if ( self.massSpan < 2 ) {
-      self.massSpan = 2; // Mass spa n must be at least 2 or the spacing doesn't look good.
-    }
-    // Adjust the span so that there is some space at the ends of the line.
-    self.massSpan *= 1.2;
-    // Set the low end of the mass range, needed for positioning on line.
-    self.minMass = ( heaviestIsotopeMass + lightestIsotopeMass ) / 2 - self.massSpan / 2;
+    // Add the moving readout.
+    const readoutPointer = new ReadoutPointer( model );
+    readoutPointer.top = barNode.bottom;
+    readoutPointer.centerX = barNode.centerX;
+    this.addChild( readoutPointer );
 
-    // Add the new tick marks.
-    model.possibleIsotopesProperty.get().forEach( function( isotope ) {
-      const tickMark = new IsotopeTickMark( isotope );
-      tickMark.centerX = self.calcXOffsetFromAtomicMass( isotope.getIsotopeAtomicMass() );
-      tickMarkLayer.addChild( tickMark );
+    // Doesn't need unlink as it stays through out the sim life
+    model.testChamber.averageAtomicMassProperty.link( averageAtomicMass => {
+      if ( model.testChamber.isotopeCountProperty.get() > 0 ) {
+        readoutPointer.centerX = this.calcXOffsetFromAtomicMass( averageAtomicMass );
+        readoutPointer.setVisible( true );
+      }
+      else {
+        readoutPointer.setVisible( false );
+      }
     } );
+  }
 
-  } );
-
-  // Add the moving readout.
-  const readoutPointer = new ReadoutPointer( model );
-  readoutPointer.top = barNode.bottom;
-  readoutPointer.centerX = barNode.centerX;
-  this.addChild( readoutPointer );
-
-  // Doesn't need unlink as it stays through out the sim life
-  model.testChamber.averageAtomicMassProperty.link( function( averageAtomicMass ) {
-    if ( model.testChamber.isotopeCountProperty.get() > 0 ) {
-      readoutPointer.centerX = self.calcXOffsetFromAtomicMass( averageAtomicMass );
-      readoutPointer.setVisible( true );
-    }
-    else {
-      readoutPointer.setVisible( false );
-    }
-  } );
+  /**
+   * Calculate the X offset on the bar given the atomic mass. This is clamped to never return a value less than 0.
+   * @param {double} atomicMass
+   * @returns {number}
+   * @private
+   */
+  calcXOffsetFromAtomicMass( atomicMass ) {
+    return Math.max( ( atomicMass - this.minMass ) / this.massSpan * INDICATOR_WIDTH, 0 );
+  }
 }
 
 isotopesAndAtomicMass.register( 'AverageAtomicMassIndicator', AverageAtomicMassIndicator );
-inherit( Node, AverageAtomicMassIndicator, {
-  /**
-   * Calculate the X offset on the bar given the atomic mass. This is clamped to never return a value less than 0.
-   *
-   * @param {double} atomicMass
-   * @return
-   */
-  calcXOffsetFromAtomicMass: function( atomicMass ) {
-    return Math.max( ( atomicMass - this.minMass ) / this.massSpan * INDICATOR_WIDTH, 0 );
-  }
-
-} );
-
 export default AverageAtomicMassIndicator;

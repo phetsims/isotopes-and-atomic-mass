@@ -11,7 +11,6 @@ import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Shape from '../../../../kite/js/Shape.js';
-import inherit from '../../../../phet-core/js/inherit.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Circle from '../../../../scenery/js/nodes/Circle.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
@@ -121,40 +120,37 @@ function sliceLabelNode( isotopeConfig, isotopePercentage, labelOnLeft, numberOf
   return node;
 }
 
-/**
- * @param {MixIsotopesModel} model
- * @constructor
- */
-function IsotopeProportionsPieChart( model ) {
-  Node.call( this );
-  this.model = model;
-  this.labelLayer = new Node();
-  this.addChild( this.labelLayer );
-  this.pieChartBoundingRectangle = new Rectangle( -OVERALL_HEIGHT / 2, -OVERALL_HEIGHT / 2,
-    OVERALL_HEIGHT, OVERALL_HEIGHT, 0, 0 );
-  this.emptyCircle = new Circle( PIE_CHART_RADIUS, { stroke: 'black', lineDash: [ 3, 1 ] } );
-  this.emptyCircle.centerX = 0;
-  this.emptyCircle.centerY = 0;
-  this.pieChartBoundingRectangle.addChild( this.emptyCircle );
+class IsotopeProportionsPieChart extends Node {
 
-  // default slices this will be updated based on possible isotopes
-  this.slices = [];
-  this.sliceLabels = [];
-  this.pieChart = new PieChartNode( this.slices, PIE_CHART_RADIUS );
-  this.pieChartBoundingRectangle.addChild( this.pieChart );
+  /**
+   * @param {MixIsotopesModel} model
+   */
+  constructor( model ) {
+    super();
+    this.model = model;
+    this.labelLayer = new Node();
+    this.addChild( this.labelLayer );
+    this.pieChartBoundingRectangle = new Rectangle( -OVERALL_HEIGHT / 2, -OVERALL_HEIGHT / 2,
+      OVERALL_HEIGHT, OVERALL_HEIGHT, 0, 0 );
+    this.emptyCircle = new Circle( PIE_CHART_RADIUS, { stroke: 'black', lineDash: [ 3, 1 ] } );
+    this.emptyCircle.centerX = 0;
+    this.emptyCircle.centerY = 0;
+    this.pieChartBoundingRectangle.addChild( this.emptyCircle );
 
-  this.addChild( this.pieChartBoundingRectangle );
-}
+    // default slices this will be updated based on possible isotopes
+    this.slices = [];
+    this.sliceLabels = [];
+    this.pieChart = new PieChartNode( this.slices, PIE_CHART_RADIUS );
+    this.pieChartBoundingRectangle.addChild( this.pieChart );
 
-isotopesAndAtomicMass.register( 'IsotopeProportionsPieChart', IsotopeProportionsPieChart );
-
-inherit( Node, IsotopeProportionsPieChart, {
+    this.addChild( this.pieChartBoundingRectangle );
+  }
 
   /**
    * Update the complete node based on isotopeCount
    * @public
    */
-  update: function() {
+  update() {
     if ( this.model.testChamber.isotopeCountProperty.get() > 0 ) {
       this.emptyCircle.setVisible( false );
       this.updatePieChart();
@@ -166,49 +162,47 @@ inherit( Node, IsotopeProportionsPieChart, {
       this.pieChart.setVisible( false );
       this.labelLayer.setVisible( false );
     }
-  },
+  }
 
   /**
    * Update the pie chart
    * @public
    */
-  updatePieChart: function() {
-    const self = this;
+  updatePieChart() {
     this.slices = [];
     let i = 0;
-    this.model.possibleIsotopesProperty.get().forEach( function( isotope ) {
-      const value = self.model.testChamber.getIsotopeCount( isotope );
-      const color = self.model.getColorForIsotope( isotope );
-      self.slices[ i ] = { value: value, color: color, stroke: 'black', lineWidth: 0.5 };
+    this.model.possibleIsotopesProperty.get().forEach( isotope => {
+      const value = this.model.testChamber.getIsotopeCount( isotope );
+      const color = this.model.getColorForIsotope( isotope );
+      this.slices[ i ] = { value: value, color: color, stroke: 'black', lineWidth: 0.5 };
       i += 1;
     } );
     const lightestIsotopeProportion = this.slices[ 0 ].value / this.model.testChamber.isotopeCountProperty.get();
     this.pieChart.setAngleAndValues( Math.PI - ( lightestIsotopeProportion * Math.PI ), this.slices );
     this.updateLabels( this.model.possibleIsotopesProperty.get() );
-  },
+  }
 
   /**
    * @param {Array.<Object>} possibleIsotopes
    * @private
    */
-  updateLabels: function( possibleIsotopes ) {
-    const self = this;
+  updateLabels( possibleIsotopes ) {
     this.labelLayer.removeAllChildren();
     this.sliceLabels = [];
     let i = 0;
-    possibleIsotopes.forEach( function( isotope ) {
+    possibleIsotopes.forEach( isotope => {
       let proportion;
-      if ( self.model.showingNaturesMixProperty.get() ) {
+      if ( this.model.showingNaturesMixProperty.get() ) {
         proportion = AtomIdentifier.getNaturalAbundance( isotope, NUMBER_DECIMALS + 2 ); // 2 more digits since % is used
       }
       else {
-        proportion = self.model.testChamber.getIsotopeProportion( isotope );
+        proportion = this.model.testChamber.getIsotopeProportion( isotope );
       }
 
-      const centerEdgeOfPieSlice = self.pieChart.getCenterEdgePtForSlice( i );
+      const centerEdgeOfPieSlice = this.pieChart.getCenterEdgePtForSlice( i );
       if ( centerEdgeOfPieSlice ) {
-        const labelOnLeft = centerEdgeOfPieSlice.x <= self.pieChart.centerXCord;
-        const numberOfDecimals = self.model.showingNaturesMixProperty.get() ? NUMBER_DECIMALS : 1;
+        const labelOnLeft = centerEdgeOfPieSlice.x <= this.pieChart.centerXCord;
+        const numberOfDecimals = this.model.showingNaturesMixProperty.get() ? NUMBER_DECIMALS : 1;
         const labelNode = sliceLabelNode( isotope, proportion * 100, labelOnLeft, numberOfDecimals );
 
         // Determine the "unconstrained" target position for the label, meaning a position that is directly out from
@@ -242,8 +236,8 @@ inherit( Node, IsotopeProportionsPieChart, {
           labelNode.centerX = positionVector.x + labelNode.width / 2;
           labelNode.centerY = positionVector.y;
         }
-        self.labelLayer.addChild( labelNode );
-        self.sliceLabels.push( labelNode );
+        this.labelLayer.addChild( labelNode );
+        this.sliceLabels.push( labelNode );
       }
       i = i + 1;
     } );
@@ -253,12 +247,12 @@ inherit( Node, IsotopeProportionsPieChart, {
     // slice to which it corresponds.
     let j = 0;
     let k = 0;
-    possibleIsotopes.forEach( function( isotope ) {
-      const sliceConnectPt = self.pieChart.getCenterEdgePtForSlice( j );
+    possibleIsotopes.forEach( isotope => {
+      const sliceConnectPt = this.pieChart.getCenterEdgePtForSlice( j );
       if ( sliceConnectPt ) {
-        const label = self.sliceLabels[ k ];
+        const label = this.sliceLabels[ k ];
         const labelConnectPt = new Vector2( 0, 0 );
-        if ( label.centerX > self.pieChart.centerX ) {
+        if ( label.centerX > this.pieChart.centerX ) {
           // Label is on right, so connect point should be on left.
           labelConnectPt.x = label.left;
           labelConnectPt.y = label.centerY;
@@ -279,7 +273,7 @@ inherit( Node, IsotopeProportionsPieChart, {
             sliceConnectPt.y * ( 1 + additionalLength * scaleFactor ) );
         }
         connectingLineShape.lineTo( labelConnectPt.x, labelConnectPt.y );
-        self.labelLayer.addChild( new Path( connectingLineShape, {
+        this.labelLayer.addChild( new Path( connectingLineShape, {
           stroke: 'black',
           lineWidth: 1
         } ) );
@@ -287,7 +281,7 @@ inherit( Node, IsotopeProportionsPieChart, {
       }
       j = j + 1;
     } );
-  },
+  }
 
   /**
    * @param {Array.<Object>} sliceLabels
@@ -295,11 +289,11 @@ inherit( Node, IsotopeProportionsPieChart, {
    * @param {number} maxY
    * @private
    */
-  adjustLabelPositionsForOverlap: function( sliceLabels, minY, maxY ) {
+  adjustLabelPositionsForOverlap( sliceLabels, minY, maxY ) {
     const rotationIncrement = Math.PI / 200; // Empirically chosen.
     for ( let i = 1; i < 50; i++ ) { // Number of iterations empirically chosen.
       var overlapDetected = false;
-      sliceLabels.forEach( function( label ) {
+      sliceLabels.forEach( label => {
         let moveUp = false;
         let moveDown = false;
         for ( let j = 0; j < sliceLabels.length; j++ ) {
@@ -361,6 +355,8 @@ inherit( Node, IsotopeProportionsPieChart, {
       }
     }
   }
-} );
+}
+
+isotopesAndAtomicMass.register( 'IsotopeProportionsPieChart', IsotopeProportionsPieChart );
 
 export default IsotopeProportionsPieChart;

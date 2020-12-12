@@ -27,7 +27,7 @@ const simOptions = {
   }
 };
 
-simLauncher.launch( function() {
+simLauncher.launch( () => {
   const makeIsotopeScreenTandem = tandem.createTandem( 'makeIsotopeScreen' );
   const mixIsotopeScreenTandem = tandem.createTandem( 'mixIsotopeScreen' );
 

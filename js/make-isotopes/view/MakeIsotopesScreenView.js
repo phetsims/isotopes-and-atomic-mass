@@ -65,7 +65,7 @@ class MakeIsotopesScreenView extends ScreenView {
 
     // Create and add the Reset All Button in the bottom right, which resets the model
     const resetAllButton = new ResetAllButton( {
-      listener: function() {
+      listener: () => {
         makeIsotopesModel.reset();
         scaleNode.reset();
         symbolBox.expandedProperty.reset();
@@ -124,7 +124,7 @@ class MakeIsotopesScreenView extends ScreenView {
     // Add the listener to update the symbol text.
     const textCenter = new Vector2( symbolRectangle.width / 2, symbolRectangle.height / 2 );
     // Doesn't need unlink as it stays through out the sim life
-    makeIsotopesModel.particleAtom.protonCountProperty.link( function( protonCount ) {
+    makeIsotopesModel.particleAtom.protonCountProperty.link( protonCount => {
       const symbol = AtomIdentifier.getSymbol( protonCount );
       symbolText.text = protonCount > 0 ? symbol : '';
       symbolText.center = textCenter;
@@ -140,7 +140,7 @@ class MakeIsotopesScreenView extends ScreenView {
 
     // Add the listener to update the proton count.
     // Doesn't need unlink as it stays through out the sim life
-    makeIsotopesModel.particleAtom.protonCountProperty.link( function( protonCount ) {
+    makeIsotopesModel.particleAtom.protonCountProperty.link( protonCount => {
       protonCountDisplay.text = protonCount;
       protonCountDisplay.left = NUMBER_INSET;
       protonCountDisplay.bottom = SYMBOL_BOX_HEIGHT - NUMBER_INSET;
@@ -155,7 +155,7 @@ class MakeIsotopesScreenView extends ScreenView {
 
     // Add the listener to update the mass number.
     // Doesn't need unlink as it stays through out the sim life
-    makeIsotopesModel.particleAtom.massNumberProperty.link( function( massNumber ) {
+    makeIsotopesModel.particleAtom.massNumberProperty.link( massNumber => {
       massNumberDisplay.text = massNumber;
       massNumberDisplay.left = NUMBER_INSET;
       massNumberDisplay.top = NUMBER_INSET;

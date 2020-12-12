@@ -13,31 +13,28 @@
  */
 
 import Property from '../../../../axon/js/Property.js';
-import inherit from '../../../../phet-core/js/inherit.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import MovableAtom from './MovableAtom.js';
 
 // constants
 const CAPACITY = 100;
 
-/**
- * @param {MixIsotopesModel} model
- * @param {NumberAtom} isotopeConfig
- * @param {Vector2} position
- * @param {string} caption
- * @constructor
- */
-function NumericalIsotopeQuantityControl( model, isotopeConfig, position, caption ) {
+class NumericalIsotopeQuantityControl {
 
-  this.quantityProperty = new Property( model.testChamber.getIsotopeCount( isotopeConfig ) ); // @public
-  this.model = model; // @private
-  this.isotopeConfig = isotopeConfig; // @public
-  this.centerPosition = position; // @public
-  this.caption = caption; // @public
-}
+  /**
+   * @param {MixIsotopesModel} model
+   * @param {NumberAtom} isotopeConfig
+   * @param {Vector2} position
+   * @param {string} caption
+   */
+  constructor( model, isotopeConfig, position, caption ) {
 
-isotopesAndAtomicMass.register( 'NumericalIsotopeQuantityControl', NumericalIsotopeQuantityControl );
-inherit( Object, NumericalIsotopeQuantityControl, {
+    this.quantityProperty = new Property( model.testChamber.getIsotopeCount( isotopeConfig ) ); // @public
+    this.model = model; // @private
+    this.isotopeConfig = isotopeConfig; // @public
+    this.centerPosition = position; // @public
+    this.caption = caption; // @public
+  }
 
   /**
    * Set the quantity of the isotope associated with this control to the specified value.
@@ -46,7 +43,7 @@ inherit( Object, NumericalIsotopeQuantityControl, {
    *
    * @public
    */
-  setIsotopeQuantity: function( targetQuantity ) {
+  setIsotopeQuantity( targetQuantity ) {
     assert && assert( targetQuantity <= CAPACITY );
     const changeAmount = targetQuantity - this.model.testChamber.getIsotopeCount( this.isotopeConfig );
 
@@ -72,20 +69,21 @@ inherit( Object, NumericalIsotopeQuantityControl, {
         }
       }
     }
-  },
+  }
 
   // @public
-  getBaseColor: function() {
+  getBaseColor() {
     return this.model.getColorForIsotope( this.isotopeConfig );
-  },
+  }
 
   // @public
-  getQuantity: function() {
+  getQuantity() {
     // Verify that the internal property matches that of the test chamber.
     assert && assert( this.quantityProperty === this.model.testChamber.getIsotopeCount( this.isotopeConfig ) );
     // Return the value.
     return this.quantityProperty;
   }
-} );
+}
 
+isotopesAndAtomicMass.register( 'NumericalIsotopeQuantityControl', NumericalIsotopeQuantityControl );
 export default NumericalIsotopeQuantityControl;

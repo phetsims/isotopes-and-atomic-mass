@@ -10,11 +10,10 @@
  * @author Aadish Gupta
  */
 
-import Emitter from '../../../../axon/js/Emitter.js';
 import createObservableArray from '../../../../axon/js/createObservableArray.js';
+import Emitter from '../../../../axon/js/Emitter.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import inherit from '../../../../phet-core/js/inherit.js';
 import SphereBucket from '../../../../phetcommon/js/model/SphereBucket.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
@@ -22,8 +21,8 @@ import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
 import Particle from '../../../../shred/js/model/Particle.js';
 import ParticleAtom from '../../../../shred/js/model/ParticleAtom.js';
 import ShredConstants from '../../../../shred/js/ShredConstants.js';
-import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
+import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
 
 const neutronsString = isotopesAndAtomicMassStrings.neutrons;
 
@@ -38,90 +37,87 @@ const BUCKET_SIZE = new Dimension2( 130, 60 );
 const NEUTRON_BUCKET_POSITION = new Vector2( -220, -180 );
 const DEFAULT_ATOM_CONFIG = new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } ); // Hydrogen.
 
-/**
- * Constructor for a make isotopes model.  This will construct the model with atoms initially in the bucket.
- *
- * @constructor
- */
-function MakeIsotopesModel() {
+class MakeIsotopesModel {
 
-  // carry through scope
-  const self = this;
+  /**
+   * Constructor for a make isotopes model.  This will construct the model with atoms initially in the bucket.
+   *
+   */
+  constructor() {
 
-  // create the atom.
-  this.particleAtom = new ParticleAtom(); // @public
+    // carry through scope
 
-  // Make available a 'number atom' that tracks the state of the particle atom.
-  // @public
-  this.numberAtom = new NumberAtom( {
-    protonCount: DEFAULT_ATOM_CONFIG.protonCountProperty.get(),
-    neutronCount: DEFAULT_ATOM_CONFIG.neutronCountProperty.get(),
-    electronCount: DEFAULT_ATOM_CONFIG.electronCountProperty.get()
-  } );
+    // create the atom.
+    this.particleAtom = new ParticleAtom(); // @public
 
-  // @public - events emitted by instances of this type
-  this.atomReconfigured = new Emitter();
+    // Make available a 'number atom' that tracks the state of the particle atom.
+    // @public
+    this.numberAtom = new NumberAtom( {
+      protonCount: DEFAULT_ATOM_CONFIG.protonCountProperty.get(),
+      neutronCount: DEFAULT_ATOM_CONFIG.neutronCountProperty.get(),
+      electronCount: DEFAULT_ATOM_CONFIG.electronCountProperty.get()
+    } );
 
-  // Update the stability state and counter on changes.
-  self.nucleusStable = true; // @public
-  self.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD; // @private
-  self.nucleusOffset = Vector2.ZERO; // @private
-  // Unlink in not required here as it is used through out the sim life
-  self.particleAtom.massNumberProperty.link( function( massNumber ) {
-    const stable = massNumber > 0 ?
-                   AtomIdentifier.isStable( self.particleAtom.protonCountProperty.get(),
-                     self.particleAtom.neutronCountProperty.get() ) : true;
-    if ( self.nucleusStable !== stable ) {
-      // Stability has changed.
-      self.nucleusStable = stable;
-      if ( stable ) {
-        self.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
-        self.particleAtom.nucleusOffsetProperty.set( Vector2.ZERO );
+    // @public - events emitted by instances of this type
+    this.atomReconfigured = new Emitter();
+
+    // Update the stability state and counter on changes.
+    this.nucleusStable = true; // @public
+    this.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD; // @private
+    this.nucleusOffset = Vector2.ZERO; // @private
+    // Unlink in not required here as it is used through out the sim life
+    this.particleAtom.massNumberProperty.link( massNumber => {
+      const stable = massNumber > 0 ?
+                     AtomIdentifier.isStable( this.particleAtom.protonCountProperty.get(),
+                       this.particleAtom.neutronCountProperty.get() ) : true;
+      if ( this.nucleusStable !== stable ) {
+        // Stability has changed.
+        this.nucleusStable = stable;
+        if ( stable ) {
+          this.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
+          this.particleAtom.nucleusOffsetProperty.set( Vector2.ZERO );
+        }
       }
-    }
-    if ( self.particleAtom.protonCountProperty.get() > 0 && self.particleAtom.neutronCountProperty.get() >= 0 ) {
-      self.atomReconfigured.emit();
-    }
-  } );
+      if ( this.particleAtom.protonCountProperty.get() > 0 && this.particleAtom.neutronCountProperty.get() >= 0 ) {
+        this.atomReconfigured.emit();
+      }
+    } );
 
-  // Arrays that contain the subatomic particles, whether they are in the  bucket or in the atom.  This is part of a
-  // basic assumption about how the model works, which is that the model contains all the particles, and the particles
-  // move back and forth from being in the bucket or in in the atom.
-  this.neutrons = createObservableArray(); // @public
-  this.protons = createObservableArray(); // @public
-  this.electrons = createObservableArray(); // @public
+    // Arrays that contain the subatomic particles, whether they are in the  bucket or in the atom.  This is part of a
+    // basic assumption about how the model works, which is that the model contains all the particles, and the particles
+    // move back and forth from being in the bucket or in in the atom.
+    this.neutrons = createObservableArray(); // @public
+    this.protons = createObservableArray(); // @public
+    this.electrons = createObservableArray(); // @public
 
-  // The bucket that holds the neutrons that are not in the atom.
-  // @public
-  this.neutronBucket = new SphereBucket( {
-    position: NEUTRON_BUCKET_POSITION,
-    size: BUCKET_SIZE,
-    baseColor: Color.gray,
-    captionText: neutronsString,
-    sphereRadius: ShredConstants.NUCLEON_RADIUS
-  } );
+    // The bucket that holds the neutrons that are not in the atom.
+    // @public
+    this.neutronBucket = new SphereBucket( {
+      position: NEUTRON_BUCKET_POSITION,
+      size: BUCKET_SIZE,
+      baseColor: Color.gray,
+      captionText: neutronsString,
+      sphereRadius: ShredConstants.NUCLEON_RADIUS
+    } );
 
-  this.numberAtom.atomUpdated.addListener( function() {
-    self.setAtomConfiguration( self.numberAtom );
-  } );
+    this.numberAtom.atomUpdated.addListener( () => {
+      this.setAtomConfiguration( this.numberAtom );
+    } );
 
-  // Set the initial atom configuration.
-  this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
+    // Set the initial atom configuration.
+    this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
 
-}
+  }
 
-isotopesAndAtomicMass.register( 'MakeIsotopesModel', MakeIsotopesModel );
-inherit( Object, MakeIsotopesModel, {
-  _nucleusJumpCount: 0,
   // Main model step function, called by the framework.
   // @public
-  step: function( dt ) {
+  step( dt ) {
     // Update particle positions.
-    this.neutrons.forEach( function( neutron ) {
+    this.neutrons.forEach( neutron => {
       neutron.step( dt );
     } );
 
-    this.protons.forEach( function( neutron ) {
+    this.protons.forEach( neutron => {
       neutron.step( dt );
     } );
 
@@ -141,15 +137,15 @@ inherit( Object, MakeIsotopesModel, {
         }
       }
     }
-  },
+  }
 
   /**
    * Get the current atom of this model, in its number representation
    * @public
    */
-  getNumberAtom: function() {
+  getNumberAtom() {
     return this.numberAtom;
-  },
+  }
 
   /**
    *
@@ -158,14 +154,14 @@ inherit( Object, MakeIsotopesModel, {
    * @param {ParticleAtom} atom
    * @public
    */
-  placeNucleon: function( particle, bucket, atom ) {
+  placeNucleon( particle, bucket, atom ) {
     if ( particle.positionProperty.get().distance( atom.positionProperty.get() ) < NUCLEON_CAPTURE_RADIUS ) {
       atom.addParticle( particle );
     }
     else {
       bucket.addParticleNearestOpen( particle, true );
     }
-  },
+  }
 
   /**
    *
@@ -173,13 +169,12 @@ inherit( Object, MakeIsotopesModel, {
    * @param {boolean} lazyLink whether the linking has to be lazy or not
    * @private
    */
-  linkNeutron: function( neutron, lazyLink ) {
-    const self = this;
-    const userControlledLink = function( userControlled ) {
-      self.atomReconfigured.emit();
-      if ( !userControlled && !self.neutronBucket.containsParticle( neutron ) ) {
-        self.placeNucleon( neutron, self.neutronBucket, self.particleAtom );
-        self.atomReconfigured.emit();
+  linkNeutron( neutron, lazyLink ) {
+    const userControlledLink = userControlled => {
+      this.atomReconfigured.emit();
+      if ( !userControlled && !this.neutronBucket.containsParticle( neutron ) ) {
+        this.placeNucleon( neutron, this.neutronBucket, this.particleAtom );
+        this.atomReconfigured.emit();
       }
     };
     if ( lazyLink ) {
@@ -188,22 +183,21 @@ inherit( Object, MakeIsotopesModel, {
     else {
       neutron.userControlledProperty.link( userControlledLink );
     }
-    neutron.userControlledPropertyUnlink = function() {
+    neutron.userControlledPropertyUnlink = () => {
       neutron.userControlledProperty.unlink( userControlledLink );
     };
-  },
+  }
 
   // @public
-  setNeutronBucketConfiguration: function() {
-    const self = this;
+  setNeutronBucketConfiguration() {
     // Add the neutrons to the neutron bucket.
-    _.times( DEFAULT_NUM_NEUTRONS_IN_BUCKET, function() {
+    _.times( DEFAULT_NUM_NEUTRONS_IN_BUCKET, () => {
       const neutron = new Particle( 'neutron' );
-      self.neutronBucket.addParticleFirstOpen( neutron, false );
-      self.linkNeutron( neutron, false );
-      self.neutrons.add( neutron );
+      this.neutronBucket.addParticleFirstOpen( neutron, false );
+      this.linkNeutron( neutron, false );
+      this.neutrons.add( neutron );
     } );
-  },
+  }
 
   /**
    * Set the configuration of the atom that the user interacts with.  Specifically, this sets the particle atom equal
@@ -214,12 +208,11 @@ inherit( Object, MakeIsotopesModel, {
    * @param {NumberAtom} numberAtom - New configuration of atomic properties to which the atom should be set.
    * @public
    */
-  setAtomConfiguration: function( numberAtom ) {
-    const self = this;
+  setAtomConfiguration( numberAtom ) {
     this.particleAtom.clear();
     this.protons.clear();
     this.electrons.clear();
-    this.neutrons.forEach( function( neutron ) {
+    this.neutrons.forEach( neutron => {
       neutron.userControlledPropertyUnlink();
     } );
     this.neutrons.clear();
@@ -241,25 +234,25 @@ inherit( Object, MakeIsotopesModel, {
       this.particleAtom.addParticle( proton );
       this.protons.add( proton );
     }
-    _.times( numberAtom.neutronCountProperty.get(), function() {
+    _.times( numberAtom.neutronCountProperty.get(), () => {
       const neutron = new Particle( 'neutron' );
-      self.particleAtom.addParticle( neutron );
-      self.neutrons.add( neutron );
-      self.linkNeutron( neutron, true );
+      this.particleAtom.addParticle( neutron );
+      this.neutrons.add( neutron );
+      this.linkNeutron( neutron, true );
     } );
     this.particleAtom.moveAllParticlesToDestination();
     this.setNeutronBucketConfiguration();
     this.atomReconfigured.emit();
-  },
+  }
 
   /**
    * Reset the model. The sets the atom and the neutron bucket into their default initial states.
    * @public
    */
-  reset: function() {
+  reset() {
     // Reset the atom.  This also resets the neutron bucket.
     this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
-  },
+  }
 
   /**
    * Get neutron bucket.
@@ -268,10 +261,12 @@ inherit( Object, MakeIsotopesModel, {
    *
    * @public
    */
-  getNeutronBucket: function() {
+  getNeutronBucket() {
     return this.neutronBucket;
   }
+}
 
-} );
+MakeIsotopesModel.prototype._nucleusJumpCount = 0;
 
+isotopesAndAtomicMass.register( 'MakeIsotopesModel', MakeIsotopesModel );
 export default MakeIsotopesModel;

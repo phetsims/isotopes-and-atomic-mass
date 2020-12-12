@@ -120,6 +120,7 @@ function InteractivityModeSelectionNode( model, modelViewTransform ) {
 }
 
 class MixIsotopesScreenView extends ScreenView {
+
   /**
    * @param {MixIsotopesModel} mixIsotopesModel
    * @param {Tandem} tandem
@@ -172,8 +173,8 @@ class MixIsotopesScreenView extends ScreenView {
       } );
     }
 
-    mixIsotopesModel.bucketList.addItemAddedListener( function( addedBucket ) { addBucketView( addedBucket ); } );
-    mixIsotopesModel.bucketList.forEach( function( addedBucket ) { addBucketView( addedBucket ); } );
+    mixIsotopesModel.bucketList.addItemAddedListener( addedBucket => { addBucketView( addedBucket ); } );
+    mixIsotopesModel.bucketList.forEach( addedBucket => { addBucketView( addedBucket ); } );
 
     // Adding Isotopes
     function addIsotopeView( addedIsotope ) {
@@ -184,7 +185,7 @@ class MixIsotopesScreenView extends ScreenView {
 
       isotopeLayer.addChild( isotopeView );
 
-      const moveToFront = function( value ) {
+      const moveToFront = value => {
         if ( value ) {
           isotopeView.moveToFront();
         }
@@ -200,15 +201,15 @@ class MixIsotopesScreenView extends ScreenView {
       } );
     }
 
-    mixIsotopesModel.isotopesList.forEach( function( addedIsotope ) { addIsotopeView( addedIsotope ); } );
+    mixIsotopesModel.isotopesList.forEach( addedIsotope => { addIsotopeView( addedIsotope ); } );
 
-    mixIsotopesModel.isotopesList.addItemAddedListener( function( addedIsotope ) {
+    mixIsotopesModel.isotopesList.addItemAddedListener( addedIsotope => {
       if ( mixIsotopesModel.interactivityModeProperty.get() ===
            MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
         addIsotopeView( addedIsotope );
       }
       else {
-        self.isotopesLayer.setIsotopes( self.model.isotopesList );
+        this.isotopesLayer.setIsotopes( this.model.isotopesList );
         mixIsotopesModel.isotopesList.addItemRemovedListener( function removalListener( removedIsotope ) {
           if ( removedIsotope === addedIsotope ) {
             self.isotopesLayer.setIsotopes( self.model.isotopesList );
@@ -219,9 +220,9 @@ class MixIsotopesScreenView extends ScreenView {
     } );
 
     // Adding Numeric Controllers
-    mixIsotopesModel.numericalControllerList.addItemAddedListener( function( addedController ) {
+    mixIsotopesModel.numericalControllerList.addItemAddedListener( addedController => {
       const controllerView = new ControlIsotope( addedController, 0, 100 );
-      const center_pos = self.modelViewTransform.modelToViewPosition( addedController.centerPosition );
+      const center_pos = this.modelViewTransform.modelToViewPosition( addedController.centerPosition );
       controllerView.centerY = center_pos.y;
       // if the width of slider decreases due to thumb position, keep the left position fixed
       controllerView.left = center_pos.x - ( MAX_SLIDER_WIDTH / 2 );
@@ -247,13 +248,13 @@ class MixIsotopesScreenView extends ScreenView {
     } );
     this.addChild( this.isotopesLayer );
     this.isotopesLayer.visible = false;
-    this.model.naturesIsotopeUpdated.addListener( function() {
-      self.isotopesLayer.setIsotopes( self.model.naturesIsotopesList );
+    this.model.naturesIsotopeUpdated.addListener( () => {
+      this.isotopesLayer.setIsotopes( this.model.naturesIsotopesList );
     } );
 
     const clearBoxButton = new EraserButton( {
       baseColor: ShredConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
-      listener: function() {
+      listener: () => {
         mixIsotopesModel.clearBox();
       }
     } );
@@ -330,7 +331,7 @@ class MixIsotopesScreenView extends ScreenView {
 
     // Create and add the Reset All Button in the bottom right, which resets the model
     const resetAllButton = new ResetAllButton( {
-      listener: function() {
+      listener: () => {
         mixIsotopesModel.reset();
         compositionBox.expandedProperty.reset();
         averageAtomicMassBox.expandedProperty.reset();
@@ -345,37 +346,37 @@ class MixIsotopesScreenView extends ScreenView {
     this.addChild( bucketFrontLayer );
 
     // Doesn't need unlink as it stays through out the sim life
-    mixIsotopesModel.showingNaturesMixProperty.link( function() {
+    mixIsotopesModel.showingNaturesMixProperty.link( () => {
       if ( mixIsotopesModel.showingNaturesMixProperty.get() === true ) {
         interactivityModeSelectionNode.visible = false;
         clearBoxButton.visible = false;
-        self.isotopesLayer.visible = true;
+        this.isotopesLayer.visible = true;
       }
       else {
         interactivityModeSelectionNode.visible = true;
         clearBoxButton.visible = true;
-        self.isotopesLayer.visible = false;
+        this.isotopesLayer.visible = false;
       }
       if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS && mixIsotopesModel.showingNaturesMixProperty.get() === false ) {
-        self.isotopesLayer.visible = true;
-        self.isotopesLayer.setIsotopes( self.model.isotopesList );
+        this.isotopesLayer.visible = true;
+        this.isotopesLayer.setIsotopes( this.model.isotopesList );
       }
     } );
 
     // Doesn't need unlink as it stays through out the sim life
-    mixIsotopesModel.interactivityModeProperty.link( function() {
+    mixIsotopesModel.interactivityModeProperty.link( () => {
       if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
-        self.isotopesLayer.visible = false;
+        this.isotopesLayer.visible = false;
       }
       else {
-        self.isotopesLayer.visible = true;
-        self.isotopesLayer.setIsotopes( self.model.isotopesList );
+        this.isotopesLayer.visible = true;
+        this.isotopesLayer.setIsotopes( this.model.isotopesList );
       }
     } );
 
     // Doesn't need unlink as it stays through out the sim life
-    mixIsotopesModel.testChamber.isotopeCountProperty.link( function( isotopeCount ) {
-      self.updatePieChart = true;
+    mixIsotopesModel.testChamber.isotopeCountProperty.link( isotopeCount => {
+      this.updatePieChart = true;
     } );
   }
 

@@ -77,7 +77,7 @@ class MonoIsotopeBucket extends SphereBucket {
    */
   getContainedIsotopes() {
     const containedIsotopes = createObservableArray();
-    this.getParticleList().forEach( function( isotope ) {
+    this.getParticleList().forEach( isotope => {
       assert && assert( isotope instanceof MovableAtom );
       containedIsotopes.push( isotope );
     } );

@@ -6,38 +6,33 @@
  * @author John Blanco
  */
 
-
-//modules
-import inherit from '../../../../phet-core/js/inherit.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 
-/**
- * @param {number} numProtons
- * @param {number} numNeutrons
- * @param {number} numElectrons
- * @constructor
- */
-function ImmutableAtomConfig( numProtons, numNeutrons, numElectrons ) {
-  this.protonCount = numProtons;
-  this.neutronCount = numNeutrons;
-  this.electronCount = numElectrons;
-}
+class ImmutableAtomConfig {
 
-isotopesAndAtomicMass.register( 'ImmutableAtomConfig', ImmutableAtomConfig );
-
-inherit( Object, ImmutableAtomConfig, {
+  /**
+   * @param {number} numProtons
+   * @param {number} numNeutrons
+   * @param {number} numElectrons
+   */
+  constructor( numProtons, numNeutrons, numElectrons ) {
+    this.protonCount = numProtons;
+    this.neutronCount = numNeutrons;
+    this.electronCount = numElectrons;
+  }
 
   /**
    * compare two atom configurations, return true if the particle counts are the same
    * @param {NumberAtom|ImmutableAtomConfig} atomConfig
    * @returns {boolean}
+   * @public
    */
-  equals: function( atomConfig ) {
+  equals( atomConfig ) {
 
     let configsAreEqual;
 
-    // support comparision to mutable or immutable atom configurations
+    // support comparison to mutable or immutable atom configurations
     if ( atomConfig.protonCountProperty ) {
 
       assert && assert(
@@ -58,11 +53,17 @@ inherit( Object, ImmutableAtomConfig, {
                         this.electronCount === atomConfig.electronCount;
     }
     return configsAreEqual;
-  },
+  }
 
+  /**
+   * @returns {number}
+   * @public
+   */
   getIsotopeAtomicMass() {
     return AtomIdentifier.getIsotopeAtomicMass( this.protonCount, this.neutronCount );
   }
-} );
+}
+
+isotopesAndAtomicMass.register( 'ImmutableAtomConfig', ImmutableAtomConfig );
 
 export default ImmutableAtomConfig;

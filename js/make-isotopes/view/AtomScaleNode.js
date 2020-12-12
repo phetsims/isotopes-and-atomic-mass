@@ -11,7 +11,6 @@
 import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Utils from '../../../../dot/js/Utils.js';
-import inherit from '../../../../phet-core/js/inherit.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Image from '../../../../scenery/js/nodes/Image.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
@@ -19,8 +18,8 @@ import Text from '../../../../scenery/js/nodes/Text.js';
 import AquaRadioButton from '../../../../sun/js/AquaRadioButton.js';
 import Panel from '../../../../sun/js/Panel.js';
 import scaleImage from '../../../mipmaps/scale_png.js';
-import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
+import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
 
 const atomicMassString = isotopesAndAtomicMassStrings.atomicMass;
 const massNumberString = isotopesAndAtomicMassStrings.massNumber;
@@ -63,13 +62,13 @@ function ScaleReadoutNode( atom, displayModeProperty ) {
 
   // Watch the property that represents the display mode and update the readout when it changes.
   // Doesn't need unlink as it stays through out the sim life
-  displayModeProperty.link( function() {
+  displayModeProperty.link( () => {
     updateReadout();
   } );
 
   // Watch the atom and update the readout whenever it changes.
   // Doesn't need unlink as it stays through out the sim life
-  atom.massNumberProperty.link( function() {
+  atom.massNumberProperty.link( () => {
     updateReadout();
   } );
 
@@ -111,47 +110,47 @@ function DisplayModeSelectionNode( displayModeProperty ) {
   return displayButtonGroup;
 }
 
-/**
- * Constructor for an AtomScaleNode.
- *
- * @param {ParticleAtom} atom
- * @constructor
- */
-function AtomScaleNode( atom ) {
+class AtomScaleNode extends Node {
 
-  Node.call( this );
+  /**
+   * Constructor for an AtomScaleNode.
+   *
+   * @param {ParticleAtom} atom
+   */
+  constructor( atom ) {
 
-  this.displayModeProperty = new Property( DISPLAY_MODE.MASS_NUMBER );
+    super();
 
-  // This is Loading the scale image and scaling it to desired width and adding to the node
-  const weighScaleImage = new Image( scaleImage );
-  weighScaleImage.scale( SCALE_WIDTH / weighScaleImage.width );
-  this.addChild( weighScaleImage );
+    this.displayModeProperty = new Property( DISPLAY_MODE.MASS_NUMBER );
 
-  // Add the scale readout node which displays either atomic mass or number.
-  const scaleReadoutNode = new ScaleReadoutNode( atom, this.displayModeProperty );
-  scaleReadoutNode.left = SCALE_WIDTH * 0.075; // empirically determined
-  scaleReadoutNode.centerY = weighScaleImage.height * 0.7; // empirically determined
+    // This is Loading the scale image and scaling it to desired width and adding to the node
+    const weighScaleImage = new Image( scaleImage );
+    weighScaleImage.scale( SCALE_WIDTH / weighScaleImage.width );
+    this.addChild( weighScaleImage );
 
-  this.addChild( scaleReadoutNode );
+    // Add the scale readout node which displays either atomic mass or number.
+    const scaleReadoutNode = new ScaleReadoutNode( atom, this.displayModeProperty );
+    scaleReadoutNode.left = SCALE_WIDTH * 0.075; // empirically determined
+    scaleReadoutNode.centerY = weighScaleImage.height * 0.7; // empirically determined
 
-  // Add the display mode selector to the scale base.
-  const displayModeSelectionNode = new DisplayModeSelectionNode( this.displayModeProperty );
-  // Position the selector next to the readout.
-  displayModeSelectionNode.centerX = ( scaleReadoutNode.right + weighScaleImage.width - 5 ) / 2; // empirically determined
-  displayModeSelectionNode.centerY = weighScaleImage.height * 0.7; // empirically determined
-  this.addChild( displayModeSelectionNode );
-}
+    this.addChild( scaleReadoutNode );
 
-isotopesAndAtomicMass.register( 'AtomScaleNode', AtomScaleNode );
-inherit( Node, AtomScaleNode, {
+    // Add the display mode selector to the scale base.
+    const displayModeSelectionNode = new DisplayModeSelectionNode( this.displayModeProperty );
+    // Position the selector next to the readout.
+    displayModeSelectionNode.centerX = ( scaleReadoutNode.right + weighScaleImage.width - 5 ) / 2; // empirically determined
+    displayModeSelectionNode.centerY = weighScaleImage.height * 0.7; // empirically determined
+    this.addChild( displayModeSelectionNode );
+  }
 
   /**
    * Reset the atom scale node to its initial state by resetting the display mode property.
+   * @public
    */
-  reset: function() {
+  reset() {
     this.displayModeProperty.reset();
   }
-} );
+}
 
+isotopesAndAtomicMass.register( 'AtomScaleNode', AtomScaleNode );
 export default AtomScaleNode;

@@ -34,8 +34,8 @@ class MixIsotopesScreen extends Screen {
     };
 
     super(
-      function() { return new MixIsotopesModel(); },
-      function( model ) { return new MixIsotopesScreenView( model, tandem ); },
+      () => new MixIsotopesModel(),
+      model => new MixIsotopesScreenView( model, tandem ),
       options );
   }
 }

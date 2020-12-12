@@ -33,8 +33,8 @@ class MakeIsotopesScreen extends Screen {
     };
 
     super(
-      function() { return new MakeIsotopesModel(); },
-      function( model ) { return new MakeIsotopesScreenView( model, tandem ); },
+      () => new MakeIsotopesModel(),
+      model => new MakeIsotopesScreenView( model, tandem ),
       options );
   }
 }

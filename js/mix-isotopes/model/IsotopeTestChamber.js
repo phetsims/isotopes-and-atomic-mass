@@ -15,7 +15,6 @@ import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Rectangle from '../../../../dot/js/Rectangle.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import inherit from '../../../../phet-core/js/inherit.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 
 // constants
@@ -35,34 +34,32 @@ const BUFFER = 1; // isotopes stroke doesn't cross the wall, empirically determi
  * @param {IsotopeTestChamber} model
  */
 function State( model ) {
-  const self = this;
   this.containedIsotopes = createObservableArray();
-  model.containedIsotopes.forEach( function( isotope ) {
-    self.containedIsotopes.add( isotope );
+  model.containedIsotopes.forEach( isotope => {
+    this.containedIsotopes.add( isotope );
   } );
 }
 
-/**
- * @constructor
- * @param {MixIsotopesModel} model
- *
- */
-function IsotopeTestChamber( model ) {
+class IsotopeTestChamber {
 
-  // @private - Isotope Mixtures Model that contains this test chamber.
-  this.model = model;
+  /**
+   * @param {MixIsotopesModel} model
+   *
+   */
+  constructor( model ) {
 
-  // {ObservableArrayDef<MovableAtom>} Keeps track of the isotopes in the chamber and is updated as isotopes come and go
-  // @public
-  this.containedIsotopes = createObservableArray();
+    // @private - Isotope Mixtures Model that contains this test chamber.
+    this.model = model;
 
-  // @public {Read-Only}
-  this.isotopeCountProperty = new Property( 0 );
-  this.averageAtomicMassProperty = new Property( 0 );
-}
+    // {ObservableArrayDef<MovableAtom>} Keeps track of the isotopes in the chamber and is updated as isotopes come and go
+    // @public
+    this.containedIsotopes = createObservableArray();
 
-isotopesAndAtomicMass.register( 'IsotopeTestChamber', IsotopeTestChamber );
-inherit( Object, IsotopeTestChamber, {
+    // @public {Read-Only}
+    this.isotopeCountProperty = new Property( 0 );
+    this.averageAtomicMassProperty = new Property( 0 );
+  }
+
   /**
    * Get the number of isotopes currently in the chamber that match the specified configuration.
    *
@@ -70,24 +67,24 @@ inherit( Object, IsotopeTestChamber, {
    * @returns {number} isotopeCount
    * @public
    */
-  getIsotopeCount: function( isotopeConfig ) {
+  getIsotopeCount( isotopeConfig ) {
     assert && assert( isotopeConfig.protonCountProperty.get() === isotopeConfig.electronCountProperty.get() ); // Should always be neutral atom.
     let isotopeCount = 0;
-    this.containedIsotopes.forEach( function( isotope ) {
+    this.containedIsotopes.forEach( isotope => {
       if ( isotope.atomConfiguration.equals( isotopeConfig ) ) {
         isotopeCount++;
       }
     } );
     return isotopeCount;
-  },
+  }
 
   /**
    * @returns {Rectangle} TEST_CHAMBER_RECT
    * @public
    */
-  getTestChamberRect: function() {
+  getTestChamberRect() {
     return TEST_CHAMBER_RECT;
-  },
+  }
 
   /**
    * Test whether an isotope is within the chamber. This is strictly a 2D test that looks as the isotopes center
@@ -97,9 +94,9 @@ inherit( Object, IsotopeTestChamber, {
    * @returns {boolean}
    * @public
    */
-  isIsotopePositionedOverChamber: function( isotope ) {
+  isIsotopePositionedOverChamber( isotope ) {
     return TEST_CHAMBER_RECT.containsPoint( isotope.positionProperty.get() );
-  },
+  }
 
   /**
    * Add the specified isotope to the chamber. This method requires that the position of the isotope be within the
@@ -113,14 +110,13 @@ inherit( Object, IsotopeTestChamber, {
    *
    * @public
    */
-  addIsotopeToChamber: function( isotope, performUpdates ) {
-    const self = this;
+  addIsotopeToChamber( isotope, performUpdates ) {
     if ( this.isIsotopePositionedOverChamber( isotope ) ) {
       this.containedIsotopes.push( isotope );
 
-      var isotopeRemovedListener = function( userControlled ) {
-        if ( userControlled && self.containedIsotopes.includes( isotope ) ) {
-          self.removeIsotopeFromChamber( isotope );
+      var isotopeRemovedListener = userControlled => {
+        if ( userControlled && this.containedIsotopes.includes( isotope ) ) {
+          this.removeIsotopeFromChamber( isotope );
         }
         isotope.userControlledProperty.unlink( isotopeRemovedListener );
       };
@@ -164,8 +160,7 @@ inherit( Object, IsotopeTestChamber, {
       // This isotope is not positioned correctly.
       assert && assert( false, 'Ignoring attempt to add incorrectly located isotope to test chamber.' );
     }
-  },
-
+  }
 
   /**
    * Adds a list of isotopes to the test chamber. Same restrictions as above.
@@ -174,29 +169,28 @@ inherit( Object, IsotopeTestChamber, {
    *
    * @public
    */
-  bulkAddIsotopesToChamber: function( isotopeList ) {
-    const self = this;
-    isotopeList.forEach( function( isotope ) {
-      self.addIsotopeToChamber( isotope, false );
+  bulkAddIsotopesToChamber( isotopeList ) {
+    isotopeList.forEach( isotope => {
+      this.addIsotopeToChamber( isotope, false );
     } );
     this.updateCountProperty();
     this.updateAverageAtomicMassProperty();
-  },
+  }
 
   /**
    * Convenience function to set the isotopeCount property equal to the number of isotopes contained in this test chamber.
    *
    * @private
    */
-  updateCountProperty: function() {
+  updateCountProperty() {
     this.isotopeCountProperty.set( this.containedIsotopes.length );
-  },
+  }
 
   // @private
-  updateAverageAtomicMassProperty: function() {
+  updateAverageAtomicMassProperty() {
     if ( this.containedIsotopes.length > 0 ) {
       let totalMass = 0;
-      this.containedIsotopes.forEach( function( isotope ) {
+      this.containedIsotopes.forEach( isotope => {
         totalMass += isotope.atomConfiguration.getIsotopeAtomicMass();
       } );
 
@@ -205,14 +199,14 @@ inherit( Object, IsotopeTestChamber, {
     else {
       this.averageAtomicMassProperty.set( 0 );
     }
-  },
+  }
 
   /**
    * @param {MovableAtom} isotope
    *
    * @public
    */
-  removeIsotopeFromChamber: function( isotope ) {
+  removeIsotopeFromChamber( isotope ) {
     this.containedIsotopes.remove( isotope );
     this.updateCountProperty();
     // Update the average atomic mass.
@@ -223,8 +217,7 @@ inherit( Object, IsotopeTestChamber, {
     else {
       this.averageAtomicMassProperty.set( 0 );
     }
-  },
-
+  }
 
   /**
    * Remove an isotope from the chamber that matches the specified atom configuration. Note that electrons are ignored.
@@ -234,12 +227,12 @@ inherit( Object, IsotopeTestChamber, {
    *
    * @public
    */
-  removeIsotopeMatchingConfig: function( isotopeConfig ) {
+  removeIsotopeMatchingConfig( isotopeConfig ) {
     assert && assert( ( isotopeConfig.protonCountProperty.get() - isotopeConfig.electronCountProperty.get() ) === 0 );
 
     // Locate and remove a matching isotope.
     let removedIsotope = null;
-    this.containedIsotopes.forEach( function( isotope ) {
+    this.containedIsotopes.forEach( isotope => {
       if ( isotope.atomConfiguration.equals( isotopeConfig ) ) {
         removedIsotope = isotope;
         return;
@@ -247,18 +240,18 @@ inherit( Object, IsotopeTestChamber, {
     } );
     this.removeIsotopeFromChamber( removedIsotope );
     return removedIsotope;
-  },
+  }
 
   /**
    * Removes all isotopes
    *
    * @public
    */
-  removeAllIsotopes: function() {
+  removeAllIsotopes() {
     this.containedIsotopes.clear();
     this.updateCountProperty();
     this.averageAtomicMassProperty.set( 0 );
-  },
+  }
 
   /**
    * Returns the containedIsotopes.
@@ -266,18 +259,18 @@ inherit( Object, IsotopeTestChamber, {
    *
    * @public
    */
-  getContainedIsotopes: function() {
+  getContainedIsotopes() {
     return this.containedIsotopes;
-  },
+  }
 
   /**
    * Get a count of the total number of isotopes in the chamber.
    * @returns {number}
    * @public
    */
-  getTotalIsotopeCount: function() {
+  getTotalIsotopeCount() {
     return this.isotopeCountProperty.get();
-  },
+  }
 
   /**
    * Get the proportion of isotopes currently within the chamber that match the specified configuration.
@@ -287,20 +280,19 @@ inherit( Object, IsotopeTestChamber, {
    *
    * @public
    */
-  getIsotopeProportion: function( isotopeConfig ) {
+  getIsotopeProportion( isotopeConfig ) {
     // Calculates charge to ensure that isotopes are neutral.
     assert && assert( isotopeConfig.protonCountProperty.get() - isotopeConfig.electronCountProperty.get() === 0 );
     let isotopeCount = 0;
 
-    this.containedIsotopes.forEach( function( isotope ) {
+    this.containedIsotopes.forEach( isotope => {
       if ( isotopeConfig.equals( isotope.atomConfiguration ) ) {
         isotopeCount++;
       }
     } );
 
     return isotopeCount / this.containedIsotopes.length;
-  },
-
+  }
 
   /**
    * Move all the particles in the chamber such that they don't overlap. This is intended for usage where there are not
@@ -308,7 +300,7 @@ inherit( Object, IsotopeTestChamber, {
    *
    * @public
    */
-  adjustForOverlap: function() {
+  adjustForOverlap() {
     // Bounds checking.  The threshold is pretty much arbitrary.
     assert && assert( this.getTotalIsotopeCount() <= 100,
       'Ignoring request to adjust for overlap - too many particles in the chamber for that' );
@@ -325,7 +317,7 @@ inherit( Object, IsotopeTestChamber, {
 
       var self = this; //Prevents any scope error when using this.
 
-      this.containedIsotopes.forEach( function( isotope1 ) {
+      this.containedIsotopes.forEach( isotope1 => {
 
         const totalForce = new Vector2( 0, 0 );
         //Calculate the force due to other isotopes
@@ -386,7 +378,7 @@ inherit( Object, IsotopeTestChamber, {
 
       }
     }
-  },
+  }
 
   /**
    * Checks to ensure that particles are not overlapped.
@@ -395,13 +387,12 @@ inherit( Object, IsotopeTestChamber, {
    *
    * //@private
    */
-  checkForParticleOverlap: function() {
-    const self = this;
+  checkForParticleOverlap() {
     let overlapCheck = false;
 
-    self.containedIsotopes.forEach( function( isotope1 ) {
-      for ( let i = 0; i < self.containedIsotopes.length; i++ ) {
-        const isotope2 = self.containedIsotopes.get( i );
+    this.containedIsotopes.forEach( isotope1 => {
+      for ( let i = 0; i < this.containedIsotopes.length; i++ ) {
+        const isotope2 = this.containedIsotopes.get( i );
         if ( isotope1 === isotope2 ) {
           // Same isotope so skip it!
           continue;
@@ -416,8 +407,7 @@ inherit( Object, IsotopeTestChamber, {
     } );
 
     return overlapCheck;
-  },
-
+  }
 
   /**
    * Generate a random position within the test chamber.
@@ -426,17 +416,16 @@ inherit( Object, IsotopeTestChamber, {
    *
    * @public
    */
-  generateRandomPosition: function() {
+  generateRandomPosition() {
     return new Vector2(
       TEST_CHAMBER_RECT.minX + phet.joist.random.nextDouble() * TEST_CHAMBER_RECT.width,
       TEST_CHAMBER_RECT.minY + phet.joist.random.nextDouble() * TEST_CHAMBER_RECT.height );
-  },
+  }
 
   // @public
-  getState: function() {
+  getState() {
     return new State( this );
-  },
-
+  }
 
   /**
    * Restore a previously captured state
@@ -444,10 +433,11 @@ inherit( Object, IsotopeTestChamber, {
    *
    * @public
    */
-  setState: function( state ) {
+  setState( state ) {
     this.removeAllIsotopes( true );
     this.bulkAddIsotopesToChamber( state.containedIsotopes );
   }
-} );
+}
 
+isotopesAndAtomicMass.register( 'IsotopeTestChamber', IsotopeTestChamber );
 export default IsotopeTestChamber;
