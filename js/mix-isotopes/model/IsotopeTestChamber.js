@@ -13,6 +13,7 @@
 import createObservableArray from '../../../../axon/js/createObservableArray.js';
 import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
+import dotRandom from '../../../../dot/js/dotRandom.js';
 import Rectangle from '../../../../dot/js/Rectangle.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
@@ -335,7 +336,7 @@ class IsotopeTestChamber {
             // These isotopes are sitting right on top of one another.
             // Add the max amount of inter-particle force in a random direction.
             forceFromIsotope.setPolar( interParticleForceConst / ( minInterParticleDistance * minInterParticleDistance ),
-              phet.joist.random.nextDouble() * 2 * Math.PI );
+              dotRandom.nextDouble() * 2 * Math.PI );
           }
           else if ( distanceBetweenIsotopes < isotope1.radiusProperty.get() + isotope2.radiusProperty.get() ) {
             // calculate the repulsive force based on the distance.
@@ -420,8 +421,8 @@ class IsotopeTestChamber {
    */
   generateRandomPosition() {
     return new Vector2(
-      TEST_CHAMBER_RECT.minX + phet.joist.random.nextDouble() * TEST_CHAMBER_RECT.width,
-      TEST_CHAMBER_RECT.minY + phet.joist.random.nextDouble() * TEST_CHAMBER_RECT.height );
+      TEST_CHAMBER_RECT.minX + dotRandom.nextDouble() * TEST_CHAMBER_RECT.width,
+      TEST_CHAMBER_RECT.minY + dotRandom.nextDouble() * TEST_CHAMBER_RECT.height );
   }
 
   // @public
