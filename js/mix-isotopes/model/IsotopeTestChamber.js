@@ -52,7 +52,7 @@ class IsotopeTestChamber {
     // @private - Isotope Mixtures Model that contains this test chamber.
     this.model = model;
 
-    // {ObservableArrayDef<MovableAtom>} Keeps track of the isotopes in the chamber and is updated as isotopes come and go
+    // {ObservableArrayDef.<MovableAtom>} Keeps track of the isotopes in the chamber and is updated as isotopes come and go
     // @public
     this.containedIsotopes = createObservableArray();
 
