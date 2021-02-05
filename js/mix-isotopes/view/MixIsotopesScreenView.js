@@ -50,75 +50,6 @@ const percentCompositionString = isotopesAndAtomicMassStrings.percentComposition
 // constants
 const MAX_SLIDER_WIDTH = 99.75; //empirically determined
 
-/**
- * Created a node containing radio buttons to select My Mix or Nature's Mix
- * @param {Property} isotopeMixtureProperty
- */
-function IsotopeMixtureSelectionNode( isotopeMixtureProperty ) {
-  const radioButtonRadius = 6;
-  const LABEL_FONT = new PhetFont( 14 );
-  const MAX_WIDTH = 160;
-  const myMixButton = new AquaRadioButton(
-    isotopeMixtureProperty,
-    false,
-    new Text( myMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ), { radius: radioButtonRadius }
-  );
-  const naturesMixButton = new AquaRadioButton(
-    isotopeMixtureProperty,
-    true,
-    new Text( naturesMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ), { radius: radioButtonRadius }
-  );
-  const label = new Text( isotopeMixtureString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } );
-  const displayButtonGroup = new Node();
-  displayButtonGroup.addChild( label );
-  myMixButton.top = label.bottom + 3;
-  myMixButton.left = displayButtonGroup.left;
-  displayButtonGroup.addChild( myMixButton );
-  naturesMixButton.top = myMixButton.bottom + 8;
-  naturesMixButton.left = displayButtonGroup.left;
-  displayButtonGroup.addChild( naturesMixButton );
-  return displayButtonGroup;
-}
-
-/**
- * Created a node containing radio buttons to select Buckets or Sliders in My Mix
- * @param {MixIsotopesModel} model
- * @param {ModelViewTransform2} modelViewTransform
- */
-function InteractivityModeSelectionNode( model, modelViewTransform ) {
-  const bucketNode = new Node();
-  const bucket = new Bucket( {
-    baseColor: Color.gray,
-    size: new Dimension2( 50, 30 )
-  } );
-  bucketNode.addChild( new BucketHole( bucket, modelViewTransform ) );
-  bucketNode.addChild( new BucketFront( bucket, modelViewTransform ) );
-  bucketNode.scale( 0.5 );
-
-  const range = new Range( 0, 100 );
-  const slider = new HSlider( new Property( 50 ), range, {
-    trackSize: new Dimension2( 50, 5 ),
-    thumbSize: new Dimension2( 15, 30 ),
-    majorTickLength: 15
-  } );
-  slider.addMajorTick( 0 );
-  slider.addMajorTick( 100 );
-  slider.scale( 0.5 );
-
-  const radioButtonContent = [
-    { value: MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS, node: bucketNode },
-    { value: MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS, node: slider }
-  ];
-  return new RectangularRadioButtonGroup( model.interactivityModeProperty, radioButtonContent, {
-    orientation: 'horizontal',
-    baseColor: Color.white,
-    spacing: 5,
-    selectedStroke: '#3291b8',
-    selectedLineWidth: 2,
-    deselectedContentOpacity: 0.2
-  } );
-}
-
 class MixIsotopesScreenView extends ScreenView {
 
   /**
@@ -133,12 +64,15 @@ class MixIsotopesScreenView extends ScreenView {
     this.updatePieChart = true; // track when to update pie chart in the animation frame
 
     // Set up the model view transform. The test chamber is centered at (0, 0) in model space, and this transform is set
-    // up to place the chamber where we want it on the canvas.
-    // IMPORTANT NOTES: The multiplier factors for the 2nd point can be adjusted to shift the center right or left, and
-    // the scale factor can be adjusted to zoom in or out (smaller numbers zoom out, larger ones zoom in).
-    this.modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping( Vector2.ZERO,
-      new Vector2( Utils.roundSymmetric( this.layoutBounds.width * 0.32 ),
-        Utils.roundSymmetric( this.layoutBounds.height * 0.33 ) ),
+    // up to place the chamber where we want it on the canvas.  The multiplier factors for the 2nd point can be adjusted
+    // to shift the center right or left, and the scale factor can be adjusted to zoom in or out (smaller numbers zoom
+    // out, larger ones zoom in).
+    this.modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
+      Vector2.ZERO,
+      new Vector2(
+        Utils.roundSymmetric( this.layoutBounds.width * 0.32 ),
+        Utils.roundSymmetric( this.layoutBounds.height * 0.33 )
+      ),
       1.0
     );
 
@@ -149,11 +83,12 @@ class MixIsotopesScreenView extends ScreenView {
     this.addChild( bucketHoleLayer );
     const chamberLayer = new Node();
     this.addChild( chamberLayer );
+
     // rendering these two nodes at last so that isotopes are at the over everything but behind the bucket
     const isotopeLayer = new Node();
     const bucketFrontLayer = new Node();
 
-    // Adding Buckets
+    // buckets
     const addBucketView = addedBucket => {
       const bucketHole = new BucketHole( addedBucket, this.modelViewTransform );
       const bucketFront = new BucketFront( addedBucket, this.modelViewTransform );
@@ -167,6 +102,7 @@ class MixIsotopesScreenView extends ScreenView {
       mixIsotopesModel.bucketList.addItemRemovedListener( function removalListener( removedBucket ) {
         if ( removedBucket === addedBucket ) {
           bucketHoleLayer.removeChild( bucketHole );
+          bucketFront.interruptSubtreeInput(); // cancel any in-progress interactions, prevents multi-touch issues
           bucketFrontLayer.removeChild( bucketFront );
           mixIsotopesModel.bucketList.removeItemRemovedListener( removalListener );
         }
@@ -176,7 +112,7 @@ class MixIsotopesScreenView extends ScreenView {
     mixIsotopesModel.bucketList.addItemAddedListener( addedBucket => { addBucketView( addedBucket ); } );
     mixIsotopesModel.bucketList.forEach( addedBucket => { addBucketView( addedBucket ); } );
 
-    // Adding Isotopes
+    // isotopes
     const addIsotopeView = addedIsotope => {
       const isotopeView = new ParticleView( addedIsotope, this.modelViewTransform );
       isotopeView.center = this.modelViewTransform.modelToViewPosition( addedIsotope.positionProperty.get() );
@@ -219,7 +155,7 @@ class MixIsotopesScreenView extends ScreenView {
       }
     } );
 
-    // Adding Numeric Controllers
+    // numeric controllers
     mixIsotopesModel.numericalControllerList.addItemAddedListener( addedController => {
       const controllerView = new ControlIsotope( addedController, 0, 100 );
       const center_pos = this.modelViewTransform.modelToViewPosition( addedController.centerPosition );
@@ -237,6 +173,7 @@ class MixIsotopesScreenView extends ScreenView {
       } );
     } );
 
+    // test chamber
     const testChamberNode = new Rectangle( this.modelViewTransform.modelToViewBounds(
       this.model.testChamber.getTestChamberRect() ), {
       fill: 'black',
@@ -262,8 +199,7 @@ class MixIsotopesScreenView extends ScreenView {
     clearBoxButton.top = chamberLayer.bottom + 5;
     clearBoxButton.left = chamberLayer.left;
 
-    // Add the interactive periodic table that allows the user to select the current element.  Heaviest interactive
-    // element is Neon for this sim.
+    // Add the interactive periodic table that allows the user to select the current element.
     const periodicTableNode = new ExpandedPeriodicTableNode( mixIsotopesModel.selectedAtomConfig, 18, {
       tandem: tandem
     } );
@@ -329,9 +265,10 @@ class MixIsotopesScreenView extends ScreenView {
     isotopeMixtureSelectionNode.left = averageAtomicMassBox.left;
     this.addChild( isotopeMixtureSelectionNode );
 
-    // Create and add the Reset All Button in the bottom right, which resets the model
+    // Create and add the reset all button in the bottom right, which resets the model.
     const resetAllButton = new ResetAllButton( {
       listener: () => {
+        this.interruptSubtreeInput(); // cancel any interactions that are in progress
         mixIsotopesModel.reset();
         compositionBox.expandedProperty.reset();
         averageAtomicMassBox.expandedProperty.reset();
@@ -345,7 +282,7 @@ class MixIsotopesScreenView extends ScreenView {
     this.addChild( isotopeLayer );
     this.addChild( bucketFrontLayer );
 
-    // Doesn't need unlink as it stays through out the sim life
+    // doesn't need unlink as it stays through out the sim life
     mixIsotopesModel.showingNaturesMixProperty.link( () => {
       if ( mixIsotopesModel.showingNaturesMixProperty.get() === true ) {
         interactivityModeSelectionNode.visible = false;
@@ -363,7 +300,7 @@ class MixIsotopesScreenView extends ScreenView {
       }
     } );
 
-    // Doesn't need unlink as it stays through out the sim life
+    // doesn't need unlink as it stays through out the sim life
     mixIsotopesModel.interactivityModeProperty.link( () => {
       if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
         this.isotopesLayer.visible = false;
@@ -374,20 +311,103 @@ class MixIsotopesScreenView extends ScreenView {
       }
     } );
 
-    // Doesn't need unlink as it stays through out the sim life
+    // doesn't need unlink as it stays through out the sim life
     mixIsotopesModel.testChamber.isotopeCountProperty.link( isotopeCount => {
       this.updatePieChart = true;
     } );
   }
 
-  // @public
+  /**
+   * step the time-dependent behavior
+   * @public
+   */
   step() {
-    // as an optimization we would updating pie chart once every animation frame in place of updating it every time
-    // isotope is added in the test chamber in single animation frame
+
+    // As an optimization we update the pie chart once every animation frame in place of updating it every time an
+    // isotope is added in the test chamber.
     if ( this.updatePieChart ) {
       this.isotopeProportionsPieChart.update();
       this.updatePieChart = false;
     }
+  }
+}
+
+/**
+ * selector node containing radio buttons to select between My Mix or Nature's Mix
+ */
+class IsotopeMixtureSelectionNode extends Node {
+
+  /**
+   * @param {Property} isotopeMixtureProperty
+   */
+  constructor( isotopeMixtureProperty ) {
+    super();
+    const radioButtonRadius = 6;
+    const LABEL_FONT = new PhetFont( 14 );
+    const MAX_WIDTH = 160;
+    const myMixButton = new AquaRadioButton(
+      isotopeMixtureProperty,
+      false,
+      new Text( myMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ), { radius: radioButtonRadius }
+    );
+    const naturesMixButton = new AquaRadioButton(
+      isotopeMixtureProperty,
+      true,
+      new Text( naturesMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ), { radius: radioButtonRadius }
+    );
+    const label = new Text( isotopeMixtureString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } );
+    this.addChild( label );
+    myMixButton.left = 0;
+    myMixButton.top = label.bottom + 3;
+    this.addChild( myMixButton );
+    naturesMixButton.left = 0;
+    naturesMixButton.top = myMixButton.bottom + 8;
+    this.addChild( naturesMixButton );
+  }
+}
+
+/**
+ * selector node containing radio buttons to select Buckets or Sliders in "My Mix" mode
+ */
+class InteractivityModeSelectionNode extends RectangularRadioButtonGroup {
+
+  /**
+   * @param {MixIsotopesModel} model
+   * @param {ModelViewTransform2} modelViewTransform
+   */
+  constructor( model, modelViewTransform ) {
+    const bucketNode = new Node();
+    const bucket = new Bucket( {
+      baseColor: Color.gray,
+      size: new Dimension2( 50, 30 )
+    } );
+    bucketNode.addChild( new BucketHole( bucket, modelViewTransform ) );
+    bucketNode.addChild( new BucketFront( bucket, modelViewTransform ) );
+    bucketNode.scale( 0.5 );
+
+    const range = new Range( 0, 100 );
+    const slider = new HSlider( new Property( 50 ), range, {
+      trackSize: new Dimension2( 50, 5 ),
+      thumbSize: new Dimension2( 15, 30 ),
+      majorTickLength: 15
+    } );
+    slider.addMajorTick( 0 );
+    slider.addMajorTick( 100 );
+    slider.scale( 0.5 );
+
+    const radioButtonContent = [
+      { value: MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS, node: bucketNode },
+      { value: MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS, node: slider }
+    ];
+
+    super( model.interactivityModeProperty, radioButtonContent, {
+      orientation: 'horizontal',
+      baseColor: Color.white,
+      spacing: 5,
+      selectedStroke: '#3291b8',
+      selectedLineWidth: 2,
+      deselectedContentOpacity: 0.2
+    } );
   }
 }
 

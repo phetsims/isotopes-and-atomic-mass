@@ -45,13 +45,10 @@ class MakeIsotopesModel {
    */
   constructor() {
 
-    // carry through scope
+    // @public - create the atom.
+    this.particleAtom = new ParticleAtom();
 
-    // create the atom.
-    this.particleAtom = new ParticleAtom(); // @public
-
-    // Make available a 'number atom' that tracks the state of the particle atom.
-    // @public
+    // @public - Make available a 'number atom' that tracks the state of the particle atom.
     this.numberAtom = new NumberAtom( {
       protonCount: DEFAULT_ATOM_CONFIG.protonCountProperty.get(),
       neutronCount: DEFAULT_ATOM_CONFIG.neutronCountProperty.get(),
@@ -65,6 +62,8 @@ class MakeIsotopesModel {
     this.nucleusStable = true; // @public
     this.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD; // @private
     this.nucleusOffset = Vector2.ZERO; // @private
+    this.nucleusJumpCount = 0; // @private
+
     // Unlink in not required here as it is used through out the sim life
     this.particleAtom.massNumberProperty.link( massNumber => {
       const stable = massNumber > 0 ?
@@ -126,9 +125,9 @@ class MakeIsotopesModel {
       if ( this.nucleusJumpCountdown <= 0 ) {
         this.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
         if ( this.particleAtom.nucleusOffsetProperty.get() === Vector2.ZERO ) {
-          this._nucleusJumpCount++;
-          const angle = JUMP_ANGLES[ this._nucleusJumpCount % JUMP_ANGLES.length ];
-          const distance = JUMP_DISTANCES[ this._nucleusJumpCount % JUMP_DISTANCES.length ];
+          this.nucleusJumpCount++;
+          const angle = JUMP_ANGLES[ this.nucleusJumpCount % JUMP_ANGLES.length ];
+          const distance = JUMP_DISTANCES[ this.nucleusJumpCount % JUMP_DISTANCES.length ];
           this.particleAtom.nucleusOffsetProperty.set(
             new Vector2( Math.cos( angle ) * distance, Math.sin( angle ) * distance ) );
         }
@@ -265,8 +264,6 @@ class MakeIsotopesModel {
     return this.neutronBucket;
   }
 }
-
-MakeIsotopesModel.prototype._nucleusJumpCount = 0;
 
 isotopesAndAtomicMass.register( 'MakeIsotopesModel', MakeIsotopesModel );
 export default MakeIsotopesModel;
