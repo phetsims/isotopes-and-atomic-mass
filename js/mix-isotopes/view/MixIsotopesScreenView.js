@@ -208,6 +208,7 @@ class MixIsotopesScreenView extends ScreenView {
     periodicTableNode.right = this.layoutBounds.width - 10;
     this.addChild( periodicTableNode );
 
+    // pie chart
     this.isotopeProportionsPieChart = new IsotopeProportionsPieChart( this.model );
     this.isotopeProportionsPieChart.scale( 0.6 );
     this.isotopeProportionsPieChart.centerX = this.isotopeProportionsPieChart.centerX + 150; // Empirically determined
@@ -282,7 +283,8 @@ class MixIsotopesScreenView extends ScreenView {
     this.addChild( isotopeLayer );
     this.addChild( bucketFrontLayer );
 
-    // doesn't need unlink as it stays through out the sim life
+    // Update component visibility based on whether "nature's mix" is being shown.  This doesn't need unlink as it stays
+    // throughout the sim life.
     mixIsotopesModel.showingNaturesMixProperty.link( () => {
       if ( mixIsotopesModel.showingNaturesMixProperty.get() === true ) {
         interactivityModeSelectionNode.visible = false;
@@ -294,13 +296,16 @@ class MixIsotopesScreenView extends ScreenView {
         clearBoxButton.visible = true;
         this.isotopesLayer.visible = false;
       }
-      if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS && mixIsotopesModel.showingNaturesMixProperty.get() === false ) {
+      if ( mixIsotopesModel.interactivityModeProperty.get() ===
+           MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS &&
+           mixIsotopesModel.showingNaturesMixProperty.get() === false ) {
         this.isotopesLayer.visible = true;
         this.isotopesLayer.setIsotopes( this.model.isotopesList );
       }
     } );
 
-    // doesn't need unlink as it stays through out the sim life
+    // Update the visibility of the isotopes based on the interactivity mode, doesn't need unlink as it stays throughout
+    // the sim life.
     mixIsotopesModel.interactivityModeProperty.link( () => {
       if ( mixIsotopesModel.interactivityModeProperty.get() === MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
         this.isotopesLayer.visible = false;
@@ -311,9 +316,17 @@ class MixIsotopesScreenView extends ScreenView {
       }
     } );
 
-    // doesn't need unlink as it stays through out the sim life
-    mixIsotopesModel.testChamber.isotopeCountProperty.link( isotopeCount => {
+    // Set the flag to cause the pie chart to get updated when the isotope count changes, doesn't need unlink as it
+    // stays throughout the sim life
+    mixIsotopesModel.testChamber.isotopeCountProperty.link( () => {
       this.updatePieChart = true;
+    } );
+
+    // Listen for changes to the selected atom configuration and, when they occur, cancel any interactions with the
+    // individual isotopes.  This prevents multi-touch issues such as those described in
+    // https://github.com/phetsims/isotopes-and-atomic-mass/issues/101
+    mixIsotopesModel.selectedAtomConfig.atomUpdated.addListener( () => {
+      isotopeLayer.interruptSubtreeInput();
     } );
   }
 

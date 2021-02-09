@@ -111,7 +111,7 @@ class IsotopeTestChamber {
     if ( this.isIsotopePositionedOverChamber( isotope ) ) {
       this.containedIsotopes.push( isotope );
 
-      var isotopeRemovedListener = userControlled => {
+      const isotopeRemovedListener = userControlled => {
         if ( userControlled && this.containedIsotopes.includes( isotope ) ) {
           this.removeIsotopeFromChamber( isotope );
         }

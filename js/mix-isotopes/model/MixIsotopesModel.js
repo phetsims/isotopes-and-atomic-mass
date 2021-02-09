@@ -114,10 +114,13 @@ class MixIsotopesModel {
     // Doesn't need unlink as it stays through out the sim life
     this.showingNaturesMixProperty.lazyLink( () => {
       if ( this.showingNaturesMixProperty.get() ) {
+
         // Get the current user's mix state.
         const usersMixState = this.getState();
+
         // Tweak the users mix state. This is necessary since the state is being saved inside a property change observer.
         usersMixState.showingNaturesMix = false;
+
         // Save the user's mix state.
         if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( this.prototypeIsotope.protonCountProperty.get() ) ) {
           this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCountProperty.get() ][ this.interactivityModeProperty.get() ] =
@@ -128,6 +131,7 @@ class MixIsotopesModel {
           this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCountProperty.get() ][ this.interactivityModeProperty.get() ] =
             usersMixState;
         }
+
         // Display nature's mix.
         this.showNaturesMix();
       }
@@ -188,9 +192,8 @@ class MixIsotopesModel {
   }
 
   /**
-   * Create and add an isotope of the specified configuration.  Where the isotope is initially placed depends upon the
-   * current interactivity mode.
-   * @param {NumberAtom} isotope
+   * Place an isotope into the test chamber or a bucket based on its current position.
+   * @param {MovableAtom} isotope
    * @param {MonoIsotopeBucket} bucket
    * @param {IsotopeTestChamber} testChamber
    * @private
@@ -205,7 +208,13 @@ class MixIsotopesModel {
     }
   }
 
-  // @public
+  /**
+   * Create and add an isotope of the specified configuration.  Where the isotope is initially placed depends upon the
+   * current interactivity mode.
+   * @param {NumberAtom} isotopeConfig
+   * @param {boolean} animate
+   * @private
+   */
   createAndAddIsotope( isotopeConfig, animate ) {
     let newIsotope;
     if ( this.interactivityModeProperty.get() === InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
@@ -243,7 +252,6 @@ class MixIsotopesModel {
     let isotopeBucket = null;
     this.bucketList.forEach( bucket => {
       if ( bucket.isIsotopeAllowed( isotope.protonCountProperty.get(), isotope.neutronCountProperty.get() ) ) {
-        // Found it.
         isotopeBucket = bucket;
       }
     } );
@@ -324,14 +332,14 @@ class MixIsotopesModel {
     // Set up the isotope controllers to match whatever is in the test chamber.
     if ( this.interactivityModeProperty.get() === InteractivityMode.BUCKETS_AND_LARGE_ATOMS ) {
 
-      // Remove isotopes from buckets based on the number in the test chamber. This makes sense because in this mode,
-      // any isotopes in the chamber must have come from the buckets.
+      // Add the buckets and the isotope instances that they contain.
       this.removeBuckets();
       modelState.bucketList.forEach( bucket => {
         this.bucketList.add( bucket );
-        bucket.particles.forEach( isotope => {
-          bucket.addParticleFirstOpen( isotope, false );
+        const particlesInThisBucket = modelState.bucketToParticleListMap.get( bucket );
+        particlesInThisBucket.forEach( isotope => {
           this.isotopesList.add( isotope );
+          bucket.addParticleFirstOpen( isotope, false );
         } );
       } );
     }
@@ -379,6 +387,7 @@ class MixIsotopesModel {
       if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( atom.protonCount ) ) {
         if ( this.mapIsotopeConfigToUserMixState[ atom.protonCount ].hasOwnProperty(
           this.interactivityModeProperty.get() ) ) {
+
           // Restore the previously saved state for this element.
           this.setState( this.mapIsotopeConfigToUserMixState[ atom.protonCount ][ this.interactivityModeProperty.get() ] );
         }
@@ -429,6 +438,7 @@ class MixIsotopesModel {
         } ) );
       }
     }
+
     // Sort from lightest to heaviest. Do not change this without careful considerations, since several areas of the
     // code count on this. This is kept in case someone adds another isotope to AtomIdentifier and doesn't add it
     // in order.
@@ -461,45 +471,54 @@ class MixIsotopesModel {
    * @public
    */
   addIsotopeControllers() {
+
     // Remove existing controllers.
     this.removeBuckets();
     this.removeNumericalControllers();
 
     const buckets = this.interactivityModeProperty.get() === InteractivityMode.BUCKETS_AND_LARGE_ATOMS ||
                     this.showingNaturesMixProperty.get();
+
     // Set up layout variables.
-    const controllerYOffsetBucket = -250; //emprically determined
-    const controllerYOffsetSlider = -238; //empirically determined
+    const controllerYOffsetBucket = -250; // empirically determined
+    const controllerYOffsetSlider = -238; // empirically determined
     let interControllerDistanceX;
     let controllerXOffset;
     if ( this.possibleIsotopesProperty.get().length < 4 ) {
+
       // We can fit 3 or less cleanly under the test chamber.
       interControllerDistanceX = this.testChamber.getTestChamberRect().getWidth() / this.possibleIsotopesProperty.get().length;
       controllerXOffset = this.testChamber.getTestChamberRect().minX + interControllerDistanceX / 2;
     }
     else {
+
       // Four controllers don't fit well under the chamber, so use a positioning algorithm where they are extended
       // a bit to the right.
       interControllerDistanceX = ( this.testChamber.getTestChamberRect().getWidth() * 1.10 ) /
                                  this.possibleIsotopesProperty.get().length;
       controllerXOffset = -180;
     }
+
     // Add the controllers.
     for ( let i = 0; i < this.possibleIsotopesProperty.get().length; i++ ) {
       const isotopeConfig = this.possibleIsotopesProperty.get()[ i ];
       const isotopeCaption = AtomIdentifier.getName( isotopeConfig.protonCountProperty.get() )
                              + '-' + isotopeConfig.massNumberProperty.get();
       if ( buckets ) {
-        const newBucket = new MonoIsotopeBucket( isotopeConfig.protonCountProperty.get(),
-          isotopeConfig.neutronCountProperty.get(), {
+        const newBucket = new MonoIsotopeBucket(
+          isotopeConfig.protonCountProperty.get(),
+          isotopeConfig.neutronCountProperty.get(),
+          {
             position: new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetBucket ),
             size: BUCKET_SIZE,
             baseColor: this.getColorForIsotope( isotopeConfig ),
             captionText: isotopeCaption,
             sphereRadius: LARGE_ISOTOPE_RADIUS
-          } );
+          }
+        );
         this.addBucket( newBucket );
         if ( !this.showingNaturesMixProperty.get() ) {
+
           // Create and add initial isotopes to the new bucket.
           _.times( NUM_LARGE_ISOTOPES_PER_BUCKET, () => {
             this.createAndAddIsotope( isotopeConfig, false );
@@ -654,6 +673,7 @@ class MixIsotopesModel {
     this.showingNaturesMixProperty.reset();
 
     this.prototypeIsotope = new NumberAtom();
+
     // Set the default element
     this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
 
@@ -664,12 +684,16 @@ class MixIsotopesModel {
 }
 
 /**
- * Class that defines the state of the model. This will be used for saving and restoring of the state.
+ * Class that can be used to save the state of the model. This will be used for saving and restoring of the state when
+ * switching between various modes.
  * @param {MixIsotopesModel} model
  */
 class State {
 
-  constructor( model ){
+  /**
+   * @param {MixIsotopesModel} model
+   */
+  constructor( model ) {
     this.elementConfig = new NumberAtom( {
       protonCount: model.prototypeIsotope.protonCountProperty.get(),
       neutronCount: model.prototypeIsotope.neutronCountProperty.get(),
@@ -678,14 +702,23 @@ class State {
     this.isotopeTestChamberState = model.testChamber.getState();
     this.interactivityMode = model.interactivityModeProperty.get();
     this.showingNaturesMix = model.showingNaturesMixProperty.get();
-    this.bucketList = createObservableArray();
+
+    // Make sure none of the isotope instances are in a state where they are being dragged by the user.  In the vast
+    // majority of cases, they won't be when the state is recorded, so this will be a no-op, but there are some multi-
+    // touch scenarios where it is possible, and it is problematic to try to store them in this state.  The view will
+    // cancel interactions anyway, but there is no guarantee that the cancellation will have happened at this point in
+    // time, so we have to do this here to be sure.  See https://github.com/phetsims/isotopes-and-atomic-mass/issues/101.
+    model.isotopesList.forEach( isotopeInstance => { isotopeInstance.userControlledProperty.set( false ); } );
+
+    // For the bucket state, we keep references to the actual buckets and particles that are being used.  This works for
+    // this model because nothing else is done with a bucket after saving its state.  It is admittedly not very general,
+    // but works fine for the needs of this model.  Note that we need to store the particle references separately so
+    // that they can be added back during state restoration.
+    this.bucketList = [ ...model.bucketList ];
+    this.bucketToParticleListMap = new Map();
     model.bucketList.forEach( bucket => {
-      const newBucket = bucket;
-      newBucket.particles = [];
-      bucket._particles.forEach( particle => {
-        newBucket.particles.push( particle );
-      } );
-      this.bucketList.add( newBucket );
+      const particlesInThisBucket = [ ...bucket.getParticleList() ];
+      this.bucketToParticleListMap.set( bucket, particlesInThisBucket );
     } );
   }
 }
