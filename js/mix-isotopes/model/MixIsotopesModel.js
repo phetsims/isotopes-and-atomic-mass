@@ -299,6 +299,16 @@ class MixIsotopesModel {
    * @private
    */
   getState() {
+
+    // If any movable isotope instances are being dragged by the user at this moment, we need to force that isotope
+    // instance into a state that indicates that it isn't.  Otherwise it can get lost, since it will neither be in a
+    // bucket or in the test chamber.  This case can only occur in multi-touch situations, see
+    // https://github.com/phetsims/isotopes-and-atomic-mass/issues/101.
+    const userControlledMovableIsotopes = this.isotopesList.filter( isotope => isotope.userControlledProperty.value );
+    userControlledMovableIsotopes.forEach( isotope => {
+      isotope.userControlledProperty.set( false );
+    } );
+
     return new State( this );
   }
 
@@ -358,13 +368,13 @@ class MixIsotopesModel {
    */
   setAtomConfiguration( atom ) {
 
-    if ( this.selectedAtomConfig !== atom ) {
+    if ( !this.selectedAtomConfig.equals( atom ) ) {
       this.selectedAtomConfig.protonCountProperty.set( atom.protonCount );
       this.selectedAtomConfig.electronCountProperty.set( atom.electronCount );
       this.selectedAtomConfig.neutronCountProperty.set( atom.neutronCount );
     }
 
-    if ( this.showingNaturesMixProperty.get() ) {
+    if ( this.showingNaturesMixProperty.value ) {
       this.removeAllIsotopesFromTestChamberAndModel();
       this.prototypeIsotope.protonCountProperty.set( atom.protonCount );
       this.prototypeIsotope.neutronCountProperty.set( atom.neutronCount );
@@ -376,38 +386,24 @@ class MixIsotopesModel {
 
       // Save the user's mix state for the current element before transitioning to the new one.
       if ( this.prototypeIsotope !== atom ) {
-        if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( this.prototypeIsotope.protonCount ) ) {
-          this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ][ this.interactivityModeProperty.get() ] = this.getState();
-        }
-        else {
+        if ( !this.mapIsotopeConfigToUserMixState.hasOwnProperty( this.prototypeIsotope.protonCount ) ) {
           this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ] = {};
-          this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ][ this.interactivityModeProperty.get() ] = this.getState();
         }
+
+        // Store the state.
+        this.mapIsotopeConfigToUserMixState [ this.prototypeIsotope.protonCount ][ this.interactivityModeProperty.get() ] = this.getState();
       }
-      if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( atom.protonCount ) ) {
-        if ( this.mapIsotopeConfigToUserMixState[ atom.protonCount ].hasOwnProperty(
-          this.interactivityModeProperty.get() ) ) {
 
-          // Restore the previously saved state for this element.
-          this.setState( this.mapIsotopeConfigToUserMixState[ atom.protonCount ][ this.interactivityModeProperty.get() ] );
-        }
-        else {
+      // Check whether previous state information was stored for this configuration.
+      if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( atom.protonCount ) &&
+           this.mapIsotopeConfigToUserMixState[ atom.protonCount ].hasOwnProperty( this.interactivityModeProperty.get() ) ) {
 
-          // Clean up any previous isotopes.
-          this.removeAllIsotopesFromTestChamberAndModel();
-
-          this.prototypeIsotope.protonCountProperty.set( atom.protonCount );
-          this.prototypeIsotope.neutronCountProperty.set( atom.neutronCount );
-          this.prototypeIsotope.electronCountProperty.set( atom.electronCount );
-          this.updatePossibleIsotopesList();
-
-          // Set all model elements for the first time this element's user mix is shown.
-          this.setUpInitialUsersMix();
-        }
+        // Restore the previous state information.
+        this.setState( this.mapIsotopeConfigToUserMixState[ atom.protonCount ][ this.interactivityModeProperty.get() ] );
       }
       else {
 
-        // Clean up any previous isotopes.
+        // Set initial default state for this isotope configuration.
         this.removeAllIsotopesFromTestChamberAndModel();
 
         this.prototypeIsotope.protonCountProperty.set( atom.protonCount );

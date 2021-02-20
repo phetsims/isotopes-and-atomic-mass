@@ -322,9 +322,13 @@ class MixIsotopesScreenView extends ScreenView {
       this.updatePieChart = true;
     } );
 
-    // Listen for changes to the selected atom configuration and, when they occur, cancel any interactions with the
-    // individual isotopes.  This prevents multi-touch issues such as those described in
-    // https://github.com/phetsims/isotopes-and-atomic-mass/issues/101
+    // Listen for changes to the model state that can end up leaving particles that are being dragged in odd states,
+    // and cancel any interactions with the individual isotopes.  This helps to prevent multi-touch issues such as those
+    // described in https://github.com/phetsims/isotopes-and-atomic-mass/issues/101
+    Property.multilink(
+      [ mixIsotopesModel.showingNaturesMixProperty, mixIsotopesModel.interactivityModeProperty ],
+      () => { isotopeLayer.interruptSubtreeInput(); }
+    );
     mixIsotopesModel.selectedAtomConfig.atomUpdated.addListener( () => {
       isotopeLayer.interruptSubtreeInput();
     } );
