@@ -391,7 +391,7 @@ class MixIsotopesModel {
         }
 
         // Store the state.
-        this.mapIsotopeConfigToUserMixState [ this.prototypeIsotope.protonCount ][ this.interactivityModeProperty.get() ] = this.getState();
+        this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ][ this.interactivityModeProperty.get() ] = this.getState();
       }
 
       // Check whether previous state information was stored for this configuration.
