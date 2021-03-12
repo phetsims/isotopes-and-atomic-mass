@@ -50,12 +50,12 @@ class ControlIsotope extends Node {
     slider.addMajorTick( range.max, new Text( range.max, tickLabelOptions ) );
     sliderLayer.addChild( slider );
 
-    const plusButton = new ArrowButton( 'right', function propertyPlus() {
+    const plusButton = new ArrowButton( 'right', ( () => {
       controller.quantityProperty.set( Math.floor( controller.quantityProperty.get() ) + 1 );
-    }, { arrowHeight: 10, arrowWidth: 10 } );
-    const minusButton = new ArrowButton( 'left', function propertyMinus() {
+    } ), { arrowHeight: 10, arrowWidth: 10 } );
+    const minusButton = new ArrowButton( 'left', ( () => {
       controller.quantityProperty.set( Math.floor( controller.quantityProperty.get() ) - 1 );
-    }, { arrowHeight: 10, arrowWidth: 10 } );
+    } ), { arrowHeight: 10, arrowWidth: 10 } );
     numericLayer.addChild( plusButton );
     numericLayer.addChild( minusButton );
 
