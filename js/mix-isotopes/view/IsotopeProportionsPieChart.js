@@ -292,7 +292,7 @@ class IsotopeProportionsPieChart extends Node {
   adjustLabelPositionsForOverlap( sliceLabels, minY, maxY ) {
     const rotationIncrement = Math.PI / 200; // Empirically chosen.
     for ( let i = 1; i < 50; i++ ) { // Number of iterations empirically chosen.
-      var overlapDetected = false;
+      var overlapDetected = false; // eslint-disable-line no-var
       sliceLabels.forEach( label => {
         let moveUp = false;
         let moveDown = false;

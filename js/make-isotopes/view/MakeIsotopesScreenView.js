@@ -79,7 +79,7 @@ class MakeIsotopesScreenView extends ScreenView {
 
 
     // Create the node that represents the scale upon which the atom sits.
-    var scaleNode = new AtomScaleNode( makeIsotopesModel.particleAtom );
+    const scaleNode = new AtomScaleNode( makeIsotopesModel.particleAtom );
 
     // The scale needs to sit just below the atom, and there are some "tweak factors" needed to get it looking right.
     scaleNode.setCenterBottom( new Vector2( this.modelViewTransform.modelToViewX( 0 ), this.bottom ) );
@@ -162,7 +162,7 @@ class MakeIsotopesScreenView extends ScreenView {
     } );
 
     symbolRectangle.scale( 0.20 );
-    var symbolBox = new AccordionBox( symbolRectangle, {
+    const symbolBox = new AccordionBox( symbolRectangle, {
       cornerRadius: 3,
       titleNode: new Text( symbolString, {
         font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
@@ -183,7 +183,7 @@ class MakeIsotopesScreenView extends ScreenView {
     symbolBox.top = periodicTableNode.bottom + 10;
     this.addChild( symbolBox );
 
-    var abundanceBox = new AccordionBox( new TwoItemPieChartNode( makeIsotopesModel ), {
+    const abundanceBox = new AccordionBox( new TwoItemPieChartNode( makeIsotopesModel ), {
       cornerRadius: 3,
       titleNode: new Text( abundanceInNatureString, {
         font: ShredConstants.ACCORDION_BOX_TITLE_FONT,

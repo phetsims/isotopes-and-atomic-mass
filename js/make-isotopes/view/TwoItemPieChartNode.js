@@ -120,7 +120,7 @@ class TwoItemPieChartNode extends Node {
       leftConnectingLine.visible = thisIsotopeAbundanceTo6Digits > 0 || existsInTraceAmounts;
     }
 
-    var thisIsotopeLabel = new Text( thisIsotopeString, {
+    const thisIsotopeLabel = new Text( thisIsotopeString, {
       font: new PhetFont( { size: 12 } ),
       fill: 'black',
       maxWidth: 60
@@ -128,7 +128,7 @@ class TwoItemPieChartNode extends Node {
     thisIsotopeLabel.bottom = thisIsotopeAbundancePanel.top - 5;
     this.addChild( thisIsotopeLabel );
 
-    var leftConnectingLine = new Line( thisIsotopeAbundancePanel.centerX, thisIsotopeAbundancePanel.centerY,
+    const leftConnectingLine = new Line( thisIsotopeAbundancePanel.centerX, thisIsotopeAbundancePanel.centerY,
       pieChartBoundingRectangle.centerX, pieChartBoundingRectangle.centerY, {
         stroke: FIRST_SLICE_COLOR,
         lineDash: [ 3, 1 ]
@@ -163,7 +163,7 @@ class TwoItemPieChartNode extends Node {
 
     this.addChild( otherIsotopeLabel );
 
-    var rightConnectingLine = new Line( pieChartBoundingRectangle.centerX, pieChartBoundingRectangle.centerY,
+    const rightConnectingLine = new Line( pieChartBoundingRectangle.centerX, pieChartBoundingRectangle.centerY,
       pieChartBoundingRectangle.right + 20, pieChartBoundingRectangle.centerY, {
         stroke: SECOND_SLICE_COLOR,
         lineDash: [ 3, 1 ]
