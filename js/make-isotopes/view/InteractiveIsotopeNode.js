@@ -189,7 +189,7 @@ class InteractiveIsotopeNode extends Node {
       };
 
       // get element name and append mass number to identify isotope
-      let name = AtomIdentifier.getName( numProtons ) + '-' + ( numProtons + numNeutrons );
+      let name = `${AtomIdentifier.getName( numProtons )}-${numProtons + numNeutrons}`;
       if ( name.length === 0 ) {
         name = '';
       }

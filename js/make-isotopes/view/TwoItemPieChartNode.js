@@ -112,7 +112,7 @@ class TwoItemPieChartNode extends Node {
         readoutMyIsotopeAbundanceText.text = traceString;
       }
       else {
-        readoutMyIsotopeAbundanceText.text = ( Utils.toFixedNumber( thisIsotopeAbundanceTo6Digits * 100, 6 ) ).toString() + '%';
+        readoutMyIsotopeAbundanceText.text = `${( Utils.toFixedNumber( thisIsotopeAbundanceTo6Digits * 100, 6 ) ).toString()}%`;
       }
       thisIsotopeAbundancePanel.centerX = pieChartBoundingRectangle.left - 50; // empirically determined
       thisIsotopeAbundancePanel.centerY = pieChartBoundingRectangle.centerY;
