@@ -52,7 +52,7 @@ function IsotopeTickMark( isotopeConfig ) {
 
   // Create the label that goes above the tick mark.
   const label = new RichText( ` <sup>${isotopeConfig.massNumberProperty.get()}</sup>${
-                              AtomIdentifier.getSymbol( isotopeConfig.protonCountProperty.get() )}`, {
+    AtomIdentifier.getSymbol( isotopeConfig.protonCountProperty.get() )}`, {
     font: new PhetFont( 12 )
   } );
   label.centerX = shape.centerX;
