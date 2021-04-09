@@ -292,7 +292,7 @@ class IsotopeProportionsPieChart extends Node {
   adjustLabelPositionsForOverlap( sliceLabels, minY, maxY ) {
     const rotationIncrement = Math.PI / 200; // Empirically chosen.
     for ( let i = 1; i < 50; i++ ) { // Number of iterations empirically chosen.
-      var overlapDetected = false; // eslint-disable-line no-var
+      let overlapDetected = false;
       sliceLabels.forEach( label => {
         let moveUp = false;
         let moveDown = false;
@@ -303,6 +303,7 @@ class IsotopeProportionsPieChart extends Node {
             continue;
           }
           if ( label.bounds.intersectsBounds( comparisonLabel.bounds ) ) {
+
             // These labels overlap.
             overlapDetected = true;
             if ( label.unconstrainedPos.y > comparisonLabel.unconstrainedPos.y && label.bottom < maxY ) {
@@ -313,6 +314,7 @@ class IsotopeProportionsPieChart extends Node {
             }
           }
         }
+
         // Adjust this label's position based upon any overlap that was detected.  The general idea is this: if there
         // is overlap in both directions, don't move.  If there is only overlap with a label that has a higher
         // unconstrained position, move down.  If there is only overlap with a label with a lower unconstrained
@@ -350,7 +352,8 @@ class IsotopeProportionsPieChart extends Node {
         }
       } );
       if ( !overlapDetected ) {
-        // No overlap for any of the labels, so we are done.
+
+        // No overlap was detected for any of the labels, so we're done.
         break;
       }
     }
