@@ -1,5 +1,5 @@
 {
-  "comment": "# isotopes-and-atomic-mass 1.1.10-rc.1 Sat May 08 2021 22:33:42 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# isotopes-and-atomic-mass 1.1.10-rc.1 Mon May 10 2021 15:30:47 GMT-0600 (Mountain Daylight Time)",
   "assert": {
     "sha": "d8a2e8992420327ff72a6fc4bb93ec76549ded0e",
     "branch": "HEAD"
@@ -21,7 +21,7 @@
     "branch": "HEAD"
   },
   "isotopes-and-atomic-mass": {
-    "sha": "ef6604fb79ddca9c3868430e7b96d21925cb81cd",
+    "sha": "3eb34dc3b5ddb3f46ab12e3e5d2c31e756c2add5",
     "branch": "1.1"
   },
   "joist": {
@@ -50,15 +50,15 @@
   },
   "phetmarks": {
     "sha": "a7ed1ff996696daca57aa612250f216f3d480682",
-    "branch": "isotopes-and-atomic-mass-1.1"
+    "branch": "HEAD"
   },
   "query-string-machine": {
     "sha": "d100eb241d0c7a959823b669149f4a6a33630fda",
     "branch": "HEAD"
   },
   "scenery": {
-    "sha": "17eba2a98181187df1a85f3e1847af2b8c65b3f0",
-    "branch": "HEAD"
+    "sha": "b7078508762430b88e6bc1188f1217b3a900d83c",
+    "branch": "isotopes-and-atomic-mass-1.1"
   },
   "scenery-phet": {
     "sha": "b2301065c225cfdf3b7583d1ab81e130cf3abd06",
