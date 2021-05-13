@@ -21,7 +21,7 @@
     "branch": "HEAD"
   },
   "isotopes-and-atomic-mass": {
-    "sha": "a9c1a019b456e68cb4d28bfff46017988a9101cf",
+    "sha": "0c9c3ebb0283d8640f618a2abba98fd9aec57e96",
     "branch": "1.1"
   },
   "joist": {
@@ -57,7 +57,7 @@
     "branch": "HEAD"
   },
   "scenery": {
-    "sha": "60826870924c97a0ead5473ad7f4dabf778d6e16",
+    "sha": "470ecc9b73849537dceff49a5b75fb8cb2f16595",
     "branch": "isotopes-and-atomic-mass-1.1"
   },
   "scenery-phet": {
