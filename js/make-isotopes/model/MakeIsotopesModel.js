@@ -1,4 +1,4 @@
-// Copyright 2014-2020, University of Colorado Boulder
+// Copyright 2014-2021, University of Colorado Boulder
 
 /**
  * This is the primary model class for the Make Isotopes module. This class acts as the main interface for model

@@ -1,4 +1,4 @@
-// Copyright 2015-2020, University of Colorado Boulder
+// Copyright 2015-2021, University of Colorado Boulder
 
 /**
  * ControlIsotope is a control that allows the client to control the quantity of an isotope.  It has arrow buttons, a
