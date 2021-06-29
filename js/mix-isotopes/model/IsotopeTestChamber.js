@@ -378,7 +378,7 @@ class IsotopeTestChamber {
   checkForParticleOverlap() {
     let overlapCheck = false;
 
-    this.containedIsotopes.forEach( isotope1 => {
+    this.containedIsotopes.forEach( isotope1 => { // eslint-disable-line consistent-return
       for ( let i = 0; i < this.containedIsotopes.length; i++ ) {
         const isotope2 = this.containedIsotopes.get( i );
         if ( isotope1 === isotope2 ) {

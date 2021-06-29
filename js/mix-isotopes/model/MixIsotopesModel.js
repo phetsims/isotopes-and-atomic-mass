@@ -560,7 +560,6 @@ class MixIsotopesModel {
       if ( controller.isotopeConfig.equals( isotope ) ) {
         // Found it.
         isotopeController = controller;
-        return isotopeController;
       }
     } );
     return isotopeController;
