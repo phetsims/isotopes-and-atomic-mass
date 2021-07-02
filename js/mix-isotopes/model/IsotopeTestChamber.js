@@ -376,25 +376,26 @@ class IsotopeTestChamber {
    * @private
    */
   checkForParticleOverlap() {
-    let overlapCheck = false;
+    let overlapExists = false;
 
-    this.containedIsotopes.forEach( isotope1 => { // eslint-disable-line consistent-return
-      for ( let i = 0; i < this.containedIsotopes.length; i++ ) {
-        const isotope2 = this.containedIsotopes.get( i );
+    for ( let i = 0; i < this.containedIsotopes.length && !overlapExists; i++ ) {
+      const isotope1 = this.containedIsotopes.get( i );
+      for ( let j = 0; j < this.containedIsotopes.length && !overlapExists; j++ ) {
+        const isotope2 = this.containedIsotopes.get( j );
         if ( isotope1 === isotope2 ) {
-          // Same isotope so skip it!
+
+          // Same isotope, so skip it.
           continue;
         }
 
         const distance = isotope1.positionProperty.get().distance( isotope2.positionProperty.get() );
         if ( distance < isotope1.radiusProperty.get() + isotope2.radiusProperty.get() ) {
-          overlapCheck = true;
-          return overlapCheck;
+          overlapExists = true;
         }
       }
-    } );
+    }
 
-    return overlapCheck;
+    return overlapExists;
   }
 
   /**
