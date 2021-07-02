@@ -549,23 +549,6 @@ class MixIsotopesModel {
   }
 
   /**
-   * @param {MovableAtom} isotope
-   * @returns {NumericalIsotopeQuantityControl} isotopeController
-   *
-   * @public
-   */
-  getNumericalControllerForIsotope( isotope ) {
-    let isotopeController = null;
-    this.numericalControllerList.forEach( controller => {
-      if ( controller.isotopeConfig.equals( isotope ) ) {
-        // Found it.
-        isotopeController = controller;
-      }
-    } );
-    return isotopeController;
-  }
-
-  /**
    * @param {NumberAtom} isotope
    *
    * @public
