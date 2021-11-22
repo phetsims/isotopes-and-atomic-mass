@@ -5,7 +5,7 @@
       "path": "../shred"
     },
     {
-      "path": "../joist"
+      "path": "../joist/tsconfig-module.json"
     }
   ],
   "include": [
