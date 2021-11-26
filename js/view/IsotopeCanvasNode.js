@@ -6,7 +6,7 @@
  * @author Aadish Gupta
  */
 
-import CanvasNode from '../../../scenery/js/nodes/CanvasNode.js';
+import { CanvasNode } from '../../../scenery/js/imports.js';
 import shred from '../shred.js';
 
 class IsotopeCanvasNode extends CanvasNode {
