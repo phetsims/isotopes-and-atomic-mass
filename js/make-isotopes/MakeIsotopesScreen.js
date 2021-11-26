@@ -9,7 +9,7 @@
 
 import Screen from '../../../joist/js/Screen.js';
 import ScreenIcon from '../../../joist/js/ScreenIcon.js';
-import Image from '../../../scenery/js/nodes/Image.js';
+import { Image } from '../../../scenery/js/imports.js';
 import makeIsotopesIcon from '../../mipmaps/make-isotopes-icon_png.js';
 import isotopesAndAtomicMass from '../isotopesAndAtomicMass.js';
 import isotopesAndAtomicMassStrings from '../isotopesAndAtomicMassStrings.js';

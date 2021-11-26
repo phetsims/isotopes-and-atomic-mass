@@ -16,7 +16,7 @@ import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import Color from '../../../../scenery/js/util/Color.js';
+import { Color } from '../../../../scenery/js/imports.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
 import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
