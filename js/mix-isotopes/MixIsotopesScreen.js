@@ -11,7 +11,7 @@
 import Screen from '../../../joist/js/Screen.js';
 import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import { Image } from '../../../scenery/js/imports.js';
-import mixIsotopesIcon from '../../mipmaps/mix-isotopes-icon_png.js';
+import mixIsotopesIcon_png from '../../mipmaps/mixIsotopesIcon_png.js';
 import isotopesAndAtomicMass from '../isotopesAndAtomicMass.js';
 import isotopesAndAtomicMassStrings from '../isotopesAndAtomicMassStrings.js';
 import MixIsotopesModel from './model/MixIsotopesModel.js';
@@ -26,7 +26,7 @@ class MixIsotopesScreen extends Screen {
 
     const options = {
       name: isotopesAndAtomicMassStrings.mixtures,
-      homeScreenIcon: new ScreenIcon( new Image( mixIsotopesIcon ), {
+      homeScreenIcon: new ScreenIcon( new Image( mixIsotopesIcon_png ), {
         maxIconWidthProportion: 1,
         maxIconHeightProportion: 1
       } ),

@@ -10,7 +10,7 @@
 import Screen from '../../../joist/js/Screen.js';
 import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import { Image } from '../../../scenery/js/imports.js';
-import makeIsotopesIcon from '../../mipmaps/make-isotopes-icon_png.js';
+import makeIsotopesIcon_png from '../../mipmaps/makeIsotopesIcon_png.js';
 import isotopesAndAtomicMass from '../isotopesAndAtomicMass.js';
 import isotopesAndAtomicMassStrings from '../isotopesAndAtomicMassStrings.js';
 import MakeIsotopesModel from './model/MakeIsotopesModel.js';
@@ -25,7 +25,7 @@ class MakeIsotopesScreen extends Screen {
 
     const options = {
       name: isotopesAndAtomicMassStrings.isotopes,
-      homeScreenIcon: new ScreenIcon( new Image( makeIsotopesIcon ), {
+      homeScreenIcon: new ScreenIcon( new Image( makeIsotopesIcon_png ), {
         maxIconWidthProportion: 1,
         maxIconHeightProportion: 1
       } ),

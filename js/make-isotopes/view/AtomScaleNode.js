@@ -17,7 +17,7 @@ import { Node } from '../../../../scenery/js/imports.js';
 import { Text } from '../../../../scenery/js/imports.js';
 import AquaRadioButton from '../../../../sun/js/AquaRadioButton.js';
 import Panel from '../../../../sun/js/Panel.js';
-import scaleImage from '../../../mipmaps/scale_png.js';
+import scale_png from '../../../mipmaps/scale_png.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
 
@@ -124,7 +124,7 @@ class AtomScaleNode extends Node {
     this.displayModeProperty = new Property( DISPLAY_MODE.MASS_NUMBER );
 
     // This is Loading the scale image and scaling it to desired width and adding to the node
-    const weighScaleImage = new Image( scaleImage );
+    const weighScaleImage = new Image( scale_png );
     weighScaleImage.scale( SCALE_WIDTH / weighScaleImage.width );
     this.addChild( weighScaleImage );
 
