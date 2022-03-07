@@ -14,14 +14,12 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import ScreenView from '../../../../joist/js/ScreenView.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
-import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import { Node } from '../../../../scenery/js/imports.js';
-import { Rectangle } from '../../../../scenery/js/imports.js';
 import { Text } from '../../../../scenery/js/imports.js';
-import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
 import ShredConstants from '../../../../shred/js/ShredConstants.js';
 import ExpandedPeriodicTableNode from '../../../../shred/js/view/ExpandedPeriodicTableNode.js';
 import ParticleCountDisplay from '../../../../shred/js/view/ParticleCountDisplay.js';
+import SymbolNode from '../../../../shred/js/view/SymbolNode.js';
 import AccordionBox from '../../../../sun/js/AccordionBox.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
@@ -30,10 +28,6 @@ import InteractiveIsotopeNode from './InteractiveIsotopeNode.js';
 import TwoItemPieChartNode from './TwoItemPieChartNode.js';
 
 // constants
-const NUMBER_FONT = new PhetFont( 70 );
-const NUMBER_INSET = 20; // In screen coords, which are roughly pixels.
-const SYMBOL_BOX_WIDTH = 275; // In screen coords, which are roughly pixels.
-const SYMBOL_BOX_HEIGHT = 300; // In screen coords, which are roughly pixels.
 const OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION = 12;
 
 const abundanceInNatureString = isotopesAndAtomicMassStrings.abundanceInNature;
@@ -108,61 +102,11 @@ class MakeIsotopesScreenView extends ScreenView {
     particleCountLegend.top = periodicTableNode.visibleBounds.minY;
     indicatorLayer.addChild( particleCountLegend );
 
-    const symbolRectangle = new Rectangle( 0, 0, SYMBOL_BOX_WIDTH, SYMBOL_BOX_HEIGHT, 0, 0, {
-      fill: 'white',
-      stroke: 'black',
-      lineWidth: 2
+    // Add the symbol node
+    const symbolNode = new SymbolNode( makeIsotopesModel.particleAtom.protonCountProperty, makeIsotopesModel.particleAtom.massNumberProperty, {
+      scale: 0.2
     } );
-
-    // Add the symbol text.
-    const symbolText = new Text( '', {
-      font: new PhetFont( 150 ),
-      fill: 'black',
-      center: new Vector2( symbolRectangle.width / 2, symbolRectangle.height / 2 )
-    } );
-
-    // Add the listener to update the symbol text.
-    const textCenter = new Vector2( symbolRectangle.width / 2, symbolRectangle.height / 2 );
-    // Doesn't need unlink as it stays through out the sim life
-    makeIsotopesModel.particleAtom.protonCountProperty.link( protonCount => {
-      const symbol = AtomIdentifier.getSymbol( protonCount );
-      symbolText.text = protonCount > 0 ? symbol : '';
-      symbolText.center = textCenter;
-    } );
-    symbolRectangle.addChild( symbolText );
-
-    // Add the proton count display.
-    const protonCountDisplay = new Text( '0', {
-      font: NUMBER_FONT,
-      fill: 'red'
-    } );
-    symbolRectangle.addChild( protonCountDisplay );
-
-    // Add the listener to update the proton count.
-    // Doesn't need unlink as it stays through out the sim life
-    makeIsotopesModel.particleAtom.protonCountProperty.link( protonCount => {
-      protonCountDisplay.text = protonCount;
-      protonCountDisplay.left = NUMBER_INSET;
-      protonCountDisplay.bottom = SYMBOL_BOX_HEIGHT - NUMBER_INSET;
-    } );
-
-    // Add the mass number display.
-    const massNumberDisplay = new Text( '0', {
-      font: NUMBER_FONT,
-      fill: 'black'
-    } );
-    symbolRectangle.addChild( massNumberDisplay );
-
-    // Add the listener to update the mass number.
-    // Doesn't need unlink as it stays through out the sim life
-    makeIsotopesModel.particleAtom.massNumberProperty.link( massNumber => {
-      massNumberDisplay.text = massNumber;
-      massNumberDisplay.left = NUMBER_INSET;
-      massNumberDisplay.top = NUMBER_INSET;
-    } );
-
-    symbolRectangle.scale( 0.20 );
-    const symbolBox = new AccordionBox( symbolRectangle, {
+    const symbolBox = new AccordionBox( symbolNode, {
       cornerRadius: 3,
       titleNode: new Text( symbolString, {
         font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
