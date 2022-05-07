@@ -9,25 +9,25 @@ import isotopesAndAtomicMass from './isotopesAndAtomicMass.js';
 
 type StringsType = {
   'isotopes-and-atomic-mass': {
-    'title': string
-  },
-  'isotopes': string,
-  'mixtures': string,
-  'neutrons': string,
-  'massNumber': string,
-  'atomicMass': string,
-  'symbol': string,
-  'abundanceInNature': string,
-  'myIsotope': string,
-  'thisIsotope': string,
-  'otherIsotopesPattern': string,
-  'amu': string,
-  'myMix': string,
-  'naturesMix': string,
-  'isotopeMixture': string,
-  'percentComposition': string,
-  'averageAtomicMass': string,
-  'trace': string
+    'title': string;
+  };
+  'isotopes': string;
+  'mixtures': string;
+  'neutrons': string;
+  'massNumber': string;
+  'atomicMass': string;
+  'symbol': string;
+  'abundanceInNature': string;
+  'myIsotope': string;
+  'thisIsotope': string;
+  'otherIsotopesPattern': string;
+  'amu': string;
+  'myMix': string;
+  'naturesMix': string;
+  'isotopeMixture': string;
+  'percentComposition': string;
+  'averageAtomicMass': string;
+  'trace': string;
 };
 
 const isotopesAndAtomicMassStrings = getStringModule( 'ISOTOPES_AND_ATOMIC_MASS' ) as StringsType;
