@@ -9,6 +9,7 @@
  */
 
 import Property from '../../../../axon/js/Property.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Range from '../../../../dot/js/Range.js';
 import Utils from '../../../../dot/js/Utils.js';
@@ -325,7 +326,7 @@ class MixIsotopesScreenView extends ScreenView {
     // Listen for changes to the model state that can end up leaving particles that are being dragged in odd states,
     // and cancel any interactions with the individual isotopes.  This helps to prevent multi-touch issues such as those
     // described in https://github.com/phetsims/isotopes-and-atomic-mass/issues/101
-    Property.multilink(
+    Multilink.multilink(
       [ mixIsotopesModel.showingNaturesMixProperty, mixIsotopesModel.interactivityModeProperty ],
       () => { isotopeLayer.interruptSubtreeInput(); }
     );
