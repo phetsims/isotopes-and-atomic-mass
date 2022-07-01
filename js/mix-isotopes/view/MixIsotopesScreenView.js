@@ -407,7 +407,10 @@ class InteractivityModeSelectionNode extends RectangularRadioButtonGroup {
     const slider = new HSlider( new Property( 50 ), range, {
       trackSize: new Dimension2( 50, 5 ),
       thumbSize: new Dimension2( 15, 30 ),
-      majorTickLength: 15
+      majorTickLength: 15,
+
+      // pdom - this slider is just an icon and should not have PDOM representation
+      tagName: null
     } );
     slider.addMajorTick( 0 );
     slider.addMajorTick( 100 );
