@@ -423,11 +423,13 @@ class InteractivityModeSelectionNode extends RectangularRadioButtonGroup {
 
     super( model.interactivityModeProperty, radioButtonContent, {
       orientation: 'horizontal',
-      baseColor: Color.white,
       spacing: 5,
-      selectedStroke: '#3291b8',
-      selectedLineWidth: 2,
-      deselectedContentOpacity: 0.2
+      radioButtonOptions: {
+        baseColor: Color.white,
+        selectedStroke: '#3291b8',
+        selectedLineWidth: 2,
+        deselectedContentOpacity: 0.2
+      }
     } );
   }
 }
