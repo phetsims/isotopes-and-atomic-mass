@@ -423,9 +423,11 @@ class InteractivityModeSelectionNode extends RectangularRadioButtonGroup {
       spacing: 5,
       radioButtonOptions: {
         baseColor: Color.white,
-        selectedStroke: '#3291b8',
-        selectedLineWidth: 2,
-        deselectedContentOpacity: 0.2
+        buttonAppearanceStrategyOptions: {
+          selectedStroke: '#3291b8',
+          selectedLineWidth: 2,
+          deselectedContentOpacity: 0.2
+        }
       }
     } );
   }
