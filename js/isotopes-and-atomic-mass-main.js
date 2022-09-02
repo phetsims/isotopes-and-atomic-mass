@@ -13,7 +13,7 @@ import isotopesAndAtomicMassStrings from './isotopesAndAtomicMassStrings.js';
 import MakeIsotopesScreen from './make-isotopes/MakeIsotopesScreen.js';
 import MixIsotopesScreen from './mix-isotopes/MixIsotopesScreen.js';
 
-const isotopesAndAtomicMassTitleString = isotopesAndAtomicMassStrings[ 'isotopes-and-atomic-mass' ].title;
+const isotopesAndAtomicMassTitleStringProperty = isotopesAndAtomicMassStrings[ 'isotopes-and-atomic-mass' ].titleStringProperty;
 
 const tandem = Tandem.ROOT;
 
@@ -31,6 +31,6 @@ simLauncher.launch( () => {
   const makeIsotopeScreenTandem = tandem.createTandem( 'makeIsotopeScreen' );
   const mixIsotopeScreenTandem = tandem.createTandem( 'mixIsotopeScreen' );
 
-  const sim = new Sim( isotopesAndAtomicMassTitleString, [ new MakeIsotopesScreen( makeIsotopeScreenTandem ), new MixIsotopesScreen( mixIsotopeScreenTandem ) ], simOptions );
+  const sim = new Sim( isotopesAndAtomicMassTitleStringProperty, [ new MakeIsotopesScreen( makeIsotopeScreenTandem ), new MixIsotopesScreen( mixIsotopeScreenTandem ) ], simOptions );
   sim.start();
 } );
