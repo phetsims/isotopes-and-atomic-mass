@@ -49,8 +49,8 @@ type StringsType = {
   'traceStringProperty': TReadOnlyProperty<string>;
 };
 
-const isotopesAndAtomicMassStrings = getStringModule( 'ISOTOPES_AND_ATOMIC_MASS' ) as StringsType;
+const IsotopesAndAtomicMassStrings = getStringModule( 'ISOTOPES_AND_ATOMIC_MASS' ) as StringsType;
 
-isotopesAndAtomicMass.register( 'isotopesAndAtomicMassStrings', isotopesAndAtomicMassStrings );
+isotopesAndAtomicMass.register( 'IsotopesAndAtomicMassStrings', IsotopesAndAtomicMassStrings );
 
-export default isotopesAndAtomicMassStrings;
+export default IsotopesAndAtomicMassStrings;

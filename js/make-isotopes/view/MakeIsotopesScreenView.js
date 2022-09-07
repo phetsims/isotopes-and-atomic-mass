@@ -22,7 +22,7 @@ import ExpandedPeriodicTableNode from '../../../../shred/js/view/ExpandedPeriodi
 import ParticleCountDisplay from '../../../../shred/js/view/ParticleCountDisplay.js';
 import AccordionBox from '../../../../sun/js/AccordionBox.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
+import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 import AtomScaleNode from './AtomScaleNode.js';
 import InteractiveIsotopeNode from './InteractiveIsotopeNode.js';
 import TwoItemPieChartNode from './TwoItemPieChartNode.js';
@@ -34,8 +34,8 @@ const SYMBOL_BOX_WIDTH = 275; // In screen coords, which are roughly pixels.
 const SYMBOL_BOX_HEIGHT = 300; // In screen coords, which are roughly pixels.
 const OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION = 12;
 
-const abundanceInNatureString = isotopesAndAtomicMassStrings.abundanceInNature;
-const symbolString = isotopesAndAtomicMassStrings.symbol;
+const abundanceInNatureString = IsotopesAndAtomicMassStrings.abundanceInNature;
+const symbolString = IsotopesAndAtomicMassStrings.symbol;
 
 class MakeIsotopesScreenView extends ScreenView {
 

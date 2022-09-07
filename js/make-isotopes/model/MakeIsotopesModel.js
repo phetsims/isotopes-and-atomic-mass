@@ -22,9 +22,9 @@ import Particle from '../../../../shred/js/model/Particle.js';
 import ParticleAtom from '../../../../shred/js/model/ParticleAtom.js';
 import ShredConstants from '../../../../shred/js/ShredConstants.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
+import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 
-const neutronsString = isotopesAndAtomicMassStrings.neutrons;
+const neutronsString = IsotopesAndAtomicMassStrings.neutrons;
 
 // constants
 const DEFAULT_NUM_NEUTRONS_IN_BUCKET = 4;

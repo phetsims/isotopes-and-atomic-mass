@@ -15,7 +15,7 @@ import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
 import Panel from '../../../../sun/js/Panel.js';
 import PieChartNode from '../../common/view/PieChartNode.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
+import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 
 // constants
 const PIE_CHART_RADIUS = 60;
@@ -23,9 +23,9 @@ const FIRST_SLICE_COLOR = ' rgb( 134, 102, 172 ) ';
 const SECOND_SLICE_COLOR = ' #d3d3d3';
 const TRACE_ABUNDANCE_IN_PIE_CHART = 1E-6; // empirically chosen value used to represent trace abundance in the pie chart
 
-const otherIsotopesPatternString = isotopesAndAtomicMassStrings.otherIsotopesPattern;
-const thisIsotopeString = isotopesAndAtomicMassStrings.thisIsotope;
-const traceString = isotopesAndAtomicMassStrings.trace;
+const otherIsotopesPatternString = IsotopesAndAtomicMassStrings.otherIsotopesPattern;
+const thisIsotopeString = IsotopesAndAtomicMassStrings.thisIsotope;
+const traceString = IsotopesAndAtomicMassStrings.trace;
 
 class TwoItemPieChartNode extends Node {
 

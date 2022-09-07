@@ -33,17 +33,17 @@ import AquaRadioButton from '../../../../sun/js/AquaRadioButton.js';
 import RectangularRadioButtonGroup from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
 import HSlider from '../../../../sun/js/HSlider.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
+import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 import MixIsotopesModel from '../model/MixIsotopesModel.js';
 import AverageAtomicMassIndicator from './AverageAtomicMassIndicator.js';
 import ControlIsotope from './ControlIsotope.js';
 import IsotopeProportionsPieChart from './IsotopeProportionsPieChart.js';
 
-const averageAtomicMassString = isotopesAndAtomicMassStrings.averageAtomicMass;
-const isotopeMixtureString = isotopesAndAtomicMassStrings.isotopeMixture;
-const myMixString = isotopesAndAtomicMassStrings.myMix;
-const naturesMixString = isotopesAndAtomicMassStrings.naturesMix;
-const percentCompositionString = isotopesAndAtomicMassStrings.percentComposition;
+const averageAtomicMassString = IsotopesAndAtomicMassStrings.averageAtomicMass;
+const isotopeMixtureString = IsotopesAndAtomicMassStrings.isotopeMixture;
+const myMixString = IsotopesAndAtomicMassStrings.myMix;
+const naturesMixString = IsotopesAndAtomicMassStrings.naturesMix;
+const percentCompositionString = IsotopesAndAtomicMassStrings.percentComposition;
 
 // constants
 const MAX_SLIDER_WIDTH = 99.75; //empirically determined

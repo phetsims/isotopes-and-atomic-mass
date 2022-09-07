@@ -9,11 +9,11 @@
 import Sim from '../../joist/js/Sim.js';
 import simLauncher from '../../joist/js/simLauncher.js';
 import Tandem from '../../tandem/js/Tandem.js';
-import isotopesAndAtomicMassStrings from './isotopesAndAtomicMassStrings.js';
+import IsotopesAndAtomicMassStrings from './IsotopesAndAtomicMassStrings.js';
 import MakeIsotopesScreen from './make-isotopes/MakeIsotopesScreen.js';
 import MixIsotopesScreen from './mix-isotopes/MixIsotopesScreen.js';
 
-const isotopesAndAtomicMassTitleStringProperty = isotopesAndAtomicMassStrings[ 'isotopes-and-atomic-mass' ].titleStringProperty;
+const isotopesAndAtomicMassTitleStringProperty = IsotopesAndAtomicMassStrings[ 'isotopes-and-atomic-mass' ].titleStringProperty;
 
 const tandem = Tandem.ROOT;
 

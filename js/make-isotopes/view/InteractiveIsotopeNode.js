@@ -16,16 +16,16 @@ import BucketHole from '../../../../scenery-phet/js/bucket/BucketHole.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import { Node, Text } from '../../../../scenery/js/imports.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
-import shredStrings from '../../../../shred/js/shredStrings.js';
+import ShredStrings from '../../../../shred/js/ShredStrings.js';
 import BucketDragListener from '../../../../shred/js/view/BucketDragListener.js';
 import ParticleView from '../../../../shred/js/view/ParticleView.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
+import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 import IsotopeAtomNode from './IsotopeAtomNode.js';
 
-const myIsotopeString = isotopesAndAtomicMassStrings.myIsotope;
-const stableString = shredStrings.stable;
-const unstableString = shredStrings.unstable;
+const myIsotopeString = IsotopesAndAtomicMassStrings.myIsotope;
+const stableString = ShredStrings.stable;
+const unstableString = ShredStrings.unstable;
 
 // constants
 const NUM_NUCLEON_LAYERS = 5; // This is based on max number of particles, may need adjustment if that changes.

@@ -17,10 +17,10 @@ import AquaRadioButton from '../../../../sun/js/AquaRadioButton.js';
 import Panel from '../../../../sun/js/Panel.js';
 import scale_png from '../../../mipmaps/scale_png.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
+import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 
-const atomicMassString = isotopesAndAtomicMassStrings.atomicMass;
-const massNumberString = isotopesAndAtomicMassStrings.massNumber;
+const atomicMassString = IsotopesAndAtomicMassStrings.atomicMass;
+const massNumberString = IsotopesAndAtomicMassStrings.massNumber;
 
 // class data
 const DISPLAY_MODE = { MASS_NUMBER: 'mass number', ATOMIC_MASS: 'atomic mass' };

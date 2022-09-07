@@ -18,7 +18,7 @@ import { Color, Line, Node, Path, RichText, Text } from '../../../../scenery/js/
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
 import Panel from '../../../../sun/js/Panel.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
+import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 
 // constants
 const INDICATOR_WIDTH = 200;
@@ -29,7 +29,7 @@ const TRIANGULAR_POINTER_HEIGHT = 15;
 const TRIANGULAR_POINTER_WIDTH = 20;
 const NUMBER_DECIMALS = 5;
 
-const amuString = isotopesAndAtomicMassStrings.amu;
+const amuString = IsotopesAndAtomicMassStrings.amu;
 
 /**
  * Convenience function for creating tick marks. This includes both the actual mark and the label.
