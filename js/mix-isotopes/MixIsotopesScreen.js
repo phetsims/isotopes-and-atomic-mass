@@ -25,7 +25,7 @@ class MixIsotopesScreen extends Screen {
   constructor( tandem ) {
 
     const options = {
-      name: IsotopesAndAtomicMassStrings.mixtures,
+      name: IsotopesAndAtomicMassStrings.mixturesStringProperty,
       homeScreenIcon: new ScreenIcon( new Image( mixIsotopesIcon_png ), {
         maxIconWidthProportion: 1,
         maxIconHeightProportion: 1

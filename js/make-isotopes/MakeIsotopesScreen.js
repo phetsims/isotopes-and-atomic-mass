@@ -24,7 +24,7 @@ class MakeIsotopesScreen extends Screen {
   constructor( tandem ) {
 
     const options = {
-      name: IsotopesAndAtomicMassStrings.isotopes,
+      name: IsotopesAndAtomicMassStrings.isotopesStringProperty,
       homeScreenIcon: new ScreenIcon( new Image( makeIsotopesIcon_png ), {
         maxIconWidthProportion: 1,
         maxIconHeightProportion: 1
