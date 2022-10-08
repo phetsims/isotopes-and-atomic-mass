@@ -414,8 +414,8 @@ class InteractivityModeSelectionNode extends RectangularRadioButtonGroup {
     slider.scale( 0.5 );
 
     const radioButtonContent = [
-      { value: MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS, node: bucketNode },
-      { value: MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS, node: slider }
+      { value: MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS, createNode: tandem => bucketNode },
+      { value: MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS, createNode: tandem => slider }
     ];
 
     super( model.interactivityModeProperty, radioButtonContent, {
