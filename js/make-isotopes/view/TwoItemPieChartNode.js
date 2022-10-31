@@ -144,7 +144,7 @@ class TwoItemPieChartNode extends Node {
       const abundanceTo6Digits = AtomIdentifier.getNaturalAbundance( isotope, 6 );
       const name = AtomIdentifier.getName( makeIsotopesModel.particleAtom.protonCountProperty.get() );
       if ( makeIsotopesModel.particleAtom.protonCountProperty.get() > 0 && abundanceTo6Digits < 1 ) {
-        otherIsotopeLabel.text = StringUtils.format( otherIsotopesPatternString, name );
+        otherIsotopeLabel.string = StringUtils.format( otherIsotopesPatternString, name );
         otherIsotopeLabel.visible = true;
         rightConnectingLine.visible = true;
       }
