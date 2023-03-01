@@ -124,7 +124,7 @@ class MakeIsotopesScreenView extends ScreenView {
     // Doesn't need unlink as it stays through out the sim life
     makeIsotopesModel.particleAtom.protonCountProperty.link( protonCount => {
       const symbol = AtomIdentifier.getSymbol( protonCount );
-      symbolText.text = protonCount > 0 ? symbol : '';
+      symbolText.string = protonCount > 0 ? symbol : '';
       symbolText.center = textCenter;
     } );
     symbolRectangle.addChild( symbolText );
@@ -139,7 +139,7 @@ class MakeIsotopesScreenView extends ScreenView {
     // Add the listener to update the proton count.
     // Doesn't need unlink as it stays through out the sim life
     makeIsotopesModel.particleAtom.protonCountProperty.link( protonCount => {
-      protonCountDisplay.text = protonCount;
+      protonCountDisplay.string = protonCount;
       protonCountDisplay.left = NUMBER_INSET;
       protonCountDisplay.bottom = SYMBOL_BOX_HEIGHT - NUMBER_INSET;
     } );
@@ -154,7 +154,7 @@ class MakeIsotopesScreenView extends ScreenView {
     // Add the listener to update the mass number.
     // Doesn't need unlink as it stays through out the sim life
     makeIsotopesModel.particleAtom.massNumberProperty.link( massNumber => {
-      massNumberDisplay.text = massNumber;
+      massNumberDisplay.string = massNumber;
       massNumberDisplay.left = NUMBER_INSET;
       massNumberDisplay.top = NUMBER_INSET;
     } );

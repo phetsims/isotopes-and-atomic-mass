@@ -105,10 +105,10 @@ class TwoItemPieChartNode extends Node {
       const thisIsotopeAbundanceTo6Digits = AtomIdentifier.getNaturalAbundance( isotope, 6 );
       const existsInTraceAmounts = AtomIdentifier.existsInTraceAmounts( isotope );
       if ( thisIsotopeAbundanceTo6Digits === 0 && existsInTraceAmounts ) {
-        readoutMyIsotopeAbundanceText.text = traceString;
+        readoutMyIsotopeAbundanceText.string = traceString;
       }
       else {
-        readoutMyIsotopeAbundanceText.text = `${( Utils.toFixedNumber( thisIsotopeAbundanceTo6Digits * 100, 6 ) ).toString()}%`;
+        readoutMyIsotopeAbundanceText.string = `${( Utils.toFixedNumber( thisIsotopeAbundanceTo6Digits * 100, 6 ) ).toString()}%`;
       }
       thisIsotopeAbundancePanel.centerX = pieChartBoundingRectangle.left - 50; // empirically determined
       thisIsotopeAbundancePanel.centerY = pieChartBoundingRectangle.centerY;

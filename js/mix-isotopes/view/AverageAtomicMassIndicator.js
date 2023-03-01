@@ -110,7 +110,7 @@ function ReadoutPointer( model ) {
     else {
       weight = averageAtomicMass;
     }
-    readoutText.setText( `${Utils.toFixed( weight, NUMBER_DECIMALS )} ${amuString}` );
+    readoutText.setString( `${Utils.toFixed( weight, NUMBER_DECIMALS )} ${amuString}` );
     readoutText.centerX = SIZE.width / 2;
   }
 

@@ -192,7 +192,7 @@ class InteractiveIsotopeNode extends Node {
       if ( name.length === 0 ) {
         name = '';
       }
-      elementName.text = name;
+      elementName.string = name;
       const isotopeAtomNodeRadius = isotopeAtomNode.centerY - isotopeAtomNode.top;
       let elementNameMaxWidth;
       if ( isotopeAtomNodeRadius > mapElementToPosition[ numProtons ] ) {
@@ -259,14 +259,14 @@ class InteractiveIsotopeNode extends Node {
       // set the text of the stability indicator
       if ( numProtons > 0 ) {
         if ( AtomIdentifier.isStable( numProtons, numNeutrons ) ) {
-          stabilityIndicator.text = stableString;
+          stabilityIndicator.string = stableString;
         }
         else {
-          stabilityIndicator.text = unstableString;
+          stabilityIndicator.string = unstableString;
         }
       }
       else {
-        stabilityIndicator.text = '';
+        stabilityIndicator.string = '';
       }
 
       // position and limit the width

@@ -46,11 +46,11 @@ function ScaleReadoutNode( atom, displayModeProperty ) {
 
   function updateReadout() {
     if ( displayModeProperty.get() === DISPLAY_MODE.MASS_NUMBER ) {
-      readoutText.setText( atom.massNumberProperty.get().toString() );
+      readoutText.setString( atom.massNumberProperty.get().toString() );
     }
     else {
       const isotopeAtomicMass = atom.getIsotopeAtomicMass();
-      readoutText.setText( isotopeAtomicMass > 0 ? Utils.toFixed( isotopeAtomicMass, 5 ) : '--' );
+      readoutText.setString( isotopeAtomicMass > 0 ? Utils.toFixed( isotopeAtomicMass, 5 ) : '--' );
     }
 
     // Center the text in the display.

@@ -80,7 +80,7 @@ class ControlIsotope extends Node {
     minusButton.centerY = panel.centerY;
 
     const changedValue = value => {
-      isotopeText.setText( Math.floor( value ) );
+      isotopeText.setString( Math.floor( value ) );
       isotopeText.centerX = READOUT_SIZE.width / 2;
       isotopeText.centerY = READOUT_SIZE.height * 0.75;
 
