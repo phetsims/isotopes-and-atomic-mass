@@ -21,7 +21,11 @@
     ],
     "simulation": true,
     "supportsOutputJS": true,
-    "published": true
+    "published": true,
+    "screenNameKeys": [
+      "ISOTOPES_AND_ATOMIC_MASS/isotopes",
+      "ISOTOPES_AND_ATOMIC_MASS/mixtures"
+    ]
   },
   "eslintConfig": {
     "extends": "../chipper/eslint/sim_eslintrc.js"
