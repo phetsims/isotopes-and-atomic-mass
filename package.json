@@ -19,7 +19,11 @@
       "phet",
       "adapted-from-phet"
     ],
-    "simulation": true
+    "simulation": true,
+    "screenNameKeys": [
+      "ISOTOPES_AND_ATOMIC_MASS/isotopes",
+      "ISOTOPES_AND_ATOMIC_MASS/mixtures"
+    ]
   },
   "eslintConfig": {
     "extends": "../chipper/eslint/sim_eslintrc.js"
