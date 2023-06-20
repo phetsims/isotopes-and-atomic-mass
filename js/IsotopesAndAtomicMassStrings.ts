@@ -5,48 +5,48 @@
  */
 /* eslint-disable */
 import getStringModule from '../../chipper/js/getStringModule.js';
-import LinkableProperty from '../../axon/js/LinkableProperty.js';
+import type LocalizedStringProperty from '../../chipper/js/LocalizedStringProperty.js';
 import isotopesAndAtomicMass from './isotopesAndAtomicMass.js';
 
 type StringsType = {
   'isotopes-and-atomic-mass': {
     'title': string;
-    'titleStringProperty': LinkableProperty<string>;
+    'titleStringProperty': LocalizedStringProperty;
   };
   'isotopes': string;
-  'isotopesStringProperty': LinkableProperty<string>;
+  'isotopesStringProperty': LocalizedStringProperty;
   'mixtures': string;
-  'mixturesStringProperty': LinkableProperty<string>;
+  'mixturesStringProperty': LocalizedStringProperty;
   'neutrons': string;
-  'neutronsStringProperty': LinkableProperty<string>;
+  'neutronsStringProperty': LocalizedStringProperty;
   'massNumber': string;
-  'massNumberStringProperty': LinkableProperty<string>;
+  'massNumberStringProperty': LocalizedStringProperty;
   'atomicMass': string;
-  'atomicMassStringProperty': LinkableProperty<string>;
+  'atomicMassStringProperty': LocalizedStringProperty;
   'symbol': string;
-  'symbolStringProperty': LinkableProperty<string>;
+  'symbolStringProperty': LocalizedStringProperty;
   'abundanceInNature': string;
-  'abundanceInNatureStringProperty': LinkableProperty<string>;
+  'abundanceInNatureStringProperty': LocalizedStringProperty;
   'myIsotope': string;
-  'myIsotopeStringProperty': LinkableProperty<string>;
+  'myIsotopeStringProperty': LocalizedStringProperty;
   'thisIsotope': string;
-  'thisIsotopeStringProperty': LinkableProperty<string>;
+  'thisIsotopeStringProperty': LocalizedStringProperty;
   'otherIsotopesPattern': string;
-  'otherIsotopesPatternStringProperty': LinkableProperty<string>;
+  'otherIsotopesPatternStringProperty': LocalizedStringProperty;
   'amu': string;
-  'amuStringProperty': LinkableProperty<string>;
+  'amuStringProperty': LocalizedStringProperty;
   'myMix': string;
-  'myMixStringProperty': LinkableProperty<string>;
+  'myMixStringProperty': LocalizedStringProperty;
   'naturesMix': string;
-  'naturesMixStringProperty': LinkableProperty<string>;
+  'naturesMixStringProperty': LocalizedStringProperty;
   'isotopeMixture': string;
-  'isotopeMixtureStringProperty': LinkableProperty<string>;
+  'isotopeMixtureStringProperty': LocalizedStringProperty;
   'percentComposition': string;
-  'percentCompositionStringProperty': LinkableProperty<string>;
+  'percentCompositionStringProperty': LocalizedStringProperty;
   'averageAtomicMass': string;
-  'averageAtomicMassStringProperty': LinkableProperty<string>;
+  'averageAtomicMassStringProperty': LocalizedStringProperty;
   'trace': string;
-  'traceStringProperty': LinkableProperty<string>;
+  'traceStringProperty': LocalizedStringProperty;
 };
 
 const IsotopesAndAtomicMassStrings = getStringModule( 'ISOTOPES_AND_ATOMIC_MASS' ) as StringsType;
