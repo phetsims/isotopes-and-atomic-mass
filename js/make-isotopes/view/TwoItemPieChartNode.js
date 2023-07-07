@@ -1,4 +1,4 @@
-// Copyright 2015-2021, University of Colorado Boulder
+// Copyright 2015-2023, University of Colorado Boulder
 
 /**
  * Node that represents a pie chart with two slice and there labels positioned accordingly
@@ -10,16 +10,12 @@
 import Utils from '../../../../dot/js/Utils.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
-import { Line } from '../../../../scenery/js/imports.js';
-import { Node } from '../../../../scenery/js/imports.js';
-import { Rectangle } from '../../../../scenery/js/imports.js';
-import { RichText } from '../../../../scenery/js/imports.js';
-import { Text } from '../../../../scenery/js/imports.js';
+import { Line, Node, Rectangle, RichText, Text } from '../../../../scenery/js/imports.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
 import Panel from '../../../../sun/js/Panel.js';
 import PieChartNode from '../../common/view/PieChartNode.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
+import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 
 // constants
 const PIE_CHART_RADIUS = 60;
@@ -27,9 +23,9 @@ const FIRST_SLICE_COLOR = ' rgb( 134, 102, 172 ) ';
 const SECOND_SLICE_COLOR = ' #d3d3d3';
 const TRACE_ABUNDANCE_IN_PIE_CHART = 1E-6; // empirically chosen value used to represent trace abundance in the pie chart
 
-const otherIsotopesPatternString = isotopesAndAtomicMassStrings.otherIsotopesPattern;
-const thisIsotopeString = isotopesAndAtomicMassStrings.thisIsotope;
-const traceString = isotopesAndAtomicMassStrings.trace;
+const otherIsotopesPatternString = IsotopesAndAtomicMassStrings.otherIsotopesPattern;
+const thisIsotopeString = IsotopesAndAtomicMassStrings.thisIsotope;
+const traceString = IsotopesAndAtomicMassStrings.trace;
 
 class TwoItemPieChartNode extends Node {
 
@@ -109,10 +105,10 @@ class TwoItemPieChartNode extends Node {
       const thisIsotopeAbundanceTo6Digits = AtomIdentifier.getNaturalAbundance( isotope, 6 );
       const existsInTraceAmounts = AtomIdentifier.existsInTraceAmounts( isotope );
       if ( thisIsotopeAbundanceTo6Digits === 0 && existsInTraceAmounts ) {
-        readoutMyIsotopeAbundanceText.text = traceString;
+        readoutMyIsotopeAbundanceText.string = traceString;
       }
       else {
-        readoutMyIsotopeAbundanceText.text = `${( Utils.toFixedNumber( thisIsotopeAbundanceTo6Digits * 100, 6 ) ).toString()}%`;
+        readoutMyIsotopeAbundanceText.string = `${( Utils.toFixedNumber( thisIsotopeAbundanceTo6Digits * 100, 6 ) ).toString()}%`;
       }
       thisIsotopeAbundancePanel.centerX = pieChartBoundingRectangle.left - 50; // empirically determined
       thisIsotopeAbundancePanel.centerY = pieChartBoundingRectangle.centerY;
@@ -148,7 +144,7 @@ class TwoItemPieChartNode extends Node {
       const abundanceTo6Digits = AtomIdentifier.getNaturalAbundance( isotope, 6 );
       const name = AtomIdentifier.getName( makeIsotopesModel.particleAtom.protonCountProperty.get() );
       if ( makeIsotopesModel.particleAtom.protonCountProperty.get() > 0 && abundanceTo6Digits < 1 ) {
-        otherIsotopeLabel.text = StringUtils.format( otherIsotopesPatternString, name );
+        otherIsotopeLabel.string = StringUtils.format( otherIsotopesPatternString, name );
         otherIsotopeLabel.visible = true;
         rightConnectingLine.visible = true;
       }

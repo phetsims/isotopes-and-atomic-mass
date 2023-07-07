@@ -1,4 +1,4 @@
-// Copyright 2014-2021, University of Colorado Boulder
+// Copyright 2014-2023, University of Colorado Boulder
 
 /**
  * Screen view for the tab where the user makes isotopes of a given element by adding and removing neutrons.
@@ -8,6 +8,7 @@
  * @author James Smith
  */
 
+import Multilink from '../../../../axon/js/Multilink.js';
 import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Range from '../../../../dot/js/Range.js';
@@ -21,10 +22,7 @@ import BucketHole from '../../../../scenery-phet/js/bucket/BucketHole.js';
 import EraserButton from '../../../../scenery-phet/js/buttons/EraserButton.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
-import { Node } from '../../../../scenery/js/imports.js';
-import { Rectangle } from '../../../../scenery/js/imports.js';
-import { Text } from '../../../../scenery/js/imports.js';
-import { Color } from '../../../../scenery/js/imports.js';
+import { Color, Node, Rectangle, Text } from '../../../../scenery/js/imports.js';
 import ShredConstants from '../../../../shred/js/ShredConstants.js';
 import BucketDragListener from '../../../../shred/js/view/BucketDragListener.js';
 import ExpandedPeriodicTableNode from '../../../../shred/js/view/ExpandedPeriodicTableNode.js';
@@ -35,17 +33,17 @@ import AquaRadioButton from '../../../../sun/js/AquaRadioButton.js';
 import RectangularRadioButtonGroup from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
 import HSlider from '../../../../sun/js/HSlider.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
+import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 import MixIsotopesModel from '../model/MixIsotopesModel.js';
 import AverageAtomicMassIndicator from './AverageAtomicMassIndicator.js';
 import ControlIsotope from './ControlIsotope.js';
 import IsotopeProportionsPieChart from './IsotopeProportionsPieChart.js';
 
-const averageAtomicMassString = isotopesAndAtomicMassStrings.averageAtomicMass;
-const isotopeMixtureString = isotopesAndAtomicMassStrings.isotopeMixture;
-const myMixString = isotopesAndAtomicMassStrings.myMix;
-const naturesMixString = isotopesAndAtomicMassStrings.naturesMix;
-const percentCompositionString = isotopesAndAtomicMassStrings.percentComposition;
+const averageAtomicMassString = IsotopesAndAtomicMassStrings.averageAtomicMass;
+const isotopeMixtureString = IsotopesAndAtomicMassStrings.isotopeMixture;
+const myMixString = IsotopesAndAtomicMassStrings.myMix;
+const naturesMixString = IsotopesAndAtomicMassStrings.naturesMix;
+const percentCompositionString = IsotopesAndAtomicMassStrings.percentComposition;
 
 // constants
 const MAX_SLIDER_WIDTH = 99.75; //empirically determined
@@ -325,7 +323,7 @@ class MixIsotopesScreenView extends ScreenView {
     // Listen for changes to the model state that can end up leaving particles that are being dragged in odd states,
     // and cancel any interactions with the individual isotopes.  This helps to prevent multi-touch issues such as those
     // described in https://github.com/phetsims/isotopes-and-atomic-mass/issues/101
-    Property.multilink(
+    Multilink.multilink(
       [ mixIsotopesModel.showingNaturesMixProperty, mixIsotopesModel.interactivityModeProperty ],
       () => { isotopeLayer.interruptSubtreeInput(); }
     );
@@ -406,24 +404,31 @@ class InteractivityModeSelectionNode extends RectangularRadioButtonGroup {
     const slider = new HSlider( new Property( 50 ), range, {
       trackSize: new Dimension2( 50, 5 ),
       thumbSize: new Dimension2( 15, 30 ),
-      majorTickLength: 15
+      majorTickLength: 15,
+
+      // pdom - this slider is just an icon and should not have PDOM representation
+      tagName: null
     } );
     slider.addMajorTick( 0 );
     slider.addMajorTick( 100 );
     slider.scale( 0.5 );
 
     const radioButtonContent = [
-      { value: MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS, node: bucketNode },
-      { value: MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS, node: slider }
+      { value: MixIsotopesModel.InteractivityMode.BUCKETS_AND_LARGE_ATOMS, createNode: () => bucketNode },
+      { value: MixIsotopesModel.InteractivityMode.SLIDERS_AND_SMALL_ATOMS, createNode: () => slider }
     ];
 
     super( model.interactivityModeProperty, radioButtonContent, {
       orientation: 'horizontal',
-      baseColor: Color.white,
       spacing: 5,
-      selectedStroke: '#3291b8',
-      selectedLineWidth: 2,
-      deselectedContentOpacity: 0.2
+      radioButtonOptions: {
+        baseColor: Color.white,
+        buttonAppearanceStrategyOptions: {
+          selectedStroke: '#3291b8',
+          selectedLineWidth: 2,
+          deselectedContentOpacity: 0.2
+        }
+      }
     } );
   }
 }

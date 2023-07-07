@@ -1,4 +1,4 @@
-// Copyright 2015-2021, University of Colorado Boulder
+// Copyright 2015-2023, University of Colorado Boulder
 
 /**
  * ControlIsotope is a control that allows the client to control the quantity of an isotope.  It has arrow buttons, a
@@ -8,8 +8,7 @@
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Range from '../../../../dot/js/Range.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
-import { Node } from '../../../../scenery/js/imports.js';
-import { Text } from '../../../../scenery/js/imports.js';
+import { Node, Text } from '../../../../scenery/js/imports.js';
 import IsotopeNode from '../../../../shred/js/view/IsotopeNode.js';
 import ArrowButton from '../../../../sun/js/buttons/ArrowButton.js';
 import HSlider from '../../../../sun/js/HSlider.js';
@@ -81,7 +80,7 @@ class ControlIsotope extends Node {
     minusButton.centerY = panel.centerY;
 
     const changedValue = value => {
-      isotopeText.setText( Math.floor( value ) );
+      isotopeText.setString( Math.floor( value ) );
       isotopeText.centerX = READOUT_SIZE.width / 2;
       isotopeText.centerY = READOUT_SIZE.height * 0.75;
 

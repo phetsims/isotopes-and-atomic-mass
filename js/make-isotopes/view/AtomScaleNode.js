@@ -1,4 +1,4 @@
-// Copyright 2014-2022, University of Colorado Boulder
+// Copyright 2014-2023, University of Colorado Boulder
 
 /**
  * Node that represents a scale on which an atom can be weighed.
@@ -12,17 +12,15 @@ import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Utils from '../../../../dot/js/Utils.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
-import { Image } from '../../../../scenery/js/imports.js';
-import { Node } from '../../../../scenery/js/imports.js';
-import { Text } from '../../../../scenery/js/imports.js';
+import { Image, Node, Text } from '../../../../scenery/js/imports.js';
 import AquaRadioButton from '../../../../sun/js/AquaRadioButton.js';
 import Panel from '../../../../sun/js/Panel.js';
 import scale_png from '../../../mipmaps/scale_png.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
+import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 
-const atomicMassString = isotopesAndAtomicMassStrings.atomicMass;
-const massNumberString = isotopesAndAtomicMassStrings.massNumber;
+const atomicMassString = IsotopesAndAtomicMassStrings.atomicMass;
+const massNumberString = IsotopesAndAtomicMassStrings.massNumber;
 
 // class data
 const DISPLAY_MODE = { MASS_NUMBER: 'mass number', ATOMIC_MASS: 'atomic mass' };
@@ -48,11 +46,11 @@ function ScaleReadoutNode( atom, displayModeProperty ) {
 
   function updateReadout() {
     if ( displayModeProperty.get() === DISPLAY_MODE.MASS_NUMBER ) {
-      readoutText.setText( atom.massNumberProperty.get().toString() );
+      readoutText.setString( atom.massNumberProperty.get().toString() );
     }
     else {
       const isotopeAtomicMass = atom.getIsotopeAtomicMass();
-      readoutText.setText( isotopeAtomicMass > 0 ? Utils.toFixed( isotopeAtomicMass, 5 ) : '--' );
+      readoutText.setString( isotopeAtomicMass > 0 ? Utils.toFixed( isotopeAtomicMass, 5 ) : '--' );
     }
 
     // Center the text in the display.

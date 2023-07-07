@@ -1,4 +1,4 @@
-// Copyright 2014-2021, University of Colorado Boulder
+// Copyright 2014-2023, University of Colorado Boulder
 
 /**
  * This class defines a Node that represents an atom in "schematic" (i.e. Bohr) form and allows users to add or remove
@@ -14,19 +14,18 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import BucketFront from '../../../../scenery-phet/js/bucket/BucketFront.js';
 import BucketHole from '../../../../scenery-phet/js/bucket/BucketHole.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
-import { Node } from '../../../../scenery/js/imports.js';
-import { Text } from '../../../../scenery/js/imports.js';
+import { Node, Text } from '../../../../scenery/js/imports.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
-import shredStrings from '../../../../shred/js/shredStrings.js';
+import ShredStrings from '../../../../shred/js/ShredStrings.js';
 import BucketDragListener from '../../../../shred/js/view/BucketDragListener.js';
 import ParticleView from '../../../../shred/js/view/ParticleView.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
+import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 import IsotopeAtomNode from './IsotopeAtomNode.js';
 
-const myIsotopeString = isotopesAndAtomicMassStrings.myIsotope;
-const stableString = shredStrings.stable;
-const unstableString = shredStrings.unstable;
+const myIsotopeString = IsotopesAndAtomicMassStrings.myIsotope;
+const stableString = ShredStrings.stable;
+const unstableString = ShredStrings.unstable;
 
 // constants
 const NUM_NUCLEON_LAYERS = 5; // This is based on max number of particles, may need adjustment if that changes.
@@ -193,7 +192,7 @@ class InteractiveIsotopeNode extends Node {
       if ( name.length === 0 ) {
         name = '';
       }
-      elementName.text = name;
+      elementName.string = name;
       const isotopeAtomNodeRadius = isotopeAtomNode.centerY - isotopeAtomNode.top;
       let elementNameMaxWidth;
       if ( isotopeAtomNodeRadius > mapElementToPosition[ numProtons ] ) {
@@ -260,14 +259,14 @@ class InteractiveIsotopeNode extends Node {
       // set the text of the stability indicator
       if ( numProtons > 0 ) {
         if ( AtomIdentifier.isStable( numProtons, numNeutrons ) ) {
-          stabilityIndicator.text = stableString;
+          stabilityIndicator.string = stableString;
         }
         else {
-          stabilityIndicator.text = unstableString;
+          stabilityIndicator.string = unstableString;
         }
       }
       else {
-        stabilityIndicator.text = '';
+        stabilityIndicator.string = '';
       }
 
       // position and limit the width

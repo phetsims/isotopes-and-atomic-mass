@@ -12,7 +12,7 @@ import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import { Image } from '../../../scenery/js/imports.js';
 import makeIsotopesIcon_png from '../../mipmaps/makeIsotopesIcon_png.js';
 import isotopesAndAtomicMass from '../isotopesAndAtomicMass.js';
-import isotopesAndAtomicMassStrings from '../isotopesAndAtomicMassStrings.js';
+import IsotopesAndAtomicMassStrings from '../IsotopesAndAtomicMassStrings.js';
 import MakeIsotopesModel from './model/MakeIsotopesModel.js';
 import MakeIsotopesScreenView from './view/MakeIsotopesScreenView.js';
 
@@ -24,7 +24,7 @@ class MakeIsotopesScreen extends Screen {
   constructor( tandem ) {
 
     const options = {
-      name: isotopesAndAtomicMassStrings.isotopes,
+      name: IsotopesAndAtomicMassStrings.isotopesStringProperty,
       homeScreenIcon: new ScreenIcon( new Image( makeIsotopesIcon_png ), {
         maxIconWidthProportion: 1,
         maxIconHeightProportion: 1

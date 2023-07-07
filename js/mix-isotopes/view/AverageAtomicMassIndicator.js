@@ -1,4 +1,4 @@
-// Copyright 2015-2022, University of Colorado Boulder
+// Copyright 2015-2023, University of Colorado Boulder
 
 /**
  * monitors the average atomic mass of a set of isotopes in a model and displays it.
@@ -14,16 +14,11 @@ import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import { Shape } from '../../../../kite/js/imports.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
-import { Line } from '../../../../scenery/js/imports.js';
-import { Node } from '../../../../scenery/js/imports.js';
-import { Path } from '../../../../scenery/js/imports.js';
-import { RichText } from '../../../../scenery/js/imports.js';
-import { Text } from '../../../../scenery/js/imports.js';
-import { Color } from '../../../../scenery/js/imports.js';
+import { Color, Line, Node, Path, RichText, Text } from '../../../../scenery/js/imports.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
 import Panel from '../../../../sun/js/Panel.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
+import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 
 // constants
 const INDICATOR_WIDTH = 200;
@@ -34,7 +29,7 @@ const TRIANGULAR_POINTER_HEIGHT = 15;
 const TRIANGULAR_POINTER_WIDTH = 20;
 const NUMBER_DECIMALS = 5;
 
-const amuString = isotopesAndAtomicMassStrings.amu;
+const amuString = IsotopesAndAtomicMassStrings.amu;
 
 /**
  * Convenience function for creating tick marks. This includes both the actual mark and the label.
@@ -115,7 +110,7 @@ function ReadoutPointer( model ) {
     else {
       weight = averageAtomicMass;
     }
-    readoutText.setText( `${Utils.toFixed( weight, NUMBER_DECIMALS )} ${amuString}` );
+    readoutText.setString( `${Utils.toFixed( weight, NUMBER_DECIMALS )} ${amuString}` );
     readoutText.centerX = SIZE.width / 2;
   }
 

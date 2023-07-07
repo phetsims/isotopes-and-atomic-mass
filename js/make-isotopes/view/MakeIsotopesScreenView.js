@@ -1,4 +1,4 @@
-// Copyright 2014-2021, University of Colorado Boulder
+// Copyright 2014-2023, University of Colorado Boulder
 
 /**
  * Screen view where the user makes isotopes of a given element by adding and removing neutrons.
@@ -14,15 +14,14 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import ScreenView from '../../../../joist/js/ScreenView.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
-import { Node } from '../../../../scenery/js/imports.js';
-import { Text } from '../../../../scenery/js/imports.js';
+import { Node, Text } from '../../../../scenery/js/imports.js';
 import ShredConstants from '../../../../shred/js/ShredConstants.js';
 import ExpandedPeriodicTableNode from '../../../../shred/js/view/ExpandedPeriodicTableNode.js';
 import ParticleCountDisplay from '../../../../shred/js/view/ParticleCountDisplay.js';
 import SymbolNode from '../../../../shred/js/view/SymbolNode.js';
 import AccordionBox from '../../../../sun/js/AccordionBox.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import isotopesAndAtomicMassStrings from '../../isotopesAndAtomicMassStrings.js';
+import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 import AtomScaleNode from './AtomScaleNode.js';
 import InteractiveIsotopeNode from './InteractiveIsotopeNode.js';
 import TwoItemPieChartNode from './TwoItemPieChartNode.js';
@@ -30,8 +29,8 @@ import TwoItemPieChartNode from './TwoItemPieChartNode.js';
 // constants
 const OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION = 12;
 
-const abundanceInNatureString = isotopesAndAtomicMassStrings.abundanceInNature;
-const symbolString = isotopesAndAtomicMassStrings.symbol;
+const abundanceInNatureString = IsotopesAndAtomicMassStrings.abundanceInNature;
+const symbolString = IsotopesAndAtomicMassStrings.symbol;
 
 class MakeIsotopesScreenView extends ScreenView {
 

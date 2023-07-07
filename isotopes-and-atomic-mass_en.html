@@ -29,7 +29,7 @@
         "url": "https://github.com/phetsims/isotopes-and-atomic-mass.git"
       },
       "devDependencies": {
-        "grunt": "~1.4.0"
+        "grunt": "~1.5.3"
       },
       "phet": {
         "requirejsNamespace": "ISOTOPES_AND_ATOMIC_MASS",
@@ -42,7 +42,12 @@
           "adapted-from-phet"
         ],
         "simulation": true,
-        "supportsOutputJS": true
+        "supportsOutputJS": true,
+        "published": true,
+        "screenNameKeys": [
+          "ISOTOPES_AND_ATOMIC_MASS/isotopes",
+          "ISOTOPES_AND_ATOMIC_MASS/mixtures"
+        ]
       },
       "eslintConfig": {
         "extends": "../chipper/eslint/sim_eslintrc.js"
@@ -79,6 +84,7 @@
         "requirejsNamespace": "TWIXT"
       }
     ];
+  window.phet.chipper.allowLocaleSwitching = true;
 
   // Identify the brand (assume generated brand if not provided with query parameters)
   const brandMatch = location.search.match( /brand=([^&]+)/ );
@@ -91,6 +97,7 @@
     '../sherpa/lib/lodash-4.17.4.js',
     '../sherpa/lib/FileSaver-b8054a2.js',
     '../sherpa/lib/himalaya-1.1.0.js',
+    '../sherpa/lib/linebreak-1.1.0.js',
     '../sherpa/lib/flatqueue-1.2.1.js',
     '../sherpa/lib/he-1.1.1.js',
     '../assert/js/assert.js',
