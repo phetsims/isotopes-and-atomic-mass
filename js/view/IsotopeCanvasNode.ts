@@ -6,18 +6,25 @@
  * @author Aadish Gupta
  */
 
-import { CanvasNode } from '../../../scenery/js/imports.js';
+import { CanvasNode, CanvasNodeOptions } from '../../../scenery/js/imports.js';
 import shred from '../shred.js';
+import ModelViewTransform2 from '../../../phetcommon/js/view/ModelViewTransform2.js';
+import MovableAtom from '../../../isotopes-and-atomic-mass/js/mix-isotopes/model/MovableAtom.js';
+import { ObservableArray } from '../../../axon/js/createObservableArray.js';
+
+type IsotopeCanvasNodeOptions = CanvasNodeOptions;
 
 class IsotopeCanvasNode extends CanvasNode {
+  private isotopes: ObservableArray<MovableAtom>;
+  private readonly modelViewTransform: ModelViewTransform2;
 
   /**
    * A particle layer rendered on canvas
-   * @param {Array.<MovableAtom>} isotopes that need to be rendered on the canvas
-   * @param {ModelViewTransform2} modelViewTransform to convert between model and view coordinate frames
-   * @param {Object} [options] that can be passed on to the underlying node
+   * @param isotopes - that need to be rendered on the canvas
+   * @param modelViewTransform - to convert between model and view coordinate frames
+   * @param options - that can be passed on to the underlying node
    */
-  constructor( isotopes, modelViewTransform, options ) {
+  public constructor( isotopes: ObservableArray<MovableAtom>, modelViewTransform: ModelViewTransform2, options?: IsotopeCanvasNodeOptions ) {
     super( options );
     this.isotopes = isotopes;
     this.modelViewTransform = modelViewTransform;
@@ -25,11 +32,8 @@ class IsotopeCanvasNode extends CanvasNode {
 
   /**
    * Paints the particles on the canvas node.
-   * @param {CanvasRenderingContext2D} context
-   * @public
-   * @override
    */
-  paintCanvas( context ) {
+  public override paintCanvas( context: CanvasRenderingContext2D ): void {
     let isotope;
     let i;
     const numIsotopes = this.isotopes.length;
@@ -44,6 +48,7 @@ class IsotopeCanvasNode extends CanvasNode {
         const position = isotope.positionProperty.get();
         const x = this.modelViewTransform.modelToViewX( position.x );
         const y = this.modelViewTransform.modelToViewY( position.y );
+        // @ts-expect-error - Seems like some work needs to be done here when Isotopes And Atomic Mass is converted to TypeScript
         context.fillStyle = isotope.color.toCSS();
         context.beginPath();
         context.arc( x, y, radius, 0, 2 * Math.PI, true );
@@ -53,14 +58,12 @@ class IsotopeCanvasNode extends CanvasNode {
     }
   }
 
-  // @public
-  setIsotopes( isotopes ) {
+  public setIsotopes( isotopes: ObservableArray<MovableAtom> ): void {
     this.isotopes = isotopes;
     this.invalidatePaint();
   }
 
-  // @public
-  step() {
+  public step(): void {
     this.invalidatePaint();
   }
 }
