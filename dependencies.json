@@ -2,98 +2,98 @@
   "comment": "# isotopes-and-atomic-mass 1.1.0-dev.1 Wed Mar 20 2019 13:44:31 GMT-0600 (Mountain Daylight Time)",
   "assert": {
     "sha": "d8a2e8992420327ff72a6fc4bb93ec76549ded0e",
-    "branch": "master"
+    "branch": "main"
   },
   "axon": {
     "sha": "1d00083818bee6c6fbdc746527523d80c626938e",
-    "branch": "master"
+    "branch": "main"
   },
   "brand": {
     "sha": "eab5236cde285d9ad689fbc335ebcc7ab0a14bfa",
-    "branch": "master"
+    "branch": "main"
   },
   "chipper": {
     "sha": "8d5a7027a51fa2871fd1150443072f421f8c44c1",
-    "branch": "master"
+    "branch": "main"
   },
   "dot": {
     "sha": "dba21987a05470f2da00ea0314020ff0581bea60",
-    "branch": "master"
+    "branch": "main"
   },
   "isotopes-and-atomic-mass": {
     "sha": "e74096c27f65e75d59a9a9159863b0dae107839a",
-    "branch": "master"
+    "branch": "main"
   },
   "joist": {
     "sha": "1d3e7051dd25af0ca28c601258b304f1be7fb9b3",
-    "branch": "master"
+    "branch": "main"
   },
   "kite": {
     "sha": "95999b737aad44dde813fee32661ea196fc400b9",
-    "branch": "master"
+    "branch": "main"
   },
   "phet-core": {
     "sha": "4600255759a8cf1769b7c7dde146fa13ad15d054",
-    "branch": "master"
+    "branch": "main"
   },
   "phet-io": {
     "sha": "9d446f9ddc2a8aa9213310fa4a87a6ad52fba6f6",
-    "branch": "master"
+    "branch": "main"
   },
   "phet-io-wrapper-classroom-activity": {
     "sha": "248958109c8d3b73b5f9d6c31015b2c8b5016571",
-    "branch": "master"
+    "branch": "main"
   },
   "phet-io-wrapper-hookes-law-energy": {
     "sha": "3ea0d43712de26832a841086365544fa930fe458",
-    "branch": "master"
+    "branch": "main"
   },
   "phet-io-wrapper-lab-book": {
     "sha": "cdb2698695aba22b25571a4330386346378ff7d2",
-    "branch": "master"
+    "branch": "main"
   },
   "phet-io-wrappers": {
     "sha": "5c641663a815315f723a9f1569b33c8b3cb7d437",
-    "branch": "master"
+    "branch": "main"
   },
   "phetcommon": {
     "sha": "e495149bda019d002b373304235b8bc90edee617",
-    "branch": "master"
+    "branch": "main"
   },
   "phetmarks": {
     "sha": "7a10df2547c10e82261cb03b96db77c11c032eef",
-    "branch": "master"
+    "branch": "main"
   },
   "query-string-machine": {
     "sha": "f20a2b06972ed330c2cd5a7c3f2321935718ee92",
-    "branch": "master"
+    "branch": "main"
   },
   "scenery": {
     "sha": "8bdb07369911641d5b22d9f54e41faecf0a7b2af",
-    "branch": "master"
+    "branch": "main"
   },
   "scenery-phet": {
     "sha": "10183e93c32ad3c052d6a5d0e110e09af4028d21",
-    "branch": "master"
+    "branch": "main"
   },
   "sherpa": {
     "sha": "d52196c927f1c284384eb8fbb2b84f040e613aaa",
-    "branch": "master"
+    "branch": "main"
   },
   "shred": {
     "sha": "47cab013301cb33b81573d90be538f0ccfe1415a",
-    "branch": "master"
+    "branch": "main"
   },
   "sun": {
     "sha": "77896f7fbedc9fcf288f9fd33c1d1edca6cdd067",
-    "branch": "master"
+    "branch": "main"
   },
   "tambo": {
     "sha": "007aa9f0cf8d4300172011ea5fc065f86e61d58e",
-    "branch": "master"
+    "branch": "main"
   },
   "tandem": {
     "sha": "856aa5fb9000526b153b6fbef5019387e0461b79",
-    "branch": "master"
+    "branch": "main"
   }
 }
