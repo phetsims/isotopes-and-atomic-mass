@@ -2,8 +2,8 @@
 
 This simulation was ported from a Java version, not started from scratch in HTML5.
 
-The Java version of the simulation had two "flavors" - Build an Atom and Isotopes and Atomic Mass. Build an Atom
-has been split into a separate simulation, and the code that is shared between the two is in a repository called
+The Java version of the simulation had two "flavors" - Build an Atom and Isotopes and Atomic Mass. Build an Atom has
+been split into a separate simulation, and the code that is shared between the two is in a repository called
 'shred'.
 
 There are so many size relationships in this simulation that are not to scale that it was difficult to choose a scaling
