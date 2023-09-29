@@ -1,16 +1,15 @@
 Isotopes and Atomic Mass
 =============
-"Isotopes and Atomic Mass" is an educational simulation in HTML5,
-by <a href="https://phet.colorado.edu/" target="_blank">PhET Interactive Simulations</a>
+"Isotopes and Atomic Mass" is an educational simulation in HTML5, by <a href="https://phet.colorado.edu/" target="_blank">PhET
+Interactive Simulations</a>
 at the University of Colorado Boulder. For a description of this simulation, associated resources, and a link to the
 published version,
-<a href="https://phet.colorado.edu/en/simulation/isotopes-and-atomic-mass" target="_blank">visit the simulation's web
-page</a>.
+<a href="https://phet.colorado.edu/en/simulation/isotopes-and-atomic-mass" target="_blank">visit the simulation's web page</a>.
 
 ### Try it!
 
-<a href="https://phet.colorado.edu/sims/html/isotopes-and-atomic-mass/latest/isotopes-and-atomic-mass_en.html" target="_blank">
-Click here to run "Isotopes and Atomic Mass".</a>
+<a href="https://phet.colorado.edu/sims/html/isotopes-and-atomic-mass/latest/isotopes-and-atomic-mass_en.html" target="_blank">Click here to
+run "Isotopes and Atomic Mass".</a>
 
 <a href="https://phet.colorado.edu/sims/html/isotopes-and-atomic-mass/latest/isotopes-and-atomic-mass_en.html" target="_blank">
 <img src="https://raw.githubusercontent.com/phetsims/isotopes-and-atomic-mass/main/assets/isotopes-and-atomic-mass-screenshot.png" alt="Screenshot" style="width: 400px;"/>
@@ -70,8 +69,8 @@ new or changed files.
 
 (4) In a new terminal/command prompt, start an http-server
 
-(5) Open in the browser: `http://localhost/isotopes-and-atomic-mass/isotopes-and-atomic-mass_en.html` (You will probably
-need to modify this URL based on your HTTP port and relative path.)
+(5) Open in the browser: `http://localhost/isotopes-and-atomic-mass/isotopes-and-atomic-mass_en.html` (You will probably need to modify this
+URL based on your HTTP port and relative path.)
 
 #### Optional: Build the simulation into a single file
 
@@ -82,8 +81,8 @@ like `>> WARNING404: Skipping potentially non-public dependency`, which indicate
 being included in the build.
 
 (3) Open in the
-browser: `http://localhost/isotopes-and-atomic-mass/build/adapted-from-phet/isotopes-and-atomic-mass_en_adapted-from-phet.html` (
-You will probably need to modify this URL based on your HTTP port and relative path.)
+browser: `http://localhost/isotopes-and-atomic-mass/build/adapted-from-phet/isotopes-and-atomic-mass_en_adapted-from-phet.html` (You will
+probably need to modify this URL based on your HTTP port and relative path.)
 
 ### Get Involved
 
@@ -91,8 +90,7 @@ Contact us at our Google
 Group: <a href="http://groups.google.com/forum/#!forum/developing-interactive-simulations-in-html5" target="_blank">
 Developing Interactive Simulations in HTML5</a>
 
-Help us improve, create a <a href="http://github.com/phetsims/isotopes-and-atomic-mass/issues/new" target="_blank">New
-Issue</a>
+Help us improve, create a <a href="http://github.com/phetsims/isotopes-and-atomic-mass/issues/new" target="_blank">New Issue</a>
 
 ### License
 
