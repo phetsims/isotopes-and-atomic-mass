@@ -142,7 +142,7 @@ class TwoItemPieChartNode extends Node {
     // Attach otherIsotopeLabel with protonCountProperty to change element name on proton count change
     function updateOtherIsotopeLabel( isotope ) {
       const abundanceTo6Digits = AtomIdentifier.getNaturalAbundance( isotope, 6 );
-      const name = AtomIdentifier.getName( makeIsotopesModel.particleAtom.protonCountProperty.get() );
+      const name = AtomIdentifier.getName( makeIsotopesModel.particleAtom.protonCountProperty.get() ).value;
       if ( makeIsotopesModel.particleAtom.protonCountProperty.get() > 0 && abundanceTo6Digits < 1 ) {
         otherIsotopeLabel.string = StringUtils.format( otherIsotopesPatternString, name );
         otherIsotopeLabel.visible = true;

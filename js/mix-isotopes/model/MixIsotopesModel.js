@@ -498,7 +498,7 @@ class MixIsotopesModel {
     // Add the controllers.
     for ( let i = 0; i < this.possibleIsotopesProperty.get().length; i++ ) {
       const isotopeConfig = this.possibleIsotopesProperty.get()[ i ];
-      const isotopeCaption = `${AtomIdentifier.getName( isotopeConfig.protonCountProperty.get() )
+      const isotopeCaption = `${AtomIdentifier.getName( isotopeConfig.protonCountProperty.get() ).value
       }-${isotopeConfig.massNumberProperty.get()}`;
       if ( buckets ) {
         const newBucket = new MonoIsotopeBucket(
