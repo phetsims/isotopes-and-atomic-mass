@@ -9,6 +9,7 @@
  */
 
 import Property from '../../../../axon/js/Property.js';
+import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Utils from '../../../../dot/js/Utils.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ScreenView from '../../../../joist/js/ScreenView.js';
@@ -39,7 +40,11 @@ class MakeIsotopesScreenView extends ScreenView {
    * @param {Tandem} tandem
    */
   constructor( makeIsotopesModel, tandem ) {
-    super( { layoutBounds: ShredConstants.LAYOUT_BOUNDS } );
+
+    // A PhET wide decision was made to not update custom layout bounds even if they do not match the
+    // default layout bounds in ScreenView. Do not change these bounds as changes could break or disturb
+    // any phet-io instrumention. https://github.com/phetsims/phet-io/issues/1939
+    super( { layoutBounds: new Bounds2( 0, 0, 768, 464 ) } );
 
     // Set up the model-canvas transform.  IMPORTANT NOTES: The multiplier factors for the point in the view can be
     // adjusted to shift the center right or left, and the scale factor can be adjusted to zoom in or out (smaller
