@@ -3,6 +3,8 @@
 /**
  * ControlIsotope is a control that allows the client to control the quantity of an isotope.  It has arrow buttons, a
  * slider, a numerical readout, and a label for the isotope.
+ *
+ * @author Aadish Gupta
  */
 
 import Dimension2 from '../../../../dot/js/Dimension2.js';

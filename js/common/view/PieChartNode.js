@@ -2,6 +2,8 @@
 
 /**
  * This node can be used to display a pie chart
+ *
+ * @author Aadish Gupta
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
