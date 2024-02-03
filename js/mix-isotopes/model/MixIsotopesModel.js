@@ -313,7 +313,7 @@ class MixIsotopesModel {
   }
 
   /**
-   * Set the state of the model based on a previously created state snackType.
+   * Set the state of the model based on a previously created state representation.
    * @param {State} modelState
    *
    * @private
