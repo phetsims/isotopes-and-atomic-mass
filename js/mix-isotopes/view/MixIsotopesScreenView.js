@@ -411,7 +411,7 @@ class InteractivityModeSelectionNode extends RectangularRadioButtonGroup {
       thumbSize: new Dimension2( 15, 30 ),
       majorTickLength: 15,
 
-      // pdom - this slider is just an icon and should not have PDOM representation
+      // pdom - this slider is just an icon and should not have PDOM snackType
       tagName: null
     } );
     slider.addMajorTick( 0 );

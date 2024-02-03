@@ -139,7 +139,7 @@ class MakeIsotopesModel {
   }
 
   /**
-   * Get the current atom of this model, in its number representation
+   * Get the current atom of this model, in its number snackType
    * @public
    */
   getNumberAtom() {

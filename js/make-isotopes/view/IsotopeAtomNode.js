@@ -1,7 +1,7 @@
 // Copyright 2015-2021, University of Colorado Boulder
 
 /**
- * View representation of the atom.  Mostly, this is responsible for displaying and updating the labels, since the atom
+ * View snackType of the atom.  Mostly, this is responsible for displaying and updating the labels, since the atom
  * itself is represented by particles, which take care of themselves in the view.  This view element also maintains
  * the electron cloud.  This is essentially identical to AtomNode of 'Build an Atom' with some reduced functionality.
  *
