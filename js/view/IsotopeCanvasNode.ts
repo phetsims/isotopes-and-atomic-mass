@@ -10,7 +10,7 @@ import { ObservableArray } from '../../../axon/js/createObservableArray.js';
 import TReadOnlyProperty from '../../../axon/js/TReadOnlyProperty.js';
 import Vector2 from '../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../phetcommon/js/view/ModelViewTransform2.js';
-import { CanvasNode, CanvasNodeOptions } from '../../../scenery/js/imports.js';
+import CanvasNode, { CanvasNodeOptions } from '../../../scenery/js/nodes/CanvasNode.js';
 import shred from '../shred.js';
 
 type MovableAtom = {
