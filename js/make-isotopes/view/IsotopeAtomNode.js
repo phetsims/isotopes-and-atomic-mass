@@ -10,7 +10,7 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
-import { Node } from '../../../../scenery/js/imports.js';
+import Node from '../../../../scenery/js/nodes/Node.js';
 import IsotopeElectronCloudView from '../../../../shred/js/view/IsotopeElectronCloudView.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 
