@@ -1,4 +1,4 @@
-// Copyright 2014-2023, University of Colorado Boulder
+// Copyright 2014-2025, University of Colorado Boulder
 
 /**
  * This class defines a Node that represents an atom in "schematic" (i.e. Bohr) form and allows users to add or remove

@@ -1,4 +1,4 @@
-// Copyright 2014-2024, University of Colorado Boulder
+// Copyright 2014-2025, University of Colorado Boulder
 
 /**
  * Screen view for the tab where the user makes isotopes of a given element by adding and removing neutrons.
