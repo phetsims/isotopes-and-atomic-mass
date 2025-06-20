@@ -29,7 +29,7 @@ const stableString = ShredStrings.stable;
 const unstableString = ShredStrings.unstable;
 
 // constants
-const NUM_NUCLEON_LAYERS = 5; // This is based on max number of particles, may need adjustment if that changes.
+const NUM_NUCLEON_LAYERS = 6; // This is based on max number of particles, may need adjustment if that changes.
 const ELEMENT_NAME_FONT_SIZE = 16;
 
 class InteractiveIsotopeNode extends Node {
