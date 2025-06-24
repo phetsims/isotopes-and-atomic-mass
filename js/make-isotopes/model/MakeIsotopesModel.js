@@ -21,6 +21,7 @@ import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
 import Particle from '../../../../shred/js/model/Particle.js';
 import ParticleAtom from '../../../../shred/js/model/ParticleAtom.js';
 import ShredConstants from '../../../../shred/js/ShredConstants.js';
+import Tandem from '../../../../tandem/js/Tandem.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 
@@ -46,7 +47,9 @@ class MakeIsotopesModel {
   constructor() {
 
     // @public - create the atom.
-    this.particleAtom = new ParticleAtom();
+    this.particleAtom = new ParticleAtom( {
+      tandem: Tandem.OPT_OUT // Opt out for now until phet-io is implemented.
+    } );
 
     // @public - Make available a 'number atom' that tracks the state of the particle atom.
     this.numberAtom = new NumberAtom( {
