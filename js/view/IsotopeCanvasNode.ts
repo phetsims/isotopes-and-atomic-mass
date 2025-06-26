@@ -13,8 +13,12 @@ import ModelViewTransform2 from '../../../phetcommon/js/view/ModelViewTransform2
 import CanvasNode, { CanvasNodeOptions } from '../../../scenery/js/nodes/CanvasNode.js';
 import shred from '../shred.js';
 
+// TODO: See https://github.com/phetsims/build-an-atom/issues/241.  Why is IsotopeCanvasNode.ts in the shred repo?  It
+//       is only used in isotopes-and-atomic-mass and is not shared with any other sim, and it appears to depend
+//       type-wise on some IAAM-specific code, hence the definition for MovableAtom below.  It should probably be moved
+//       to isotopes-and-atomic-mass.
 type MovableAtom = {
-  radiusProperty: TReadOnlyProperty<number>;
+  radius:number;
   positionProperty: TReadOnlyProperty<Vector2>;
 };
 
@@ -46,7 +50,7 @@ class IsotopeCanvasNode extends CanvasNode {
     if ( numIsotopes > 0 ) {
 
       // only calculate the radius once to save time, assumes they are all the same
-      const radius = this.modelViewTransform.modelToViewDeltaX( this.isotopes.get( 0 ).radiusProperty.get() );
+      const radius = this.modelViewTransform.modelToViewDeltaX( this.isotopes.get( 0 ).radius );
       context.strokeStyle = 'black';
 
       for ( i = 0; i < this.isotopes.length; i++ ) {
