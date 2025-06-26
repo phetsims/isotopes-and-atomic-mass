@@ -533,10 +533,10 @@ class MixIsotopesModel {
         const controllerIsotope = new MovableAtom(
           isotopeConfig.protonCountProperty.get(),
           isotopeConfig.neutronCountProperty.get(),
-          new Vector2( 0, 0 )
+          new Vector2( 0, 0 ),
+          { particleRadius: SMALL_ISOTOPE_RADIUS }
         );
         controllerIsotope.color = this.getColorForIsotope( isotopeConfig );
-        controllerIsotope.radiusProperty.set( SMALL_ISOTOPE_RADIUS );
         newController.controllerIsotope = controllerIsotope;
         this.numericalControllerList.add( newController );
       }
@@ -588,12 +588,12 @@ class MixIsotopesModel {
         const newIsotope = new MovableAtom(
           isotopeConfig.protonCountProperty.get(),
           isotopeConfig.neutronCountProperty.get(),
-          this.testChamber.generateRandomPosition()
+          this.testChamber.generateRandomPosition(),
+          { particleRadius: SMALL_ISOTOPE_RADIUS }
         );
         newIsotope.color = this.getColorForIsotope( isotopeConfig );
         newIsotope.massNumber = isotopeConfig.massNumberProperty.get();
         newIsotope.protonCount = isotopeConfig.protonCountProperty.get();
-        newIsotope.radiusProperty.set( SMALL_ISOTOPE_RADIUS );
         newIsotope.showLabel = false;
         isotopesToAdd.push( newIsotope );
         this.naturesIsotopesList.push( newIsotope );

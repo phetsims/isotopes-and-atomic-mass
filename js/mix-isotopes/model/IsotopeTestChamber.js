@@ -120,33 +120,35 @@ class IsotopeTestChamber {
       isotope.userControlledProperty.lazyLink( isotopeRemovedListener );
 
       // If the edges of the isotope are outside of the container, move it to be fully inside.
-      let protrusion = isotope.positionProperty.get().x + isotope.radiusProperty.get() - TEST_CHAMBER_RECT.maxX + BUFFER;
+      let protrusion = isotope.positionProperty.get().x + isotope.radius - TEST_CHAMBER_RECT.maxX + BUFFER;
       if ( protrusion >= 0 ) {
         isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x - protrusion,
           isotope.positionProperty.get().y ) );
       }
       else {
-        protrusion = TEST_CHAMBER_RECT.minX + BUFFER - ( isotope.positionProperty.get().x - isotope.radiusProperty.get() );
+        protrusion = TEST_CHAMBER_RECT.minX + BUFFER - ( isotope.positionProperty.get().x - isotope.radius );
         if ( protrusion >= 0 ) {
           isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x + protrusion,
             isotope.positionProperty.get().y ) );
         }
       }
-      protrusion = isotope.positionProperty.get().y + isotope.radiusProperty.get() - TEST_CHAMBER_RECT.maxY + BUFFER;
+      protrusion = isotope.positionProperty.get().y + isotope.radius - TEST_CHAMBER_RECT.maxY + BUFFER;
       if ( protrusion >= 0 ) {
         isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x,
           isotope.positionProperty.get().y - protrusion ) );
       }
       else {
-        protrusion = TEST_CHAMBER_RECT.minY + BUFFER - ( isotope.positionProperty.get().y - isotope.radiusProperty.get() );
+        protrusion = TEST_CHAMBER_RECT.minY + BUFFER - ( isotope.positionProperty.get().y - isotope.radius );
         if ( protrusion >= 0 ) {
           isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x,
             isotope.positionProperty.get().y + protrusion ) );
         }
       }
       if ( performUpdates ) {
+
         // Update the isotope count.
         this.updateCountProperty();
+
         // Update the average atomic mass.
         this.averageAtomicMassProperty.set( ( ( this.averageAtomicMassProperty.get() *
                                                 ( this.isotopeCountProperty.get() - 1 ) ) +
@@ -154,6 +156,7 @@ class IsotopeTestChamber {
       }
     }
     else {
+
       // This isotope is not positioned correctly.
       assert && assert( false, 'Ignoring attempt to add incorrectly located isotope to test chamber.' );
     }
@@ -325,7 +328,7 @@ class IsotopeTestChamber {
             forceFromIsotope.setPolar( interParticleForceConst / ( minInterParticleDistance * minInterParticleDistance ),
               dotRandom.nextDouble() * 2 * Math.PI );
           }
-          else if ( distanceBetweenIsotopes < isotope1.radiusProperty.get() + isotope2.radiusProperty.get() ) {
+          else if ( distanceBetweenIsotopes < isotope1.radius + isotope2.radius ) {
             // calculate the repulsive force based on the distance.
             forceFromIsotope.x = isotope1.positionProperty.get().x - isotope2.positionProperty.get().x;
             forceFromIsotope.y = isotope1.positionProperty.get().y - isotope2.positionProperty.get().y;
@@ -337,7 +340,7 @@ class IsotopeTestChamber {
         }
 
         // Calculate the force due to the walls. This prevents particles from being pushed out of the bounds of the chamber.
-        if ( isotope1.positionProperty.get().x + isotope1.radiusProperty.get() >= TEST_CHAMBER_RECT.maxX ) {
+        if ( isotope1.positionProperty.get().x + isotope1.radius >= TEST_CHAMBER_RECT.maxX ) {
           const distanceFromRightWall = TEST_CHAMBER_RECT.maxX - isotope1.positionProperty.get().x;
           totalForce.add( new Vector2( -wallForceConst / ( distanceFromRightWall * distanceFromRightWall ), 0 ) );
         }
@@ -345,11 +348,11 @@ class IsotopeTestChamber {
           const distanceFromLeftWall = isotope1.positionProperty.get().x - TEST_CHAMBER_RECT.minX;
           totalForce.add( new Vector2( wallForceConst / ( distanceFromLeftWall * distanceFromLeftWall ), 0 ) );
         }
-        if ( isotope1.positionProperty.get().y + isotope1.radiusProperty.get() >= TEST_CHAMBER_RECT.maxY ) {
+        if ( isotope1.positionProperty.get().y + isotope1.radius >= TEST_CHAMBER_RECT.maxY ) {
           const distanceFromTopWall = TEST_CHAMBER_RECT.maxY - isotope1.positionProperty.get().y;
           totalForce.add( new Vector2( 0, -wallForceConst / ( distanceFromTopWall * distanceFromTopWall ) ) );
         }
-        else if ( isotope1.positionProperty.get().y - isotope1.radiusProperty.get() <= TEST_CHAMBER_RECT.minY ) {
+        else if ( isotope1.positionProperty.get().y - isotope1.radius <= TEST_CHAMBER_RECT.minY ) {
           const distanceFromBottomWall = isotope1.positionProperty.get().y - TEST_CHAMBER_RECT.minY;
           totalForce.add( new Vector2( 0, wallForceConst / ( distanceFromBottomWall * distanceFromBottomWall ) ) );
         }
@@ -389,7 +392,7 @@ class IsotopeTestChamber {
         }
 
         const distance = isotope1.positionProperty.get().distance( isotope2.positionProperty.get() );
-        if ( distance < isotope1.radiusProperty.get() + isotope2.radiusProperty.get() ) {
+        if ( distance < isotope1.radius + isotope2.radius ) {
           overlapExists = true;
         }
       }

@@ -49,13 +49,15 @@ class NumericalIsotopeQuantityControl {
 
     if ( changeAmount > 0 ) {
       for ( let i = 0; i < changeAmount; i++ ) {
-        const newIsotope = new MovableAtom( this.isotopeConfig.protonCountProperty.get(),
+        const newIsotope = new MovableAtom(
+          this.isotopeConfig.protonCountProperty.get(),
           this.isotopeConfig.neutronCountProperty.get(),
-          this.model.testChamber.generateRandomPosition() );
+          this.model.testChamber.generateRandomPosition(),
+          { particleRadius: 4 }
+        );
         newIsotope.color = this.model.getColorForIsotope( this.isotopeConfig );
         newIsotope.massNumber = this.isotopeConfig.massNumberProperty.get();
         newIsotope.protonCount = this.isotopeConfig.protonCountProperty.get();
-        newIsotope.radiusProperty.set( 4 );
         newIsotope.showLabel = false;
         this.model.testChamber.addIsotopeToChamber( newIsotope, true );
         this.model.isotopesList.add( newIsotope );

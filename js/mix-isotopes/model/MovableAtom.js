@@ -12,6 +12,7 @@
 
 
 //modules
+import optionize from '../../../../phet-core/js/optionize.js';
 import Particle from '../../../../shred/js/model/Particle.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import ImmutableAtomConfig from './ImmutableAtomConfig.js';
@@ -25,10 +26,16 @@ class MovableAtom extends Particle {
    * @param {number} numProtons
    * @param {number} numNeutrons
    * @param {Vector2} initialPosition
+   * @param {Object} providedOptions
    * @constructor
    */
-  constructor( numProtons, numNeutrons, initialPosition ) {
-    super( 'Isotope' );
+  constructor( numProtons, numNeutrons, initialPosition, providedOptions ) {
+
+    const options = optionize()( { // eslint-disable-line phet/bad-text
+      particleRadius: 10
+    }, providedOptions );
+
+    super( 'Isotope', options );
     this.positionProperty.set( initialPosition ); // @public
     this.destinationProperty.set( initialPosition ); // @public
 
