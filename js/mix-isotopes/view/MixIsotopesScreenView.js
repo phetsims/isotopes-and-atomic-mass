@@ -132,11 +132,11 @@ class MixIsotopesScreenView extends ScreenView {
           isotopeView.moveToFront();
         }
       };
-      addedIsotope.userControlledProperty.link( moveToFront );
+      addedIsotope.isDraggingProperty.link( moveToFront );
       mixIsotopesModel.isotopesList.addItemRemovedListener( function removalListener( removedIsotope ) {
         if ( removedIsotope === addedIsotope ) {
           isotopeLayer.removeChild( isotopeView );
-          addedIsotope.userControlledProperty.unlink( moveToFront );
+          addedIsotope.isDraggingProperty.unlink( moveToFront );
           isotopeView.dispose();
           mixIsotopesModel.isotopesList.removeItemRemovedListener( removalListener );
         }

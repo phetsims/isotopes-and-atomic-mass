@@ -172,21 +172,21 @@ class MakeIsotopesModel {
    * @private
    */
   linkNeutron( neutron, lazyLink ) {
-    const userControlledLink = userControlled => {
+    const userControlledLink = isDragging => {
       this.atomReconfigured.emit();
-      if ( !userControlled && !this.neutronBucket.containsParticle( neutron ) ) {
+      if ( !isDragging && !this.neutronBucket.containsParticle( neutron ) ) {
         this.placeNucleon( neutron, this.neutronBucket, this.particleAtom );
         this.atomReconfigured.emit();
       }
     };
     if ( lazyLink ) {
-      neutron.userControlledProperty.lazyLink( userControlledLink );
+      neutron.isDraggingProperty.lazyLink( userControlledLink );
     }
     else {
-      neutron.userControlledProperty.link( userControlledLink );
+      neutron.isDraggingProperty.link( userControlledLink );
     }
     neutron.userControlledPropertyUnlink = () => {
-      neutron.userControlledProperty.unlink( userControlledLink );
+      neutron.isDraggingProperty.unlink( userControlledLink );
     };
   }
 

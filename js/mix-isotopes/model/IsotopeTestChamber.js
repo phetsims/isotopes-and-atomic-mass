@@ -111,13 +111,13 @@ class IsotopeTestChamber {
     if ( this.isIsotopePositionedOverChamber( isotope ) ) {
       this.containedIsotopes.push( isotope );
 
-      const isotopeRemovedListener = userControlled => {
-        if ( userControlled && this.containedIsotopes.includes( isotope ) ) {
+      const isotopeRemovedListener = isDragging => {
+        if ( isDragging && this.containedIsotopes.includes( isotope ) ) {
           this.removeIsotopeFromChamber( isotope );
         }
-        isotope.userControlledProperty.unlink( isotopeRemovedListener );
+        isotope.isDraggingProperty.unlink( isotopeRemovedListener );
       };
-      isotope.userControlledProperty.lazyLink( isotopeRemovedListener );
+      isotope.isDraggingProperty.lazyLink( isotopeRemovedListener );
 
       // If the edges of the isotope are outside of the container, move it to be fully inside.
       let protrusion = isotope.positionProperty.get().x + isotope.radius - TEST_CHAMBER_RECT.maxX + BUFFER;

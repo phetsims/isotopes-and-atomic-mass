@@ -232,8 +232,8 @@ class MixIsotopesModel {
       bucket.addIsotopeInstanceFirstOpen( newIsotope, animate );
 
       // does not require unlink
-      newIsotope.userControlledProperty.link( userControlled => {
-        if ( !userControlled && !bucket.containsParticle( newIsotope ) ) {
+      newIsotope.isDraggingProperty.link( isDragging => {
+        if ( !isDragging && !bucket.containsParticle( newIsotope ) ) {
           this.placeIsotope( newIsotope, bucket, this.testChamber );
         }
       } );
@@ -304,9 +304,9 @@ class MixIsotopesModel {
     // instance into a state that indicates that it isn't.  Otherwise it can get lost, since it will neither be in a
     // bucket or in the test chamber.  This case can only occur in multi-touch situations, see
     // https://github.com/phetsims/isotopes-and-atomic-mass/issues/101.
-    const userControlledMovableIsotopes = this.isotopesList.filter( isotope => isotope.userControlledProperty.value );
+    const userControlledMovableIsotopes = this.isotopesList.filter( isotope => isotope.isDraggingProperty.value );
     userControlledMovableIsotopes.forEach( isotope => {
-      isotope.userControlledProperty.set( false );
+      isotope.isDraggingProperty.set( false );
     } );
 
     return new State( this );
@@ -686,7 +686,7 @@ class State {
     // touch scenarios where it is possible, and it is problematic to try to store them in this state.  The view will
     // cancel interactions anyway, but there is no guarantee that the cancellation will have happened at this point in
     // time, so we have to do this here to be sure.  See https://github.com/phetsims/isotopes-and-atomic-mass/issues/101.
-    model.isotopesList.forEach( isotopeInstance => { isotopeInstance.userControlledProperty.set( false ); } );
+    model.isotopesList.forEach( isotopeInstance => { isotopeInstance.isDraggingProperty.set( false ); } );
 
     // For the bucket state, we keep references to the actual buckets and particles that are being used.  This works for
     // this model because nothing else is done with a bucket after saving its state.  It is admittedly not very general,

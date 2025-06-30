@@ -133,7 +133,7 @@ class InteractiveIsotopeNode extends Node {
           particleView.moveToFront();
         }
       };
-      addedParticle.userControlledProperty.link( moveParticleToFront );
+      addedParticle.isDraggingProperty.link( moveParticleToFront );
 
       // Add the item removed listener.
       let temp;
@@ -149,7 +149,7 @@ class InteractiveIsotopeNode extends Node {
           nucleonLayers[ addedParticle.zLayerProperty.get() ].removeChild( particleView );
           particleView.dispose();
           addedParticle.zLayerProperty.unlink( adjustZLayerLink );
-          addedParticle.userControlledProperty.unlink( moveParticleToFront );
+          addedParticle.isDraggingProperty.unlink( moveParticleToFront );
           temp.removeItemRemovedListener( removalListener );
         }
       } );
