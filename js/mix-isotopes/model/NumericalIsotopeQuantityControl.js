@@ -59,7 +59,7 @@ class NumericalIsotopeQuantityControl {
         newIsotope.massNumber = this.isotopeConfig.massNumberProperty.get();
         newIsotope.protonCount = this.isotopeConfig.protonCountProperty.get();
         newIsotope.showLabel = false;
-        this.model.testChamber.addIsotopeToChamber( newIsotope, true );
+        this.model.testChamber.addParticle( newIsotope, true );
         this.model.isotopesList.add( newIsotope );
       }
     }

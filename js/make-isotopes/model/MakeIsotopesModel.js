@@ -172,26 +172,34 @@ class MakeIsotopesModel {
    * @private
    */
   linkNeutron( neutron, lazyLink ) {
-    const userControlledLink = isDragging => {
-      this.atomReconfigured.emit();
-      if ( !isDragging && !this.neutronBucket.containsParticle( neutron ) ) {
+    const isDraggingHandler = isDragging => {
+      if ( isDragging ) {
+        if ( neutron.containerProperty.value ) {
+
+          // Remove the neutron from its container, which will be either a bucket or the particle atom.
+          neutron.containerProperty.value.removeParticle( neutron );
+          this.atomReconfigured.emit();
+        }
+      }
+      else if ( !isDragging && !this.neutronBucket.includes( neutron ) ) {
         this.placeNucleon( neutron, this.neutronBucket, this.particleAtom );
         this.atomReconfigured.emit();
       }
     };
     if ( lazyLink ) {
-      neutron.isDraggingProperty.lazyLink( userControlledLink );
+      neutron.isDraggingProperty.lazyLink( isDraggingHandler );
     }
     else {
-      neutron.isDraggingProperty.link( userControlledLink );
+      neutron.isDraggingProperty.link( isDraggingHandler );
     }
-    neutron.userControlledPropertyUnlink = () => {
-      neutron.isDraggingProperty.unlink( userControlledLink );
+    neutron.isDraggingHandlerUnlink = () => {
+      neutron.isDraggingProperty.unlink( isDraggingHandler );
     };
   }
 
   // @public
   setNeutronBucketConfiguration() {
+
     // Add the neutrons to the neutron bucket.
     _.times( DEFAULT_NUM_NEUTRONS_IN_BUCKET, () => {
       const neutron = new Particle( 'neutron' );
@@ -215,7 +223,7 @@ class MakeIsotopesModel {
     this.protons.clear();
     this.electrons.clear();
     this.neutrons.forEach( neutron => {
-      neutron.userControlledPropertyUnlink();
+      neutron.isDraggingHandlerUnlink();
     } );
     this.neutrons.clear();
     this.neutronBucket.reset();

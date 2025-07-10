@@ -97,7 +97,7 @@ class IsotopeTestChamber {
   }
 
   /**
-   * Add the specified isotope to the chamber. This method requires that the position of the isotope be within the
+   * Add the specified isotope to the test chamber. This method requires that the position of the isotope be within the
    * chamber rectangle, or the isotope will not be added.
    *
    * In cases where an isotope is in a position where the center is within the chamber but the edges are not, the
@@ -107,17 +107,10 @@ class IsotopeTestChamber {
    * @param {boolean} performUpdates - Flag that can be set be used to suppress updates.
    * @public
    */
-  addIsotopeToChamber( isotope, performUpdates ) {
+  addParticle( isotope, performUpdates ) {
     if ( this.isIsotopePositionedOverChamber( isotope ) ) {
       this.containedIsotopes.push( isotope );
-
-      const isotopeRemovedListener = isDragging => {
-        if ( isDragging && this.containedIsotopes.includes( isotope ) ) {
-          this.removeIsotopeFromChamber( isotope );
-        }
-        isotope.isDraggingProperty.unlink( isotopeRemovedListener );
-      };
-      isotope.isDraggingProperty.lazyLink( isotopeRemovedListener );
+      isotope.containerProperty.value = this;
 
       // If the edges of the isotope are outside of the container, move it to be fully inside.
       let protrusion = isotope.positionProperty.get().x + isotope.radius - TEST_CHAMBER_RECT.maxX + BUFFER;
@@ -169,7 +162,7 @@ class IsotopeTestChamber {
    */
   bulkAddIsotopesToChamber( isotopeList ) {
     isotopeList.forEach( isotope => {
-      this.addIsotopeToChamber( isotope, false );
+      this.addParticle( isotope, false );
     } );
     this.updateCountProperty();
     this.updateAverageAtomicMassProperty();
@@ -202,9 +195,10 @@ class IsotopeTestChamber {
    * @param {MovableAtom} isotope
    * @public
    */
-  removeIsotopeFromChamber( isotope ) {
+  removeParticle( isotope ) {
     this.containedIsotopes.remove( isotope );
     this.updateCountProperty();
+    isotope.containerProperty.value = null;
 
     // Update the average atomic mass.
     if ( this.isotopeCountProperty.get() > 0 ) {
@@ -214,6 +208,16 @@ class IsotopeTestChamber {
     else {
       this.averageAtomicMassProperty.set( 0 );
     }
+  }
+
+  /**
+   * Checks if the isotope is contained in the chamber.
+   * @param {MovableAtom} isotope
+   * @returns {boolean}
+   * @public
+   */
+  includes( isotope ) {
+    return this.containedIsotopes.includes( isotope );
   }
 
   /**
@@ -232,7 +236,7 @@ class IsotopeTestChamber {
         removedIsotope = isotope;
       }
     } );
-    this.removeIsotopeFromChamber( removedIsotope );
+    this.removeParticle( removedIsotope );
     return removedIsotope;
   }
 

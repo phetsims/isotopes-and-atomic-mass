@@ -200,7 +200,7 @@ class MixIsotopesModel {
    */
   placeIsotope( isotope, bucket, testChamber ) {
     if ( testChamber.isIsotopePositionedOverChamber( isotope ) ) {
-      testChamber.addIsotopeToChamber( isotope, true );
+      testChamber.addParticle( isotope, true );
       testChamber.adjustForOverlap();
     }
     else {
@@ -233,7 +233,14 @@ class MixIsotopesModel {
 
       // does not require unlink
       newIsotope.isDraggingProperty.link( isDragging => {
-        if ( !isDragging && !bucket.containsParticle( newIsotope ) ) {
+        if ( isDragging ) {
+          if ( newIsotope.containerProperty.value ) {
+
+            // Remove the atom from its container, which will be either a bucket or the particle atom.
+            newIsotope.containerProperty.value.removeParticle( newIsotope );
+          }
+        }
+        else if ( !isDragging && !bucket.includes( newIsotope ) ) {
           this.placeIsotope( newIsotope, bucket, this.testChamber );
         }
       } );
