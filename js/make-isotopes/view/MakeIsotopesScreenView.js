@@ -22,6 +22,7 @@ import ExpandedPeriodicTableNode from '../../../../shred/js/view/ExpandedPeriodi
 import ParticleCountDisplay from '../../../../shred/js/view/ParticleCountDisplay.js';
 import SymbolNode from '../../../../shred/js/view/SymbolNode.js';
 import AccordionBox from '../../../../sun/js/AccordionBox.js';
+import Tandem from '../../../../tandem/js/Tandem.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 import AtomScaleNode from './AtomScaleNode.js';
@@ -44,7 +45,7 @@ class MakeIsotopesScreenView extends ScreenView {
 
     // A PhET wide decision was made to not update custom layout bounds even if they do not match the
     // default layout bounds in ScreenView. Do not change these bounds as changes could break or disturb
-    // any phet-io instrumention. https://github.com/phetsims/phet-io/issues/1939
+    // any phet-io instrumentation. https://github.com/phetsims/phet-io/issues/1939
     super( { layoutBounds: new Bounds2( 0, 0, 768, 464 ) } );
 
     // Set up the model-canvas transform.  IMPORTANT NOTES: The multiplier factors for the point in the view can be
@@ -101,7 +102,10 @@ class MakeIsotopesScreenView extends ScreenView {
     this.addChild( periodicTableNode );
 
     // Add the legend/particle count indicator.
-    const particleCountLegend = new ParticleCountDisplay( makeIsotopesModel.particleAtom, 13, 250 );
+    const particleCountLegend = new ParticleCountDisplay( makeIsotopesModel.particleAtom, Tandem.OPT_OUT, {
+      maxParticles: 13,
+      maxWidth: 250
+    } );
     particleCountLegend.scale( 1.1 );
     particleCountLegend.left = 20;
     particleCountLegend.top = periodicTableNode.visibleBounds.minY;
