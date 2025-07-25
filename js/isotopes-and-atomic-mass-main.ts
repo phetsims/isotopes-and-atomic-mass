@@ -3,10 +3,10 @@
 /**
  * Main entry point for the sim.
  *
- * @author John Blanco
+ * @author John Blanco (PhET Interactive Simulations)
  */
 
-import Sim from '../../joist/js/Sim.js';
+import Sim, { SimOptions } from '../../joist/js/Sim.js';
 import simLauncher from '../../joist/js/simLauncher.js';
 import Tandem from '../../tandem/js/Tandem.js';
 import IsotopesAndAtomicMassStrings from './IsotopesAndAtomicMassStrings.js';
@@ -17,7 +17,7 @@ const isotopesAndAtomicMassTitleStringProperty = IsotopesAndAtomicMassStrings[ '
 
 const tandem = Tandem.ROOT;
 
-const simOptions = {
+const options: SimOptions = {
   credits: {
     leadDesign: 'Amy Hanson, Kelly Lancaster',
     softwareDevelopment: 'John Blanco, Jesse Greenberg, Aadish Gupta, Sam Reid, James Smith',
@@ -31,6 +31,10 @@ simLauncher.launch( () => {
   const makeIsotopeScreenTandem = tandem.createTandem( 'makeIsotopeScreen' );
   const mixIsotopeScreenTandem = tandem.createTandem( 'mixIsotopeScreen' );
 
-  const sim = new Sim( isotopesAndAtomicMassTitleStringProperty, [ new MakeIsotopesScreen( makeIsotopeScreenTandem ), new MixIsotopesScreen( mixIsotopeScreenTandem ) ], simOptions );
+  const sim = new Sim(
+    isotopesAndAtomicMassTitleStringProperty,
+    [ new MakeIsotopesScreen( makeIsotopeScreenTandem ), new MixIsotopesScreen( mixIsotopeScreenTandem ) ],
+    options
+  );
   sim.start();
 } );
