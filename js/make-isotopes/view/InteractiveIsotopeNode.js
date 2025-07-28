@@ -1,14 +1,13 @@
 // Copyright 2014-2025, University of Colorado Boulder
 
 /**
- * This class defines a Node that represents an atom in "schematic" (i.e. Bohr) form and allows users to add or remove
- * neutrons from/to a bucket in order to create different isotopes of a particular atom.
+ * This class defines a Node that represents an atom in made out of particles and allows users to add or remove
+ * neutrons to form different isotopes.  The neutrons that are not part of the atom reside in a bucket.
  *
  * @author John Blanco
  * @author Jesse Greenberg
  * @author Aadish Gupta
  */
-
 
 import Vector2 from '../../../../dot/js/Vector2.js';
 import BucketFront from '../../../../scenery-phet/js/bucket/BucketFront.js';
