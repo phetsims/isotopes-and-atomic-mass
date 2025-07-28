@@ -10,18 +10,16 @@
 import Screen from '../../../joist/js/Screen.js';
 import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import Image from '../../../scenery/js/nodes/Image.js';
+import Tandem from '../../../tandem/js/Tandem.js';
 import makeIsotopesIcon_png from '../../mipmaps/makeIsotopesIcon_png.js';
 import isotopesAndAtomicMass from '../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../IsotopesAndAtomicMassStrings.js';
 import MakeIsotopesModel from './model/MakeIsotopesModel.js';
 import MakeIsotopesScreenView from './view/MakeIsotopesScreenView.js';
 
-class MakeIsotopesScreen extends Screen {
+class MakeIsotopesScreen extends Screen<MakeIsotopesModel, MakeIsotopesScreenView> {
 
-  /**
-   * @param {Tandem} tandem
-   */
-  constructor( tandem ) {
+  public constructor( tandem: Tandem ) {
 
     const options = {
       name: IsotopesAndAtomicMassStrings.isotopesStringProperty,
@@ -34,8 +32,9 @@ class MakeIsotopesScreen extends Screen {
 
     super(
       () => new MakeIsotopesModel(),
-      model => new MakeIsotopesScreenView( model, tandem ),
-      options );
+      ( model: MakeIsotopesModel ) => new MakeIsotopesScreenView( model, tandem ),
+      options
+    );
   }
 }
 
