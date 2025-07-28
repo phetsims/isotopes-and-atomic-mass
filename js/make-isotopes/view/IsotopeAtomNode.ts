@@ -10,25 +10,17 @@
  */
 
 import Vector2 from '../../../../dot/js/Vector2.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import IsotopeElectronCloudView from '../../../../shred/js/view/IsotopeElectronCloudView.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
+import ParticleAtom from '../../../../shred/js/model/ParticleAtom.js';
 
 class IsotopeAtomNode extends Node {
 
-  /**
-   * Constructor for an IsotopeAtomNode.
-   *
-   * @param {ParticleAtom} particleAtom Model that represents the atom, including particle positions
-   * @param {Vector2} bottomPoint desired bottom point of the atom which holds the atom in position as the size changes.
-   * @param {ModelViewTransform2} modelViewTransform Model-View transform
-   */
-  constructor( particleAtom, bottomPoint, modelViewTransform ) {
+  public constructor( particleAtom: ParticleAtom, bottomPoint: Vector2, modelViewTransform: ModelViewTransform2 ) {
 
     super();
-
-    this.atom = particleAtom;
-    this.modelViewTransform = modelViewTransform;
 
     // Add the electron cloud.
     const isotopeElectronCloud = new IsotopeElectronCloudView( particleAtom, modelViewTransform );
@@ -36,15 +28,19 @@ class IsotopeAtomNode extends Node {
 
     // Add the handler that keeps the bottom of the atom in one place. This was added due to a request to make the atom
     // get larger and smaller but to stay on the scale.
-    const updateAtomPosition = numProtons => {
-      const newCenter = new Vector2( bottomPoint.x, bottomPoint.y - modelViewTransform.modelToViewDeltaX(
-        isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2 ) * 1.2 ); // empirically determined
+    const updateAtomPosition = ( numProtons: number ): void => {
+      const newCenter = new Vector2(
+        bottomPoint.x,
+        bottomPoint.y - modelViewTransform.modelToViewDeltaX(
+                        isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2
+                      ) * 1.2 // empirically determined
+      );
       particleAtom.positionProperty.set( modelViewTransform.viewToModelPosition( newCenter ) );
       isotopeElectronCloud.center = newCenter;
     };
 
-    // Doesn't need unlink as it stays through out the sim life
-    particleAtom.protonCountProperty.link( numProtons => {
+    // Doesn't need unlink as it stays throughout the sim life.
+    particleAtom.protonCountProperty.link( ( numProtons: number ) => {
       updateAtomPosition( numProtons );
     } );
   }
