@@ -11,6 +11,7 @@ import Shape from '../../../../kite/js/Shape.js';
 import Circle from '../../../../scenery/js/nodes/Circle.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Path from '../../../../scenery/js/nodes/Path.js';
+import Color from '../../../../scenery/js/util/Color.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 
 const INITIAL_ANGLE = 0;
@@ -19,17 +20,17 @@ const DEFAULT_CENTER_Y = 0;
 
 export type PieSlice = {
   value: number;
-  color: string;
-  stroke?: string;
+  color: Color;
+  stroke?: Color;
   lineWidth?: number;
 };
 
 class PieChartNode extends Node {
 
+  public centerXCord = DEFAULT_CENTER_X;
+  public centerYCord = DEFAULT_CENTER_Y;
   private slices: PieSlice[];
   private radius: number;
-  private centerXCord = DEFAULT_CENTER_X;
-  private centerYCord = DEFAULT_CENTER_Y;
   private initialAngle = INITIAL_ANGLE;
   private sliceEdgeCenterPoints: Array<Vector2 | null>;
 

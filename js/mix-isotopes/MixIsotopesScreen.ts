@@ -8,23 +8,24 @@
  * @author James Smith
  */
 
-import Screen from '../../../joist/js/Screen.js';
+import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
 import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import Image from '../../../scenery/js/nodes/Image.js';
+import Tandem from '../../../tandem/js/Tandem.js';
 import mixIsotopesIcon_png from '../../mipmaps/mixIsotopesIcon_png.js';
 import isotopesAndAtomicMass from '../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../IsotopesAndAtomicMassStrings.js';
 import MixIsotopesModel from './model/MixIsotopesModel.js';
 import MixIsotopesScreenView from './view/MixIsotopesScreenView.js';
 
-class MixIsotopesScreen extends Screen {
+class MixIsotopesScreen extends Screen<MixIsotopesModel, MixIsotopesScreenView> {
 
   /**
-   * @param {Tandem} tandem
+   * @param tandem - Tandem instance for instrumentation
    */
-  constructor( tandem ) {
+  public constructor( tandem: Tandem ) {
 
-    const options = {
+    const options: ScreenOptions = {
       name: IsotopesAndAtomicMassStrings.mixturesStringProperty,
       homeScreenIcon: new ScreenIcon( new Image( mixIsotopesIcon_png ), {
         maxIconWidthProportion: 1,
@@ -36,7 +37,8 @@ class MixIsotopesScreen extends Screen {
     super(
       () => new MixIsotopesModel(),
       model => new MixIsotopesScreenView( model, tandem ),
-      options );
+      options
+    );
   }
 }
 

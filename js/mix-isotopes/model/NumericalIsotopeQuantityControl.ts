@@ -10,10 +10,15 @@
  *
  * @author James Smith
  * @author Jesse Greenberg
+ * @author John Blanco (PhET Interactive Simulations)
  */
 
 import Property from '../../../../axon/js/Property.js';
+import Vector2 from '../../../../dot/js/Vector2.js';
+import Color from '../../../../scenery/js/util/Color.js';
+import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
+import MixIsotopesModel from './MixIsotopesModel.js';
 import MovableAtom from './MovableAtom.js';
 
 // constants
@@ -21,29 +26,31 @@ const CAPACITY = 100;
 
 class NumericalIsotopeQuantityControl {
 
-  /**
-   * @param {MixIsotopesModel} model
-   * @param {NumberAtom} isotopeConfig
-   * @param {Vector2} position
-   * @param {string} caption
-   */
-  constructor( model, isotopeConfig, position, caption ) {
+  public readonly quantityProperty: Property<number>;
+  private readonly model: MixIsotopesModel;
+  public readonly isotopeConfig: NumberAtom;
+  public readonly centerPosition: Vector2;
+  public readonly caption: string;
+  public controllerIsotope?: MovableAtom;
 
-    this.quantityProperty = new Property( model.testChamber.getIsotopeCount( isotopeConfig ) ); // @public
-    this.model = model; // @private
-    this.isotopeConfig = isotopeConfig; // @public
-    this.centerPosition = position; // @public
-    this.caption = caption; // @public
+  /**
+   * @param model - The main model for mix isotopes
+   * @param isotopeConfig - Configuration for the isotope controlled by this control
+   * @param position - Position of the control in model coordinates
+   * @param caption - Text label for the control
+   */
+  public constructor( model: MixIsotopesModel, isotopeConfig: NumberAtom, position: Vector2, caption: string ) {
+    this.quantityProperty = new Property<number>( model.testChamber.getIsotopeCount( isotopeConfig ) );
+    this.model = model;
+    this.isotopeConfig = isotopeConfig;
+    this.centerPosition = position;
+    this.caption = caption;
   }
 
   /**
    * Set the quantity of the isotope associated with this control to the specified value.
-   *
-   * @param {number} targetQuantity
-   *
-   * @public
    */
-  setIsotopeQuantity( targetQuantity ) {
+  public setIsotopeQuantity( targetQuantity: number ): void {
     assert && assert( targetQuantity <= CAPACITY );
     const changeAmount = targetQuantity - this.model.testChamber.getIsotopeCount( this.isotopeConfig );
 
@@ -55,9 +62,6 @@ class NumericalIsotopeQuantityControl {
           this.model.testChamber.generateRandomPosition(),
           { particleRadius: 4 }
         );
-        newIsotope.color = this.model.getColorForIsotope( this.isotopeConfig );
-        newIsotope.massNumber = this.isotopeConfig.massNumberProperty.get();
-        newIsotope.protonCount = this.isotopeConfig.protonCountProperty.get();
         newIsotope.showLabel = false;
         this.model.testChamber.addParticle( newIsotope, true );
         this.model.isotopesList.add( newIsotope );
@@ -73,17 +77,21 @@ class NumericalIsotopeQuantityControl {
     }
   }
 
-  // @public
-  getBaseColor() {
+  /**
+   * Returns the base color for this isotope
+   */
+  public getBaseColor(): Color {
     return this.model.getColorForIsotope( this.isotopeConfig );
   }
 
-  // @public
-  getQuantity() {
+  /**
+   * Returns the current quantity in the test chamber
+   */
+  public getQuantity(): number {
     // Verify that the internal property matches that of the test chamber.
-    assert && assert( this.quantityProperty === this.model.testChamber.getIsotopeCount( this.isotopeConfig ) );
+    assert && assert( this.quantityProperty.get() === this.model.testChamber.getIsotopeCount( this.isotopeConfig ) );
     // Return the value.
-    return this.quantityProperty;
+    return this.quantityProperty.get();
   }
 }
 

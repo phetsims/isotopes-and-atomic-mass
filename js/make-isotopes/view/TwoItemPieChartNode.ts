@@ -16,6 +16,7 @@ import Node from '../../../../scenery/js/nodes/Node.js';
 import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import RichText from '../../../../scenery/js/nodes/RichText.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
+import Color from '../../../../scenery/js/util/Color.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
 import { TReadOnlyNumberAtom } from '../../../../shred/js/model/NumberAtom.js';
 import Panel from '../../../../sun/js/Panel.js';
@@ -26,8 +27,8 @@ import MakeIsotopesModel from '../model/MakeIsotopesModel.js';
 
 // constants
 const PIE_CHART_RADIUS = 60;
-const FIRST_SLICE_COLOR = ' rgb( 134, 102, 172 ) ';
-const SECOND_SLICE_COLOR = ' #d3d3d3';
+const FIRST_SLICE_COLOR = new Color( 'rgb( 134, 102, 172 )' );
+const SECOND_SLICE_COLOR = new Color( '#d3d3d3' );
 const TRACE_ABUNDANCE_IN_PIE_CHART = 1E-6; // empirically chosen value used to represent trace abundance in the pie chart
 
 const otherIsotopesPatternString = IsotopesAndAtomicMassStrings.otherIsotopesPattern;
@@ -43,8 +44,8 @@ class TwoItemPieChartNode extends Node {
 
     // default slices and color coding, first slice is for my isotope and second slice is for other isotope
     const slices: PieSlice[] = [
-      { value: 0, color: FIRST_SLICE_COLOR, stroke: 'black', lineWidth: 0.5 },
-      { value: 0, color: SECOND_SLICE_COLOR, stroke: 'black', lineWidth: 0.5 }
+      { value: 0, color: FIRST_SLICE_COLOR, stroke: Color.BLACK, lineWidth: 0.5 },
+      { value: 0, color: SECOND_SLICE_COLOR, stroke: Color.BLACK, lineWidth: 0.5 }
     ];
 
     const pieChart = new PieChartNode( slices, PIE_CHART_RADIUS );

@@ -10,64 +10,57 @@
  * @author Aadish Gupta
  */
 
-import createObservableArray from '../../../../axon/js/createObservableArray.js';
+import createObservableArray, { ObservableArray } from '../../../../axon/js/createObservableArray.js';
 import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import dotRandom from '../../../../dot/js/dotRandom.js';
 import Rectangle from '../../../../dot/js/Rectangle.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import { TReadOnlyNumberAtom } from '../../../../shred/js/model/NumberAtom.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
+import MovableAtom from './MovableAtom.js';
+import MixIsotopesModel from './MixIsotopesModel.js';
 
 // constants
 
-// Size of the "test chamber", which is the area in model space into which the isotopes can be dragged in order to
-// contribute to the current average atomic weight.
 const SIZE = new Dimension2( 450, 280 ); // In picometers.
-
-// Rectangle that defines the position of the test chamber. This is set up so that the center of the test chamber is
-// at (0, 0) in model space.
 const TEST_CHAMBER_RECT = new Rectangle( -SIZE.width / 2, -SIZE.height / 2, SIZE.width, SIZE.height );
 const BUFFER = 1; // isotopes stroke doesn't cross the wall, empirically determined
 
 /**
- * Utility Function that contains the state of the isotope test chamber, and can be used for saving and later restoring
- * the state.
- *
- * @param {IsotopeTestChamber} isotopeTestChamber
+ * Utility class that holds the state of the isotope test chamber, and can be used for saving and later restoring the
+ * state.
  */
-function State( isotopeTestChamber ) {
-  this.containedIsotopes = createObservableArray();
-  isotopeTestChamber.containedIsotopes.forEach( isotope => {
-    this.containedIsotopes.add( isotope );
-  } );
+export class IsotopeTestChamberState {
+  public containedIsotopes: ObservableArray<MovableAtom>;
+
+  public constructor( isotopeTestChamber: IsotopeTestChamber ) {
+    this.containedIsotopes = createObservableArray<MovableAtom>();
+    isotopeTestChamber.containedIsotopes.forEach( ( isotope: MovableAtom ) => {
+      this.containedIsotopes.add( isotope );
+    } );
+  }
 }
 
 class IsotopeTestChamber {
 
-  /**
-   * @param {MixIsotopesModel} model
-   */
-  constructor( model ) {
+  private readonly model: MixIsotopesModel;
+  public readonly containedIsotopes: ObservableArray<MovableAtom>;
+  public readonly isotopeCountProperty: Property<number>;
+  public readonly averageAtomicMassProperty: Property<number>;
 
-    // @private {MixIsotopesModel} - model that contains this test chamber
+  public constructor( model: MixIsotopesModel ) {
     this.model = model;
-
-    // @public - {ObservableArrayDef.<MovableAtom>} - isotopes that are in this test chamber
-    this.containedIsotopes = createObservableArray();
-
-    // @public {Read-Only}
-    this.isotopeCountProperty = new Property( 0 );
-    this.averageAtomicMassProperty = new Property( 0 );
+    this.containedIsotopes = createObservableArray<MovableAtom>();
+    this.isotopeCountProperty = new Property<number>( 0 );
+    this.averageAtomicMassProperty = new Property<number>( 0 );
   }
 
   /**
    * Get the number of isotopes currently in the chamber that match the specified configuration.
-   * @param {NumberAtom} isotopeConfig
-   * @returns {number} isotopeCount
-   * @public
    */
-  getIsotopeCount( isotopeConfig ) {
-    assert && assert( isotopeConfig.protonCountProperty.get() === isotopeConfig.electronCountProperty.get() ); // Should always be neutral atom.
+  public getIsotopeCount( isotopeConfig: TReadOnlyNumberAtom ): number {
+    assert && assert( isotopeConfig.protonCountProperty.get() === isotopeConfig.electronCountProperty.get() );
     let isotopeCount = 0;
     this.containedIsotopes.forEach( isotope => {
       if ( isotope.atomConfiguration.equals( isotopeConfig ) ) {
@@ -78,36 +71,23 @@ class IsotopeTestChamber {
   }
 
   /**
-   * @returns {Rectangle} TEST_CHAMBER_RECT
-   * @public
+   * Get the rectangle shape that represents the test chamber.
    */
-  getTestChamberRect() {
+  public getTestChamberRect(): Rectangle {
     return TEST_CHAMBER_RECT;
   }
 
   /**
-   * Test whether an isotope is within the chamber. This is strictly a 2D test that looks as the isotopes center
-   * position and determines if it is within the bounds of the chamber rectangle.
-   * @param {MovableAtom} isotope
-   * @returns {boolean}
-   * @public
+   * Test whether an isotope is within the chamber.
    */
-  isIsotopePositionedOverChamber( isotope ) {
+  public isIsotopePositionedOverChamber( isotope: MovableAtom ): boolean {
     return TEST_CHAMBER_RECT.containsPoint( isotope.positionProperty.get() );
   }
 
   /**
-   * Add the specified isotope to the test chamber. This method requires that the position of the isotope be within the
-   * chamber rectangle, or the isotope will not be added.
-   *
-   * In cases where an isotope is in a position where the center is within the chamber but the edges are not, the
-   * isotope will be moved so that it is fully contained within the chamber.
-   *
-   * @param {MovableAtom} isotope
-   * @param {boolean} performUpdates - Flag that can be set be used to suppress updates.
-   * @public
+   * Add the specified isotope to the test chamber.
    */
-  addParticle( isotope, performUpdates ) {
+  public addParticle( isotope: MovableAtom, performUpdates: boolean ): void {
     if ( this.isIsotopePositionedOverChamber( isotope ) ) {
       this.containedIsotopes.push( isotope );
       isotope.containerProperty.value = this;
@@ -138,29 +118,22 @@ class IsotopeTestChamber {
         }
       }
       if ( performUpdates ) {
-
-        // Update the isotope count.
         this.updateCountProperty();
-
-        // Update the average atomic mass.
-        this.averageAtomicMassProperty.set( ( ( this.averageAtomicMassProperty.get() *
-                                                ( this.isotopeCountProperty.get() - 1 ) ) +
-                                              isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCountProperty.get() );
+        this.averageAtomicMassProperty.set(
+          ( ( this.averageAtomicMassProperty.get() * ( this.isotopeCountProperty.get() - 1 ) ) +
+            isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCountProperty.get()
+        );
       }
     }
     else {
-
-      // This isotope is not positioned correctly.
       assert && assert( false, 'Ignoring attempt to add incorrectly located isotope to test chamber.' );
     }
   }
 
   /**
-   * Adds a list of isotopes to the test chamber. Same restrictions as above.
-   * @param {MovableAtom[]} isotopeList
-   * @public
+   * Adds a list of isotopes to the test chamber.
    */
-  bulkAddIsotopesToChamber( isotopeList ) {
+  public bulkAddIsotopesToChamber( isotopeList: MovableAtom[] ): void {
     isotopeList.forEach( isotope => {
       this.addParticle( isotope, false );
     } );
@@ -170,20 +143,17 @@ class IsotopeTestChamber {
 
   /**
    * Convenience function to set the isotopeCount property equal to the number of isotopes contained in this test chamber.
-   * @private
    */
-  updateCountProperty() {
+  private updateCountProperty(): void {
     this.isotopeCountProperty.set( this.containedIsotopes.length );
   }
 
-  // @private
-  updateAverageAtomicMassProperty() {
+  private updateAverageAtomicMassProperty(): void {
     if ( this.containedIsotopes.length > 0 ) {
       let totalMass = 0;
       this.containedIsotopes.forEach( isotope => {
         totalMass += isotope.atomConfiguration.getIsotopeAtomicMass();
       } );
-
       this.averageAtomicMassProperty.set( totalMass / this.containedIsotopes.length );
     }
     else {
@@ -192,18 +162,18 @@ class IsotopeTestChamber {
   }
 
   /**
-   * @param {MovableAtom} isotope
-   * @public
+   * Remove a particle from the chamber.
    */
-  removeParticle( isotope ) {
+  public removeParticle( isotope: MovableAtom ): void {
     this.containedIsotopes.remove( isotope );
     this.updateCountProperty();
     isotope.containerProperty.value = null;
 
-    // Update the average atomic mass.
     if ( this.isotopeCountProperty.get() > 0 ) {
-      this.averageAtomicMassProperty.set( ( this.averageAtomicMassProperty.get() * ( this.isotopeCountProperty.get() + 1 ) -
-                                            isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCountProperty.get() );
+      this.averageAtomicMassProperty.set(
+        ( this.averageAtomicMassProperty.get() * ( this.isotopeCountProperty.get() + 1 ) -
+          isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCountProperty.get()
+      );
     }
     else {
       this.averageAtomicMassProperty.set( 0 );
@@ -212,39 +182,32 @@ class IsotopeTestChamber {
 
   /**
    * Checks if the isotope is contained in the chamber.
-   * @param {MovableAtom} isotope
-   * @returns {boolean}
-   * @public
    */
-  includes( isotope ) {
+  public includes( isotope: MovableAtom ): boolean {
     return this.containedIsotopes.includes( isotope );
   }
 
   /**
    * Remove an isotope from the chamber that matches the specified atom configuration. Note that electrons are ignored.
-   * @param {NumberAtom} isotopeConfig
-   * @returns {MovableAtom} removedIsotope
-   * @public
    */
-  removeIsotopeMatchingConfig( isotopeConfig ) {
+  public removeIsotopeMatchingConfig( isotopeConfig: TReadOnlyNumberAtom ): MovableAtom | null {
     assert && assert( ( isotopeConfig.protonCountProperty.get() - isotopeConfig.electronCountProperty.get() ) === 0 );
-
-    // Locate and remove a matching isotope.
-    let removedIsotope = null;
+    let removedIsotope: MovableAtom | null = null;
     this.containedIsotopes.forEach( isotope => {
       if ( isotope.atomConfiguration.equals( isotopeConfig ) ) {
         removedIsotope = isotope;
       }
     } );
-    this.removeParticle( removedIsotope );
+    if ( removedIsotope ) {
+      this.removeParticle( removedIsotope );
+    }
     return removedIsotope;
   }
 
   /**
    * Removes all isotopes
-   * @public
    */
-  removeAllIsotopes() {
+  public removeAllIsotopes(): void {
     this.containedIsotopes.clear();
     this.updateCountProperty();
     this.averageAtomicMassProperty.set( 0 );
@@ -252,88 +215,65 @@ class IsotopeTestChamber {
 
   /**
    * Returns the containedIsotopes.
-   * @returns {ObservableArrayDef}
-   * @public
    */
-  getContainedIsotopes() {
+  public getContainedIsotopes(): ObservableArray<MovableAtom> {
     return this.containedIsotopes;
   }
 
   /**
    * Get a count of the total number of isotopes in the chamber.
-   * @returns {number}
-   * @public
    */
-  getTotalIsotopeCount() {
+  public getTotalIsotopeCount(): number {
     return this.isotopeCountProperty.get();
   }
 
   /**
    * Get the proportion of isotopes currently within the chamber that match the specified configuration.
-   * @param {NumberAtom} isotopeConfig
-   * @returns {number} isotopeProportion
-   * @public
    */
-  getIsotopeProportion( isotopeConfig ) {
-    // Calculates charge to ensure that isotopes are neutral.
+  public getIsotopeProportion( isotopeConfig: TReadOnlyNumberAtom ): number {
     assert && assert( isotopeConfig.protonCountProperty.get() - isotopeConfig.electronCountProperty.get() === 0 );
     let isotopeCount = 0;
-
     this.containedIsotopes.forEach( isotope => {
-      if ( isotopeConfig.equals( isotope.atomConfiguration ) ) {
+      if ( isotope.atomConfiguration.equals( isotopeConfig ) ) {
         isotopeCount++;
       }
     } );
-
-    return isotopeCount / this.containedIsotopes.length;
+    return this.containedIsotopes.length > 0 ? isotopeCount / this.containedIsotopes.length : 0;
   }
 
   /**
-   * Move all the particles in the chamber such that they don't overlap. This is intended for usage where there are not
-   * a lot of particles in the chamber. Using it in cases where there are a lost of particles could take a very long time.
-   * @public
+   * Move all the particles in the chamber such that they don't overlap and don't protrude outside the chamber.
    */
-  adjustForOverlap() {
-
-    // Bounds checking.  The threshold is pretty much arbitrary.
+  public adjustForOverlap(): void {
     assert && assert(
       this.getTotalIsotopeCount() <= 100,
       'Ignoring request to adjust for overlap - too many particles in the chamber for that'
     );
 
-    // Check for overlap and adjust particle positions until none exists.
-    const maxIterations = 10000; // empirically determined
+    const maxIterations = 10000;
     for ( let i = 0; this.checkForParticleOverlap() && i < maxIterations; i++ ) {
-
-      // Adjustment factors for the repositioning algorithm, these can be changed for different behaviour.
       const interParticleForceConst = 200;
       const wallForceConst = interParticleForceConst * 10;
       const minInterParticleDistance = 5;
-      const mapIsotopesToForces = {};
-      const mapIsotopesIDToIsotope = {};
+      const mapIsotopesToForces = new Map<MovableAtom, Vector2>();
 
       this.containedIsotopes.forEach( isotope1 => {
 
         const totalForce = new Vector2( 0, 0 );
 
-        // Calculate the force due to other isotopes.
+        // Check this isotope against all others, and calculate the forces on it.
         for ( let j = 0; j < this.containedIsotopes.length; j++ ) {
           const isotope2 = this.containedIsotopes.get( j );
           if ( isotope1 === isotope2 ) {
             continue;
-
           }
           const forceFromIsotope = new Vector2( 0, 0 );
           const distanceBetweenIsotopes = isotope1.positionProperty.get().distance( isotope2.positionProperty.get() );
           if ( distanceBetweenIsotopes === 0 ) {
-
-            // These isotopes are sitting right on top of one another.  Add the max amount of inter-particle force in a
-            // random direction.
             forceFromIsotope.setPolar( interParticleForceConst / ( minInterParticleDistance * minInterParticleDistance ),
               dotRandom.nextDouble() * 2 * Math.PI );
           }
           else if ( distanceBetweenIsotopes < isotope1.radius + isotope2.radius ) {
-            // calculate the repulsive force based on the distance.
             forceFromIsotope.x = isotope1.positionProperty.get().x - isotope2.positionProperty.get().x;
             forceFromIsotope.y = isotope1.positionProperty.get().y - isotope2.positionProperty.get().y;
             const distance = Math.max( forceFromIsotope.magnitude, minInterParticleDistance );
@@ -343,7 +283,7 @@ class IsotopeTestChamber {
           totalForce.add( forceFromIsotope );
         }
 
-        // Calculate the force due to the walls. This prevents particles from being pushed out of the bounds of the chamber.
+        // Check the isotope against the walls of the chamber, and calculate the forces on it.
         if ( isotope1.positionProperty.get().x + isotope1.radius >= TEST_CHAMBER_RECT.maxX ) {
           const distanceFromRightWall = TEST_CHAMBER_RECT.maxX - isotope1.positionProperty.get().x;
           totalForce.add( new Vector2( -wallForceConst / ( distanceFromRightWall * distanceFromRightWall ), 0 ) );
@@ -360,74 +300,56 @@ class IsotopeTestChamber {
           const distanceFromBottomWall = isotope1.positionProperty.get().y - TEST_CHAMBER_RECT.minY;
           totalForce.add( new Vector2( 0, wallForceConst / ( distanceFromBottomWall * distanceFromBottomWall ) ) );
         }
-        // Put the calculated repulsive force into the map.
-        mapIsotopesToForces[ isotope1.instanceCount ] = totalForce;
-        mapIsotopesIDToIsotope[ isotope1.instanceCount ] = isotope1;
+        mapIsotopesToForces.set( isotope1, totalForce );
       } );
 
-      // Adjust the particle positions based on forces.
-      for ( const isotopeID in mapIsotopesToForces ) {
-        if ( mapIsotopesToForces.hasOwnProperty( isotopeID ) ) {
-          // Sets the position of the isotope to the corresponding Vector2 from mapIsotopesToForces
-          mapIsotopesIDToIsotope[ isotopeID ]
-            .setPositionAndDestination( mapIsotopesToForces[ isotopeID ].add( mapIsotopesIDToIsotope[ isotopeID ].positionProperty.get() ) );
-        }
-
+      // Apply the forces to the isotopes.
+      for ( const [ isotope, force ] of mapIsotopesToForces ) {
+        isotope.setPositionAndDestination( isotope.positionProperty.value.add( force ) );
       }
     }
   }
 
   /**
    * Checks to ensure that particles are not overlapped.
-   * @returns {boolean}
-   * @private
    */
-  checkForParticleOverlap() {
+  private checkForParticleOverlap(): boolean {
     let overlapExists = false;
-
     for ( let i = 0; i < this.containedIsotopes.length && !overlapExists; i++ ) {
       const isotope1 = this.containedIsotopes.get( i );
       for ( let j = 0; j < this.containedIsotopes.length && !overlapExists; j++ ) {
         const isotope2 = this.containedIsotopes.get( j );
         if ( isotope1 === isotope2 ) {
-
-          // Same isotope, so skip it.
           continue;
         }
-
         const distance = isotope1.positionProperty.get().distance( isotope2.positionProperty.get() );
         if ( distance < isotope1.radius + isotope2.radius ) {
           overlapExists = true;
         }
       }
     }
-
     return overlapExists;
   }
 
   /**
    * Generate a random position within the test chamber.
-   * @returns {Vector2}
-   * @public
    */
-  generateRandomPosition() {
+  public generateRandomPosition(): Vector2 {
     return new Vector2(
       TEST_CHAMBER_RECT.minX + dotRandom.nextDouble() * TEST_CHAMBER_RECT.width,
-      TEST_CHAMBER_RECT.minY + dotRandom.nextDouble() * TEST_CHAMBER_RECT.height );
+      TEST_CHAMBER_RECT.minY + dotRandom.nextDouble() * TEST_CHAMBER_RECT.height
+    );
   }
 
-  // @public
-  getState() {
-    return new State( this );
+  public getState(): IsotopeTestChamberState {
+    return new IsotopeTestChamberState( this );
   }
 
   /**
    * Restore a previously captured state.
-   * @param {State} state
-   * @public
    */
-  setState( state ) {
-    this.removeAllIsotopes( true );
+  public setState( state: IsotopeTestChamberState ): void {
+    this.removeAllIsotopes();
     this.bulkAddIsotopesToChamber( state.containedIsotopes );
   }
 }

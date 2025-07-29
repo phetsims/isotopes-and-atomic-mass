@@ -1,4 +1,4 @@
-// Copyright 2015-2024, University of Colorado Boulder
+// Copyright 2015-2025, University of Colorado Boulder
 
 /**
  * A particle bucket that can only contain one configuration of isotope, though it may contain multiple instances
@@ -9,34 +9,31 @@
  * @author James Smith
  */
 
-import createObservableArray from '../../../../axon/js/createObservableArray.js';
-import SphereBucket from '../../../../phetcommon/js/model/SphereBucket.js';
+import SphereBucket, { SphereBucketOptions } from '../../../../phetcommon/js/model/SphereBucket.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import MovableAtom from './MovableAtom.js';
 
-class MonoIsotopeBucket extends SphereBucket {
+class MonoIsotopeBucket extends SphereBucket<MovableAtom> {
+
+  public readonly numProtonsInIsotope: number;
+  public readonly numNeutronsInIsotope: number;
 
   /**
-   * @param {number} numProtonsInIsotope
-   * @param {number} numNeutronsInIsotope
-   * @param {Object} [options]
+   * @param numProtonsInIsotope - Number of protons in the isotope this bucket holds
+   * @param numNeutronsInIsotope - Number of neutrons in the isotope this bucket holds
+   * @param options - Options that control the appearance and behavior of the bucket
    */
-  constructor( numProtonsInIsotope, numNeutronsInIsotope, options ) {
+  public constructor( numProtonsInIsotope: number, numNeutronsInIsotope: number, options?: SphereBucketOptions ) {
     super( options );
 
-    this.numProtonsInIsotope = numProtonsInIsotope; // @public
-    this.numNeutronsInIsotope = numNeutronsInIsotope; // @public
+    this.numProtonsInIsotope = numProtonsInIsotope;
+    this.numNeutronsInIsotope = numNeutronsInIsotope;
   }
 
   /**
    * Add an isotope to the first open position in the bucket.
-   *
-   * @param {MovableAtom} isotope
-   * @param {boolean} moveImmediately
-   *
-   * @public
    */
-  addIsotopeInstanceFirstOpen( isotope, moveImmediately ) {
+  public addIsotopeInstanceFirstOpen( isotope: MovableAtom, moveImmediately: boolean ): void {
     if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount ) ) {
       this.addParticleFirstOpen( isotope, moveImmediately );
     }
@@ -44,45 +41,18 @@ class MonoIsotopeBucket extends SphereBucket {
 
   /**
    * Tests to see if an isotope matches the MonoIsotopeBucket.
-   *
-   * @param {number} numProtons
-   * @param {number} numNeutrons
-   * @returns {boolean}
-   *
-   * @public
    */
-  isIsotopeAllowed( numProtons, numNeutrons ) {
+  public isIsotopeAllowed( numProtons: number, numNeutrons: number ): boolean {
     return this.numProtonsInIsotope === numProtons && this.numNeutronsInIsotope === numNeutrons;
   }
 
   /**
    * Add an isotope to the nearest open position in the bucket.
-   *
-   * @param {MovableAtom} isotope
-   * @param {boolean} animate
-   *
-   * @public
    */
-  addIsotopeInstanceNearestOpen( isotope, animate ) {
+  public addIsotopeInstanceNearestOpen( isotope: MovableAtom, animate: boolean ): void {
     if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount ) ) {
       this.addParticleNearestOpen( isotope, animate );
     }
-  }
-
-  /**
-   * Get a list of all isotopes contained within this bucket.
-   * @returns {ObservableArrayDef} containedIsotopes
-   *
-   * @public
-   */
-  getContainedIsotopes() {
-    const containedIsotopes = createObservableArray();
-    this.getParticleList().forEach( isotope => {
-      assert && assert( isotope instanceof MovableAtom );
-      containedIsotopes.push( isotope );
-    } );
-
-    return containedIsotopes;
   }
 }
 

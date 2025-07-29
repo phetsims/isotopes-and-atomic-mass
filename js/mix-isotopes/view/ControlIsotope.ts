@@ -17,18 +17,26 @@ import ArrowButton from '../../../../sun/js/buttons/ArrowButton.js';
 import HSlider from '../../../../sun/js/HSlider.js';
 import Panel from '../../../../sun/js/Panel.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
+import NumericalIsotopeQuantityControl from '../model/NumericalIsotopeQuantityControl.js';
 
 const READOUT_SIZE = new Dimension2( 30, 15 );
 
 class ControlIsotope extends Node {
 
+  private disposeControlIsotope!: () => void;
+
   /**
-   * @param {Property.<number>} controller
-   * @param {number} minRange
-   * @param {number} maxRange
+   * @param controller - NumericalIsotopeQuantityControl instance
+   * @param minRange - minimum allowed value
+   * @param maxRange - maximum allowed value
    */
-  constructor( controller, minRange, maxRange ) {
-    super(); // Call super constructor.
+  public constructor(
+    controller: NumericalIsotopeQuantityControl,
+    minRange: number,
+    maxRange: number
+  ) {
+    super();
+
     const sliderLayer = new Node();
     this.addChild( sliderLayer );
     const labelLayer = new Node();
@@ -48,16 +56,16 @@ class ControlIsotope extends Node {
     } );
 
     // major ticks
-    slider.addMajorTick( range.min, new Text( range.min, tickLabelOptions ) );
-    slider.addMajorTick( range.max, new Text( range.max, tickLabelOptions ) );
+    slider.addMajorTick( range.min, new Text( `${range.min}`, tickLabelOptions ) );
+    slider.addMajorTick( range.max, new Text( `${range.max}`, tickLabelOptions ) );
     sliderLayer.addChild( slider );
 
-    const plusButton = new ArrowButton( 'right', ( () => {
+    const plusButton = new ArrowButton( 'right', () => {
       controller.quantityProperty.set( Math.floor( controller.quantityProperty.get() ) + 1 );
-    } ), { arrowHeight: 10, arrowWidth: 10 } );
-    const minusButton = new ArrowButton( 'left', ( () => {
+    }, { arrowHeight: 10, arrowWidth: 10 } );
+    const minusButton = new ArrowButton( 'left', () => {
       controller.quantityProperty.set( Math.floor( controller.quantityProperty.get() ) - 1 );
-    } ), { arrowHeight: 10, arrowWidth: 10 } );
+    }, { arrowHeight: 10, arrowWidth: 10 } );
     numericLayer.addChild( plusButton );
     numericLayer.addChild( minusButton );
 
@@ -82,8 +90,8 @@ class ControlIsotope extends Node {
     plusButton.centerY = panel.centerY;
     minusButton.centerY = panel.centerY;
 
-    const changedValue = value => {
-      isotopeText.setString( Math.floor( value ) );
+    const changedValue = ( value: number ): void => {
+      isotopeText.setString( `${Math.floor( value )}` );
       isotopeText.centerX = READOUT_SIZE.width / 2;
       isotopeText.centerY = READOUT_SIZE.height * 0.75;
 
@@ -94,7 +102,7 @@ class ControlIsotope extends Node {
 
     controller.quantityProperty.link( changedValue );
 
-    const isotopeNode = new IsotopeNode( controller.controllerIsotope, 6, {
+    const isotopeNode = new IsotopeNode( controller.controllerIsotope!, 6, {
       showLabel: false
     } );
     labelLayer.addChild( isotopeNode );
@@ -111,16 +119,15 @@ class ControlIsotope extends Node {
     labelLayer.centerX = numericLayer.centerX;
     sliderLayer.centerX = numericLayer.centerX + 5;
 
-    this.disposeControlIsotope = () => {
+    this.disposeControlIsotope = (): void => {
       controller.quantityProperty.unlink( changedValue );
     };
   }
 
   /**
    * release memory references
-   * @public
    */
-  dispose() {
+  public override dispose(): void {
     this.disposeControlIsotope();
     super.dispose();
   }

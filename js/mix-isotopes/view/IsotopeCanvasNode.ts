@@ -1,26 +1,16 @@
 // Copyright 2016-2025, University of Colorado Boulder
 
 /**
- * A isotope layer rendered on canvas.  This exists for performance reasons.
+ * An isotope layer rendered on canvas.  This exists for performance reasons.
  *
  * @author Aadish Gupta
  */
 
-import { ObservableArray } from '../../../axon/js/createObservableArray.js';
-import TReadOnlyProperty from '../../../axon/js/TReadOnlyProperty.js';
-import Vector2 from '../../../dot/js/Vector2.js';
-import ModelViewTransform2 from '../../../phetcommon/js/view/ModelViewTransform2.js';
-import CanvasNode, { CanvasNodeOptions } from '../../../scenery/js/nodes/CanvasNode.js';
-import shred from '../shred.js';
-
-// TODO: See https://github.com/phetsims/build-an-atom/issues/241.  Why is IsotopeCanvasNode.ts in the shred repo?  It
-//       is only used in isotopes-and-atomic-mass and is not shared with any other sim, and it appears to depend
-//       type-wise on some IAAM-specific code, hence the definition for MovableAtom below.  It should probably be moved
-//       to isotopes-and-atomic-mass.
-type MovableAtom = {
-  radius:number;
-  positionProperty: TReadOnlyProperty<Vector2>;
-};
+import { ObservableArray } from '../../../../axon/js/createObservableArray.js';
+import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
+import CanvasNode, { CanvasNodeOptions } from '../../../../scenery/js/nodes/CanvasNode.js';
+import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
+import MovableAtom from '../model/MovableAtom.js';
 
 type IsotopeCanvasNodeOptions = CanvasNodeOptions;
 
@@ -58,7 +48,6 @@ class IsotopeCanvasNode extends CanvasNode {
         const position = isotope.positionProperty.get();
         const x = this.modelViewTransform.modelToViewX( position.x );
         const y = this.modelViewTransform.modelToViewY( position.y );
-        // @ts-expect-error - Seems like some work needs to be done here when Isotopes And Atomic Mass is converted to TypeScript
         context.fillStyle = isotope.color.toCSS();
         context.beginPath();
         context.arc( x, y, radius, 0, 2 * Math.PI, true );
@@ -78,5 +67,5 @@ class IsotopeCanvasNode extends CanvasNode {
   }
 }
 
-shred.register( 'IsotopeCanvasNode', IsotopeCanvasNode );
+isotopesAndAtomicMass.register( 'IsotopeCanvasNode', IsotopeCanvasNode );
 export default IsotopeCanvasNode;
