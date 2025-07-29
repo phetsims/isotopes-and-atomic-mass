@@ -24,7 +24,10 @@ class IsotopeCanvasNode extends CanvasNode {
    * @param modelViewTransform - to convert between model and view coordinate frames
    * @param options - that can be passed on to the underlying node
    */
-  public constructor( isotopes: ObservableArray<MovableAtom>, modelViewTransform: ModelViewTransform2, options?: IsotopeCanvasNodeOptions ) {
+  public constructor( isotopes: ObservableArray<MovableAtom>,
+                      modelViewTransform: ModelViewTransform2,
+                      options?: IsotopeCanvasNodeOptions ) {
+
     super( options );
     this.isotopes = isotopes;
     this.modelViewTransform = modelViewTransform;
@@ -39,9 +42,10 @@ class IsotopeCanvasNode extends CanvasNode {
     const numIsotopes = this.isotopes.length;
     if ( numIsotopes > 0 ) {
 
-      // only calculate the radius once to save time, assumes they are all the same
+      // Only calculate the radius once to save time, assumes they are all the same.
       const radius = this.modelViewTransform.modelToViewDeltaX( this.isotopes.get( 0 ).radius );
       context.strokeStyle = 'black';
+
 
       for ( i = 0; i < this.isotopes.length; i++ ) {
         isotope = this.isotopes.get( i );

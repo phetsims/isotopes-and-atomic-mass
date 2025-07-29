@@ -14,7 +14,7 @@ import createObservableArray, { ObservableArray } from '../../../../axon/js/crea
 import Emitter from '../../../../axon/js/Emitter.js';
 import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
-import Utils from '../../../../dot/js/Utils.js';
+import { roundSymmetric } from '../../../../dot/js/util/roundSymmetric.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
@@ -517,8 +517,8 @@ class MixIsotopesModel {
           new Vector2( 0, 0 ),
           { particleRadius: SMALL_ISOTOPE_RADIUS }
         );
-
         controllerIsotope.color = this.getColorForIsotope( isotopeConfig.protonCount, isotopeConfig.neutronCount );
+
         newController.controllerIsotope = controllerIsotope;
 
         this.numericalControllerList.add( newController );
@@ -540,7 +540,7 @@ class MixIsotopesModel {
     );
     return isotope && this.possibleIsotopesProperty.value.includes( isotope ) ?
            ISOTOPE_COLORS[ this.possibleIsotopesProperty.value.indexOf( isotope ) ] :
-           Color.WHITE;
+           Color.RED;
   }
 
   private showNaturesMix(): void {
@@ -559,10 +559,9 @@ class MixIsotopesModel {
 
     // Add the isotopes.
     possibleIsotopesCopy.forEach( isotopeConfig => {
-      let numToCreate = Utils.roundSymmetric(
-        NUM_NATURES_MIX_ATOMS * AtomIdentifier.getNaturalAbundance( isotopeConfig, 5 )
-      );
+      let numToCreate = roundSymmetric( NUM_NATURES_MIX_ATOMS * AtomIdentifier.getNaturalAbundance( isotopeConfig, 5 ) );
       if ( numToCreate === 0 ) {
+
         // The calculated quantity was 0, but we don't want to have no instances of this isotope in the chamber, so
         // add only one. This behavior was requested by the design team.
         numToCreate = 1;
@@ -575,10 +574,13 @@ class MixIsotopesModel {
           this.testChamber.generateRandomPosition(),
           { particleRadius: SMALL_ISOTOPE_RADIUS }
         );
+        newIsotope.color = this.getColorForIsotope( isotopeConfig.protonCount, isotopeConfig.neutronCount );
+
         newIsotope.showLabel = false;
         isotopesToAdd.push( newIsotope );
         this.naturesIsotopesList.push( newIsotope );
       }
+      console.log( `this.naturesIsotopesList.length = ${this.naturesIsotopesList.length}` );
       this.testChamber.bulkAddIsotopesToChamber( isotopesToAdd );
     } );
     this.naturesIsotopeUpdated.emit();

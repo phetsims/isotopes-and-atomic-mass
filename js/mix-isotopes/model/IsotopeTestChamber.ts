@@ -27,21 +27,6 @@ const SIZE = new Dimension2( 450, 280 ); // In picometers.
 const TEST_CHAMBER_RECT = new Rectangle( -SIZE.width / 2, -SIZE.height / 2, SIZE.width, SIZE.height );
 const BUFFER = 1; // isotopes stroke doesn't cross the wall, empirically determined
 
-/**
- * Utility class that holds the state of the isotope test chamber, and can be used for saving and later restoring the
- * state.
- */
-export class IsotopeTestChamberState {
-  public containedIsotopes: ObservableArray<MovableAtom>;
-
-  public constructor( isotopeTestChamber: IsotopeTestChamber ) {
-    this.containedIsotopes = createObservableArray<MovableAtom>();
-    isotopeTestChamber.containedIsotopes.forEach( ( isotope: MovableAtom ) => {
-      this.containedIsotopes.add( isotope );
-    } );
-  }
-}
-
 class IsotopeTestChamber {
 
   private readonly model: MixIsotopesModel;
@@ -92,7 +77,7 @@ class IsotopeTestChamber {
       this.containedIsotopes.push( isotope );
       isotope.containerProperty.value = this;
 
-      // If the edges of the isotope are outside of the container, move it to be fully inside.
+      // If the edges of the isotope are outside the container, move it to be fully inside.
       let protrusion = isotope.positionProperty.get().x + isotope.radius - TEST_CHAMBER_RECT.maxX + BUFFER;
       if ( protrusion >= 0 ) {
         isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x - protrusion,
@@ -351,6 +336,22 @@ class IsotopeTestChamber {
   public setState( state: IsotopeTestChamberState ): void {
     this.removeAllIsotopes();
     this.bulkAddIsotopesToChamber( state.containedIsotopes );
+  }
+}
+
+
+/**
+ * Utility class that holds the state of the isotope test chamber, and can be used for saving and later restoring the
+ * state.
+ */
+export class IsotopeTestChamberState {
+  public containedIsotopes: ObservableArray<MovableAtom>;
+
+  public constructor( isotopeTestChamber: IsotopeTestChamber ) {
+    this.containedIsotopes = createObservableArray<MovableAtom>();
+    isotopeTestChamber.containedIsotopes.forEach( ( isotope: MovableAtom ) => {
+      this.containedIsotopes.add( isotope );
+    } );
   }
 }
 

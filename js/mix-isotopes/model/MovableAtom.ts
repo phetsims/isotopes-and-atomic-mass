@@ -28,8 +28,8 @@ class MovableAtom extends Particle {
   public showLabel: boolean;
   public readonly instanceCount: number;
 
-  // Color to use for the atom, when shown in the view.  Defaults to black, set value to change.
-  public color = Color.BLACK;
+  // Color to use for the atom, when shown in the view.  Set value to change.
+  public color = Color.GREEN;
 
   public constructor(
     numProtons: number,

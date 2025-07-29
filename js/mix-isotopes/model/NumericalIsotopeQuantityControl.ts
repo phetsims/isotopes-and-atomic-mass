@@ -63,6 +63,10 @@ class NumericalIsotopeQuantityControl {
           { particleRadius: 4 }
         );
         newIsotope.showLabel = false;
+        newIsotope.color = this.model.getColorForIsotope(
+          newIsotope.atomConfiguration.protonCount,
+          newIsotope.atomConfiguration.neutronCount
+        );
         this.model.testChamber.addParticle( newIsotope, true );
         this.model.isotopesList.add( newIsotope );
       }

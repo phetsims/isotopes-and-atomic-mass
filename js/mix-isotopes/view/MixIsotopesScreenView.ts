@@ -13,7 +13,7 @@ import Property from '../../../../axon/js/Property.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Range from '../../../../dot/js/Range.js';
-import Utils from '../../../../dot/js/Utils.js';
+import { roundSymmetric } from '../../../../dot/js/util/roundSymmetric.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ScreenView from '../../../../joist/js/ScreenView.js';
 import Bucket from '../../../../phetcommon/js/model/Bucket.js';
@@ -78,8 +78,8 @@ class MixIsotopesScreenView extends ScreenView {
     this.modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       Vector2.ZERO,
       new Vector2(
-        Utils.roundSymmetric( this.layoutBounds.width * 0.32 ),
-        Utils.roundSymmetric( this.layoutBounds.height * 0.33 )
+        roundSymmetric( this.layoutBounds.width * 0.32 ),
+        roundSymmetric( this.layoutBounds.height * 0.33 )
       ),
       1.0
     );
