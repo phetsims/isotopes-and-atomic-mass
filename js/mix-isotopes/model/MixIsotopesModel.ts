@@ -230,7 +230,7 @@ class MixIsotopesModel {
         isotopeConfig.neutronCountProperty.get(),
         new Vector2( 0, 0 )
       );
-      newIsotope.color = this.getColorForIsotope( isotopeConfig );
+      newIsotope.color = this.getColorForIsotope( isotopeConfig.protonCount, isotopeConfig.neutronCount );
 
       const bucket = this.getBucketForIsotope( isotopeConfig );
       if ( bucket ) {
@@ -488,13 +488,14 @@ class MixIsotopesModel {
           {
             position: new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetBucket ),
             size: BUCKET_SIZE,
-            baseColor: this.getColorForIsotope( isotopeConfig ),
+            baseColor: this.getColorForIsotope( isotopeConfig.protonCount, isotopeConfig.neutronCount ),
             captionText: isotopeCaption,
             sphereRadius: LARGE_ISOTOPE_RADIUS
           }
         );
         this.addBucket( newBucket );
         if ( !this.showingNaturesMixProperty.get() ) {
+
           // Create and add initial isotopes to the new bucket.
           for ( let j = 0; j < NUM_LARGE_ISOTOPES_PER_BUCKET; j++ ) {
             this.createAndAddIsotope( isotopeConfig, false );
@@ -502,6 +503,7 @@ class MixIsotopesModel {
         }
       }
       else {
+
         // assume a numerical controller
         const newController = new NumericalIsotopeQuantityControl(
           this,
@@ -516,7 +518,7 @@ class MixIsotopesModel {
           { particleRadius: SMALL_ISOTOPE_RADIUS }
         );
 
-        controllerIsotope.color = this.getColorForIsotope( isotopeConfig );
+        controllerIsotope.color = this.getColorForIsotope( isotopeConfig.protonCount, isotopeConfig.neutronCount );
         newController.controllerIsotope = controllerIsotope;
 
         this.numericalControllerList.add( newController );
@@ -531,9 +533,14 @@ class MixIsotopesModel {
   /**
    * Get the color for an isotope.
    */
-  public getColorForIsotope( isotope: NumberAtom ): Color {
-    const index = this.possibleIsotopesProperty.get().indexOf( isotope );
-    return index >= 0 ? ISOTOPE_COLORS[ index ] : Color.WHITE;
+  public getColorForIsotope( protonCount: number, neutronCount: number ): Color {
+    const isotope = this.possibleIsotopesProperty.value.find(
+      atom => atom.protonCountProperty.get() === protonCount &&
+              atom.neutronCountProperty.get() === neutronCount
+    );
+    return isotope && this.possibleIsotopesProperty.value.includes( isotope ) ?
+           ISOTOPE_COLORS[ this.possibleIsotopesProperty.value.indexOf( isotope ) ] :
+           Color.WHITE;
   }
 
   private showNaturesMix(): void {

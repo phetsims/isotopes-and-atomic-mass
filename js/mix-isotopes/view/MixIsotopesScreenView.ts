@@ -38,13 +38,13 @@ import HSlider from '../../../../sun/js/HSlider.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
-import IsotopeCanvasNode from './IsotopeCanvasNode.js';
 import MixIsotopesModel, { InteractivityModeType } from '../model/MixIsotopesModel.js';
 import MonoIsotopeBucket from '../model/MonoIsotopeBucket.js';
 import MovableAtom from '../model/MovableAtom.js';
 import NumericalIsotopeQuantityControl from '../model/NumericalIsotopeQuantityControl.js';
 import AverageAtomicMassIndicator from './AverageAtomicMassIndicator.js';
 import ControlIsotope from './ControlIsotope.js';
+import IsotopeCanvasNode from './IsotopeCanvasNode.js';
 import IsotopeProportionsPieChart from './IsotopeProportionsPieChart.js';
 
 const averageAtomicMassString = IsotopesAndAtomicMassStrings.averageAtomicMass;
@@ -118,7 +118,16 @@ class MixIsotopesScreenView extends ScreenView {
 
     // Isotopes
     const addIsotopeView = ( addedIsotope: MovableAtom ) => {
-      const isotopeView = new ParticleView( addedIsotope, this.modelViewTransform );
+      const isotopeView = new ParticleView( addedIsotope, this.modelViewTransform, {
+        isotopeNodeOptions: {
+          baseColor: this.model.getColorForIsotope(
+            addedIsotope.atomConfiguration.protonCount,
+            addedIsotope.atomConfiguration.neutronCount
+          ),
+          protonCount: addedIsotope.atomConfiguration.protonCount,
+          massNumber: addedIsotope.atomConfiguration.protonCount + addedIsotope.atomConfiguration.neutronCount
+        }
+      } );
       isotopeView.center = this.modelViewTransform.modelToViewPosition( addedIsotope.positionProperty.get() );
       isotopeView.pickable = ( mixIsotopesModel.interactivityModeProperty.get() === 'bucketsAndLargeAtoms' );
       isotopeLayer.addChild( isotopeView );

@@ -171,7 +171,7 @@ class IsotopeProportionsPieChart extends Node {
     let i = 0;
     this.model.possibleIsotopesProperty.get().forEach( isotope => {
       const value = this.model.testChamber.getIsotopeCount( isotope );
-      const color = this.model.getColorForIsotope( isotope );
+      const color = this.model.getColorForIsotope( isotope.protonCount, isotope.neutronCount );
       this.slices[ i ] = { value: value, color: color, stroke: Color.BLACK, lineWidth: 0.5 };
       i += 1;
     } );

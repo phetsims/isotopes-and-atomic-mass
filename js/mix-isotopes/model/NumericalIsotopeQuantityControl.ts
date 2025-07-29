@@ -81,7 +81,7 @@ class NumericalIsotopeQuantityControl {
    * Returns the base color for this isotope
    */
   public getBaseColor(): Color {
-    return this.model.getColorForIsotope( this.isotopeConfig );
+    return this.model.getColorForIsotope( this.isotopeConfig.protonCount, this.isotopeConfig.neutronCount );
   }
 
   /**

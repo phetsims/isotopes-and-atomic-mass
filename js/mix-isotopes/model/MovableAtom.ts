@@ -42,7 +42,7 @@ class MovableAtom extends Particle {
       particleRadius: 10
     }, providedOptions );
 
-    super( 'Isotope', options );
+    super( 'isotope', options );
     this.positionProperty.set( initialPosition );
     this.destinationProperty.set( initialPosition );
 
