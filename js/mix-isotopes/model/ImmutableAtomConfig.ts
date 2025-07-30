@@ -1,4 +1,4 @@
-// Copyright 2019-2020, University of Colorado Boulder
+// Copyright 2019-2025, University of Colorado Boulder
 
 /**
  * atom configuration that doesn't use properties, and thus consumes less memory
