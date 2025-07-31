@@ -91,7 +91,8 @@ class MakeIsotopesScreenView extends ScreenView {
 
     const particleCountLegend = new ParticleCountDisplay( makeIsotopesModel.particleAtom, {
       maxParticles: 13,
-      maxWidth: 250
+      maxWidth: 250,
+      tandem: Tandem.OPT_OUT
     } );
     particleCountLegend.scale( 1.1 );
     particleCountLegend.left = 20;
