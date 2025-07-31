@@ -37,7 +37,7 @@ const JUMP_DISTANCES: number[] = [ MAX_NUCLEUS_JUMP * 0.4, MAX_NUCLEUS_JUMP * 0.
 const NUCLEON_CAPTURE_RADIUS = 100;
 const BUCKET_SIZE = new Dimension2( 130, 60 );
 const NEUTRON_BUCKET_POSITION = new Vector2( -220, -180 );
-const DEFAULT_ATOM_CONFIG = new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } ); // Hydrogen atom
+const DEFAULT_ATOM_CONFIG = new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } ); // hydrogen atom
 
 class MakeIsotopesModel {
 
@@ -135,10 +135,6 @@ class MakeIsotopesModel {
     }
   }
 
-  public getNumberAtom(): NumberAtom {
-    return this.numberAtom;
-  }
-
   /**
    * Places a neutron in the particle atom if it is close enough, otherwise places it in the neutron bucket.
    */
@@ -213,11 +209,13 @@ class MakeIsotopesModel {
     this.neutrons.clear();
     this.neutronBucket.reset();
 
-    // Set the new atom configuration.
-    if ( this.numberAtom !== numberAtom ) {
-      this.numberAtom.protonCountProperty.set( numberAtom.protonCountProperty.get() );
-      this.numberAtom.electronCountProperty.set( numberAtom.electronCountProperty.get() );
-      this.numberAtom.neutronCountProperty.set( numberAtom.neutronCountProperty.get() );
+    // Set the new atom configuration (but not redundantly, or we could get recursion).
+    if ( numberAtom !== this.numberAtom ) {
+      this.numberAtom.setSubAtomicParticleCount(
+        numberAtom.protonCountProperty.get(),
+        numberAtom.neutronCountProperty.get(),
+        numberAtom.electronCountProperty.get()
+      );
     }
 
     // Create the particles for the atom based on the number atom's properties.
@@ -253,6 +251,7 @@ class MakeIsotopesModel {
 
   public reset(): void {
     this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
+    this.numberAtom.atomUpdated.emit();
   }
 }
 
