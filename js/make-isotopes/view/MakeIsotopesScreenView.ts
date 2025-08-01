@@ -89,7 +89,7 @@ class MakeIsotopesScreenView extends ScreenView {
     periodicTableNode.right = this.layoutBounds.width - 10;
     this.addChild( periodicTableNode );
 
-    const particleCountLegend = new ParticleCountDisplay( makeIsotopesModel.particleAtom, Tandem.OPT_OUT, {
+    const particleCountLegend = new ParticleCountDisplay( makeIsotopesModel.particleAtom, {
       maxParticles: 13,
       maxWidth: 250
     } );
