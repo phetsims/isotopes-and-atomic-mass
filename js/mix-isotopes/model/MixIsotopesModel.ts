@@ -16,6 +16,7 @@ import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import { roundSymmetric } from '../../../../dot/js/util/roundSymmetric.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import affirm from '../../../../perennial-alias/js/browser-and-node/affirm.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
 import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
@@ -47,11 +48,7 @@ const ISOTOPE_COLORS = [ new Color( 180, 82, 205 ), Color.green, new Color( 255,
 export const interactivityModeValues = [ 'bucketsAndLargeAtoms', 'slidersAndSmallAtoms' ] as const;
 export type InteractivityModeType = typeof interactivityModeValues[number];
 
-const STUBBED_STATE = {
-  bucketsAndLargeAtoms: null,
-  slidersAndSmallAtoms: null
-};
-
+// constants
 const NUM_NATURES_MIX_ATOMS = 1000; // Total number of atoms placed in the chamber when depicting nature's mix.
 
 class MixIsotopesModel {
@@ -67,7 +64,10 @@ class MixIsotopesModel {
   public readonly isotopesList: ObservableArray<MovableAtom>;
   public readonly naturesIsotopesList: ObservableArray<MovableAtom>;
   public readonly numericalControllerList: ObservableArray<NumericalIsotopeQuantityControl>;
-  private mapIsotopeConfigToUserMixState: Record<number, Record<InteractivityModeType, State | null>>;
+
+  // This map will be used to store the user-created mix states for each element and for the two interactivity modes so
+  // that they can be restored when the user switches between elements, modes, and showing nature's mix.
+  private mapIsotopeConfigToUserMixState: Map<number, Map<InteractivityModeType, State>>;
 
   /**
    * Constructor for the Mix Isotopes Model
@@ -113,7 +113,7 @@ class MixIsotopesModel {
     this.numericalControllerList = createObservableArray<NumericalIsotopeQuantityControl>();
 
     // map of elements to user mixes. These are restored when switching between elements
-    this.mapIsotopeConfigToUserMixState = {};
+    this.mapIsotopeConfigToUserMixState = new Map<number, Map<InteractivityModeType, State>>();
     this.updatePossibleIsotopesList();
 
     // watch for external updates to the configuration and match them (the periodic table can cause this)
@@ -124,37 +124,50 @@ class MixIsotopesModel {
     // Set the initial atom configuration.
     this.setAtomConfiguration( this.selectedAtomConfig );
 
-    // Listen to "showing nature's mix" property and show/hide the appropriate isotopes when the value changes.
-    // Doesn't need unlink as it stays through out the sim life
-    this.showingNaturesMixProperty.lazyLink( () => {
-      if ( this.showingNaturesMixProperty.get() ) {
+    // Listen to Property that indicates whether "Nature's Mix" is being shown and show/hide the appropriate isotopes
+    // when the value changes. This doesn't need and unlink as it stays throughout the life of the sim.
+    this.showingNaturesMixProperty.lazyLink( showingNaturesMix => {
+      if ( showingNaturesMix ) {
 
-        // Get the current user's mix state.
+        // Get the current user-created mix state.
         const usersMixState = this.getState();
 
-        // Tweak the users mix state. This is necessary since the state is being saved inside a property change observer.
+        // We need to tweak this part of the state because we are transitioning to nature's mix.
         usersMixState.showingNaturesMix = false;
 
-        // Save the user's mix state.
-        if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( this.prototypeIsotope.protonCountProperty.get() ) ) {
-          this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCountProperty.get() ][ this.interactivityModeProperty.get() ] =
-            usersMixState;
+        // Save the user-created mix state so that it can be restored later if needed.
+        let stateMapForProtonCount = this.mapIsotopeConfigToUserMixState.get(
+          this.prototypeIsotope.protonCountProperty.get()
+        );
+        if ( !stateMapForProtonCount ) {
+
+          // Nothing has been saved for this element yet, so create a new map to hold the states for the interactivity
+          // modes.
+          stateMapForProtonCount = new Map<InteractivityModeType, State>();
+          this.mapIsotopeConfigToUserMixState.set(
+            this.prototypeIsotope.protonCountProperty.get(),
+            stateMapForProtonCount
+          );
         }
-        else {
-          this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCountProperty.get() ] = STUBBED_STATE;
-          this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCountProperty.get() ][ this.interactivityModeProperty.get() ] =
-            usersMixState;
-        }
+
+        // Save the user-created mix state for the current interactivity mode.
+        stateMapForProtonCount.set( this.interactivityModeProperty.get(), usersMixState );
 
         // Display nature's mix.
         this.showNaturesMix();
       }
       else {
         this.naturesIsotopesList.clear();
-        if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( this.prototypeIsotope.protonCountProperty.get() ) ) {
-          if ( this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCountProperty.get() ]
-            .hasOwnProperty( this.interactivityModeProperty.get() ) ) {
-            const state = this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCountProperty.get() ][ this.interactivityModeProperty.get() ];
+
+        // If there is a previously saved user-created mix state for this element and interactivity mode, restore it.
+        if ( this.mapIsotopeConfigToUserMixState.has( this.prototypeIsotope.protonCountProperty.get() ) ) {
+
+          const stateMapForProtonCount = this.mapIsotopeConfigToUserMixState.get(
+            this.prototypeIsotope.protonCountProperty.get()
+          )!;
+
+          if ( stateMapForProtonCount ) {
+            const state = stateMapForProtonCount.get( this.interactivityModeProperty.get() );
             state && this.setState( state );
           }
           else {
@@ -167,24 +180,45 @@ class MixIsotopesModel {
       }
     } );
 
-    // Doesn't need unlink as it stays throughout the sim life.
-    this.interactivityModeProperty.lazyLink( ( value, oldValue ) => {
-      const usersMixState = this.getState();
-      usersMixState.interactivityMode = oldValue;
-      if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( this.prototypeIsotope.protonCountProperty.get() ) ) {
-        this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCountProperty.get() ][ oldValue ] = usersMixState;
-      }
-      else {
-        this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCountProperty.get() ] = STUBBED_STATE;
-        this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCountProperty.get() ][ oldValue ] = usersMixState;
-      }
+    // Listen to interactivity mode changes and update the model appropriately. This will save the current user-created
+    // mix state for the current element and interactivity mode, and then restore any previously saved state for the
+    // new interactivity mode. If no previous state is found, then the initial user-created mix will be set up.  This
+    // doesn't need unlink as it stays throughout the sim life.
+    this.interactivityModeProperty.lazyLink( ( interactivityMode, oldInteractivityMode ) => {
 
-      if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( this.prototypeIsotope.protonCountProperty.get() ) ) {
-        const state = this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCountProperty.get() ][ value ];
+      // Get the current user-created mix state.
+      const usersMixState = this.getState();
+      usersMixState.interactivityMode = oldInteractivityMode;
+
+      // Save the user-created mix state so that it can be restored later.
+      let stateMapForProtonCount = this.mapIsotopeConfigToUserMixState.get(
+        this.prototypeIsotope.protonCountProperty.get()
+      );
+      if ( !stateMapForProtonCount ) {
+
+        // Nothing has been saved for this element yet, so create a new map to hold the states for the interactivity
+        // modes.
+        stateMapForProtonCount = new Map<InteractivityModeType, State>();
+        this.mapIsotopeConfigToUserMixState.set(
+          this.prototypeIsotope.protonCountProperty.get(),
+          stateMapForProtonCount
+        );
+      }
+      stateMapForProtonCount.set( oldInteractivityMode, usersMixState );
+
+      // See if there is a previously saved user-created mix state for this element and interactivity mode and restore
+      // it if found.
+      if ( this.mapIsotopeConfigToUserMixState.has( this.prototypeIsotope.protonCountProperty.get() ) ) {
+        stateMapForProtonCount = this.mapIsotopeConfigToUserMixState.get(
+          this.prototypeIsotope.protonCountProperty.get()
+        )!;
+        const state = stateMapForProtonCount.get( interactivityMode );
         if ( state ) {
           this.setState( state );
         }
         else {
+
+          // No previous state found, so set up the initial state.
           this.removeAllIsotopesFromTestChamberAndModel();
           this.addIsotopeControllers();
         }
@@ -287,13 +321,6 @@ class MixIsotopesModel {
   }
 
   /**
-   * Returns the prototypeIsotope
-   */
-  public getAtom(): NumberAtom {
-    return this.prototypeIsotope;
-  }
-
-  /**
    * Returns the state of the model.
    */
   private getState(): State {
@@ -321,7 +348,7 @@ class MixIsotopesModel {
     this.prototypeIsotope = modelState.elementConfig;
     this.updatePossibleIsotopesList();
 
-    assert && assert( modelState.showingNaturesMix === this.showingNaturesMixProperty.get() );
+    affirm( modelState.showingNaturesMix === this.showingNaturesMixProperty.get() );
     this.showingNaturesMixProperty.set( modelState.showingNaturesMix );
 
     // Add any particles that were in the test chamber.
@@ -376,25 +403,31 @@ class MixIsotopesModel {
 
       // Save the user's mix state for the current element before transitioning to the new one.
       if ( this.prototypeIsotope !== atom ) {
-        if ( !this.mapIsotopeConfigToUserMixState.hasOwnProperty( this.prototypeIsotope.protonCount ) ) {
-          this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ] = STUBBED_STATE;
-        }
 
-        // Store the state.
-        this.mapIsotopeConfigToUserMixState[ this.prototypeIsotope.protonCount ][ this.interactivityModeProperty.get() ] = this.getState();
+        const stateMapForProtonCount = this.mapIsotopeConfigToUserMixState.get(
+          this.prototypeIsotope.protonCountProperty.get()
+        );
+        if ( stateMapForProtonCount ) {
+          stateMapForProtonCount.set( this.interactivityModeProperty.get(), this.getState() );
+        }
+        else {
+
+          // Nothing has been saved for this element yet, so create a new map to hold the states for the interactivity
+          // modes.
+          const newStateMapForProtonCount = new Map<InteractivityModeType, State>();
+          newStateMapForProtonCount.set( this.interactivityModeProperty.get(), this.getState() );
+          this.mapIsotopeConfigToUserMixState.set(
+            this.prototypeIsotope.protonCountProperty.get(),
+            newStateMapForProtonCount
+          );
+        }
       }
 
       // Check whether previous state information was stored for this configuration.
-      if ( this.mapIsotopeConfigToUserMixState.hasOwnProperty( atom.protonCount ) ) {
+      if ( this.mapIsotopeConfigToUserMixState.has( atom.protonCount ) &&
+           this.mapIsotopeConfigToUserMixState.get( atom.protonCount )!.get( this.interactivityModeProperty.get() ) ) {
 
-        const state = this.mapIsotopeConfigToUserMixState[ atom.protonCount ][ this.interactivityModeProperty.get() ];
-
-        // If the state is not null, then we have a previous state to restore.
-        if ( state ) {
-
-          // Restore the previous state information.
-          this.setState( state );
-        }
+        this.setState( this.mapIsotopeConfigToUserMixState.get( atom.protonCount )!.get( this.interactivityModeProperty.get() )! );
       }
       else {
 
@@ -615,25 +648,18 @@ class MixIsotopesModel {
    */
   public reset(): void {
     this.clearBox();
-
-    // Remove any stored state for the default atom.
-    // before clearing up the state clearing all the observable array stored in it
-    this.mapIsotopeConfigToUserMixState = {};
-
     this.naturesIsotopesList.clear();
-
     this.interactivityModeProperty.reset();
     this.possibleIsotopesProperty.reset();
     this.showingNaturesMixProperty.reset();
-
     this.prototypeIsotope = new NumberAtom();
 
     // Set the default element
     this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
 
-    // Remove all stored user's mix states.  This must be done after setting the default isotope because state could
-    // have been saved when the default was set.
-    this.mapIsotopeConfigToUserMixState = {};
+    // Remove all stored user-created mix states.  This must be done after setting the default isotope because state
+    // could have been saved when the default was set.
+    this.mapIsotopeConfigToUserMixState.clear();
   }
 }
 
