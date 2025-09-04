@@ -16,7 +16,6 @@ import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import { roundSymmetric } from '../../../../dot/js/util/roundSymmetric.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import affirm from '../../../../perennial-alias/js/browser-and-node/affirm.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
 import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
@@ -348,7 +347,7 @@ class MixIsotopesModel {
     this.prototypeIsotope = modelState.elementConfig;
     this.updatePossibleIsotopesList();
 
-    affirm( modelState.showingNaturesMix === this.showingNaturesMixProperty.get() );
+    // Restore the nature's mix setting.
     this.showingNaturesMixProperty.set( modelState.showingNaturesMix );
 
     // Add any particles that were in the test chamber.
@@ -653,6 +652,10 @@ class MixIsotopesModel {
     this.possibleIsotopesProperty.reset();
     this.showingNaturesMixProperty.reset();
     this.prototypeIsotope = new NumberAtom();
+
+    // Make sure there is nothing stored for the default configuration so that it doesn't get restored when we set that
+    // as the initial configuration.
+    this.mapIsotopeConfigToUserMixState.delete( DEFAULT_ATOM_CONFIG.protonCount );
 
     // Set the default element
     this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
