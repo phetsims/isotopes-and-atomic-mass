@@ -580,7 +580,6 @@ class MixIsotopesModel {
         isotopesToAdd.push( newIsotope );
         this.naturesIsotopesList.push( newIsotope );
       }
-      console.log( `this.naturesIsotopesList.length = ${this.naturesIsotopesList.length}` );
       this.testChamber.bulkAddIsotopesToChamber( isotopesToAdd );
     } );
     this.naturesIsotopeUpdated.emit();
