@@ -23,7 +23,7 @@ const READOUT_SIZE = new Dimension2( 30, 15 );
 
 class ControlIsotope extends Node {
 
-  private disposeControlIsotope!: () => void;
+  private readonly disposeControlIsotope!: () => void;
 
   /**
    * @param controller - NumericalIsotopeQuantityControl instance
@@ -60,12 +60,20 @@ class ControlIsotope extends Node {
     slider.addMajorTick( range.max, new Text( `${range.max}`, tickLabelOptions ) );
     sliderLayer.addChild( slider );
 
-    const plusButton = new ArrowButton( 'right', () => {
-      controller.quantityProperty.set( Math.floor( controller.quantityProperty.get() ) + 1 );
-    }, { arrowHeight: 10, arrowWidth: 10 } );
-    const minusButton = new ArrowButton( 'left', () => {
-      controller.quantityProperty.set( Math.floor( controller.quantityProperty.get() ) - 1 );
-    }, { arrowHeight: 10, arrowWidth: 10 } );
+    const plusButton = new ArrowButton(
+      'right',
+      () => {
+        controller.quantityProperty.set( Math.floor( controller.quantityProperty.get() ) + 1 );
+      },
+      { arrowHeight: 10, arrowWidth: 10 }
+    );
+    const minusButton = new ArrowButton(
+      'left',
+      () => {
+        controller.quantityProperty.set( Math.floor( controller.quantityProperty.get() ) - 1 );
+      },
+      { arrowHeight: 10, arrowWidth: 10 }
+    );
     numericLayer.addChild( plusButton );
     numericLayer.addChild( minusButton );
 
@@ -103,7 +111,8 @@ class ControlIsotope extends Node {
     controller.quantityProperty.link( changedValue );
 
     const isotopeNode = new IsotopeNode( controller.controllerIsotope!, 6, {
-      showLabel: false
+      showLabel: false,
+      baseColor: controller.getBaseColor()
     } );
     labelLayer.addChild( isotopeNode );
     const captionLabel = new Text( controller.caption, {

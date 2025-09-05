@@ -572,7 +572,7 @@ class MixIsotopesModel {
     );
     return isotope && this.possibleIsotopesProperty.value.includes( isotope ) ?
            ISOTOPE_COLORS[ this.possibleIsotopesProperty.value.indexOf( isotope ) ] :
-           Color.RED;
+           Color.PINK;
   }
 
   private showNaturesMix(): void {
