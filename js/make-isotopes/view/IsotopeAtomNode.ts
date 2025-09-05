@@ -26,22 +26,13 @@ class IsotopeAtomNode extends Node {
     const isotopeElectronCloud = new IsotopeElectronCloudView( particleAtom, modelViewTransform );
     this.addChild( isotopeElectronCloud );
 
-    // Add the handler that keeps the bottom of the atom in one place. This was added due to a request to make the atom
-    // get larger and smaller but to stay on the scale.
-    const updateAtomPosition = ( numProtons: number ): void => {
-      const newCenter = new Vector2(
-        bottomPoint.x,
-        bottomPoint.y - modelViewTransform.modelToViewDeltaX(
-                        isotopeElectronCloud.getElectronShellDiameter( numProtons ) / 2
-                      ) * 1.2 // empirically determined
-      );
-      particleAtom.positionProperty.set( modelViewTransform.viewToModelPosition( newCenter ) );
-      isotopeElectronCloud.center = newCenter;
-    };
-
-    // Doesn't need unlink as it stays throughout the sim life.
-    particleAtom.protonCountProperty.link( ( numProtons: number ) => {
-      updateAtomPosition( numProtons );
+    // The size of the electron cloud depends on the number of electrons.  The following listener monitors the size of
+    // the electron cloud and adjusts the position of the atom so that the bottom of the atom sits on the scale. This
+    // does not need to be unlinked since it exists for the life of the sim.
+    isotopeElectronCloud.localBoundsProperty.link( () => {
+      isotopeElectronCloud.centerX = bottomPoint.x;
+      isotopeElectronCloud.bottom = bottomPoint.y;
+      particleAtom.positionProperty.set( modelViewTransform.viewToModelPosition( isotopeElectronCloud.center ) );
     } );
   }
 }

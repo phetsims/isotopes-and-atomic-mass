@@ -62,7 +62,10 @@ class MakeIsotopesScreenView extends ScreenView {
 
     const scaleNode = new AtomScaleNode( makeIsotopesModel.particleAtom );
     this.addChild( scaleNode );
-    scaleNode.setCenterBottom( new Vector2( this.modelViewTransform.modelToViewX( 0 ), this.layoutBounds.bottom ) );
+    scaleNode.setCenterBottom( new Vector2(
+      this.modelViewTransform.modelToViewX( 0 ),
+      this.layoutBounds.bottom - 13 // empirically determined offset to match design
+    ) );
 
     const resetAllButton = new ResetAllButton( {
       listener: (): void => {
@@ -78,7 +81,11 @@ class MakeIsotopesScreenView extends ScreenView {
     this.addChild( resetAllButton );
 
     const bottomOfAtomPosition = new Vector2( scaleNode.centerX, scaleNode.top + 15 );
-    const atomAndBucketNode = new InteractiveIsotopeNode( makeIsotopesModel, this.modelViewTransform, bottomOfAtomPosition );
+    const atomAndBucketNode = new InteractiveIsotopeNode(
+      makeIsotopesModel,
+      this.modelViewTransform,
+      bottomOfAtomPosition
+    );
     atomLayer.addChild( atomAndBucketNode );
 
     const periodicTableNode = new ExpandedPeriodicTableNode( makeIsotopesModel.numberAtom, 10, {
