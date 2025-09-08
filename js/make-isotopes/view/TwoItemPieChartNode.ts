@@ -7,7 +7,8 @@
  * @author Aadish Gupta
  */
 
-import Utils from '../../../../dot/js/Utils.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import { toFixedNumber } from '../../../../dot/js/util/toFixedNumber.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
@@ -26,10 +27,12 @@ import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js'
 import MakeIsotopesModel from '../model/MakeIsotopesModel.js';
 
 // constants
-const PIE_CHART_RADIUS = 60;
+const PIE_CHART_RADIUS = 36;
 const FIRST_SLICE_COLOR = new Color( 'rgb( 134, 102, 172 )' );
 const SECOND_SLICE_COLOR = new Color( '#d3d3d3' );
 const TRACE_ABUNDANCE_IN_PIE_CHART = 1E-6; // empirically chosen value used to represent trace abundance in the pie chart
+const ABUNDANCE_DECIMAL_PLACES = 4; // number of decimal places to show in abundance readout
+const READOUT_TO_PIE_CHART_DISTANCE = 50; // distance between the abundance readout and the pie chart
 
 const otherIsotopesPatternString = IsotopesAndAtomicMassStrings.otherIsotopesPattern;
 const thisIsotopeString = IsotopesAndAtomicMassStrings.thisIsotope;
@@ -41,6 +44,7 @@ class TwoItemPieChartNode extends Node {
     super();
 
     const pieChartBoundingRectangle = new Rectangle( 150, 0, PIE_CHART_RADIUS * 2, PIE_CHART_RADIUS * 2, 0, 0 );
+    this.addChild( pieChartBoundingRectangle );
 
     // Create the default slices and color coding.  The first slice is for the user-created isotope, the second is for
     // all other isotopes that exist in nature (and are stable).
@@ -55,23 +59,41 @@ class TwoItemPieChartNode extends Node {
     pieChart.setCenter( new Vector2( pieChartBoundingRectangle.width / 2 + 150, pieChartBoundingRectangle.height / 2 ) );
     pieChartBoundingRectangle.addChild( pieChart );
 
-    const readoutMyIsotopeAbundanceText = new Text( '', {
-      font: new PhetFont( 14 ),
-      maxWidth: 80
-    } );
+    // Create a derived property that will represent the abundance on Earth of the current isotope.
+    const abundanceStringProperty = new DerivedProperty(
+      [ makeIsotopesModel.particleAtom.protonCountProperty, makeIsotopesModel.particleAtom.neutronCountProperty ],
+      protonCount => {
+        if ( protonCount > 0 ) {
+          const abundance = AtomIdentifier.getNaturalAbundance(
+            makeIsotopesModel.particleAtom,
+            ABUNDANCE_DECIMAL_PLACES + 2
+          );
+          if ( abundance === 0 && AtomIdentifier.existsInTraceAmounts( makeIsotopesModel.particleAtom ) ) {
+            return traceString;
+          }
+          else {
+            return toFixedNumber( abundance * 100, ABUNDANCE_DECIMAL_PLACES ) + '%';
+          }
+        }
+        else {
+          return '';
+        }
+      }
+    );
 
-    const thisIsotopeAbundancePanel = new Panel( readoutMyIsotopeAbundanceText, {
-      minWidth: 60,
-      minHeight: 20,
-      resize: true,
-      cornerRadius: 5,
-      lineWidth: 1.5,
-      align: 'center',
-      stroke: FIRST_SLICE_COLOR,
-      centerY: pieChartBoundingRectangle.centerY
-    } );
-
-    this.addChild( thisIsotopeAbundancePanel );
+    // Create the number display for the abundance of the current isotope.
+    const abundanceDisplay = new Panel(
+      new Text( abundanceStringProperty, { font: new PhetFont( 14 ), maxWidth: 100 } ),
+      {
+        align: 'center',
+        lineWidth: 1.5,
+        stroke: FIRST_SLICE_COLOR,
+        cornerRadius: 5,
+        xMargin: 4,
+        yMargin: 4
+      }
+    );
+    this.addChild( abundanceDisplay );
 
     const thisIsotopeLabel = new Text( thisIsotopeString, {
       font: new PhetFont( { size: 12 } ),
@@ -106,27 +128,19 @@ class TwoItemPieChartNode extends Node {
     this.addChild( rightConnectingLine );
     rightConnectingLine.moveToBack();
 
-    function updateThisIsotopeAbundanceReadout( isotope: TReadOnlyNumberAtom ): void {
-      const thisIsotopeAbundanceTo6Digits = AtomIdentifier.getNaturalAbundance( isotope, 6 );
-      const existsInTraceAmounts = AtomIdentifier.existsInTraceAmounts( isotope );
-      if ( thisIsotopeAbundanceTo6Digits === 0 && existsInTraceAmounts ) {
-        readoutMyIsotopeAbundanceText.string = traceString;
-      }
-      else {
-        readoutMyIsotopeAbundanceText.string = `${Utils.toFixedNumber( thisIsotopeAbundanceTo6Digits * 100, 6 )}%`;
-      }
-      thisIsotopeAbundancePanel.centerX = pieChartBoundingRectangle.left - 50; // empirically determined
-      thisIsotopeAbundancePanel.centerY = pieChartBoundingRectangle.centerY;
-      thisIsotopeLabel.centerX = thisIsotopeAbundancePanel.centerX;
-      thisIsotopeLabel.bottom = thisIsotopeAbundancePanel.top - 5;
+    // Align the number display and its connecting line when the number display changes.
+    abundanceDisplay.localBoundsProperty.link( () => {
+      abundanceDisplay.centerX = pieChartBoundingRectangle.left - READOUT_TO_PIE_CHART_DISTANCE;
+      abundanceDisplay.centerY = pieChartBoundingRectangle.centerY;
+      thisIsotopeLabel.centerX = abundanceDisplay.centerX;
+      thisIsotopeLabel.bottom = abundanceDisplay.top - 5;
       leftConnectingLine.setLine(
-        thisIsotopeAbundancePanel.centerX,
-        thisIsotopeAbundancePanel.centerY,
+        abundanceDisplay.left,
+        abundanceDisplay.centerY,
         pieChartBoundingRectangle.centerX,
         pieChartBoundingRectangle.centerY
       );
-      leftConnectingLine.visible = thisIsotopeAbundanceTo6Digits > 0 || existsInTraceAmounts;
-    }
+    } );
 
     function updateOtherIsotopeLabel( isotope: TReadOnlyNumberAtom ): void {
       const abundanceTo6Digits = AtomIdentifier.getNaturalAbundance( isotope, 6 );
@@ -170,17 +184,16 @@ class TwoItemPieChartNode extends Node {
         Math.PI * 2 * slices[ 1 ].value / ( slices[ 0 ].value + slices[ 1 ].value ) / 2,
         slices
       );
-      updateThisIsotopeAbundanceReadout( makeIsotopesModel.particleAtom );
       updateOtherIsotopeLabel( makeIsotopesModel.particleAtom );
     }
 
     // No call to off() required since this exists for the lifetime of the sim
     makeIsotopesModel.atomReconfigured.addListener( (): void => {
       updatePieChart();
+      leftConnectingLine.visible = makeIsotopesModel.particleAtom.protonCountProperty.get() > 0 &&
+                                   ( AtomIdentifier.getNaturalAbundance( makeIsotopesModel.particleAtom, ABUNDANCE_DECIMAL_PLACES ) > 0 ||
+                                     AtomIdentifier.existsInTraceAmounts( makeIsotopesModel.particleAtom ) );
     } );
-
-    pieChartBoundingRectangle.scale( 0.6 );
-    this.addChild( pieChartBoundingRectangle );
 
     // do initial update to the pie chart
     updatePieChart();
