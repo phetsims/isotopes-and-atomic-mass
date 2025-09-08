@@ -42,13 +42,15 @@ class TwoItemPieChartNode extends Node {
 
     const pieChartBoundingRectangle = new Rectangle( 150, 0, PIE_CHART_RADIUS * 2, PIE_CHART_RADIUS * 2, 0, 0 );
 
-    // default slices and color coding, first slice is for my isotope and second slice is for other isotope
+    // Create the default slices and color coding.  The first slice is for the user-created isotope, the second is for
+    // all other isotopes that exist in nature (and are stable).
     const slices: PieSlice[] = [
       { value: 0, color: FIRST_SLICE_COLOR, stroke: Color.BLACK, lineWidth: 0.5 },
       { value: 0, color: SECOND_SLICE_COLOR, stroke: Color.BLACK, lineWidth: 0.5 }
     ];
 
     const pieChart = new PieChartNode( slices, PIE_CHART_RADIUS );
+
     // center point of bounding rectangle
     pieChart.setCenter( new Vector2( pieChartBoundingRectangle.width / 2 + 150, pieChartBoundingRectangle.height / 2 ) );
     pieChartBoundingRectangle.addChild( pieChart );
@@ -76,19 +78,14 @@ class TwoItemPieChartNode extends Node {
       fill: 'black',
       maxWidth: 60
     } );
-    thisIsotopeLabel.bottom = thisIsotopeAbundancePanel.top - 5;
     this.addChild( thisIsotopeLabel );
 
-    const leftConnectingLine = new Line(
-      thisIsotopeAbundancePanel.centerX,
-      thisIsotopeAbundancePanel.centerY,
-      pieChartBoundingRectangle.centerX,
-      pieChartBoundingRectangle.centerY,
-      {
-        stroke: FIRST_SLICE_COLOR,
-        lineDash: [ 3, 1 ]
-      }
-    );
+    // Create the dashed line that connects the abundance readout panel to the pie chart.  The initial size is
+    // arbitrary, it will be updated when the readout panel is positioned.
+    const leftConnectingLine = new Line( 0, 0, pieChartBoundingRectangle.centerX, 0, {
+      stroke: FIRST_SLICE_COLOR,
+      lineDash: [ 3, 1 ]
+    } );
     this.addChild( leftConnectingLine );
     leftConnectingLine.moveToBack();
 
@@ -100,16 +97,12 @@ class TwoItemPieChartNode extends Node {
     } );
     this.addChild( otherIsotopeLabel );
 
-    const rightConnectingLine = new Line(
-      pieChartBoundingRectangle.centerX,
-      pieChartBoundingRectangle.centerY,
-      pieChartBoundingRectangle.right + 20,
-      pieChartBoundingRectangle.centerY,
-      {
-        stroke: SECOND_SLICE_COLOR,
-        lineDash: [ 3, 1 ]
-      }
-    );
+    // Create the dashed line that connects the other isotope label to the pie chart.  The initial size is arbitrary, it
+    // will be updated when the label is positioned.
+    const rightConnectingLine = new Line( 0, 0, 20, 0, {
+      stroke: SECOND_SLICE_COLOR,
+      lineDash: [ 3, 1 ]
+    } );
     this.addChild( rightConnectingLine );
     rightConnectingLine.moveToBack();
 
@@ -125,6 +118,13 @@ class TwoItemPieChartNode extends Node {
       thisIsotopeAbundancePanel.centerX = pieChartBoundingRectangle.left - 50; // empirically determined
       thisIsotopeAbundancePanel.centerY = pieChartBoundingRectangle.centerY;
       thisIsotopeLabel.centerX = thisIsotopeAbundancePanel.centerX;
+      thisIsotopeLabel.bottom = thisIsotopeAbundancePanel.top - 5;
+      leftConnectingLine.setLine(
+        thisIsotopeAbundancePanel.centerX,
+        thisIsotopeAbundancePanel.centerY,
+        pieChartBoundingRectangle.centerX,
+        pieChartBoundingRectangle.centerY
+      );
       leftConnectingLine.visible = thisIsotopeAbundanceTo6Digits > 0 || existsInTraceAmounts;
     }
 
@@ -142,7 +142,12 @@ class TwoItemPieChartNode extends Node {
       }
       otherIsotopeLabel.centerY = pieChartBoundingRectangle.centerY;
       otherIsotopeLabel.left = pieChartBoundingRectangle.right + 10;
-      rightConnectingLine.right = otherIsotopeLabel.left;
+      rightConnectingLine.setLine(
+        otherIsotopeLabel.left - 2,
+        pieChartBoundingRectangle.centerY,
+        pieChartBoundingRectangle.centerX,
+        pieChartBoundingRectangle.centerY
+      );
     }
 
     function updatePieChart(): void {
