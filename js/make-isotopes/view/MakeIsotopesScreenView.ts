@@ -132,7 +132,7 @@ class MakeIsotopesScreenView extends ScreenView {
     symbolBox.top = periodicTableNode.bottom + 10;
     this.addChild( symbolBox );
 
-    const abundanceBox = new AccordionBox( new TwoItemPieChartNode( makeIsotopesModel ), {
+    const abundanceBox = new AccordionBox( new TwoItemPieChartNode( makeIsotopesModel.particleAtom ), {
       cornerRadius: 3,
       titleNode: new Text( abundanceInNatureString, {
         font: ShredConstants.ACCORDION_BOX_TITLE_FONT,

@@ -8,8 +8,8 @@
  */
 
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 import { toFixedNumber } from '../../../../dot/js/util/toFixedNumber.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Line from '../../../../scenery/js/nodes/Line.js';
@@ -20,11 +20,11 @@ import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
 import { TReadOnlyNumberAtom } from '../../../../shred/js/model/NumberAtom.js';
+import ParticleAtom from '../../../../shred/js/model/ParticleAtom.js';
 import Panel from '../../../../sun/js/Panel.js';
 import PieChartNode, { PieSlice } from '../../common/view/PieChartNode.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
-import MakeIsotopesModel from '../model/MakeIsotopesModel.js';
 
 // constants
 const PIE_CHART_RADIUS = 36;
@@ -40,9 +40,11 @@ const traceString = IsotopesAndAtomicMassStrings.trace;
 
 class TwoItemPieChartNode extends Node {
 
-  public constructor( makeIsotopesModel: MakeIsotopesModel ) {
+  public constructor( particleAtom: ParticleAtom ) {
     super();
 
+    // Create a bounding rectangle for the pie chart.  This is needed because the pie chart can disappear if none of
+    // its slices have a value greater than zero, which messes with layout.  The rectangle is invisible
     const pieChartBoundingRectangle = new Rectangle( 150, 0, PIE_CHART_RADIUS * 2, PIE_CHART_RADIUS * 2, 0, 0 );
     this.addChild( pieChartBoundingRectangle );
 
@@ -53,22 +55,21 @@ class TwoItemPieChartNode extends Node {
       { value: 0, color: SECOND_SLICE_COLOR, stroke: Color.BLACK, lineWidth: 0.5 }
     ];
 
+    // Create the pie chart itself, centered in the bounding rectangle.
     const pieChart = new PieChartNode( slices, PIE_CHART_RADIUS );
-
-    // center point of bounding rectangle
-    pieChart.setCenter( new Vector2( pieChartBoundingRectangle.width / 2 + 150, pieChartBoundingRectangle.height / 2 ) );
+    pieChart.setCenter( pieChartBoundingRectangle.center );
     pieChartBoundingRectangle.addChild( pieChart );
 
     // Create a derived property that will represent the abundance on Earth of the current isotope.
     const abundanceStringProperty = new DerivedProperty(
-      [ makeIsotopesModel.particleAtom.protonCountProperty, makeIsotopesModel.particleAtom.neutronCountProperty ],
+      [ particleAtom.protonCountProperty, particleAtom.neutronCountProperty ],
       protonCount => {
         if ( protonCount > 0 ) {
           const abundance = AtomIdentifier.getNaturalAbundance(
-            makeIsotopesModel.particleAtom,
+            particleAtom,
             ABUNDANCE_DECIMAL_PLACES + 2
           );
-          if ( abundance === 0 && AtomIdentifier.existsInTraceAmounts( makeIsotopesModel.particleAtom ) ) {
+          if ( abundance === 0 && AtomIdentifier.existsInTraceAmounts( particleAtom ) ) {
             return traceString;
           }
           else {
@@ -144,8 +145,8 @@ class TwoItemPieChartNode extends Node {
 
     function updateOtherIsotopeLabel( isotope: TReadOnlyNumberAtom ): void {
       const abundanceTo6Digits = AtomIdentifier.getNaturalAbundance( isotope, 6 );
-      const name = AtomIdentifier.getName( makeIsotopesModel.particleAtom.protonCountProperty.get() ).value;
-      if ( makeIsotopesModel.particleAtom.protonCountProperty.get() > 0 && abundanceTo6Digits < 1 ) {
+      const name = AtomIdentifier.getName( particleAtom.protonCountProperty.get() ).value;
+      if ( particleAtom.protonCountProperty.get() > 0 && abundanceTo6Digits < 1 ) {
         otherIsotopeLabel.string = StringUtils.format( otherIsotopesPatternString, name );
         otherIsotopeLabel.visible = true;
         rightConnectingLine.visible = true;
@@ -165,11 +166,11 @@ class TwoItemPieChartNode extends Node {
     }
 
     function updatePieChart(): void {
-      const thisIsotopeAbundanceTo6Digits = AtomIdentifier.getNaturalAbundance( makeIsotopesModel.particleAtom, 6 );
+      const thisIsotopeAbundanceTo6Digits = AtomIdentifier.getNaturalAbundance( particleAtom, 6 );
       const otherIsotopesAbundance = 1 - thisIsotopeAbundanceTo6Digits;
 
       // set the slice value for the current isotope
-      if ( thisIsotopeAbundanceTo6Digits === 0 && AtomIdentifier.existsInTraceAmounts( makeIsotopesModel.particleAtom ) ) {
+      if ( thisIsotopeAbundanceTo6Digits === 0 && AtomIdentifier.existsInTraceAmounts( particleAtom ) ) {
         slices[ 0 ].value = TRACE_ABUNDANCE_IN_PIE_CHART;
       }
       else {
@@ -184,16 +185,20 @@ class TwoItemPieChartNode extends Node {
         Math.PI * 2 * slices[ 1 ].value / ( slices[ 0 ].value + slices[ 1 ].value ) / 2,
         slices
       );
-      updateOtherIsotopeLabel( makeIsotopesModel.particleAtom );
+      updateOtherIsotopeLabel( particleAtom );
     }
 
-    // No call to off() required since this exists for the lifetime of the sim
-    makeIsotopesModel.atomReconfigured.addListener( (): void => {
-      updatePieChart();
-      leftConnectingLine.visible = makeIsotopesModel.particleAtom.protonCountProperty.get() > 0 &&
-                                   ( AtomIdentifier.getNaturalAbundance( makeIsotopesModel.particleAtom, ABUNDANCE_DECIMAL_PLACES ) > 0 ||
-                                     AtomIdentifier.existsInTraceAmounts( makeIsotopesModel.particleAtom ) );
-    } );
+    // Update the pie chart when the proton or neutron counts change.
+    Multilink.multilink(
+      [ particleAtom.protonCountProperty, particleAtom.neutronCountProperty ],
+      protonCount => {
+        if ( protonCount > 0 ) {
+          updatePieChart();
+          leftConnectingLine.visible = AtomIdentifier.getNaturalAbundance( particleAtom, ABUNDANCE_DECIMAL_PLACES ) > 0 ||
+                                       AtomIdentifier.existsInTraceAmounts( particleAtom );
+        }
+      }
+    );
 
     // do initial update to the pie chart
     updatePieChart();
