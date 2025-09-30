@@ -279,7 +279,6 @@ class MixIsotopesScreenView extends ScreenView {
     // Reset all button
     const resetAllButton = new ResetAllButton( {
       listener: () => {
-        this.interruptSubtreeInput();
         mixIsotopesModel.reset();
         compositionBox.expandedProperty.reset();
         averageAtomicMassBox.expandedProperty.reset();
