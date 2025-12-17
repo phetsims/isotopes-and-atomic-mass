@@ -323,6 +323,7 @@ class MixIsotopesModel {
    * Returns the state of the model.
    */
   private getState(): State {
+
     // If any movable isotope instances are being dragged by the user at this moment, we need to force that isotope
     // instance into a state that indicates that it isn't.  Otherwise it can get lost, since it will neither be in a
     // bucket or in the test chamber.  This case can only occur in multi-touch situations, see
@@ -336,7 +337,8 @@ class MixIsotopesModel {
   }
 
   /**
-   * Set the state of the model based on a previously created state representation.
+   * Set the state of the model based on a previously created state representation.  This is used when switching between
+   * elements and interactivity modes, since each element and mode can have its own user-created state.
    */
   private setState( modelState: State ): void {
 
@@ -362,8 +364,17 @@ class MixIsotopesModel {
     // Set up the isotope controllers to match whatever is in the test chamber.
     if ( this.interactivityModeProperty.get() === 'bucketsAndLargeAtoms' ) {
 
-      // Add the buckets and the isotope instances that they contain.
+      // The code above created the buckets in their initial states, but we need to set them to match the saved state.
+      // The first step is to remove the buckets that were just created and the isotopes they contained.
+      this.bucketList.forEach( bucket => {
+        const particlesInThisBucket = bucket.getParticleList();
+        particlesInThisBucket.forEach( isotope => {
+          this.isotopesList.remove( isotope );
+        } );
+      } );
       this.removeBuckets();
+
+      // Add the buckets and the isotope instances they contain based on the provided state.
       modelState.bucketList.forEach( bucket => {
         this.bucketList.add( bucket );
         const particlesInThisBucket = modelState.bucketToParticleListMap.get( bucket ) || [];
@@ -483,6 +494,7 @@ class MixIsotopesModel {
    * the appropriate initial number of isotopes to any buckets that are created.
    */
   public addIsotopeControllers(): void {
+
     // Remove existing controllers.
     this.removeBuckets();
     this.removeNumericalControllers();
@@ -496,11 +508,13 @@ class MixIsotopesModel {
     let interControllerDistanceX: number;
     let controllerXOffset: number;
     if ( this.possibleIsotopesProperty.get().length < 4 ) {
+
       // We can fit 3 or less cleanly under the test chamber.
       interControllerDistanceX = this.testChamber.getTestChamberRect().getWidth() / this.possibleIsotopesProperty.get().length;
       controllerXOffset = this.testChamber.getTestChamberRect().minX + interControllerDistanceX / 2;
     }
     else {
+
       // Four controllers don't fit well under the chamber, so use a positioning algorithm where they are extended
       // a bit to the right.
       interControllerDistanceX = ( this.testChamber.getTestChamberRect().getWidth() * 1.10 ) /
@@ -511,8 +525,8 @@ class MixIsotopesModel {
     // Add the controllers.
     for ( let i = 0; i < this.possibleIsotopesProperty.get().length; i++ ) {
       const isotopeConfig = this.possibleIsotopesProperty.get()[ i ];
-      const isotopeCaption = `${AtomIdentifier.getName( isotopeConfig.protonCountProperty.get() ).value
-      }-${isotopeConfig.massNumberProperty.get()}`;
+      const isotopeName = AtomIdentifier.getName( isotopeConfig.protonCountProperty.get() ).value;
+      const isotopeCaption = `${isotopeName}-${isotopeConfig.massNumberProperty.get()}`;
       if ( buckets ) {
         const newBucket = new MonoIsotopeBucket(
           isotopeConfig.protonCountProperty.get(),
@@ -625,6 +639,7 @@ class MixIsotopesModel {
    * isotopes back to the buckets or update the controllers.
    */
   public removeAllIsotopesFromTestChamberAndModel(): void {
+
     // Remove the isotopes from the test chamber.
     this.testChamber.removeAllIsotopes();
 
