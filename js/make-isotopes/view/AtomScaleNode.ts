@@ -37,12 +37,17 @@ class ScaleReadoutNode extends Panel {
   private readonly displayModeProperty: Property<DisplayMode>;
   private readonly readoutText: Text;
 
-  public constructor( atom: TReadOnlyNumberAtom, displayModeProperty: Property<DisplayMode> ) {
+  public constructor(
+    atom: TReadOnlyNumberAtom,
+    displayModeProperty: Property<DisplayMode>
+  ) {
+
     const readoutText = new Text( '', {
       font: new PhetFont( 20 ),
       maxWidth: 0.9 * READOUT_SIZE.width,
       maxHeight: 0.9 * READOUT_SIZE.height
     } );
+
     super( readoutText, {
       minWidth: READOUT_SIZE.width,
       maxWidth: READOUT_SIZE.width,
@@ -116,6 +121,7 @@ class AtomScaleNode extends Node {
 
     this.displayModeProperty = new Property<DisplayMode>( DISPLAY_MODE.MASS_NUMBER );
 
+    // Add the scale image, scaled to the desired width.
     const weighScaleImage = new Image( scale_png );
     weighScaleImage.scale( SCALE_WIDTH / weighScaleImage.width );
     this.addChild( weighScaleImage );
@@ -126,12 +132,16 @@ class AtomScaleNode extends Node {
     scaleReadoutNode.centerY = weighScaleImage.height * 0.7;
     this.addChild( scaleReadoutNode );
 
+    // Add the display mode selector to the scale base, positioned between the readout and the right edge of the scale.
     const displayModeSelectionNode = new DisplayModeSelectionNode( this.displayModeProperty );
     displayModeSelectionNode.centerX = ( scaleReadoutNode.right + weighScaleImage.width - 5 ) / 2;
     displayModeSelectionNode.centerY = weighScaleImage.height * 0.7;
     this.addChild( displayModeSelectionNode );
   }
 
+  /**
+   * Reset the atom scale node to its initial state by resetting the display mode property.
+   */
   public reset(): void {
     this.displayModeProperty.reset();
   }

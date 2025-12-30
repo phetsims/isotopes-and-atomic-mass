@@ -202,11 +202,14 @@ class IsotopeProportionsPieChart extends Node {
         const numberOfDecimals = this.model.showingNaturesMixProperty.get() ? NUMBER_DECIMALS : 1;
         const labelNode = sliceLabelNode( isotope, proportion * 100, labelOnLeft, numberOfDecimals );
 
-        const posVector = centerEdgeOfPieSlice;
-        const positionVector = posVector.times( 1.6 );
+        // Determine the "unconstrained" target position for the label, meaning a position that is directly out from the
+        // edge of the slice, but may be above or below the edges of the pie chart.
+        const positionVector = centerEdgeOfPieSlice.times( 1.6 );
         labelNode.unconstrainedPos.x = positionVector.x;
         labelNode.unconstrainedPos.y = positionVector.y;
 
+        // Constrain the position so that no part of the label goes above or below the upper and lower edges of the pie
+        // chart.
         const minY = -OVERALL_HEIGHT / 2 + labelNode.height / 2;
         const maxY = OVERALL_HEIGHT / 2 - labelNode.height / 2;
         const xSign = labelOnLeft ? -1 : 1;
@@ -220,6 +223,7 @@ class IsotopeProportionsPieChart extends Node {
         }
         labelNode.unconstrainedPos.x = positionVector.x;
 
+        // Position the label node.
         if ( labelOnLeft ) {
           labelNode.centerX = positionVector.x - labelNode.width / 2;
           labelNode.centerY = positionVector.y;
@@ -235,6 +239,8 @@ class IsotopeProportionsPieChart extends Node {
     } );
     this.adjustLabelPositionsForOverlap( this.sliceLabels, -OVERALL_HEIGHT / 2, OVERALL_HEIGHT / 2 );
 
+    // The labels should now be all in reasonable positions, so draw a line from the edge of the label to the pie slice
+    // to which it corresponds.
     let j = 0;
     let k = 0;
     possibleIsotopes.forEach( () => {
@@ -243,6 +249,8 @@ class IsotopeProportionsPieChart extends Node {
         const label = this.sliceLabels[ k ];
         const labelConnectPt = new Vector2( 0, 0 );
         if ( label.centerX > this.pieChart.centerX ) {
+
+          // Label is on left, so connect point should be on right.
           labelConnectPt.x = label.left;
           labelConnectPt.y = label.centerY;
         }
@@ -250,8 +258,13 @@ class IsotopeProportionsPieChart extends Node {
           labelConnectPt.x = label.right;
           labelConnectPt.y = label.centerY;
         }
+
+        // Find a point that is straight out from the center of the pie chart above the point that connects to the
+        // slice. Note that these calculations assume that the center of the pie chart is at (0,0).
         const connectingLineShape = new Shape().moveTo( sliceConnectPt.x, sliceConnectPt.y );
         if ( sliceConnectPt.y > OVERALL_HEIGHT * 0.25 || sliceConnectPt.y < -OVERALL_HEIGHT * 0.25 ) {
+
+          // Add a "bend point" so that the line doesn't go under the pie chart.
           const additionalLength = OVERALL_HEIGHT / ( PIE_CHART_RADIUS * 2 ) - 1;
           const scaleFactor = 1 - Math.min( Math.abs( sliceConnectPt.x ) / ( PIE_CHART_RADIUS / 2.0 ), 1 );
           connectingLineShape.lineTo(
@@ -286,9 +299,13 @@ class IsotopeProportionsPieChart extends Node {
         for ( let j = 0; j < sliceLabels.length; j++ ) {
           const comparisonLabel = sliceLabels[ j ];
           if ( label === comparisonLabel ) {
+
+            // Same label, so ignore.
             continue;
           }
           if ( label.bounds.intersectsBounds( comparisonLabel.bounds ) ) {
+
+            // These labels overlap.
             overlapDetected = true;
             if ( label.unconstrainedPos.y > comparisonLabel.unconstrainedPos.y && label.bottom < maxY ) {
               moveUp = true;
@@ -298,6 +315,11 @@ class IsotopeProportionsPieChart extends Node {
             }
           }
         }
+
+        // Adjust this label's position based upon any overlap that was detected.  The general idea is this: if there
+        // is overlap in both directions, don't move.  If there is only overlap with a label that has a higher
+        // unconstrained position, move down.  If there is only overlap with a label with a lower unconstrained
+        // position, move down.
         let posVector: Vector2;
         if ( moveUp && !moveDown ) {
           if ( label.labelOnLeft ) {
@@ -329,6 +351,8 @@ class IsotopeProportionsPieChart extends Node {
         }
       } );
       if ( !overlapDetected ) {
+
+        // No overlaps detected, so we're done.
         break;
       }
     }

@@ -94,7 +94,7 @@ class MixIsotopesModel {
     } );
 
     // the test chamber into and out of which the isotopes can be moved
-    this.testChamber = new IsotopeTestChamber( this );
+    this.testChamber = new IsotopeTestChamber();
 
     this.prototypeIsotope = new NumberAtom();
 

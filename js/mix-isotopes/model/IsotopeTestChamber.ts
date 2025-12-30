@@ -19,23 +19,22 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import { TReadOnlyNumberAtom } from '../../../../shred/js/model/NumberAtom.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import MovableAtom from './MovableAtom.js';
-import MixIsotopesModel from './MixIsotopesModel.js';
 
 // constants
 
-const SIZE = new Dimension2( 450, 280 ); // In picometers.
+// Size of the "test chamber", which is the area in model space into which the isotopes can be dragged in order to
+// contribute to the current average atomic weight. In picometers.
+const SIZE = new Dimension2( 450, 280 );
 const TEST_CHAMBER_RECT = new Rectangle( -SIZE.width / 2, -SIZE.height / 2, SIZE.width, SIZE.height );
 const BUFFER = 1; // isotopes stroke doesn't cross the wall, empirically determined
 
 class IsotopeTestChamber {
 
-  private readonly model: MixIsotopesModel;
   public readonly containedIsotopes: ObservableArray<MovableAtom>;
   public readonly isotopeCountProperty: Property<number>;
   public readonly averageAtomicMassProperty: Property<number>;
 
-  public constructor( model: MixIsotopesModel ) {
-    this.model = model;
+  public constructor() {
     this.containedIsotopes = createObservableArray<MovableAtom>();
     this.isotopeCountProperty = new Property<number>( 0 );
     this.averageAtomicMassProperty = new Property<number>( 0 );
@@ -63,7 +62,7 @@ class IsotopeTestChamber {
   }
 
   /**
-   * Test whether an isotope is within the chamber.
+   * Test whether an isotope is positioned within the bounds of the chamber.
    */
   public isIsotopePositionedOverChamber( isotope: MovableAtom ): boolean {
     return TEST_CHAMBER_RECT.containsPoint( isotope.positionProperty.get() );
@@ -111,7 +110,9 @@ class IsotopeTestChamber {
       }
     }
     else {
-      assert && assert( false, 'Ignoring attempt to add incorrectly located isotope to test chamber.' );
+
+      // This isotope is not positioned correctly.
+      assert && assert( false, 'Isotope is not positioned correctly for being added to the test chamber.' );
     }
   }
 
@@ -154,6 +155,7 @@ class IsotopeTestChamber {
     this.updateCountProperty();
     isotope.containerProperty.value = null;
 
+    // Update the average atomic mass.
     if ( this.isotopeCountProperty.get() > 0 ) {
       this.averageAtomicMassProperty.set(
         ( this.averageAtomicMassProperty.get() * ( this.isotopeCountProperty.get() + 1 ) -
@@ -235,8 +237,11 @@ class IsotopeTestChamber {
       'Ignoring request to adjust for overlap - too many particles in the chamber for that'
     );
 
+    // Check for overlap and adjust particle positions until none exists.
     const maxIterations = 10000;
     for ( let i = 0; this.checkForParticleOverlap() && i < maxIterations; i++ ) {
+
+      // Adjustment factors for the repositioning algorithm, these can be changed for different behaviour.
       const interParticleForceConst = 200;
       const wallForceConst = interParticleForceConst * 10;
       const minInterParticleDistance = 5;
@@ -255,10 +260,15 @@ class IsotopeTestChamber {
           const forceFromIsotope = new Vector2( 0, 0 );
           const distanceBetweenIsotopes = isotope1.positionProperty.get().distance( isotope2.positionProperty.get() );
           if ( distanceBetweenIsotopes === 0 ) {
+
+            // These isotopes are sitting right on top of one another.  Add the max amount of inter-particle force in a
+            // random direction.
             forceFromIsotope.setPolar( interParticleForceConst / ( minInterParticleDistance * minInterParticleDistance ),
               dotRandom.nextDouble() * 2 * Math.PI );
           }
           else if ( distanceBetweenIsotopes < isotope1.radius + isotope2.radius ) {
+
+            // Calculate the repulsive force based on the distance.
             forceFromIsotope.x = isotope1.positionProperty.get().x - isotope2.positionProperty.get().x;
             forceFromIsotope.y = isotope1.positionProperty.get().y - isotope2.positionProperty.get().y;
             const distance = Math.max( forceFromIsotope.magnitude, minInterParticleDistance );
@@ -285,6 +295,8 @@ class IsotopeTestChamber {
           const distanceFromBottomWall = isotope1.positionProperty.get().y - TEST_CHAMBER_RECT.minY;
           totalForce.add( new Vector2( 0, wallForceConst / ( distanceFromBottomWall * distanceFromBottomWall ) ) );
         }
+
+        // Put the calculated repulsive force into the map.
         mapIsotopesToForces.set( isotope1, totalForce );
       } );
 
@@ -305,6 +317,8 @@ class IsotopeTestChamber {
       for ( let j = 0; j < this.containedIsotopes.length && !overlapExists; j++ ) {
         const isotope2 = this.containedIsotopes.get( j );
         if ( isotope1 === isotope2 ) {
+
+          // Don't compare an isotope against itself.
           continue;
         }
         const distance = isotope1.positionProperty.get().distance( isotope2.positionProperty.get() );

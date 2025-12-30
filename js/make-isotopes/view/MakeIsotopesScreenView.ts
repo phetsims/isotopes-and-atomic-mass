@@ -56,10 +56,13 @@ class MakeIsotopesScreenView extends ScreenView {
       1.0
     );
 
+    // Define the layers upon which the various display elements are placed. This allows us to create the desired
+    // layering effects.
     const indicatorLayer = new Node();
     this.addChild( indicatorLayer );
     const atomLayer = new Node();
 
+    // Create the node that represents the scale upon which the atom sits.
     const scaleNode = new AtomScaleNode( makeIsotopesModel.particleAtom );
     this.addChild( scaleNode );
     scaleNode.setCenterBottom( new Vector2(
@@ -80,6 +83,7 @@ class MakeIsotopesScreenView extends ScreenView {
     resetAllButton.scale( 0.85 );
     this.addChild( resetAllButton );
 
+    // Create the node that contains both the atom and the neutron bucket.
     const bottomOfAtomPosition = new Vector2( scaleNode.centerX, scaleNode.top + 15 );
     const atomAndBucketNode = new InteractiveIsotopeNode(
       makeIsotopesModel,
@@ -88,6 +92,8 @@ class MakeIsotopesScreenView extends ScreenView {
     );
     atomLayer.addChild( atomAndBucketNode );
 
+    // Add the interactive periodic table that allows the user to select the current element.  The heaviest interactive
+    // element is neon for this sim.
     const periodicTableNode = new ExpandedPeriodicTableNode( makeIsotopesModel.numberAtom, 10, {
       tandem: tandem
     } );
@@ -96,6 +102,7 @@ class MakeIsotopesScreenView extends ScreenView {
     periodicTableNode.right = this.layoutBounds.width - 10;
     this.addChild( periodicTableNode );
 
+    // Add the legend/particle count indicator.
     const particleCountLegend = new ParticleCountDisplay( makeIsotopesModel.particleAtom, {
       maxParticles: 13,
       maxWidth: 250,
@@ -106,6 +113,7 @@ class MakeIsotopesScreenView extends ScreenView {
     particleCountLegend.top = periodicTableNode.visibleBounds.minY;
     indicatorLayer.addChild( particleCountLegend );
 
+    // Add the node for the atomic symbol.
     const symbolNode = new SymbolNode(
       makeIsotopesModel.particleAtom.protonCountProperty,
       makeIsotopesModel.particleAtom.massNumberProperty,

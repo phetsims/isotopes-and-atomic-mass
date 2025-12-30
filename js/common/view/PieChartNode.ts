@@ -34,13 +34,18 @@ class PieChartNode extends Node {
   private initialAngle = INITIAL_ANGLE;
   private sliceEdgeCenterPoints: Array<Vector2 | null>;
 
+  /**
+   * @param slices - Each slice has a value and a color.  Values can be any non-negative number, and the pie chart will
+   *                 calculate the proportions accordingly.
+   * @param radius - radius of the pie chart in screen coordinates
+   */
   public constructor( slices: PieSlice[], radius: number ) {
     super();
     this.slices = slices;
     this.radius = radius;
     this.sliceEdgeCenterPoints = [];
 
-    assert && assert( this.radius > 0, 'Pie Chart needs a non-negative radius' );
+    assert && assert( this.radius > 0, 'Pie Chart needs a positive radius' );
     for ( let i = 0; i < this.slices.length; i++ ) {
       assert && assert( this.slices[ i ].value >= 0, 'Pie Chart Slice needs a non-negative value' );
     }
@@ -48,11 +53,19 @@ class PieChartNode extends Node {
     this.update();
   }
 
+  /**
+   * Set the initial angle for drawing the pie slices.  Zero (the default) means that the first slice will start at
+   * the right middle. A value of PI/2 would start at the bottom of the pie.  And so on.
+   * @param initialAngle - In radians.
+   */
   public setInitialAngle( initialAngle: number ): void {
     this.initialAngle = initialAngle;
     this.update();
   }
 
+  /**
+   * Set the center for drawing the pie slices. ( 0, 0 ) is the default.
+   */
   public override setCenter( center: Vector2 ): this {
     this.centerXCord = center.x;
     this.centerYCord = center.y;
@@ -66,6 +79,9 @@ class PieChartNode extends Node {
     this.update();
   }
 
+  /**
+   * Get the total value of all pie slices.
+   */
   public getTotal(): number {
     let total = 0;
     this.slices.forEach( slice => {
@@ -81,6 +97,7 @@ class PieChartNode extends Node {
     const total = this.getTotal();
 
     if ( total === 0 ) {
+      // If there are no values, there is no chart.
       return;
     }
 
@@ -89,10 +106,12 @@ class PieChartNode extends Node {
       const startAngle = curValue * Math.PI * 2 / total + this.initialAngle;
       let endAngle = slice.value * Math.PI * 2 / total + startAngle;
 
+      // Ensure that rounding errors do not leave a gap between the first and last slice.
       if ( index === this.slices.length - 1 ) {
         endAngle = Math.PI * 2 + this.initialAngle;
       }
 
+      // If the slice has a non-zero value, set the color and draw a filled arc.
       const shape = new Shape();
       if ( slice.value > 0 ) {
         if ( slice.value === total ) {
@@ -115,6 +134,8 @@ class PieChartNode extends Node {
         }
       }
       else {
+
+        // No slice drawn, so add null to indicate that there is no center point.
         this.sliceEdgeCenterPoints.push( null );
       }
       curValue += slice.value;
@@ -131,6 +152,10 @@ class PieChartNode extends Node {
     this.update();
   }
 
+  /**
+   * Get the center edge point for the specified slide, meaning the point on the outside edge of the pie chart that
+   * represents the center.  This is useful for adding labels that are outside the chart.
+   */
   public getCenterEdgePtForSlice( sliceNumber: number ): Vector2 | null {
     if ( sliceNumber < this.sliceEdgeCenterPoints.length ) {
       return this.sliceEdgeCenterPoints[ sliceNumber ];

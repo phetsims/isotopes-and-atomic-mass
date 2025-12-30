@@ -53,23 +53,31 @@ class MakeIsotopesModel {
   public readonly neutronBucket: SphereBucket<Particle>;
   private readonly mapNeutronsToDragListeners = new Map<Particle, IsDraggingListener>();
 
+  /**
+   * Constructor for the Make Isotopes model. This will construct the model with atoms initially in the bucket.
+   */
   public constructor() {
     this.particleAtom = new ParticleAtom( {
       tandem: Tandem.OPT_OUT
     } );
 
+    // Make available a 'number atom' that tracks the state of the particle atom.
     this.numberAtom = new NumberAtom( {
       protonCount: DEFAULT_ATOM_CONFIG.protonCountProperty.get(),
       neutronCount: DEFAULT_ATOM_CONFIG.neutronCountProperty.get(),
       electronCount: DEFAULT_ATOM_CONFIG.electronCountProperty.get()
     } );
 
+    // Emitter that notifies listeners when the atom has been reconfigured (protons or neutrons have changed).
     this.atomReconfigured = new Emitter();
 
+    // nucleus stability and jump state
     this.nucleusStable = true;
     this.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
     this.nucleusJumpCount = 0;
 
+    // Link the particle atom's mass number property to monitor stability changes.  No unlink is necessary, as this
+    // model will exist for the lifetime of the sim.
     this.particleAtom.massNumberProperty.link( ( massNumber: number ) => {
       const stable = massNumber > 0 ?
                      AtomIdentifier.isStable(
@@ -77,6 +85,8 @@ class MakeIsotopesModel {
                        this.particleAtom.neutronCountProperty.get()
                      ) : true;
       if ( this.nucleusStable !== stable ) {
+
+        // Nucleus stability has changed.
         this.nucleusStable = stable;
         if ( stable ) {
           this.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
@@ -88,10 +98,14 @@ class MakeIsotopesModel {
       }
     } );
 
+    // Arrays that contain the subatomic particles, whether they are in the bucket or in the atom.  This is part of a
+    // basic assumption about how the model works, which is that the model contains all the particles, and the particles
+    // move back and forth from being in the bucket or in the atom.
     this.neutrons = createObservableArray();
     this.protons = createObservableArray();
     this.electrons = createObservableArray();
 
+    // Create the neutron bucket, which will hold neutrons that are not in the atom.
     this.neutronBucket = new SphereBucket( {
       position: NEUTRON_BUCKET_POSITION,
       size: BUCKET_SIZE,
@@ -104,10 +118,16 @@ class MakeIsotopesModel {
       this.setAtomConfiguration( this.numberAtom );
     } );
 
+    // Set the default atom configuration.
     this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
   }
 
+  /**
+   * Steps the model forward in time, called by the framework.
+   * @param dt - time step in seconds
+   */
   public step( dt: number ): void {
+
     this.neutrons.forEach( neutron => {
       neutron.step( dt );
     } );
@@ -199,6 +219,11 @@ class MakeIsotopesModel {
     }
   }
 
+  /**
+   * Set the configuration of the atom that the user interacts with.  Specifically, this sets the particle atom equal
+   * to the provided number atom.  This is done here rather than by directly accessing the atom so that the appropriate
+   * notifications can be sent and the bucket can be reinitialized.
+   */
   public setAtomConfiguration( numberAtom: NumberAtom ): void {
 
     // Clear the current atom configuration.

@@ -70,11 +70,18 @@ class MixIsotopesScreenView extends ScreenView {
    */
   public constructor( mixIsotopesModel: MixIsotopesModel, tandem: Tandem ) {
 
+    // A PhET wide decision was made to not update custom layout bounds even if they do not match the
+    // default layout bounds in ScreenView. Do not change these bounds as changes could break or disturb
+    // any phet-io instrumentation. https://github.com/phetsims/phet-io/issues/1939
     super( { layoutBounds: new Bounds2( 0, 0, 768, 464 ) } );
 
     this.model = mixIsotopesModel;
     this.updatePieChart = true;
 
+    // Set up the model view transform. The test chamber is centered at (0, 0) in model space, and this transform is set
+    // up to place the chamber where we want it on the canvas.  The multiplier factors for the 2nd point can be adjusted
+    // to shift the center right or left, and the scale factor can be adjusted to zoom in or out (smaller numbers zoom
+    // out, larger ones zoom in).
     this.modelViewTransform = ModelViewTransform2.createSinglePointScaleInvertedYMapping(
       Vector2.ZERO,
       new Vector2(
@@ -94,11 +101,13 @@ class MixIsotopesScreenView extends ScreenView {
     const isotopeLayer = new Node();
     const bucketFrontLayer = new Node();
 
-    // Buckets
+    // buckets
     const addBucketView = ( addedBucket: MonoIsotopeBucket ) => {
       const bucketHole = new BucketHole( addedBucket, this.modelViewTransform );
       const bucketFront = new BucketFront( addedBucket, this.modelViewTransform );
       bucketFront.addInputListener( new BucketDragListener( addedBucket, bucketFront, this.modelViewTransform ) );
+
+      // Bucket hole is first item added to view for proper layering.
       bucketHoleLayer.addChild( bucketHole );
       bucketFrontLayer.addChild( bucketFront );
       bucketFront.moveToFront();
@@ -116,7 +125,7 @@ class MixIsotopesScreenView extends ScreenView {
     mixIsotopesModel.bucketList.addItemAddedListener( addBucketView );
     mixIsotopesModel.bucketList.forEach( addBucketView );
 
-    // Isotopes
+    // isotopes
     const addIsotopeView = ( addedIsotope: MovableAtom ) => {
       const isotopeView = new ParticleView( addedIsotope, this.modelViewTransform, {
         isotopeNodeOptions: {
@@ -311,6 +320,8 @@ class MixIsotopesScreenView extends ScreenView {
       }
     } );
 
+    // Update the visibility of the isotopes based on the interactivity mode, doesn't need unlink as it stays throughout
+    // the sim life.
     mixIsotopesModel.interactivityModeProperty.link( () => {
       if ( mixIsotopesModel.interactivityModeProperty.get() === 'bucketsAndLargeAtoms' ) {
         this.isotopesLayer.visible = false;
@@ -321,10 +332,15 @@ class MixIsotopesScreenView extends ScreenView {
       }
     } );
 
+    // Set the flag to cause the pie chart to get updated when the isotope count changes, doesn't need unlink as it
+    // stays throughout the sim life.
     mixIsotopesModel.testChamber.isotopeCountProperty.link( () => {
       this.updatePieChart = true;
     } );
 
+    // Listen for changes to the model state that can end up leaving particles that are being dragged in odd states,
+    // and cancel any interactions with the individual isotopes.  This helps to prevent multitouch issues such as those
+    // described in https://github.com/phetsims/isotopes-and-atomic-mass/issues/101
     Multilink.multilink(
       [ mixIsotopesModel.showingNaturesMixProperty, mixIsotopesModel.interactivityModeProperty ],
       () => { isotopeLayer.interruptSubtreeInput(); }
@@ -338,6 +354,9 @@ class MixIsotopesScreenView extends ScreenView {
    * step the time-dependent behavior
    */
   public override step(): void {
+
+    // As an optimization we update the pie chart once every animation frame in place of updating it every time an
+    // isotope is added in the test chamber.
     if ( this.updatePieChart ) {
       this.isotopeProportionsPieChart.update();
       this.updatePieChart = false;
@@ -396,6 +415,8 @@ class InteractivityModeSelectionNode extends RectangularRadioButtonGroup<Interac
       trackSize: new Dimension2( 50, 5 ),
       thumbSize: new Dimension2( 15, 30 ),
       majorTickLength: 15,
+
+      // pdom - this slider is just an icon and should not have PDOM representation
       tagName: null
     } );
     slider.addMajorTick( 0 );

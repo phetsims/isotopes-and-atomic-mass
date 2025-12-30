@@ -1,7 +1,7 @@
 // Copyright 2019-2025, University of Colorado Boulder
 
 /**
- * atom configuration that doesn't use properties, and thus consumes less memory
+ * An atom configuration that doesn't use properties, and thus consumes less memory, and can't be changed.
  *
  * @author John Blanco
  */

@@ -5,7 +5,7 @@
  * itself is represented by particles, which take care of themselves in the view.  This view element also maintains
  * the electron cloud.  This is essentially identical to AtomNode of 'Build an Atom' with some reduced functionality.
  *
- * @author John Blanco
+ * @author John Blanco (PhET Interactive Simulations)
  * @author Jesse Greenberg
  */
 

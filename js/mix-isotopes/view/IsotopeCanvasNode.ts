@@ -46,7 +46,6 @@ class IsotopeCanvasNode extends CanvasNode {
       const radius = this.modelViewTransform.modelToViewDeltaX( this.isotopes.get( 0 ).radius );
       context.strokeStyle = 'black';
 
-
       for ( i = 0; i < this.isotopes.length; i++ ) {
         isotope = this.isotopes.get( i );
         const position = isotope.positionProperty.get();

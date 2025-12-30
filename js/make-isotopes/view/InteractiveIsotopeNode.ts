@@ -58,6 +58,7 @@ class InteractiveIsotopeNode extends Node {
     this.addChild( myIsotopeLabel );
     myIsotopeLabel.bottom = isotopeAtomNode.top - 5;
 
+    // Add the components that comprise the bucket that holds the neutrons.
     const neutronBucketHole = new BucketHole( makeIsotopesModel.neutronBucket, modelViewTransform );
     const neutronBucketFront = new BucketFront( makeIsotopesModel.neutronBucket, modelViewTransform );
     neutronBucketFront.addInputListener( new BucketDragListener(
@@ -66,8 +67,10 @@ class InteractiveIsotopeNode extends Node {
       modelViewTransform
     ) );
 
+    // Bucket hole is first item added to view for proper layering.
     this.addChild( neutronBucketHole );
 
+    // Add the layers where the nucleons will be maintained.
     const nucleonLayersNode = new Node();
     const nucleonLayers: Node[] = [];
     for ( let i = 0; i < NUM_NUCLEON_LAYERS; i++ ) {
@@ -77,9 +80,13 @@ class InteractiveIsotopeNode extends Node {
     }
     nucleonLayers.reverse();
 
+    // Function to adjust z-layer ordering for a particle. This is to be linked to the particle's zLayer property.
     const adjustZLayer = ( addedAtom: Particle, zLayer: number ): void => {
+
       assert && assert( nucleonLayers.length > zLayer,
         'zLayer for proton exceeds number of layers, max number may need increasing.' );
+
+      // Determine whether proton view is on the correct layer.
       let onCorrectLayer = false;
       nucleonLayers[ zLayer ].children.forEach( ( particleView: Node ) => {
         if ( particleView instanceof ParticleView && particleView.particle === addedAtom ) {
@@ -87,6 +94,8 @@ class InteractiveIsotopeNode extends Node {
         }
       } );
       if ( !onCorrectLayer ) {
+
+        // Remove particle view from its current layer.
         let particleView: Node | null = null;
         for ( let layerIndex = 0; layerIndex < nucleonLayers.length && particleView === null; layerIndex++ ) {
           for ( let childIndex = 0; childIndex < nucleonLayers[ layerIndex ].children.length; childIndex++ ) {
@@ -98,11 +107,14 @@ class InteractiveIsotopeNode extends Node {
             }
           }
         }
+
+        // Add the particle view to its new layer.
         assert && assert( particleView !== null, 'Particle view not found during relayering' );
         nucleonLayers[ zLayer ].addChild( particleView! );
       }
     };
 
+    // function to add the view for a nucleon, i.e. a proton or neutron
     const addParticleView = ( addedParticle: Particle ): void => {
       assert && assert(
         addedParticle.type === 'proton' || addedParticle.type === 'neutron',
@@ -113,12 +125,13 @@ class InteractiveIsotopeNode extends Node {
       particleView.center = this.modelViewTransform.modelToViewPosition( addedParticle.positionProperty.get() );
       particleView.pickable = addedParticle.type === 'neutron';
 
+      // add particle view to correct z layer.
       nucleonLayers[ addedParticle.zLayerProperty.get() ].addChild( particleView );
 
+      // Add a listener that adjusts a nucleon's z-order layering.
       const adjustZLayerLink = ( zLayer: number ): void => {
         adjustZLayer( addedParticle, zLayer );
       };
-
       addedParticle.zLayerProperty.link( adjustZLayerLink );
 
       const moveParticleToFront = ( value: boolean ): void => {
@@ -128,13 +141,14 @@ class InteractiveIsotopeNode extends Node {
       };
       addedParticle.isDraggingProperty.link( moveParticleToFront );
 
-      let temp: ObservableArray<Particle>;
+      // Add the item removed listener.
+      let particleArray: ObservableArray<Particle>;
       if ( addedParticle.type === 'proton' ) {
-        temp = makeIsotopesModel.protons;
+        particleArray = makeIsotopesModel.protons;
       }
       else {
         assert && assert( addedParticle.type === 'neutron', 'addedParticle must be either a proton or neutron' );
-        temp = makeIsotopesModel.neutrons;
+        particleArray = makeIsotopesModel.neutrons;
       }
 
       const removalListener = function( removedAtom: Particle ): void {
@@ -143,22 +157,29 @@ class InteractiveIsotopeNode extends Node {
           particleView.dispose();
           addedParticle.zLayerProperty.unlink( adjustZLayerLink );
           addedParticle.isDraggingProperty.unlink( moveParticleToFront );
-          temp.removeItemRemovedListener( removalListener );
+          particleArray.removeItemRemovedListener( removalListener );
         }
       };
-      temp.addItemRemovedListener( removalListener );
+      particleArray.addItemRemovedListener( removalListener );
     };
 
+    // Add the existing protons and neutrons to the view.
     makeIsotopesModel.protons.forEach( ( proton: Particle ) => { addParticleView( proton ); } );
     makeIsotopesModel.neutrons.forEach( ( neutron: Particle ) => { addParticleView( neutron ); } );
 
+    // Add listeners for future protons and neutrons added to the model.
     makeIsotopesModel.protons.addItemAddedListener( ( addedAtom: Particle ) => { addParticleView( addedAtom ); } );
     makeIsotopesModel.neutrons.addItemAddedListener( ( addedAtom: Particle ) => { addParticleView( addedAtom ); } );
 
     const elementName = new Text( '', { font: new PhetFont( { size: ELEMENT_NAME_FONT_SIZE, weight: 'bold' } ) } );
     this.addChild( elementName );
 
+    // Define the update function for the element name.
     const updateElementName = ( numProtons: number, numNeutrons: number ): void => {
+
+      // This data structure maps the vertical distance of element name from the nucleus center for each supported
+      // number of nucleons.  These values were empirically determined, and are set so that the label looks good and
+      // doesn't overlap with the nucleus.
       const mapElementToPosition: Record<number, number> = {
         1: 35,
         2: 35,
@@ -172,12 +193,15 @@ class InteractiveIsotopeNode extends Node {
         10: 50
       };
 
+      // Get element name and append mass number to identify the isotope.
       let name = `${AtomIdentifier.getName( numProtons ).value}-${numProtons + numNeutrons}`;
       if ( name.length === 0 ) {
         name = '';
       }
       elementName.string = name;
       const isotopeAtomNodeRadius = isotopeAtomNode.centerY - isotopeAtomNode.top;
+
+      // Limit the width of the element name to fit in the electron cloud.
       let elementNameMaxWidth: number;
       if ( isotopeAtomNodeRadius > mapElementToPosition[ numProtons ] ) {
         elementNameMaxWidth = 2 * Math.sqrt(
@@ -186,6 +210,8 @@ class InteractiveIsotopeNode extends Node {
         );
       }
       else {
+
+        // This else clause can occur if there are no electrons.  In that case, use an empirically determined max width.
         elementNameMaxWidth = 30;
       }
       elementName.maxWidth = elementNameMaxWidth;
@@ -195,10 +221,15 @@ class InteractiveIsotopeNode extends Node {
       );
     };
 
+    // Create the textual readout for the stability indicator.
     const stabilityIndicator = new Text( '', { font: new PhetFont( { size: 12, weight: 'bold' } ) } );
     this.addChild( stabilityIndicator );
 
+    // Define the update function for the stability indicator.
     const updateStabilityIndicator = ( numProtons: number, numNeutrons: number ): void => {
+
+      // This data structure maps the vertical distance of stable/unstable label to the center of nucleus so that labels
+      // look good and don't overlap with nucleons in the nucleus. These values have been empirically determined.
       const mapStableUnstableToPosition: Record<number, number> = {
         1: 30,
         2: 35,
@@ -216,6 +247,8 @@ class InteractiveIsotopeNode extends Node {
         isotopeAtomNode.centerY + mapStableUnstableToPosition[ numProtons ]
       );
       const isotopeAtomNodeRadius = isotopeAtomNode.centerY - isotopeAtomNode.top;
+
+      // Limit stability indicator label to fit inside the electron cloud.
       let stabilityIndicatorMaxWidth: number;
       if ( isotopeAtomNodeRadius > mapStableUnstableToPosition[ numProtons ] ) {
         stabilityIndicatorMaxWidth = 2 * Math.sqrt(
@@ -224,9 +257,12 @@ class InteractiveIsotopeNode extends Node {
         );
       }
       else {
+
+        // This else clause can occur if there are no electrons.  In that case, use an empirically determined max width.
         stabilityIndicatorMaxWidth = 30;
       }
 
+      // Set the stability indicator text.
       if ( numProtons > 0 ) {
         if ( AtomIdentifier.isStable( numProtons, numNeutrons ) ) {
           stabilityIndicator.string = stableString;
@@ -239,6 +275,7 @@ class InteractiveIsotopeNode extends Node {
         stabilityIndicator.string = '';
       }
 
+      // Apply calculated max width and position.
       stabilityIndicator.maxWidth = stabilityIndicatorMaxWidth;
       stabilityIndicator.center = stabilityIndicatorCenterPos;
     };
@@ -258,6 +295,7 @@ class InteractiveIsotopeNode extends Node {
       myIsotopeLabel.bottom = isotopeAtomNode.top - 5;
     } );
 
+    // initial update of element name and stability indicator
     updateElementName(
       makeIsotopesModel.particleAtom.protonCountProperty.get(),
       makeIsotopesModel.particleAtom.neutronCountProperty.get()
