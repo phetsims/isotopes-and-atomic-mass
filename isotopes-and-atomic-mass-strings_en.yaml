@@ -1,0 +1,18 @@
+isotopes-and-atomic-mass.title: Isotopes and Atomic Mass
+isotopes: Isotopes
+mixtures: Mixtures
+neutrons: Neutrons
+massNumber: Mass Number
+atomicMass: Atomic Mass (amu)
+symbol: Symbol
+abundanceInNature: Abundance in Nature
+myIsotope: My Isotope
+thisIsotope: This Isotope
+otherIsotopesPattern: Other<br>{0}<br>Isotopes
+amu: amu
+myMix: My Mix
+naturesMix: Nature's Mix
+isotopeMixture: 'Isotope Mixture:'
+percentComposition: Percent Composition
+averageAtomicMass: Average Atomic Mass
+trace: trace
