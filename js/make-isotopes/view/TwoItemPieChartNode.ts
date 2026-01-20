@@ -34,7 +34,6 @@ const TRACE_ABUNDANCE_IN_PIE_CHART = 1E-6; // empirically chosen value used to r
 const ABUNDANCE_DECIMAL_PLACES = 4; // number of decimal places to show in abundance readout
 const READOUT_TO_PIE_CHART_DISTANCE = 50; // distance between the abundance readout and the pie chart
 
-// TODO: Should we use new patterns? https://github.com/phetsims/isotopes-and-atomic-mass/issues/112
 const otherIsotopesPatternStringProperty = IsotopesAndAtomicMassStrings.otherIsotopesPatternStringProperty;
 const thisIsotopeStringProperty = IsotopesAndAtomicMassStrings.thisIsotopeStringProperty;
 const traceStringProperty = IsotopesAndAtomicMassStrings.traceStringProperty;
@@ -148,8 +147,6 @@ class TwoItemPieChartNode extends Node {
       const abundanceTo6Digits = AtomIdentifier.getNaturalAbundance( isotope, 6 );
       const name = AtomIdentifier.getName( particleAtom.protonCountProperty.get() ).value;
       if ( particleAtom.protonCountProperty.get() > 0 && abundanceTo6Digits < 1 ) {
-
-        // TODO: Handle legacy string pattern https://github.com/phetsims/isotopes-and-atomic-mass/issues/112
         otherIsotopeLabel.string = StringUtils.format( otherIsotopesPatternStringProperty.value, name );
         otherIsotopeLabel.visible = true;
         rightConnectingLine.visible = true;
@@ -191,9 +188,9 @@ class TwoItemPieChartNode extends Node {
       updateOtherIsotopeLabel( particleAtom );
     }
 
-    // Update the pie chart when the proton or neutron counts change.
+    // Update the pie chart when the proton or neutron counts change. Also when the string pattern changes.
     Multilink.multilink(
-      [ particleAtom.protonCountProperty, particleAtom.neutronCountProperty ],
+      [ particleAtom.protonCountProperty, particleAtom.neutronCountProperty, otherIsotopesPatternStringProperty ],
       protonCount => {
         if ( protonCount > 0 ) {
           updatePieChart();
