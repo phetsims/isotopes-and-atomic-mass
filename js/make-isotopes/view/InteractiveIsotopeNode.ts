@@ -18,18 +18,18 @@ import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
+import Particle from '../../../../shred/js/model/Particle.js';
 import ShredStrings from '../../../../shred/js/ShredStrings.js';
 import BucketDragListener from '../../../../shred/js/view/BucketDragListener.js';
 import ParticleView from '../../../../shred/js/view/ParticleView.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
-import IsotopeAtomNode from './IsotopeAtomNode.js';
 import MakeIsotopesModel from '../model/MakeIsotopesModel.js';
-import Particle from '../../../../shred/js/model/Particle.js';
+import IsotopeAtomNode from './IsotopeAtomNode.js';
 
-const myIsotopeString = IsotopesAndAtomicMassStrings.myIsotope;
-const stableString = ShredStrings.stable;
-const unstableString = ShredStrings.unstable;
+const myIsotopeStringProperty = IsotopesAndAtomicMassStrings.myIsotopeStringProperty;
+const stableStringProperty = ShredStrings.stableStringProperty;
+const unstableStringProperty = ShredStrings.unstableStringProperty;
 
 // constants
 const NUM_NUCLEON_LAYERS = 6; // This is based on max number of particles, may need adjustment if that changes.
@@ -49,7 +49,7 @@ class InteractiveIsotopeNode extends Node {
 
     const isotopeAtomNode = new IsotopeAtomNode( makeIsotopesModel.particleAtom, bottomPoint, modelViewTransform );
     this.addChild( isotopeAtomNode );
-    const myIsotopeLabel = new Text( myIsotopeString, {
+    const myIsotopeLabel = new Text( myIsotopeStringProperty, {
       font: new PhetFont( { size: 16, weight: 'bold' } ),
       fill: 'black',
       centerX: isotopeAtomNode.centerX,
@@ -194,6 +194,7 @@ class InteractiveIsotopeNode extends Node {
       };
 
       // Get element name and append mass number to identify the isotope.
+      // TODO: Trickier string property setting https://github.com/phetsims/isotopes-and-atomic-mass/issues/112
       let name = `${AtomIdentifier.getName( numProtons ).value}-${numProtons + numNeutrons}`;
       if ( name.length === 0 ) {
         name = '';
@@ -265,10 +266,10 @@ class InteractiveIsotopeNode extends Node {
       // Set the stability indicator text.
       if ( numProtons > 0 ) {
         if ( AtomIdentifier.isStable( numProtons, numNeutrons ) ) {
-          stabilityIndicator.string = stableString;
+          stabilityIndicator.stringProperty = stableStringProperty;
         }
         else {
-          stabilityIndicator.string = unstableString;
+          stabilityIndicator.stringProperty = unstableStringProperty;
         }
       }
       else {

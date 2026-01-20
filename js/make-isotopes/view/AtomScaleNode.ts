@@ -10,7 +10,7 @@
 
 import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
-import Utils from '../../../../dot/js/Utils.js';
+import { toFixed } from '../../../../dot/js/util/toFixed.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Image from '../../../../scenery/js/nodes/Image.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
@@ -23,8 +23,8 @@ import scale_png from '../../../mipmaps/scale_png.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 
-const atomicMassString: string = IsotopesAndAtomicMassStrings.atomicMass;
-const massNumberString: string = IsotopesAndAtomicMassStrings.massNumber;
+const atomicMassStringProperty = IsotopesAndAtomicMassStrings.atomicMassStringProperty;
+const massNumberStringProperty = IsotopesAndAtomicMassStrings.massNumberStringProperty;
 
 const DISPLAY_MODE = { MASS_NUMBER: 'mass number', ATOMIC_MASS: 'atomic mass' } as const;
 type DisplayMode = typeof DISPLAY_MODE[keyof typeof DISPLAY_MODE];
@@ -69,7 +69,7 @@ class ScaleReadoutNode extends Panel {
       }
       else {
         const isotopeAtomicMass = this.atom.getIsotopeAtomicMass();
-        this.readoutText.string = isotopeAtomicMass > 0 ? Utils.toFixed( isotopeAtomicMass, 5 ) : '--';
+        this.readoutText.string = isotopeAtomicMass > 0 ? toFixed( isotopeAtomicMass, 5 ) : '--';
       }
       this.readoutText.centerX = READOUT_SIZE.width / 2;
       this.readoutText.centerY = READOUT_SIZE.height / 2;
@@ -89,7 +89,7 @@ class DisplayModeSelectionNode extends Node {
     const massNumberButton = new AquaRadioButton(
       displayModeProperty,
       DISPLAY_MODE.MASS_NUMBER,
-      new Text( massNumberString, {
+      new Text( massNumberStringProperty, {
         font: LABEL_FONT,
         maxWidth: 125,
         fill: 'white'
@@ -99,7 +99,7 @@ class DisplayModeSelectionNode extends Node {
     const atomicMassButton = new AquaRadioButton(
       displayModeProperty,
       DISPLAY_MODE.ATOMIC_MASS,
-      new Text( atomicMassString, {
+      new Text( atomicMassStringProperty, {
         font: LABEL_FONT,
         maxWidth: 125,
         fill: 'white'

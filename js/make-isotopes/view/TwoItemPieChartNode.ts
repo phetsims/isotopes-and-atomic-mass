@@ -34,9 +34,10 @@ const TRACE_ABUNDANCE_IN_PIE_CHART = 1E-6; // empirically chosen value used to r
 const ABUNDANCE_DECIMAL_PLACES = 4; // number of decimal places to show in abundance readout
 const READOUT_TO_PIE_CHART_DISTANCE = 50; // distance between the abundance readout and the pie chart
 
-const otherIsotopesPatternString = IsotopesAndAtomicMassStrings.otherIsotopesPattern;
-const thisIsotopeString = IsotopesAndAtomicMassStrings.thisIsotope;
-const traceString = IsotopesAndAtomicMassStrings.trace;
+// TODO: Should we use new patterns? https://github.com/phetsims/isotopes-and-atomic-mass/issues/112
+const otherIsotopesPatternStringProperty = IsotopesAndAtomicMassStrings.otherIsotopesPatternStringProperty;
+const thisIsotopeStringProperty = IsotopesAndAtomicMassStrings.thisIsotopeStringProperty;
+const traceStringProperty = IsotopesAndAtomicMassStrings.traceStringProperty;
 
 class TwoItemPieChartNode extends Node {
 
@@ -62,7 +63,7 @@ class TwoItemPieChartNode extends Node {
 
     // Create a derived property that will represent the abundance on Earth of the current isotope.
     const abundanceStringProperty = new DerivedProperty(
-      [ particleAtom.protonCountProperty, particleAtom.neutronCountProperty ],
+      [ particleAtom.protonCountProperty, particleAtom.neutronCountProperty, traceStringProperty ],
       protonCount => {
         if ( protonCount > 0 ) {
           const abundance = AtomIdentifier.getNaturalAbundance(
@@ -70,7 +71,7 @@ class TwoItemPieChartNode extends Node {
             ABUNDANCE_DECIMAL_PLACES + 2
           );
           if ( abundance === 0 && AtomIdentifier.existsInTraceAmounts( particleAtom ) ) {
-            return traceString;
+            return traceStringProperty.value;
           }
           else {
             return toFixedNumber( abundance * 100, ABUNDANCE_DECIMAL_PLACES ) + '%';
@@ -96,7 +97,7 @@ class TwoItemPieChartNode extends Node {
     );
     this.addChild( abundanceDisplay );
 
-    const thisIsotopeLabel = new Text( thisIsotopeString, {
+    const thisIsotopeLabel = new Text( thisIsotopeStringProperty, {
       font: new PhetFont( { size: 12 } ),
       fill: 'black',
       maxWidth: 60
@@ -147,7 +148,9 @@ class TwoItemPieChartNode extends Node {
       const abundanceTo6Digits = AtomIdentifier.getNaturalAbundance( isotope, 6 );
       const name = AtomIdentifier.getName( particleAtom.protonCountProperty.get() ).value;
       if ( particleAtom.protonCountProperty.get() > 0 && abundanceTo6Digits < 1 ) {
-        otherIsotopeLabel.string = StringUtils.format( otherIsotopesPatternString, name );
+
+        // TODO: Handle legacy string pattern https://github.com/phetsims/isotopes-and-atomic-mass/issues/112
+        otherIsotopeLabel.string = StringUtils.format( otherIsotopesPatternStringProperty.value, name );
         otherIsotopeLabel.visible = true;
         rightConnectingLine.visible = true;
       }

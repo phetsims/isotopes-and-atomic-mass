@@ -33,8 +33,8 @@ import TwoItemPieChartNode from './TwoItemPieChartNode.js';
 // constants
 const OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION = 12;
 
-const abundanceInNatureString: string = IsotopesAndAtomicMassStrings.abundanceInNature;
-const symbolString: string = IsotopesAndAtomicMassStrings.symbol;
+const abundanceInNatureStringProperty = IsotopesAndAtomicMassStrings.abundanceInNatureStringProperty;
+const symbolStringProperty = IsotopesAndAtomicMassStrings.symbolStringProperty;
 
 class MakeIsotopesScreenView extends ScreenView {
 
@@ -121,7 +121,7 @@ class MakeIsotopesScreenView extends ScreenView {
     );
     const symbolBox = new AccordionBox( symbolNode, {
       cornerRadius: 3,
-      titleNode: new Text( symbolString, {
+      titleNode: new Text( symbolStringProperty, {
         font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
         maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
       } ),
@@ -142,7 +142,7 @@ class MakeIsotopesScreenView extends ScreenView {
 
     const abundanceBox = new AccordionBox( new TwoItemPieChartNode( makeIsotopesModel.particleAtom ), {
       cornerRadius: 3,
-      titleNode: new Text( abundanceInNatureString, {
+      titleNode: new Text( abundanceInNatureStringProperty, {
         font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
         maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
       } ),

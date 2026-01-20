@@ -47,11 +47,11 @@ import ControlIsotope from './ControlIsotope.js';
 import IsotopeCanvasNode from './IsotopeCanvasNode.js';
 import IsotopeProportionsPieChart from './IsotopeProportionsPieChart.js';
 
-const averageAtomicMassString = IsotopesAndAtomicMassStrings.averageAtomicMass;
-const isotopeMixtureString = IsotopesAndAtomicMassStrings.isotopeMixture;
-const myMixString = IsotopesAndAtomicMassStrings.myMix;
-const naturesMixString = IsotopesAndAtomicMassStrings.naturesMix;
-const percentCompositionString = IsotopesAndAtomicMassStrings.percentComposition;
+const averageAtomicMassStringProperty = IsotopesAndAtomicMassStrings.averageAtomicMassStringProperty;
+const isotopeMixtureStringProperty = IsotopesAndAtomicMassStrings.isotopeMixtureStringProperty;
+const myMixStringProperty = IsotopesAndAtomicMassStrings.myMixStringProperty;
+const naturesMixStringProperty = IsotopesAndAtomicMassStrings.naturesMixStringProperty;
+const percentCompositionStringProperty = IsotopesAndAtomicMassStrings.percentCompositionStringProperty;
 
 // constants
 const MAX_SLIDER_WIDTH = 99.75; // empirically determined
@@ -233,7 +233,7 @@ class MixIsotopesScreenView extends ScreenView {
     this.isotopeProportionsPieChart.centerX = this.isotopeProportionsPieChart.centerX + 150;
     const compositionBox = new AccordionBox( this.isotopeProportionsPieChart, {
       cornerRadius: 3,
-      titleNode: new Text( percentCompositionString, {
+      titleNode: new Text( percentCompositionStringProperty, {
         font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
         maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
       } ),
@@ -255,7 +255,7 @@ class MixIsotopesScreenView extends ScreenView {
 
     const averageAtomicMassBox = new AccordionBox( new AverageAtomicMassIndicator( this.model ), {
       cornerRadius: 3,
-      titleNode: new Text( averageAtomicMassString, {
+      titleNode: new Text( averageAtomicMassStringProperty, {
         font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
         maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
       } ),
@@ -377,14 +377,14 @@ class IsotopeMixtureSelectionNode extends Node {
     const myMixButton = new AquaRadioButton(
       isotopeMixtureProperty,
       false,
-      new Text( myMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ), { radius: radioButtonRadius }
+      new Text( myMixStringProperty, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ), { radius: radioButtonRadius }
     );
     const naturesMixButton = new AquaRadioButton(
       isotopeMixtureProperty,
       true,
-      new Text( naturesMixString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ), { radius: radioButtonRadius }
+      new Text( naturesMixStringProperty, { font: LABEL_FONT, maxWidth: MAX_WIDTH } ), { radius: radioButtonRadius }
     );
-    const label = new Text( isotopeMixtureString, { font: LABEL_FONT, maxWidth: MAX_WIDTH } );
+    const label = new Text( isotopeMixtureStringProperty, { font: LABEL_FONT, maxWidth: MAX_WIDTH } );
     this.addChild( label );
     myMixButton.left = 0;
     myMixButton.top = label.bottom + 3;
