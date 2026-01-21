@@ -8,7 +8,7 @@
  */
 
 import Dimension2 from '../../../../dot/js/Dimension2.js';
-import Utils from '../../../../dot/js/Utils.js';
+import { toFixedNumber } from '../../../../dot/js/util/toFixedNumber.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Shape from '../../../../kite/js/Shape.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
@@ -78,7 +78,7 @@ function sliceLabelNode(
   const symbol = chemSymbolWithNumbersNode( isotopeConfig );
   node.addChild( symbol );
 
-  const readoutText = new Text( `${Utils.toFixedNumber( isotopePercentage, numberOfDecimals )}%`, {
+  const readoutText = new Text( `${toFixedNumber( isotopePercentage, numberOfDecimals )}%`, {
     font: READOUT_FONT,
     maxWidth: 0.9 * SIZE.width,
     maxHeight: 0.9 * SIZE.height
