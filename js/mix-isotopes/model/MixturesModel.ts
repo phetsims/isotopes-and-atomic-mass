@@ -51,7 +51,7 @@ export type InteractivityModeType = typeof interactivityModeValues[number];
 // constants
 const NUM_NATURES_MIX_ATOMS = 1000; // Total number of atoms placed in the chamber when depicting nature's mix.
 
-class MixIsotopesModel {
+class MixturesModel {
 
   public readonly interactivityModeProperty: Property<InteractivityModeType>;
   public readonly possibleIsotopesProperty: Property<NumberAtom[]>;
@@ -703,7 +703,7 @@ class State {
   /**
    * @param model - The model to create state from
    */
-  public constructor( model: MixIsotopesModel ) {
+  public constructor( model: MixturesModel ) {
     this.elementConfig = new NumberAtom( {
       protonCount: model.prototypeIsotope.protonCountProperty.get(),
       neutronCount: model.prototypeIsotope.neutronCountProperty.get(),
@@ -733,5 +733,5 @@ class State {
   }
 }
 
-isotopesAndAtomicMass.register( 'MixIsotopesModel', MixIsotopesModel );
-export default MixIsotopesModel;
+isotopesAndAtomicMass.register( 'MixturesModel', MixturesModel );
+export default MixturesModel;

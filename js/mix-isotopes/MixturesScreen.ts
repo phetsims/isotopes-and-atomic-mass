@@ -15,10 +15,10 @@ import Tandem from '../../../tandem/js/Tandem.js';
 import mixIsotopesIcon_png from '../../mipmaps/mixIsotopesIcon_png.js';
 import isotopesAndAtomicMass from '../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../IsotopesAndAtomicMassStrings.js';
-import MixIsotopesModel from './model/MixIsotopesModel.js';
-import MixIsotopesScreenView from './view/MixIsotopesScreenView.js';
+import MixturesModel from './model/MixturesModel.js';
+import MixturesScreenView from './view/MixturesScreenView.js';
 
-class MixIsotopesScreen extends Screen<MixIsotopesModel, MixIsotopesScreenView> {
+class MixturesScreen extends Screen<MixturesModel, MixturesScreenView> {
 
   /**
    * @param tandem - Tandem instance for instrumentation
@@ -35,12 +35,12 @@ class MixIsotopesScreen extends Screen<MixIsotopesModel, MixIsotopesScreenView> 
     };
 
     super(
-      () => new MixIsotopesModel(),
-      model => new MixIsotopesScreenView( model, tandem ),
+      () => new MixturesModel(),
+      model => new MixturesScreenView( model, tandem ),
       options
     );
   }
 }
 
-isotopesAndAtomicMass.register( 'MixIsotopesScreen', MixIsotopesScreen );
-export default MixIsotopesScreen;
+isotopesAndAtomicMass.register( 'MixturesScreen', MixturesScreen );
+export default MixturesScreen;

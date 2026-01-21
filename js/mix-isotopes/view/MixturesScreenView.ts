@@ -38,7 +38,7 @@ import HSlider from '../../../../sun/js/HSlider.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
-import MixIsotopesModel, { InteractivityModeType } from '../model/MixIsotopesModel.js';
+import MixturesModel, { InteractivityModeType } from '../model/MixturesModel.js';
 import MonoIsotopeBucket from '../model/MonoIsotopeBucket.js';
 import MovableAtom from '../model/MovableAtom.js';
 import NumericalIsotopeQuantityControl from '../model/NumericalIsotopeQuantityControl.js';
@@ -56,9 +56,9 @@ const percentCompositionStringProperty = IsotopesAndAtomicMassStrings.percentCom
 // constants
 const MAX_SLIDER_WIDTH = 99.75; // empirically determined
 
-class MixIsotopesScreenView extends ScreenView {
+class MixturesScreenView extends ScreenView {
 
-  public readonly model: MixIsotopesModel;
+  public readonly model: MixturesModel;
   private readonly modelViewTransform: ModelViewTransform2;
   private readonly isotopesLayer: IsotopeCanvasNode;
   private readonly isotopeProportionsPieChart: IsotopeProportionsPieChart;
@@ -68,7 +68,7 @@ class MixIsotopesScreenView extends ScreenView {
    * @param mixIsotopesModel - MixIsotopesModel instance
    * @param tandem - Tandem instance
    */
-  public constructor( mixIsotopesModel: MixIsotopesModel, tandem: Tandem ) {
+  public constructor( mixIsotopesModel: MixturesModel, tandem: Tandem ) {
 
     // A PhET wide decision was made to not update custom layout bounds even if they do not match the
     // default layout bounds in ScreenView. Do not change these bounds as changes could break or disturb
@@ -400,7 +400,7 @@ class IsotopeMixtureSelectionNode extends Node {
  */
 class InteractivityModeSelectionNode extends RectangularRadioButtonGroup<InteractivityModeType> {
 
-  public constructor( model: MixIsotopesModel, modelViewTransform: ModelViewTransform2 ) {
+  public constructor( model: MixturesModel, modelViewTransform: ModelViewTransform2 ) {
     const bucketNode = new Node();
     const bucket = new Bucket( {
       baseColor: Color.gray,
@@ -443,5 +443,5 @@ class InteractivityModeSelectionNode extends RectangularRadioButtonGroup<Interac
   }
 }
 
-isotopesAndAtomicMass.register( 'MixIsotopesScreenView', MixIsotopesScreenView );
-export default MixIsotopesScreenView;
+isotopesAndAtomicMass.register( 'MixturesScreenView', MixturesScreenView );
+export default MixturesScreenView;

@@ -23,7 +23,7 @@ import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
 import Panel from '../../../../sun/js/Panel.js';
 import PieChartNode, { PieSlice } from '../../common/view/PieChartNode.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import MixIsotopesModel from '../model/MixIsotopesModel.js';
+import MixturesModel from '../model/MixturesModel.js';
 
 // constants
 const PIE_CHART_RADIUS = 40;
@@ -115,7 +115,7 @@ function sliceLabelNode(
 
 class IsotopeProportionsPieChart extends Node {
 
-  private model: MixIsotopesModel;
+  private model: MixturesModel;
   private labelLayer: Node;
   private pieChartBoundingRectangle: Rectangle;
   private emptyCircle: Circle;
@@ -126,7 +126,7 @@ class IsotopeProportionsPieChart extends Node {
   /**
    * @param model - MixIsotopesModel instance
    */
-  public constructor( model: MixIsotopesModel ) {
+  public constructor( model: MixturesModel ) {
     super();
     this.model = model;
     this.labelLayer = new Node();

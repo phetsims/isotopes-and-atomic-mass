@@ -19,7 +19,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import MixIsotopesModel from './MixIsotopesModel.js';
+import MixturesModel from './MixturesModel.js';
 import MovableAtom from './MovableAtom.js';
 
 // constants
@@ -28,7 +28,7 @@ const CAPACITY = 100;
 class NumericalIsotopeQuantityControl {
 
   public readonly quantityProperty: Property<number>;
-  private readonly model: MixIsotopesModel;
+  private readonly model: MixturesModel;
   public readonly isotopeConfig: NumberAtom;
   public readonly centerPosition: Vector2;
   public readonly caption: string | TReadOnlyProperty<string>;
@@ -40,7 +40,7 @@ class NumericalIsotopeQuantityControl {
    * @param position - Position of the control in model coordinates
    * @param caption - Text label for the control
    */
-  public constructor( model: MixIsotopesModel, isotopeConfig: NumberAtom, position: Vector2, caption: string | TReadOnlyProperty<string> ) {
+  public constructor( model: MixturesModel, isotopeConfig: NumberAtom, position: Vector2, caption: string | TReadOnlyProperty<string> ) {
     this.quantityProperty = new Property<number>( model.testChamber.getIsotopeCount( isotopeConfig ) );
     this.model = model;
     this.isotopeConfig = isotopeConfig;

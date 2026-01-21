@@ -25,7 +25,7 @@ import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
 import Panel from '../../../../sun/js/Panel.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
-import MixIsotopesModel from '../model/MixIsotopesModel.js';
+import MixturesModel from '../model/MixturesModel.js';
 
 // constants
 const INDICATOR_WIDTH = 200;
@@ -71,7 +71,7 @@ function IsotopeTickMark( isotopeConfig: NumberAtom ): Node {
  * This node is set up such that the (0,0) point is at the top center of the node, which is where the point of the
  * pointer exists. This is done to make it easy to position the node under the mass indication line.
  */
-function ReadoutPointer( model: MixIsotopesModel ): Node {
+function ReadoutPointer( model: MixturesModel ): Node {
   const node = new Node();
 
   // Add the triangular pointer. This is created such that the point of the triangle is at (0,0) for this node.
@@ -136,7 +136,7 @@ class AverageAtomicMassIndicator extends Node {
   /**
    * @param model - The MixIsotopesModel instance
    */
-  public constructor( model: MixIsotopesModel ) {
+  public constructor( model: MixturesModel ) {
     super();
 
     // Add the bar that makes up "spine" of the indicator.
