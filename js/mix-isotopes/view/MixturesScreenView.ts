@@ -65,17 +65,17 @@ class MixturesScreenView extends ScreenView {
   private updatePieChart: boolean;
 
   /**
-   * @param mixIsotopesModel - MixIsotopesModel instance
+   * @param mixturesModel - mixturesModel instance
    * @param tandem - Tandem instance
    */
-  public constructor( mixIsotopesModel: MixturesModel, tandem: Tandem ) {
+  public constructor( mixturesModel: MixturesModel, tandem: Tandem ) {
 
     // A PhET wide decision was made to not update custom layout bounds even if they do not match the
     // default layout bounds in ScreenView. Do not change these bounds as changes could break or disturb
     // any phet-io instrumentation. https://github.com/phetsims/phet-io/issues/1939
     super( { layoutBounds: new Bounds2( 0, 0, 768, 464 ) } );
 
-    this.model = mixIsotopesModel;
+    this.model = mixturesModel;
     this.updatePieChart = true;
 
     // Set up the model view transform. The test chamber is centered at (0, 0) in model space, and this transform is set
@@ -112,18 +112,18 @@ class MixturesScreenView extends ScreenView {
       bucketFrontLayer.addChild( bucketFront );
       bucketFront.moveToFront();
 
-      mixIsotopesModel.bucketList.addItemRemovedListener( function removalListener( removedBucket: Bucket ) {
+      mixturesModel.bucketList.addItemRemovedListener( function removalListener( removedBucket: Bucket ) {
         if ( removedBucket === addedBucket ) {
           bucketHoleLayer.removeChild( bucketHole );
           bucketFront.interruptSubtreeInput();
           bucketFrontLayer.removeChild( bucketFront );
-          mixIsotopesModel.bucketList.removeItemRemovedListener( removalListener );
+          mixturesModel.bucketList.removeItemRemovedListener( removalListener );
         }
       } );
     };
 
-    mixIsotopesModel.bucketList.addItemAddedListener( addBucketView );
-    mixIsotopesModel.bucketList.forEach( addBucketView );
+    mixturesModel.bucketList.addItemAddedListener( addBucketView );
+    mixturesModel.bucketList.forEach( addBucketView );
 
     // isotopes
     const addIsotopeView = ( addedIsotope: MovableAtom ) => {
@@ -138,7 +138,7 @@ class MixturesScreenView extends ScreenView {
         }
       } );
       isotopeView.center = this.modelViewTransform.modelToViewPosition( addedIsotope.positionProperty.get() );
-      isotopeView.pickable = ( mixIsotopesModel.interactivityModeProperty.get() === 'bucketsAndLargeAtoms' );
+      isotopeView.pickable = ( mixturesModel.interactivityModeProperty.get() === 'bucketsAndLargeAtoms' );
       isotopeLayer.addChild( isotopeView );
 
       const moveToFront = ( value: boolean ) => {
@@ -147,20 +147,20 @@ class MixturesScreenView extends ScreenView {
         }
       };
       addedIsotope.isDraggingProperty.link( moveToFront );
-      mixIsotopesModel.isotopesList.addItemRemovedListener( function removalListener( removedIsotope: MovableAtom ) {
+      mixturesModel.isotopesList.addItemRemovedListener( function removalListener( removedIsotope: MovableAtom ) {
         if ( removedIsotope === addedIsotope ) {
           isotopeLayer.removeChild( isotopeView );
           addedIsotope.isDraggingProperty.unlink( moveToFront );
           isotopeView.dispose();
-          mixIsotopesModel.isotopesList.removeItemRemovedListener( removalListener );
+          mixturesModel.isotopesList.removeItemRemovedListener( removalListener );
         }
       } );
     };
 
-    mixIsotopesModel.isotopesList.forEach( addIsotopeView );
+    mixturesModel.isotopesList.forEach( addIsotopeView );
 
-    mixIsotopesModel.isotopesList.addItemAddedListener( addedIsotope => {
-      if ( mixIsotopesModel.interactivityModeProperty.get() === 'bucketsAndLargeAtoms' ) {
+    mixturesModel.isotopesList.addItemAddedListener( addedIsotope => {
+      if ( mixturesModel.interactivityModeProperty.get() === 'bucketsAndLargeAtoms' ) {
         addIsotopeView( addedIsotope );
       }
       else {
@@ -168,26 +168,26 @@ class MixturesScreenView extends ScreenView {
         const removalListener = ( removedIsotope: MovableAtom ) => {
           if ( removedIsotope === addedIsotope ) {
             this.isotopesLayer.setIsotopes( this.model.isotopesList );
-            mixIsotopesModel.isotopesList.removeItemRemovedListener( removalListener );
+            mixturesModel.isotopesList.removeItemRemovedListener( removalListener );
           }
         };
-        mixIsotopesModel.isotopesList.addItemRemovedListener( removalListener );
+        mixturesModel.isotopesList.addItemRemovedListener( removalListener );
       }
     } );
 
     // Numeric controllers
-    mixIsotopesModel.numericalControllerList.addItemAddedListener( addedController => {
+    mixturesModel.numericalControllerList.addItemAddedListener( addedController => {
       const controllerView = new ControlIsotope( addedController, 0, 100 );
       const center_pos = this.modelViewTransform.modelToViewPosition( addedController.centerPosition );
       controllerView.centerY = center_pos.y;
       controllerView.left = center_pos.x - ( MAX_SLIDER_WIDTH / 2 );
       controlsLayer.addChild( controllerView );
 
-      mixIsotopesModel.numericalControllerList.addItemRemovedListener( function removalListener( removedController: NumericalIsotopeQuantityControl ) {
+      mixturesModel.numericalControllerList.addItemRemovedListener( function removalListener( removedController: NumericalIsotopeQuantityControl ) {
         if ( removedController === addedController ) {
           controlsLayer.removeChild( controllerView );
           controllerView.dispose();
-          mixIsotopesModel.numericalControllerList.removeItemRemovedListener( removalListener );
+          mixturesModel.numericalControllerList.removeItemRemovedListener( removalListener );
         }
       } );
     } );
@@ -211,7 +211,7 @@ class MixturesScreenView extends ScreenView {
     const clearBoxButton = new EraserButton( {
       baseColor: ShredConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
       listener: () => {
-        mixIsotopesModel.clearBox();
+        mixturesModel.clearBox();
       }
     } );
     this.addChild( clearBoxButton );
@@ -219,7 +219,7 @@ class MixturesScreenView extends ScreenView {
     clearBoxButton.left = chamberLayer.left;
 
     // Periodic table
-    const periodicTableNode = new ExpandedPeriodicTableNode( mixIsotopesModel.selectedAtomConfig, 18, {
+    const periodicTableNode = new ExpandedPeriodicTableNode( mixturesModel.selectedAtomConfig, 18, {
       tandem: tandem
     } );
     periodicTableNode.scale( 0.55 );
@@ -275,12 +275,12 @@ class MixturesScreenView extends ScreenView {
     averageAtomicMassBox.top = compositionBox.bottom + 10;
     this.addChild( averageAtomicMassBox );
 
-    const interactivityModeSelectionNode = new InteractivityModeSelectionNode( mixIsotopesModel, this.modelViewTransform );
+    const interactivityModeSelectionNode = new InteractivityModeSelectionNode( mixturesModel, this.modelViewTransform );
     interactivityModeSelectionNode.right = testChamberNode.right;
     interactivityModeSelectionNode.top = testChamberNode.bottom + 5;
     this.addChild( interactivityModeSelectionNode );
 
-    const isotopeMixtureSelectionNode = new IsotopeMixtureSelectionNode( mixIsotopesModel.showingNaturesMixProperty );
+    const isotopeMixtureSelectionNode = new IsotopeMixtureSelectionNode( mixturesModel.showingNaturesMixProperty );
     isotopeMixtureSelectionNode.top = averageAtomicMassBox.bottom + 10;
     isotopeMixtureSelectionNode.left = averageAtomicMassBox.left;
     this.addChild( isotopeMixtureSelectionNode );
@@ -288,7 +288,7 @@ class MixturesScreenView extends ScreenView {
     // Reset all button
     const resetAllButton = new ResetAllButton( {
       listener: () => {
-        mixIsotopesModel.reset();
+        mixturesModel.reset();
         compositionBox.expandedProperty.reset();
         averageAtomicMassBox.expandedProperty.reset();
       },
@@ -302,8 +302,8 @@ class MixturesScreenView extends ScreenView {
     this.addChild( bucketFrontLayer );
 
     // visibility updates
-    mixIsotopesModel.showingNaturesMixProperty.link( () => {
-      if ( mixIsotopesModel.showingNaturesMixProperty.value ) {
+    mixturesModel.showingNaturesMixProperty.link( () => {
+      if ( mixturesModel.showingNaturesMixProperty.value ) {
         interactivityModeSelectionNode.visible = false;
         clearBoxButton.visible = false;
         this.isotopesLayer.visible = true;
@@ -313,8 +313,8 @@ class MixturesScreenView extends ScreenView {
         clearBoxButton.visible = true;
         this.isotopesLayer.visible = false;
       }
-      if ( mixIsotopesModel.interactivityModeProperty.get() === 'slidersAndSmallAtoms' &&
-           !mixIsotopesModel.showingNaturesMixProperty.get() ) {
+      if ( mixturesModel.interactivityModeProperty.get() === 'slidersAndSmallAtoms' &&
+           !mixturesModel.showingNaturesMixProperty.get() ) {
         this.isotopesLayer.visible = true;
         this.isotopesLayer.setIsotopes( this.model.isotopesList );
       }
@@ -322,8 +322,8 @@ class MixturesScreenView extends ScreenView {
 
     // Update the visibility of the isotopes based on the interactivity mode, doesn't need unlink as it stays throughout
     // the sim life.
-    mixIsotopesModel.interactivityModeProperty.link( () => {
-      if ( mixIsotopesModel.interactivityModeProperty.get() === 'bucketsAndLargeAtoms' ) {
+    mixturesModel.interactivityModeProperty.link( () => {
+      if ( mixturesModel.interactivityModeProperty.get() === 'bucketsAndLargeAtoms' ) {
         this.isotopesLayer.visible = false;
       }
       else {
@@ -334,7 +334,7 @@ class MixturesScreenView extends ScreenView {
 
     // Set the flag to cause the pie chart to get updated when the isotope count changes, doesn't need unlink as it
     // stays throughout the sim life.
-    mixIsotopesModel.testChamber.isotopeCountProperty.link( () => {
+    mixturesModel.testChamber.isotopeCountProperty.link( () => {
       this.updatePieChart = true;
     } );
 
@@ -342,10 +342,10 @@ class MixturesScreenView extends ScreenView {
     // and cancel any interactions with the individual isotopes.  This helps to prevent multitouch issues such as those
     // described in https://github.com/phetsims/isotopes-and-atomic-mass/issues/101
     Multilink.multilink(
-      [ mixIsotopesModel.showingNaturesMixProperty, mixIsotopesModel.interactivityModeProperty ],
+      [ mixturesModel.showingNaturesMixProperty, mixturesModel.interactivityModeProperty ],
       () => { isotopeLayer.interruptSubtreeInput(); }
     );
-    mixIsotopesModel.selectedAtomConfig.atomUpdated.addListener( () => {
+    mixturesModel.selectedAtomConfig.atomUpdated.addListener( () => {
       isotopeLayer.interruptSubtreeInput();
     } );
   }

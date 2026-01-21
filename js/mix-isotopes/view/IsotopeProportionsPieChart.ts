@@ -124,7 +124,7 @@ class IsotopeProportionsPieChart extends Node {
   private pieChart: PieChartNode;
 
   /**
-   * @param model - MixIsotopesModel instance
+   * @param model - MixturesModel instance
    */
   public constructor( model: MixturesModel ) {
     super();

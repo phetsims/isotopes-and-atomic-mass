@@ -134,7 +134,7 @@ class AverageAtomicMassIndicator extends Node {
   private massSpan = 2;
 
   /**
-   * @param model - The MixIsotopesModel instance
+   * @param model - The MixturesModel instance
    */
   public constructor( model: MixturesModel ) {
     super();

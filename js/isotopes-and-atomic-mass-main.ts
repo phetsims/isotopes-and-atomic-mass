@@ -29,11 +29,11 @@ const options: SimOptions = {
 
 simLauncher.launch( () => {
   const makeIsotopeScreenTandem = tandem.createTandem( 'makeIsotopeScreen' );
-  const mixIsotopeScreenTandem = tandem.createTandem( 'mixIsotopeScreen' );
+  const mixturescreenTandem = tandem.createTandem( 'mixturesScreen' );
 
   const sim = new Sim(
     isotopesAndAtomicMassTitleStringProperty,
-    [ new MakeIsotopesScreen( makeIsotopeScreenTandem ), new MixturesScreen( mixIsotopeScreenTandem ) ],
+    [ new MakeIsotopesScreen( makeIsotopeScreenTandem ), new MixturesScreen( mixturescreenTandem ) ],
     options
   );
   sim.start();

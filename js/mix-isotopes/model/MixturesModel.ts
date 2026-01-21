@@ -1,7 +1,7 @@
 // Copyright 2014-2025, University of Colorado Boulder
 
 /**
- * Model portion of "Mix Isotopes" module. This model contains a mixture of isotopes and allows a user to move various
+ * Model portion of "Mixtures" module. This model contains a mixture of isotopes and allows a user to move various
  * different isotopes in and out of the "Isotope Test Chamber", and simply keeps track of the average mass within the chamber.
  *
  * @author John Blanco
@@ -70,7 +70,7 @@ class MixturesModel {
   private mapIsotopeConfigToUserMixState: Map<number, Map<InteractivityModeType, State>>;
 
   /**
-   * Constructor for the Mix Isotopes Model
+   * Constructor for the Mixtures Model
    **/
   public constructor() {
 

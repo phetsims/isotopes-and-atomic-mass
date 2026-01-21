@@ -1,7 +1,7 @@
 // Copyright 2014-2025, University of Colorado Boulder
 
 /**
- * The "Mix Isotopes" screen
+ * The "Mixtures" screen
  *
  * @author John Blanco
  * @author Jesse Greenberg
@@ -12,7 +12,7 @@ import Screen, { ScreenOptions } from '../../../joist/js/Screen.js';
 import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import Image from '../../../scenery/js/nodes/Image.js';
 import Tandem from '../../../tandem/js/Tandem.js';
-import mixIsotopesIcon_png from '../../mipmaps/mixIsotopesIcon_png.js';
+import mixturesIcon_png from '../../mipmaps/mixturesIcon_png.js';
 import isotopesAndAtomicMass from '../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../IsotopesAndAtomicMassStrings.js';
 import MixturesModel from './model/MixturesModel.js';
@@ -27,7 +27,7 @@ class MixturesScreen extends Screen<MixturesModel, MixturesScreenView> {
 
     const options: ScreenOptions = {
       name: IsotopesAndAtomicMassStrings.mixturesStringProperty,
-      homeScreenIcon: new ScreenIcon( new Image( mixIsotopesIcon_png ), {
+      homeScreenIcon: new ScreenIcon( new Image( mixturesIcon_png ), {
         maxIconWidthProportion: 1,
         maxIconHeightProportion: 1
       } ),

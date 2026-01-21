@@ -35,7 +35,7 @@ class NumericalIsotopeQuantityControl {
   public controllerIsotope?: MovableAtom;
 
   /**
-   * @param model - The main model for mix isotopes
+   * @param model - The main model for mixtures
    * @param isotopeConfig - Configuration for the isotope controlled by this control
    * @param position - Position of the control in model coordinates
    * @param caption - Text label for the control
