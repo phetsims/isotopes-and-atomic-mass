@@ -10,6 +10,7 @@
  */
 
 import { ObservableArray } from '../../../../axon/js/createObservableArray.js';
+import DerivedStringProperty from '../../../../axon/js/DerivedStringProperty.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import BucketFront from '../../../../scenery-phet/js/bucket/BucketFront.js';
@@ -171,8 +172,29 @@ class InteractiveIsotopeNode extends Node {
     makeIsotopesModel.protons.addItemAddedListener( ( addedAtom: Particle ) => { addParticleView( addedAtom ); } );
     makeIsotopesModel.neutrons.addItemAddedListener( ( addedAtom: Particle ) => { addParticleView( addedAtom ); } );
 
-    const elementName = new Text( '', { font: new PhetFont( { size: ELEMENT_NAME_FONT_SIZE, weight: 'bold' } ) } );
+    // Get element name and append mass number to identify the isotope.
+    const isotopeNameStringProperty = new DerivedStringProperty(
+      [
+        // Using a dynamic property that updates on proton count changes and locale changes
+        AtomIdentifier.createDynamicNameProperty( makeIsotopesModel.particleAtom.protonCountProperty ),
+        makeIsotopesModel.particleAtom.protonCountProperty,
+        makeIsotopesModel.particleAtom.neutronCountProperty
+      ], ( elementName: string, numProtons: number, numNeutrons: number ) => {
+        if ( numProtons > 0 ) {
+          return `${elementName}-${numProtons + numNeutrons}`;
+        }
+        else {
+          return '';
+        }
+      }
+    );
+
+    const elementName = new Text( isotopeNameStringProperty, { font: new PhetFont( { size: ELEMENT_NAME_FONT_SIZE, weight: 'bold' } ) } );
     this.addChild( elementName );
+
+    elementName.boundsProperty.link( () => {
+      elementName.centerX = isotopeAtomNode.centerX;
+    } );
 
     // Define the update function for the element name.
     const updateElementName = ( numProtons: number, numNeutrons: number ): void => {
@@ -193,13 +215,6 @@ class InteractiveIsotopeNode extends Node {
         10: 50
       };
 
-      // Get element name and append mass number to identify the isotope.
-      // TODO: Trickier string property setting https://github.com/phetsims/isotopes-and-atomic-mass/issues/112
-      let name = `${AtomIdentifier.getName( numProtons ).value}-${numProtons + numNeutrons}`;
-      if ( name.length === 0 ) {
-        name = '';
-      }
-      elementName.string = name;
       const isotopeAtomNodeRadius = isotopeAtomNode.centerY - isotopeAtomNode.top;
 
       // Limit the width of the element name to fit in the electron cloud.

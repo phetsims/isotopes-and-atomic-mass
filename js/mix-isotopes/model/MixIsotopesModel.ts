@@ -11,6 +11,7 @@
  */
 
 import createObservableArray, { ObservableArray } from '../../../../axon/js/createObservableArray.js';
+import DerivedStringProperty from '../../../../axon/js/DerivedStringProperty.js';
 import Emitter from '../../../../axon/js/Emitter.js';
 import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
@@ -525,8 +526,14 @@ class MixIsotopesModel {
     // Add the controllers.
     for ( let i = 0; i < this.possibleIsotopesProperty.get().length; i++ ) {
       const isotopeConfig = this.possibleIsotopesProperty.get()[ i ];
-      const isotopeName = AtomIdentifier.getName( isotopeConfig.protonCountProperty.get() ).value;
-      const isotopeCaption = `${isotopeName}-${isotopeConfig.massNumberProperty.get()}`;
+
+      const isotopeCaptionStringProperty = new DerivedStringProperty(
+        [
+          AtomIdentifier.getName( isotopeConfig.protonCountProperty.get() ),
+          isotopeConfig.massNumberProperty
+        ], ( name: string, massNumber: number ) => `${name}-${massNumber}`
+      );
+
       if ( buckets ) {
         const newBucket = new MonoIsotopeBucket(
           isotopeConfig.protonCountProperty.get(),
@@ -535,7 +542,7 @@ class MixIsotopesModel {
             position: new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetBucket ),
             size: BUCKET_SIZE,
             baseColor: this.getColorForIsotope( isotopeConfig.protonCount, isotopeConfig.neutronCount ),
-            captionText: isotopeCaption,
+            captionText: isotopeCaptionStringProperty,
             sphereRadius: LARGE_ISOTOPE_RADIUS
           }
         );
@@ -555,7 +562,7 @@ class MixIsotopesModel {
           this,
           isotopeConfig,
           new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetSlider ),
-          isotopeCaption
+          isotopeCaptionStringProperty
         );
         const controllerIsotope = new MovableAtom(
           isotopeConfig.protonCountProperty.get(),

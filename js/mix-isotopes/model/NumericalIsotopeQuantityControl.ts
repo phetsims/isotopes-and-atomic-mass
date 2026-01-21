@@ -14,6 +14,7 @@
  */
 
 import Property from '../../../../axon/js/Property.js';
+import { TReadOnlyProperty } from '../../../../axon/js/TReadOnlyProperty.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
@@ -30,7 +31,7 @@ class NumericalIsotopeQuantityControl {
   private readonly model: MixIsotopesModel;
   public readonly isotopeConfig: NumberAtom;
   public readonly centerPosition: Vector2;
-  public readonly caption: string;
+  public readonly caption: string | TReadOnlyProperty<string>;
   public controllerIsotope?: MovableAtom;
 
   /**
@@ -39,7 +40,7 @@ class NumericalIsotopeQuantityControl {
    * @param position - Position of the control in model coordinates
    * @param caption - Text label for the control
    */
-  public constructor( model: MixIsotopesModel, isotopeConfig: NumberAtom, position: Vector2, caption: string ) {
+  public constructor( model: MixIsotopesModel, isotopeConfig: NumberAtom, position: Vector2, caption: string | TReadOnlyProperty<string> ) {
     this.quantityProperty = new Property<number>( model.testChamber.getIsotopeCount( isotopeConfig ) );
     this.model = model;
     this.isotopeConfig = isotopeConfig;
