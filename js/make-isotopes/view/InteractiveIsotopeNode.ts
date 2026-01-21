@@ -281,6 +281,10 @@ class InteractiveIsotopeNode extends Node {
       stabilityIndicator.center = stabilityIndicatorCenterPos;
     };
 
+    stabilityIndicator.boundsProperty.link( () => {
+      stabilityIndicator.centerX = isotopeAtomNode.centerX;
+    } );
+
     this.addChild( nucleonLayersNode );
     this.addChild( neutronBucketFront );
 

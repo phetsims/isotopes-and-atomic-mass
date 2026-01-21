@@ -27,7 +27,7 @@ import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js'
 
 type IsDraggingListener = ( isDragging: boolean ) => void;
 
-const neutronsString: string = IsotopesAndAtomicMassStrings.neutrons;
+const neutronsStringProperty = IsotopesAndAtomicMassStrings.neutronsStringProperty;
 
 const DEFAULT_NUM_NEUTRONS_IN_BUCKET = 4;
 const NUCLEUS_JUMP_PERIOD = 0.1; // In seconds
@@ -110,7 +110,7 @@ class MakeIsotopesModel {
       position: NEUTRON_BUCKET_POSITION,
       size: BUCKET_SIZE,
       baseColor: Color.gray,
-      captionText: neutronsString,
+      captionText: neutronsStringProperty,
       sphereRadius: ShredConstants.NUCLEON_RADIUS
     } );
 
