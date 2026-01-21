@@ -25,7 +25,7 @@ import AccordionBox from '../../../../sun/js/AccordionBox.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
-import MakeIsotopesModel from '../model/MakeIsotopesModel.js';
+import IsotopesModel from '../model/IsotopesModel.js';
 import AtomScaleNode from './AtomScaleNode.js';
 import InteractiveIsotopeNode from './InteractiveIsotopeNode.js';
 import TwoItemPieChartNode from './TwoItemPieChartNode.js';
@@ -36,11 +36,11 @@ const OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION = 12;
 const abundanceInNatureStringProperty = IsotopesAndAtomicMassStrings.abundanceInNatureStringProperty;
 const symbolStringProperty = IsotopesAndAtomicMassStrings.symbolStringProperty;
 
-class MakeIsotopesScreenView extends ScreenView {
+class IsotopesScreenView extends ScreenView {
 
   private readonly modelViewTransform: ModelViewTransform2;
 
-  public constructor( makeIsotopesModel: MakeIsotopesModel, tandem: Tandem ) {
+  public constructor( isotopesModel: IsotopesModel, tandem: Tandem ) {
 
     // A PhET wide decision was made to not update custom layout bounds even if they do not match the
     // default layout bounds in ScreenView. Do not change these bounds as changes could break or disturb
@@ -63,7 +63,7 @@ class MakeIsotopesScreenView extends ScreenView {
     const atomLayer = new Node();
 
     // Create the node that represents the scale upon which the atom sits.
-    const scaleNode = new AtomScaleNode( makeIsotopesModel.particleAtom );
+    const scaleNode = new AtomScaleNode( isotopesModel.particleAtom );
     this.addChild( scaleNode );
     scaleNode.setCenterBottom( new Vector2(
       this.modelViewTransform.modelToViewX( 0 ),
@@ -72,7 +72,7 @@ class MakeIsotopesScreenView extends ScreenView {
 
     const resetAllButton = new ResetAllButton( {
       listener: (): void => {
-        makeIsotopesModel.reset();
+        isotopesModel.reset();
         scaleNode.reset();
         symbolBox.expandedProperty.reset();
         abundanceBox.expandedProperty.reset();
@@ -86,7 +86,7 @@ class MakeIsotopesScreenView extends ScreenView {
     // Create the node that contains both the atom and the neutron bucket.
     const bottomOfAtomPosition = new Vector2( scaleNode.centerX, scaleNode.top + 15 );
     const atomAndBucketNode = new InteractiveIsotopeNode(
-      makeIsotopesModel,
+      isotopesModel,
       this.modelViewTransform,
       bottomOfAtomPosition
     );
@@ -94,7 +94,7 @@ class MakeIsotopesScreenView extends ScreenView {
 
     // Add the interactive periodic table that allows the user to select the current element.  The heaviest interactive
     // element is neon for this sim.
-    const periodicTableNode = new ExpandedPeriodicTableNode( makeIsotopesModel.numberAtom, 10, {
+    const periodicTableNode = new ExpandedPeriodicTableNode( isotopesModel.numberAtom, 10, {
       tandem: tandem
     } );
     periodicTableNode.scale( 0.65 );
@@ -103,7 +103,7 @@ class MakeIsotopesScreenView extends ScreenView {
     this.addChild( periodicTableNode );
 
     // Add the legend/particle count indicator.
-    const particleCountLegend = new ParticleCountDisplay( makeIsotopesModel.particleAtom, {
+    const particleCountLegend = new ParticleCountDisplay( isotopesModel.particleAtom, {
       maxParticles: 13,
       maxWidth: 250,
       tandem: Tandem.OPT_OUT
@@ -115,8 +115,8 @@ class MakeIsotopesScreenView extends ScreenView {
 
     // Add the node for the atomic symbol.
     const symbolNode = new SymbolNode(
-      makeIsotopesModel.particleAtom.protonCountProperty,
-      makeIsotopesModel.particleAtom.massNumberProperty,
+      isotopesModel.particleAtom.protonCountProperty,
+      isotopesModel.particleAtom.massNumberProperty,
       { scale: 0.2 }
     );
     const symbolBox = new AccordionBox( symbolNode, {
@@ -140,7 +140,7 @@ class MakeIsotopesScreenView extends ScreenView {
     symbolBox.top = periodicTableNode.bottom + 10;
     this.addChild( symbolBox );
 
-    const abundanceBox = new AccordionBox( new TwoItemPieChartNode( makeIsotopesModel.particleAtom ), {
+    const abundanceBox = new AccordionBox( new TwoItemPieChartNode( isotopesModel.particleAtom ), {
       cornerRadius: 3,
       titleNode: new Text( abundanceInNatureStringProperty, {
         font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
@@ -165,5 +165,5 @@ class MakeIsotopesScreenView extends ScreenView {
   }
 }
 
-isotopesAndAtomicMass.register( 'MakeIsotopesScreenView', MakeIsotopesScreenView );
-export default MakeIsotopesScreenView;
+isotopesAndAtomicMass.register( 'IsotopesScreenView', IsotopesScreenView );
+export default IsotopesScreenView;

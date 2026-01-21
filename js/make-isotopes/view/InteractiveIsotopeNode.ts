@@ -25,7 +25,7 @@ import BucketDragListener from '../../../../shred/js/view/BucketDragListener.js'
 import ParticleView from '../../../../shred/js/view/ParticleView.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
-import MakeIsotopesModel from '../model/MakeIsotopesModel.js';
+import IsotopesModel from '../model/IsotopesModel.js';
 import IsotopeAtomNode from './IsotopeAtomNode.js';
 
 const myIsotopeStringProperty = IsotopesAndAtomicMassStrings.myIsotopeStringProperty;
@@ -41,14 +41,14 @@ class InteractiveIsotopeNode extends Node {
   private readonly modelViewTransform: ModelViewTransform2;
 
   public constructor(
-    makeIsotopesModel: MakeIsotopesModel,
+    isotopesModel: IsotopesModel,
     modelViewTransform: ModelViewTransform2,
     bottomPoint: Vector2
   ) {
     super();
     this.modelViewTransform = modelViewTransform;
 
-    const isotopeAtomNode = new IsotopeAtomNode( makeIsotopesModel.particleAtom, bottomPoint, modelViewTransform );
+    const isotopeAtomNode = new IsotopeAtomNode( isotopesModel.particleAtom, bottomPoint, modelViewTransform );
     this.addChild( isotopeAtomNode );
     const myIsotopeLabel = new Text( myIsotopeStringProperty, {
       font: new PhetFont( { size: 16, weight: 'bold' } ),
@@ -60,10 +60,10 @@ class InteractiveIsotopeNode extends Node {
     myIsotopeLabel.bottom = isotopeAtomNode.top - 5;
 
     // Add the components that comprise the bucket that holds the neutrons.
-    const neutronBucketHole = new BucketHole( makeIsotopesModel.neutronBucket, modelViewTransform );
-    const neutronBucketFront = new BucketFront( makeIsotopesModel.neutronBucket, modelViewTransform );
+    const neutronBucketHole = new BucketHole( isotopesModel.neutronBucket, modelViewTransform );
+    const neutronBucketFront = new BucketFront( isotopesModel.neutronBucket, modelViewTransform );
     neutronBucketFront.addInputListener( new BucketDragListener(
-      makeIsotopesModel.neutronBucket,
+      isotopesModel.neutronBucket,
       neutronBucketFront,
       modelViewTransform
     ) );
@@ -145,11 +145,11 @@ class InteractiveIsotopeNode extends Node {
       // Add the item removed listener.
       let particleArray: ObservableArray<Particle>;
       if ( addedParticle.type === 'proton' ) {
-        particleArray = makeIsotopesModel.protons;
+        particleArray = isotopesModel.protons;
       }
       else {
         assert && assert( addedParticle.type === 'neutron', 'addedParticle must be either a proton or neutron' );
-        particleArray = makeIsotopesModel.neutrons;
+        particleArray = isotopesModel.neutrons;
       }
 
       const removalListener = function( removedAtom: Particle ): void {
@@ -165,20 +165,20 @@ class InteractiveIsotopeNode extends Node {
     };
 
     // Add the existing protons and neutrons to the view.
-    makeIsotopesModel.protons.forEach( ( proton: Particle ) => { addParticleView( proton ); } );
-    makeIsotopesModel.neutrons.forEach( ( neutron: Particle ) => { addParticleView( neutron ); } );
+    isotopesModel.protons.forEach( ( proton: Particle ) => { addParticleView( proton ); } );
+    isotopesModel.neutrons.forEach( ( neutron: Particle ) => { addParticleView( neutron ); } );
 
     // Add listeners for future protons and neutrons added to the model.
-    makeIsotopesModel.protons.addItemAddedListener( ( addedAtom: Particle ) => { addParticleView( addedAtom ); } );
-    makeIsotopesModel.neutrons.addItemAddedListener( ( addedAtom: Particle ) => { addParticleView( addedAtom ); } );
+    isotopesModel.protons.addItemAddedListener( ( addedAtom: Particle ) => { addParticleView( addedAtom ); } );
+    isotopesModel.neutrons.addItemAddedListener( ( addedAtom: Particle ) => { addParticleView( addedAtom ); } );
 
     // Get element name and append mass number to identify the isotope.
     const isotopeNameStringProperty = new DerivedStringProperty(
       [
         // Using a dynamic property that updates on proton count changes and locale changes
-        AtomIdentifier.createDynamicNameProperty( makeIsotopesModel.particleAtom.protonCountProperty ),
-        makeIsotopesModel.particleAtom.protonCountProperty,
-        makeIsotopesModel.particleAtom.neutronCountProperty
+        AtomIdentifier.createDynamicNameProperty( isotopesModel.particleAtom.protonCountProperty ),
+        isotopesModel.particleAtom.protonCountProperty,
+        isotopesModel.particleAtom.neutronCountProperty
       ], ( elementName: string, numProtons: number, numNeutrons: number ) => {
         if ( numProtons > 0 ) {
           return `${elementName}-${numProtons + numNeutrons}`;
@@ -303,24 +303,24 @@ class InteractiveIsotopeNode extends Node {
     this.addChild( nucleonLayersNode );
     this.addChild( neutronBucketFront );
 
-    makeIsotopesModel.atomReconfigured.addListener( (): void => {
+    isotopesModel.atomReconfigured.addListener( (): void => {
       updateElementNamePosition(
-        makeIsotopesModel.particleAtom.protonCountProperty.get()
+        isotopesModel.particleAtom.protonCountProperty.get()
       );
       updateStabilityIndicator(
-        makeIsotopesModel.particleAtom.protonCountProperty.get(),
-        makeIsotopesModel.particleAtom.neutronCountProperty.get()
+        isotopesModel.particleAtom.protonCountProperty.get(),
+        isotopesModel.particleAtom.neutronCountProperty.get()
       );
       myIsotopeLabel.bottom = isotopeAtomNode.top - 5;
     } );
 
     // initial update of element name and stability indicator
     updateElementNamePosition(
-      makeIsotopesModel.particleAtom.protonCountProperty.get()
+      isotopesModel.particleAtom.protonCountProperty.get()
     );
     updateStabilityIndicator(
-      makeIsotopesModel.particleAtom.protonCountProperty.get(),
-      makeIsotopesModel.particleAtom.neutronCountProperty.get()
+      isotopesModel.particleAtom.protonCountProperty.get(),
+      isotopesModel.particleAtom.neutronCountProperty.get()
     );
   }
 }

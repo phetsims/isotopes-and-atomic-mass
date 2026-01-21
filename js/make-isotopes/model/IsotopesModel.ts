@@ -39,7 +39,7 @@ const BUCKET_SIZE = new Dimension2( 130, 60 );
 const NEUTRON_BUCKET_POSITION = new Vector2( -220, -180 );
 const DEFAULT_ATOM_CONFIG = new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } ); // hydrogen atom
 
-class MakeIsotopesModel {
+class IsotopesModel {
 
   public readonly particleAtom: ParticleAtom;
   public readonly numberAtom: NumberAtom;
@@ -280,5 +280,5 @@ class MakeIsotopesModel {
   }
 }
 
-isotopesAndAtomicMass.register( 'MakeIsotopesModel', MakeIsotopesModel );
-export default MakeIsotopesModel;
+isotopesAndAtomicMass.register( 'IsotopesModel', IsotopesModel );
+export default IsotopesModel;

@@ -10,7 +10,7 @@ import Sim, { SimOptions } from '../../joist/js/Sim.js';
 import simLauncher from '../../joist/js/simLauncher.js';
 import Tandem from '../../tandem/js/Tandem.js';
 import IsotopesAndAtomicMassStrings from './IsotopesAndAtomicMassStrings.js';
-import MakeIsotopesScreen from './make-isotopes/MakeIsotopesScreen.js';
+import IsotopesScreen from './make-isotopes/IsotopesScreen.js';
 import MixturesScreen from './mix-isotopes/MixturesScreen.js';
 
 const isotopesAndAtomicMassTitleStringProperty = IsotopesAndAtomicMassStrings[ 'isotopes-and-atomic-mass' ].titleStringProperty;
@@ -28,12 +28,12 @@ const options: SimOptions = {
 };
 
 simLauncher.launch( () => {
-  const makeIsotopeScreenTandem = tandem.createTandem( 'makeIsotopeScreen' );
+  const isotopesScreenTandem = tandem.createTandem( 'isotopesScreen' );
   const mixturescreenTandem = tandem.createTandem( 'mixturesScreen' );
 
   const sim = new Sim(
     isotopesAndAtomicMassTitleStringProperty,
-    [ new MakeIsotopesScreen( makeIsotopeScreenTandem ), new MixturesScreen( mixturescreenTandem ) ],
+    [ new IsotopesScreen( isotopesScreenTandem ), new MixturesScreen( mixturescreenTandem ) ],
     options
   );
   sim.start();

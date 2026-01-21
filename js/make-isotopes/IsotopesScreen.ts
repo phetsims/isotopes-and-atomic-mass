@@ -1,7 +1,7 @@
 // Copyright 2014-2025, University of Colorado Boulder
 
 /**
- * The "Make Isotopes" screen
+ * The "Isotopes" screen
  *
  * @author John Blanco
  * @author Jesse Greenberg
@@ -11,19 +11,19 @@ import Screen from '../../../joist/js/Screen.js';
 import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import Image from '../../../scenery/js/nodes/Image.js';
 import Tandem from '../../../tandem/js/Tandem.js';
-import makeIsotopesIcon_png from '../../mipmaps/makeIsotopesIcon_png.js';
+import isotopesIcon_png from '../../mipmaps/isotopesIcon_png.js';
 import isotopesAndAtomicMass from '../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../IsotopesAndAtomicMassStrings.js';
-import MakeIsotopesModel from './model/MakeIsotopesModel.js';
-import MakeIsotopesScreenView from './view/MakeIsotopesScreenView.js';
+import IsotopesModel from './model/IsotopesModel.js';
+import IsotopesScreenView from './view/IsotopesScreenView.js';
 
-class MakeIsotopesScreen extends Screen<MakeIsotopesModel, MakeIsotopesScreenView> {
+class IsotopesScreen extends Screen<IsotopesModel, IsotopesScreenView> {
 
   public constructor( tandem: Tandem ) {
 
     const options = {
       name: IsotopesAndAtomicMassStrings.isotopesStringProperty,
-      homeScreenIcon: new ScreenIcon( new Image( makeIsotopesIcon_png ), {
+      homeScreenIcon: new ScreenIcon( new Image( isotopesIcon_png ), {
         maxIconWidthProportion: 1,
         maxIconHeightProportion: 1
       } ),
@@ -31,12 +31,12 @@ class MakeIsotopesScreen extends Screen<MakeIsotopesModel, MakeIsotopesScreenVie
     };
 
     super(
-      () => new MakeIsotopesModel(),
-      ( model: MakeIsotopesModel ) => new MakeIsotopesScreenView( model, tandem ),
+      () => new IsotopesModel(),
+      ( model: IsotopesModel ) => new IsotopesScreenView( model, tandem ),
       options
     );
   }
 }
 
-isotopesAndAtomicMass.register( 'MakeIsotopesScreen', MakeIsotopesScreen );
-export default MakeIsotopesScreen;
+isotopesAndAtomicMass.register( 'IsotopesScreen', IsotopesScreen );
+export default IsotopesScreen;
