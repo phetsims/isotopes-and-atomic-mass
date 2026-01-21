@@ -197,7 +197,7 @@ class InteractiveIsotopeNode extends Node {
     } );
 
     // Define the update function for the element name.
-    const updateElementName = ( numProtons: number, numNeutrons: number ): void => {
+    const updateElementNamePosition = ( numProtons: number ): void => {
 
       // This data structure maps the vertical distance of element name from the nucleus center for each supported
       // number of nucleons.  These values were empirically determined, and are set so that the label looks good and
@@ -304,9 +304,8 @@ class InteractiveIsotopeNode extends Node {
     this.addChild( neutronBucketFront );
 
     makeIsotopesModel.atomReconfigured.addListener( (): void => {
-      updateElementName(
-        makeIsotopesModel.particleAtom.protonCountProperty.get(),
-        makeIsotopesModel.particleAtom.neutronCountProperty.get()
+      updateElementNamePosition(
+        makeIsotopesModel.particleAtom.protonCountProperty.get()
       );
       updateStabilityIndicator(
         makeIsotopesModel.particleAtom.protonCountProperty.get(),
@@ -316,9 +315,8 @@ class InteractiveIsotopeNode extends Node {
     } );
 
     // initial update of element name and stability indicator
-    updateElementName(
-      makeIsotopesModel.particleAtom.protonCountProperty.get(),
-      makeIsotopesModel.particleAtom.neutronCountProperty.get()
+    updateElementNamePosition(
+      makeIsotopesModel.particleAtom.protonCountProperty.get()
     );
     updateStabilityIndicator(
       makeIsotopesModel.particleAtom.protonCountProperty.get(),
