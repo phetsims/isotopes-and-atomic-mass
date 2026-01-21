@@ -10,12 +10,12 @@
  * @author James Smith
  */
 
+import Vector2 from '../../../../dot/js/Vector2.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import Particle, { ParticleOptions } from '../../../../shred/js/model/Particle.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import ImmutableAtomConfig from './ImmutableAtomConfig.js';
-import Vector2 from '../../../../dot/js/Vector2.js';
 
 type SelfOptions = EmptySelfOptions;
 export type MovableAtomOptions = SelfOptions & ParticleOptions;

@@ -12,9 +12,9 @@
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
+import ParticleAtom from '../../../../shred/js/model/ParticleAtom.js';
 import IsotopeElectronCloudView from '../../../../shred/js/view/IsotopeElectronCloudView.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import ParticleAtom from '../../../../shred/js/model/ParticleAtom.js';
 
 class IsotopeAtomNode extends Node {
 

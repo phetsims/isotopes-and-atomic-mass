@@ -9,9 +9,9 @@
 import Sim, { SimOptions } from '../../joist/js/Sim.js';
 import simLauncher from '../../joist/js/simLauncher.js';
 import Tandem from '../../tandem/js/Tandem.js';
+import IsotopesScreen from './isotopes/IsotopesScreen.js';
 import IsotopesAndAtomicMassStrings from './IsotopesAndAtomicMassStrings.js';
-import IsotopesScreen from './make-isotopes/IsotopesScreen.js';
-import MixturesScreen from './mix-isotopes/MixturesScreen.js';
+import MixturesScreen from './mixtures/MixturesScreen.js';
 
 const isotopesAndAtomicMassTitleStringProperty = IsotopesAndAtomicMassStrings[ 'isotopes-and-atomic-mass' ].titleStringProperty;
 
