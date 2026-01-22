@@ -1,4 +1,4 @@
-// Copyright 2015, University of Colorado Boulder
+// Copyright 2015-2016, University of Colorado Boulder
 
 /**
  * Class that represents a "test chamber" where multiple isotopes can be placed. The test chamber calculates the

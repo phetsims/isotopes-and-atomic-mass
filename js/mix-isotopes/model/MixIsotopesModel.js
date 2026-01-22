@@ -1,4 +1,4 @@
-// Copyright 2014-2015, University of Colorado Boulder
+// Copyright 2014-2016, University of Colorado Boulder
 
 /**
  * Model portion of "Mix Isotopes" module. This model contains a mixture of isotopes and allows a user to move various
