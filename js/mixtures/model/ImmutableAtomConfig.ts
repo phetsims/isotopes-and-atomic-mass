@@ -1,4 +1,4 @@
-// Copyright 2019-2025, University of Colorado Boulder
+// Copyright 2019-2026, University of Colorado Boulder
 
 /**
  * An atom configuration that doesn't use properties, and thus consumes less memory, and can't be changed.
