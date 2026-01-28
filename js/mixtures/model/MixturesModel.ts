@@ -1,8 +1,10 @@
 // Copyright 2014-2026, University of Colorado Boulder
 
 /**
- * Model portion of "Mixtures" module. This model contains a mixture of isotopes and allows a user to move various
- * different isotopes in and out of the "Isotope Test Chamber", and simply keeps track of the average mass within the chamber.
+ * MixturesModel is the main model class for the "Mixtures" screen. This model allows the user to experiment with
+ * different mixtures of isotopes for a given element, and to compare their created mixtures to nature's mixture.  They
+ * do this by moving atoms into and out of a test chamber. The model keeps track of which isotopes are in the test
+ * chamber and tracks the average atomic mass of the mixture in the chamber.
  *
  * @author John Blanco
  * @author Jesse Greenberg
@@ -41,82 +43,81 @@ const NUM_LARGE_ISOTOPES_PER_BUCKET = 10; // Numbers of isotopes that are placed
 // List of colors which will be used to represent the various isotopes.
 const ISOTOPE_COLORS = [ new Color( 180, 82, 205 ), Color.green, new Color( 255, 69, 0 ), new Color( 72, 137, 161 ) ];
 
-/*
- * Enum of the possible interactivity types. The user is dragging large isotopes between the test chamber and a set of
- * buckets. The user is adding and removing small isotopes to/from the chamber using sliders.
- */
+
+// Enum type of the possible interactivity types. The user is dragging large isotopes between the test chamber and a set
+// of buckets. The user is adding and removing small isotopes to/from the chamber using sliders.
 export const interactivityModeValues = [ 'bucketsAndLargeAtoms', 'slidersAndSmallAtoms' ] as const;
 export type InteractivityModeType = typeof interactivityModeValues[number];
 
 // constants
-const NUM_NATURES_MIX_ATOMS = 1000; // Total number of atoms placed in the chamber when depicting nature's mix.
+const NUM_NATURES_MIX_ATOMS = 1000; // total number of atoms placed in the chamber when depicting nature's mix
 
 class MixturesModel {
 
-  public readonly interactivityModeProperty: Property<InteractivityModeType>;
-  public readonly possibleIsotopesProperty: Property<NumberAtom[]>;
-  public readonly showingNaturesMixProperty: Property<boolean>;
-  public readonly naturesIsotopeUpdated: Emitter;
-  public readonly selectedAtomConfig: NumberAtom;
-  public readonly testChamber: IsotopeTestChamber;
-  public prototypeIsotope: NumberAtom;
+  // The prototype isotope that defines the current element being worked with.
+  public prototypeIsotope = new NumberAtom();
+
+  // The configuration of the atom selected via the periodic table.  Setting this is one of the ways through which the
+  // current element can be chosen.
+  public readonly selectedAtomConfig = new NumberAtom( {
+    protonCount: DEFAULT_ATOM_CONFIG.protonCount,
+    neutronCount: DEFAULT_ATOM_CONFIG.neutronCount,
+    electronCount: DEFAULT_ATOM_CONFIG.electronCount
+  } );
+
+  // The mode through which the user is controlling the set of isotope instances in the test chamber, either through the
+  // buckets (smaller quantities) or the sliders (larger quantities).
+  public readonly interactivityModeProperty = new Property<InteractivityModeType>( 'bucketsAndLargeAtoms' );
+
+  // The list of isotopes that exist in nature as variations of the current "prototype isotope". In other words, this
+  // contains a list of all stable isotopes that match the atomic number of the currently configured isotope. There
+  // should be only one of each possible isotope.
+  public readonly possibleIsotopesProperty = new Property<NumberAtom[]>( [] );
+
+  // A Property that indicates whether "Nature's Mix" is being shown or the user-created mix.
+  public readonly showingNaturesMixProperty = new Property<boolean>( false );
+
+  // The test chamber into and out of which the isotopes can be moved.  Isotopes that are in the test chamber are
+  // considered part of the current mixture and included in the average atomic mass calculation.
+  public readonly testChamber = new IsotopeTestChamber();
+
+  // The list of isotope buckets that are present in the model when the interactivity mode is 'bucketsAndLargeAtoms'.
   public readonly bucketList: ObservableArray<MonoIsotopeBucket>;
+
+  // The list of movable isotopes that are present in the model, either in the test chamber or in the buckets.
   public readonly isotopesList: ObservableArray<MovableAtom>;
+
+  // The list of nature's isotopes that are present in the model when nature's mix is being shown.
   public readonly naturesIsotopesList: ObservableArray<MovableAtom>;
+
+  // The list of numerical controls that are currently present.  These allow the user to quickly add or remove isotopes.
   public readonly numericalControllerList: ObservableArray<NumericalIsotopeQuantityControl>;
 
   // This map will be used to store the user-created mix states for each element and for the two interactivity modes so
   // that they can be restored when the user switches between elements, modes, and showing nature's mix.
   private mapIsotopeConfigToUserMixState: Map<number, Map<InteractivityModeType, State>>;
 
+  // An emitter that notifies listeners when nature's isotopes have been updated.  This is used so that the view can
+  // essentially get one notification when all of nature's isotopes have been added to the test chamber instead of
+  // hundreds of separate notifications.
+  public readonly naturesIsotopeUpdated = new Emitter();
+
   /**
    * Constructor for the Mixtures Model
    **/
   public constructor() {
 
-    // Property that determines the type of user interactivity that is set.
-    this.interactivityModeProperty = new Property<InteractivityModeType>( 'bucketsAndLargeAtoms' );
-
-    // This property contains the list of isotopes that exist in nature as variations of the current "prototype isotope".
-    // In other words, this contains a list of all stable isotopes that match the atomic weight of the currently
-    // configured isotope. There should be only one of each possible isotope.
-    this.possibleIsotopesProperty = new Property<NumberAtom[]>( [] );
-
-    // Property that determines whether the user's mix or nature's mix is being displayed.
-    this.showingNaturesMixProperty = new Property<boolean>( false );
-
-    // events emitted by instances of this type
-    this.naturesIsotopeUpdated = new Emitter();
-
-    this.selectedAtomConfig = new NumberAtom( {
-      protonCount: DEFAULT_ATOM_CONFIG.protonCount,
-      neutronCount: DEFAULT_ATOM_CONFIG.neutronCount,
-      electronCount: DEFAULT_ATOM_CONFIG.electronCount
-    } );
-
-    // the test chamber into and out of which the isotopes can be moved
-    this.testChamber = new IsotopeTestChamber();
-
-    this.prototypeIsotope = new NumberAtom();
-
-    // list of the isotope buckets
+    // Create the observable arrays that will hold the various model elements that come and go.
     this.bucketList = createObservableArray<MonoIsotopeBucket>();
-
-    // This is a list of the "My Mix" isotopes that are
-    // present in the model, either in the test chamber or the bucket.  This does NOT track the "Nature's Mix" isotopes.
     this.isotopesList = createObservableArray<MovableAtom>();
-
     this.naturesIsotopesList = createObservableArray<MovableAtom>();
-
-    // List of the numerical controls that,
-    // when present, can be used to add or remove isotopes to/from the test chamber.
     this.numericalControllerList = createObservableArray<NumericalIsotopeQuantityControl>();
 
-    // map of elements to user mixes. These are restored when switching between elements
+    // Map of elements to user mixes. These are restored when switching between elements.
     this.mapIsotopeConfigToUserMixState = new Map<number, Map<InteractivityModeType, State>>();
     this.updatePossibleIsotopesList();
 
-    // watch for external updates to the configuration and match them (the periodic table can cause this)
+    // Watch for external updates to the configuration and match them (the periodic table can cause this).
     this.selectedAtomConfig.atomUpdated.addListener( () => {
       this.setAtomConfiguration( this.selectedAtomConfig );
     } );
@@ -238,7 +239,8 @@ class MixturesModel {
   }
 
   /**
-   * Place an isotope into the test chamber or a bucket based on its current position.
+   * Decide whether to place an isotope into the test chamber or a bucket based on its current position, and then do
+   * the placement.
    */
   private placeIsotope( isotope: MovableAtom, bucket: MonoIsotopeBucket, testChamber: IsotopeTestChamber ): void {
     if ( testChamber.isIsotopePositionedOverChamber( isotope ) ) {
@@ -326,8 +328,8 @@ class MixturesModel {
   private getState(): State {
 
     // If any movable isotope instances are being dragged by the user at this moment, we need to force that isotope
-    // instance into a state that indicates that it isn't.  Otherwise it can get lost, since it will neither be in a
-    // bucket or in the test chamber.  This case can only occur in multi-touch situations, see
+    // instance into a state that indicates that it isn't.  Otherwise, it can get lost, since it will neither be in a
+    // bucket nor the test chamber.  This case can only occur in multitouch situations, see
     // https://github.com/phetsims/isotopes-and-atomic-mass/issues/101.
     const userControlledMovableIsotopes = this.isotopesList.filter( isotope => isotope.isDraggingProperty.value );
     userControlledMovableIsotopes.forEach( isotope => {
@@ -615,7 +617,7 @@ class MixturesModel {
       let numToCreate = roundSymmetric( NUM_NATURES_MIX_ATOMS * AtomIdentifier.getNaturalAbundance( isotopeConfig, 5 ) );
       if ( numToCreate === 0 ) {
 
-        // The calculated quantity was 0, but we don't want to have no instances of this isotope in the chamber, so
+        // The calculated quantity was 0, but we don't want to have zero instances of this isotope in the chamber, so
         // add only one. This behavior was requested by the design team.
         numToCreate = 1;
       }
