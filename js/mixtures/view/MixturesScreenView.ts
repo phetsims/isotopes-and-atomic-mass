@@ -27,6 +27,7 @@ import Node from '../../../../scenery/js/nodes/Node.js';
 import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
+import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
 import ShredConstants from '../../../../shred/js/ShredConstants.js';
 import BucketDragListener from '../../../../shred/js/view/BucketDragListener.js';
 import ExpandedPeriodicTableNode from '../../../../shred/js/view/ExpandedPeriodicTableNode.js';
@@ -38,6 +39,7 @@ import HSlider from '../../../../sun/js/HSlider.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
+import ImmutableAtomConfig from '../model/ImmutableAtomConfig.js';
 import MixturesModel, { InteractivityModeType } from '../model/MixturesModel.js';
 import MonoIsotopeBucket from '../model/MonoIsotopeBucket.js';
 import MovableAtom from '../model/MovableAtom.js';
@@ -218,13 +220,30 @@ class MixturesScreenView extends ScreenView {
     clearBoxButton.top = chamberLayer.bottom + 5;
     clearBoxButton.left = chamberLayer.left;
 
-    // Periodic table
-    const periodicTableNode = new ExpandedPeriodicTableNode( mixturesModel.selectedAtomConfig, 18, {
+    // periodic table
+    const periodicTableNode = new ExpandedPeriodicTableNode( mixturesModel.selectedAtomConfig.protonCountProperty, 18, {
       tandem: tandem
     } );
+
+    // TODO: See https://github.com/phetsims/isotopes-and-atomic-mass/issues/103.  This way of updating the atom config
+    //       is lame.  There should be a single selected element property in the model that drives both the proton count
+    //       and the default isotope selection.  I (jbphet) plan to address this in a future refactoring.
+    // When the proton count changes, update the neutron count to match the most common isotope for that element.
+    mixturesModel.selectedAtomConfig.protonCountProperty.lazyLink( protonCount => {
+      mixturesModel.setAtomConfiguration(
+        new ImmutableAtomConfig(
+          protonCount,
+          AtomIdentifier.getNumNeutronsInMostCommonIsotope( protonCount ),
+          protonCount // neutral atom
+        )
+      );
+    } );
+
+    // size and position - empirically determined to match design
     periodicTableNode.scale( 0.55 );
     periodicTableNode.top = 10;
     periodicTableNode.right = this.layoutBounds.width - 10;
+
     this.addChild( periodicTableNode );
 
     // Pie chart

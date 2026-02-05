@@ -24,6 +24,7 @@ import ShredConstants from '../../../../shred/js/ShredConstants.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
+import ImmutableAtomConfig from '../../mixtures/model/ImmutableAtomConfig.js';
 
 type IsDraggingListener = ( isDragging: boolean ) => void;
 
@@ -37,7 +38,7 @@ const JUMP_DISTANCES: number[] = [ MAX_NUCLEUS_JUMP * 0.4, MAX_NUCLEUS_JUMP * 0.
 const NUCLEON_CAPTURE_RADIUS = 100;
 const BUCKET_SIZE = new Dimension2( 130, 60 );
 const NEUTRON_BUCKET_POSITION = new Vector2( -220, -180 );
-const DEFAULT_ATOM_CONFIG = new NumberAtom( { protonCount: 1, neutronCount: 0, electronCount: 1 } ); // hydrogen atom
+const DEFAULT_ATOM_CONFIG = new ImmutableAtomConfig( 1, 0, 1 ); // neutral hydrogen atom
 
 class IsotopesModel {
 
@@ -57,15 +58,17 @@ class IsotopesModel {
    * Constructor for the Make Isotopes model. This will construct the model with atoms initially in the bucket.
    */
   public constructor() {
+
+    // Create the particle atom that the user will interact with.
     this.particleAtom = new ParticleAtom( {
       tandem: Tandem.OPT_OUT
     } );
 
     // Make available a 'number atom' that tracks the state of the particle atom.
     this.numberAtom = new NumberAtom( {
-      protonCount: DEFAULT_ATOM_CONFIG.protonCountProperty.get(),
-      neutronCount: DEFAULT_ATOM_CONFIG.neutronCountProperty.get(),
-      electronCount: DEFAULT_ATOM_CONFIG.electronCountProperty.get()
+      protonCount: DEFAULT_ATOM_CONFIG.protonCount,
+      neutronCount: DEFAULT_ATOM_CONFIG.neutronCount,
+      electronCount: DEFAULT_ATOM_CONFIG.electronCount
     } );
 
     // Emitter that notifies listeners when the atom has been reconfigured (protons or neutrons have changed).
@@ -115,7 +118,7 @@ class IsotopesModel {
     } );
 
     this.numberAtom.atomUpdated.addListener( () => {
-      this.setAtomConfiguration( this.numberAtom );
+      this.setAtomConfiguration( ImmutableAtomConfig.getConfiguration( this.numberAtom ) );
     } );
 
     // Set the default atom configuration.
@@ -224,7 +227,7 @@ class IsotopesModel {
    * to the provided number atom.  This is done here rather than by directly accessing the atom so that the appropriate
    * notifications can be sent and the bucket can be reinitialized.
    */
-  public setAtomConfiguration( numberAtom: NumberAtom ): void {
+  private setAtomConfiguration( atomConfiguration: ImmutableAtomConfig ): void {
 
     // Clear the current atom configuration.
     this.particleAtom.clear();
@@ -235,26 +238,26 @@ class IsotopesModel {
     this.neutronBucket.reset();
 
     // Set the new atom configuration (but not redundantly, or we could get recursion).
-    if ( numberAtom !== this.numberAtom ) {
+    if ( !atomConfiguration.equals( this.numberAtom ) ) {
       this.numberAtom.setSubAtomicParticleCount(
-        numberAtom.protonCountProperty.get(),
-        numberAtom.neutronCountProperty.get(),
-        numberAtom.electronCountProperty.get()
+        atomConfiguration.protonCount,
+        atomConfiguration.neutronCount,
+        atomConfiguration.electronCount
       );
     }
 
     // Create the particles for the atom based on the number atom's properties.
-    for ( let i = 0; i < numberAtom.electronCountProperty.get(); i++ ) {
+    for ( let i = 0; i < atomConfiguration.electronCount; i++ ) {
       const electron = new Particle( 'electron' );
       this.particleAtom.addParticle( electron );
       this.electrons.add( electron );
     }
-    for ( let j = 0; j < numberAtom.protonCountProperty.get(); j++ ) {
+    for ( let j = 0; j < atomConfiguration.protonCount; j++ ) {
       const proton = new Particle( 'proton' );
       this.particleAtom.addParticle( proton );
       this.protons.add( proton );
     }
-    for ( let k = 0; k < numberAtom.neutronCountProperty.get(); k++ ) {
+    for ( let k = 0; k < atomConfiguration.neutronCount; k++ ) {
       const neutron = new Particle( 'neutron' );
       this.particleAtom.addParticle( neutron );
       this.neutrons.add( neutron );
@@ -276,6 +279,9 @@ class IsotopesModel {
 
   public reset(): void {
     this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
+
+    // TODO: See https://github.com/phetsims/isotopes-and-atomic-mass/issues/103.  It's lame that this is needed, but
+    //       it currently is.  The refactor for issue 103 should make this unnecessary.
     this.numberAtom.atomUpdated.emit();
   }
 }

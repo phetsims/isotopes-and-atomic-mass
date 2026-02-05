@@ -43,7 +43,6 @@ const NUM_LARGE_ISOTOPES_PER_BUCKET = 10; // Numbers of isotopes that are placed
 // List of colors which will be used to represent the various isotopes.
 const ISOTOPE_COLORS = [ new Color( 180, 82, 205 ), Color.green, new Color( 255, 69, 0 ), new Color( 72, 137, 161 ) ];
 
-
 // Enum type of the possible interactivity types. The user is dragging large isotopes between the test chamber and a set
 // of buckets. The user is adding and removing small isotopes to/from the chamber using sliders.
 export const interactivityModeValues = [ 'bucketsAndLargeAtoms', 'slidersAndSmallAtoms' ] as const;

@@ -53,8 +53,29 @@ class ImmutableAtomConfig {
     return configsAreEqual;
   }
 
+  /**
+   * Get the atomic mass for this isotope configuration.
+   */
   public getIsotopeAtomicMass(): number {
     return AtomIdentifier.getIsotopeAtomicMass( this.protonCount, this.neutronCount );
+  }
+
+  /**
+   * String representation, used for debugging.
+   */
+  public toString(): string {
+    return `protonCount: ${this.protonCount}, neutronCount: ${this.neutronCount}, electronCount: ${this.electronCount}`;
+  }
+
+  /**
+   * Create an ImmutableAtomConfig from a TReadOnlyNumberAtom.
+   */
+  public static getConfiguration( atom: TReadOnlyNumberAtom ): ImmutableAtomConfig {
+    return new ImmutableAtomConfig(
+      atom.protonCountProperty.value,
+      atom.neutronCountProperty.value,
+      atom.electronCountProperty.value
+    );
   }
 }
 
