@@ -15,6 +15,7 @@
 import createObservableArray, { ObservableArray } from '../../../../axon/js/createObservableArray.js';
 import DerivedStringProperty from '../../../../axon/js/DerivedStringProperty.js';
 import Emitter from '../../../../axon/js/Emitter.js';
+import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import { roundSymmetric } from '../../../../dot/js/util/roundSymmetric.js';
@@ -53,16 +54,9 @@ const NUM_NATURES_MIX_ATOMS = 1000; // total number of atoms placed in the chamb
 
 class MixturesModel {
 
-  // The prototype isotope that defines the current element being worked with.
-  public prototypeIsotope = new NumberAtom();
-
-  // The configuration of the atom selected via the periodic table.  Setting this is one of the ways through which the
-  // current element can be chosen.
-  public readonly selectedAtomConfig = new NumberAtom( {
-    protonCount: DEFAULT_ATOM_CONFIG.protonCount,
-    neutronCount: DEFAULT_ATOM_CONFIG.neutronCount,
-    electronCount: DEFAULT_ATOM_CONFIG.electronCount
-  } );
+  // The proton count of the element that is currently being worked with. This is used to determine which isotopes are
+  // available for the user to work with.  Setting this value is how the current element is changed.
+  public selectedElementProtonCountProperty: NumberProperty;
 
   // The mode through which the user is controlling the set of isotope instances in the test chamber, either through the
   // buckets (smaller quantities) or the sliders (larger quantities).
@@ -106,6 +100,9 @@ class MixturesModel {
    **/
   public constructor() {
 
+    // Start off with hydrogen as the default element, which has one proton.
+    this.selectedElementProtonCountProperty = new NumberProperty( 1 );
+
     // Create the observable arrays that will hold the various model elements that come and go.
     this.bucketList = createObservableArray<MonoIsotopeBucket>();
     this.isotopesList = createObservableArray<MovableAtom>();
@@ -114,15 +111,22 @@ class MixturesModel {
 
     // Map of elements to user mixes. These are restored when switching between elements.
     this.mapIsotopeConfigToUserMixState = new Map<number, Map<InteractivityModeType, State>>();
-    this.updatePossibleIsotopesList();
 
-    // Watch for external updates to the configuration and match them (the periodic table can cause this).
-    this.selectedAtomConfig.atomUpdated.addListener( () => {
-      this.setAtomConfiguration( this.selectedAtomConfig );
+    // Monitor the currently selected element and update other aspects of the model accordingly when changes occur.
+    this.selectedElementProtonCountProperty.link( ( newProtonCount, previousProtonCount ) => {
+
+      // Before changing anything else, save the current state for the previously selected element before transitioning
+      // to the new one.
+      if ( previousProtonCount !== null ) {
+        this.saveState( previousProtonCount, this.interactivityModeProperty.value );
+      }
+
+      // Update the list of isotopes that are available for the new element.
+      this.updatePossibleIsotopesList( newProtonCount );
+
+      // Update the controllers (i.e. buckets or sliders) and the contents of the test chamber to match the new element.
+      this.updateTestChamberAndControllers();
     } );
-
-    // Set the initial atom configuration.
-    this.setAtomConfiguration( this.selectedAtomConfig );
 
     // Listen to Property that indicates whether "Nature's Mix" is being shown and show/hide the appropriate isotopes
     // when the value changes. This doesn't need and unlink as it stays throughout the life of the sim.
@@ -130,14 +134,14 @@ class MixturesModel {
       if ( showingNaturesMix ) {
 
         // Get the current user-created mix state.
-        const usersMixState = this.getState();
+        const usersMixState = this.getCurrentState();
 
         // We need to tweak this part of the state because we are transitioning to nature's mix.
         usersMixState.showingNaturesMix = false;
 
         // Save the user-created mix state so that it can be restored later if needed.
         let stateMapForProtonCount = this.mapIsotopeConfigToUserMixState.get(
-          this.prototypeIsotope.protonCountProperty.get()
+          this.selectedElementProtonCountProperty.value
         );
         if ( !stateMapForProtonCount ) {
 
@@ -145,7 +149,7 @@ class MixturesModel {
           // modes.
           stateMapForProtonCount = new Map<InteractivityModeType, State>();
           this.mapIsotopeConfigToUserMixState.set(
-            this.prototypeIsotope.protonCountProperty.get(),
+            this.selectedElementProtonCountProperty.value,
             stateMapForProtonCount
           );
         }
@@ -160,15 +164,18 @@ class MixturesModel {
         this.naturesIsotopesList.clear();
 
         // If there is a previously saved user-created mix state for this element and interactivity mode, restore it.
-        if ( this.mapIsotopeConfigToUserMixState.has( this.prototypeIsotope.protonCountProperty.get() ) ) {
+        if ( this.mapIsotopeConfigToUserMixState.has( this.selectedElementProtonCountProperty.value ) ) {
 
           const stateMapForProtonCount = this.mapIsotopeConfigToUserMixState.get(
-            this.prototypeIsotope.protonCountProperty.get()
+            this.selectedElementProtonCountProperty.value
           )!;
 
           if ( stateMapForProtonCount ) {
             const state = stateMapForProtonCount.get( this.interactivityModeProperty.get() );
-            state && this.setState( state );
+            if ( state ) {
+              state.showingNaturesMix = false; // Prevent overwrite of nature's mix state.
+              this.setState( state );
+            }
           }
           else {
             this.setUpInitialUsersMix();
@@ -187,30 +194,27 @@ class MixturesModel {
     this.interactivityModeProperty.lazyLink( ( interactivityMode, oldInteractivityMode ) => {
 
       // Get the current user-created mix state.
-      const usersMixState = this.getState();
+      const usersMixState = this.getCurrentState();
       usersMixState.interactivityMode = oldInteractivityMode;
 
       // Save the user-created mix state so that it can be restored later.
       let stateMapForProtonCount = this.mapIsotopeConfigToUserMixState.get(
-        this.prototypeIsotope.protonCountProperty.get()
+        this.selectedElementProtonCountProperty.value
       );
       if ( !stateMapForProtonCount ) {
 
         // Nothing has been saved for this element yet, so create a new map to hold the states for the interactivity
         // modes.
         stateMapForProtonCount = new Map<InteractivityModeType, State>();
-        this.mapIsotopeConfigToUserMixState.set(
-          this.prototypeIsotope.protonCountProperty.get(),
-          stateMapForProtonCount
-        );
+        this.mapIsotopeConfigToUserMixState.set( this.selectedElementProtonCountProperty.value, stateMapForProtonCount );
       }
       stateMapForProtonCount.set( oldInteractivityMode, usersMixState );
 
       // See if there is a previously saved user-created mix state for this element and interactivity mode and restore
       // it if found.
-      if ( this.mapIsotopeConfigToUserMixState.has( this.prototypeIsotope.protonCountProperty.get() ) ) {
+      if ( this.mapIsotopeConfigToUserMixState.has( this.selectedElementProtonCountProperty.value ) ) {
         stateMapForProtonCount = this.mapIsotopeConfigToUserMixState.get(
-          this.prototypeIsotope.protonCountProperty.get()
+          this.selectedElementProtonCountProperty.value
         )!;
         const state = stateMapForProtonCount.get( interactivityMode );
         if ( state ) {
@@ -322,9 +326,12 @@ class MixturesModel {
   }
 
   /**
-   * Returns the state of the model.
+   * Get the current state of the model in a format that can be restored later.
+   * @param selectedElementProtonCount - Proton count of the currently selected element, or null to use the current one
+   *                                     from the model.  This parameter is used when saving the state when changing
+   *                                     to a new element in order to capture the previous element's proton count.
    */
-  private getState(): State {
+  private getCurrentState( selectedElementProtonCount: number | null = null ): State {
 
     // If any movable isotope instances are being dragged by the user at this moment, we need to force that isotope
     // instance into a state that indicates that it isn't.  Otherwise, it can get lost, since it will neither be in a
@@ -335,7 +342,7 @@ class MixturesModel {
       isotope.isDraggingProperty.set( false );
     } );
 
-    return new State( this );
+    return new State( this, selectedElementProtonCount );
   }
 
   /**
@@ -347,9 +354,9 @@ class MixturesModel {
     // Clear out any particles that are currently in the test chamber.
     this.removeAllIsotopesFromTestChamberAndModel();
 
-    // Restore the prototype isotope.
-    this.prototypeIsotope = modelState.elementConfig;
-    this.updatePossibleIsotopesList();
+    // Restore the selected element.
+    this.selectedElementProtonCountProperty.value = modelState.selectedElementProtonCount;
+    this.updatePossibleIsotopesList( modelState.selectedElementProtonCount );
 
     // Restore the nature's mix setting.
     this.showingNaturesMixProperty.set( modelState.showingNaturesMix );
@@ -389,67 +396,56 @@ class MixturesModel {
   }
 
   /**
-   * Set the element that is currently in use, and for which all stable isotopes will be available for movement in and
-   * out of the test chamber. In case you're wondering why this is done as an atom instead of just setting the atomic
-   * number, it is so that this will play well with the existing controllers that already existed at the time this
-   * class was created.
-   *
-   * For the sake of efficiency, clients should be careful not to call this when it isn't needed.
+   * Save the current user-created mix state for the specified element and interactivity mode.
    */
-  public setAtomConfiguration( atom: NumberAtom | ImmutableAtomConfig ): void {
-    if ( !this.selectedAtomConfig.equals( atom ) ) {
-      this.selectedAtomConfig.protonCountProperty.set( atom.protonCount );
-      this.selectedAtomConfig.electronCountProperty.set( atom.electronCount );
-      this.selectedAtomConfig.neutronCountProperty.set( atom.neutronCount );
+  private saveState( elementProtonCount: number, interactivityMode: InteractivityModeType ): void {
+
+    const currentState = this.getCurrentState( elementProtonCount );
+
+    const stateMapForProtonCount = this.mapIsotopeConfigToUserMixState.get( elementProtonCount );
+    if ( stateMapForProtonCount ) {
+
+      // Update the saved state for the current interactivity mode.
+      stateMapForProtonCount.set( interactivityMode, currentState );
     }
+    else {
+
+      // Nothing has been saved for this element yet, so create a new map to hold the states for the interactivity
+      // modes.
+      const newStateMapForProtonCount = new Map<InteractivityModeType, State>();
+      newStateMapForProtonCount.set( interactivityMode, currentState );
+      this.mapIsotopeConfigToUserMixState.set( elementProtonCount, newStateMapForProtonCount );
+    }
+  }
+
+  /**
+   * Make the state of the test chamber and controllers match the current model state.  Be careful not to call this
+   * unnecessarily, since it can be expensive.
+   */
+  private updateTestChamberAndControllers(): void {
+
+    // convenience variable
+    const selectedElementProtonCount = this.selectedElementProtonCountProperty.value;
 
     if ( this.showingNaturesMixProperty.value ) {
       this.removeAllIsotopesFromTestChamberAndModel();
-      this.prototypeIsotope.protonCountProperty.set( atom.protonCount );
-      this.prototypeIsotope.neutronCountProperty.set( atom.neutronCount );
-      this.prototypeIsotope.electronCountProperty.set( atom.electronCount );
-      this.updatePossibleIsotopesList();
+      this.updatePossibleIsotopesList( selectedElementProtonCount );
       this.showNaturesMix();
     }
     else {
 
-      // Save the user's mix state for the current element before transitioning to the new one.
-      if ( this.prototypeIsotope !== atom ) {
+      const savedState = this.mapIsotopeConfigToUserMixState.get( selectedElementProtonCount )?.get(
+        this.interactivityModeProperty.get()
+      );
 
-        const stateMapForProtonCount = this.mapIsotopeConfigToUserMixState.get(
-          this.prototypeIsotope.protonCountProperty.get()
-        );
-        if ( stateMapForProtonCount ) {
-          stateMapForProtonCount.set( this.interactivityModeProperty.get(), this.getState() );
-        }
-        else {
-
-          // Nothing has been saved for this element yet, so create a new map to hold the states for the interactivity
-          // modes.
-          const newStateMapForProtonCount = new Map<InteractivityModeType, State>();
-          newStateMapForProtonCount.set( this.interactivityModeProperty.get(), this.getState() );
-          this.mapIsotopeConfigToUserMixState.set(
-            this.prototypeIsotope.protonCountProperty.get(),
-            newStateMapForProtonCount
-          );
-        }
-      }
-
-      // Check whether previous state information was stored for this configuration.
-      if ( this.mapIsotopeConfigToUserMixState.has( atom.protonCount ) &&
-           this.mapIsotopeConfigToUserMixState.get( atom.protonCount )!.get( this.interactivityModeProperty.get() ) ) {
-
-        this.setState( this.mapIsotopeConfigToUserMixState.get( atom.protonCount )!.get( this.interactivityModeProperty.get() )! );
+      if ( savedState ) {
+        this.setState( savedState );
       }
       else {
 
         // Set initial default state for this isotope configuration.
         this.removeAllIsotopesFromTestChamberAndModel();
-
-        this.prototypeIsotope.protonCountProperty.set( atom.protonCount );
-        this.prototypeIsotope.neutronCountProperty.set( atom.neutronCount );
-        this.prototypeIsotope.electronCountProperty.set( atom.electronCount );
-        this.updatePossibleIsotopesList();
+        this.updatePossibleIsotopesList( selectedElementProtonCount );
 
         // Set all model elements for the first time this element's user mix is shown.
         this.setUpInitialUsersMix();
@@ -458,10 +454,11 @@ class MixturesModel {
   }
 
   /**
-   * Get a list of the possible isotopes, sorted from lightest to heaviest.
+   * Update the list of the possible isotopes based on the provided element, sorted from lightest to heaviest.
+   * @param elementProtonCount - the proton count of the element for which the possible isotopes list should be updated.
    */
-  private updatePossibleIsotopesList(): void {
-    const stableIsotopes = AtomIdentifier.getStableIsotopesOfElement( this.prototypeIsotope.protonCountProperty.get() );
+  private updatePossibleIsotopesList( elementProtonCount: number ): void {
+    const stableIsotopes = AtomIdentifier.getStableIsotopesOfElement( elementProtonCount );
     const newIsotopesList: NumberAtom[] = [];
     Object.entries( stableIsotopes ).forEach( ( [ index, isotope ] ) => {
       newIsotopesList.push( new NumberAtom( {
@@ -666,7 +663,7 @@ class MixturesModel {
   }
 
   /**
-   * Resets the model. Returns the default settings.
+   * Resets the model. Returns to the default settings.
    */
   public reset(): void {
     this.clearBox();
@@ -674,16 +671,15 @@ class MixturesModel {
     this.interactivityModeProperty.reset();
     this.possibleIsotopesProperty.reset();
     this.showingNaturesMixProperty.reset();
-    this.prototypeIsotope = new NumberAtom();
 
     // Make sure there is nothing stored for the default configuration so that it doesn't get restored when we set that
     // as the initial configuration.
     this.mapIsotopeConfigToUserMixState.delete( DEFAULT_ATOM_CONFIG.protonCount );
 
-    // Set the default element
-    this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
+    // Reset the selected element.
+    this.selectedElementProtonCountProperty.reset();
 
-    // Remove all stored user-created mix states.  This must be done after setting the default isotope because state
+    // Remove all stored user-created mix states.  This must be done after setting the default element because state
     // could have been saved when the default was set.
     this.mapIsotopeConfigToUserMixState.clear();
   }
@@ -694,7 +690,7 @@ class MixturesModel {
  * switching between various modes.
  */
 class State {
-  public readonly elementConfig: NumberAtom;
+  public readonly selectedElementProtonCount: number;
   public readonly isotopeTestChamberState: IsotopeTestChamberState;
   public interactivityMode: InteractivityModeType;
   public showingNaturesMix: boolean;
@@ -703,16 +699,18 @@ class State {
 
   /**
    * @param model - The model to create state from
+   * @param selectedElementProtonCount - The proton count of the selected element.  If null, it will be taken from the
+   *                                     model.  This is used when saving state as the selected element is changing so
+   *                                     that the stored value is the correct one and not the updated one.
    */
-  public constructor( model: MixturesModel ) {
-    this.elementConfig = new NumberAtom( {
-      protonCount: model.prototypeIsotope.protonCountProperty.get(),
-      neutronCount: model.prototypeIsotope.neutronCountProperty.get(),
-      electronCount: model.prototypeIsotope.electronCountProperty.get()
-    } );
+  public constructor( model: MixturesModel, selectedElementProtonCount: number | null = null ) {
+
+    this.selectedElementProtonCount = selectedElementProtonCount === null ?
+                                      model.selectedElementProtonCountProperty.value :
+                                      selectedElementProtonCount;
     this.isotopeTestChamberState = model.testChamber.getState();
-    this.interactivityMode = model.interactivityModeProperty.get();
-    this.showingNaturesMix = model.showingNaturesMixProperty.get();
+    this.interactivityMode = model.interactivityModeProperty.value;
+    this.showingNaturesMix = model.showingNaturesMixProperty.value;
 
     // Make sure none of the isotope instances are in a state where they are being dragged by the user.  In the vast
     // majority of cases, they won't be when the state is recorded, so this will be a no-op, but there are some multi-

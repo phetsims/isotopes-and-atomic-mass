@@ -110,7 +110,7 @@ function ReadoutPointer( model: MixturesModel ): Node {
   function updateReadout( averageAtomicMass: number ): void {
     let weight: number;
     if ( model.showingNaturesMixProperty.get() ) {
-      weight = AtomIdentifier.getStandardAtomicMass( model.selectedAtomConfig.protonCount );
+      weight = AtomIdentifier.getStandardAtomicMass( model.selectedElementProtonCountProperty.value );
     }
     else {
       weight = averageAtomicMass;
