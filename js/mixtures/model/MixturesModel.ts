@@ -27,7 +27,7 @@ import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import ImmutableAtomConfig from './ImmutableAtomConfig.js';
 import IsotopeTestChamber, { IsotopeTestChamberState } from './IsotopeTestChamber.js';
 import MonoIsotopeBucket from './MonoIsotopeBucket.js';
-import MovableAtom from './MovableAtom.js';
+import PositionableAtom from './PositionableAtom.js';
 import NumericalIsotopeQuantityControl from './NumericalIsotopeQuantityControl.js';
 
 // constants
@@ -78,10 +78,10 @@ class MixturesModel {
   public readonly bucketList: ObservableArray<MonoIsotopeBucket>;
 
   // The list of movable isotopes that are present in the model, either in the test chamber or in the buckets.
-  public readonly isotopesList: ObservableArray<MovableAtom>;
+  public readonly isotopesList: ObservableArray<PositionableAtom>;
 
   // The list of nature's isotopes that are present in the model when nature's mix is being shown.
-  public readonly naturesIsotopesList: ObservableArray<MovableAtom>;
+  public readonly naturesIsotopesList: ObservableArray<PositionableAtom>;
 
   // The list of numerical controls that are currently present.  These allow the user to quickly add or remove isotopes.
   public readonly numericalControllerList: ObservableArray<NumericalIsotopeQuantityControl>;
@@ -105,8 +105,8 @@ class MixturesModel {
 
     // Create the observable arrays that will hold the various model elements that come and go.
     this.bucketList = createObservableArray<MonoIsotopeBucket>();
-    this.isotopesList = createObservableArray<MovableAtom>();
-    this.naturesIsotopesList = createObservableArray<MovableAtom>();
+    this.isotopesList = createObservableArray<PositionableAtom>();
+    this.naturesIsotopesList = createObservableArray<PositionableAtom>();
     this.numericalControllerList = createObservableArray<NumericalIsotopeQuantityControl>();
 
     // Map of elements to user mixes. These are restored when switching between elements.
@@ -245,7 +245,7 @@ class MixturesModel {
    * Decide whether to place an isotope into the test chamber or a bucket based on its current position, and then do
    * the placement.
    */
-  private placeIsotope( isotope: MovableAtom, bucket: MonoIsotopeBucket, testChamber: IsotopeTestChamber ): void {
+  private placeIsotope( isotope: PositionableAtom, bucket: MonoIsotopeBucket, testChamber: IsotopeTestChamber ): void {
     if ( testChamber.isIsotopePositionedOverChamber( isotope ) ) {
       testChamber.addParticle( isotope, true );
       testChamber.adjustForOverlap();
@@ -259,12 +259,12 @@ class MixturesModel {
    * Create and add an isotope of the specified configuration.  Where the isotope is initially placed depends upon the
    * current interactivity mode.
    */
-  private createAndAddIsotope( isotopeConfig: NumberAtom, animate: boolean ): MovableAtom | undefined {
-    let newIsotope: MovableAtom | undefined;
+  private createAndAddIsotope( isotopeConfig: NumberAtom, animate: boolean ): PositionableAtom | undefined {
+    let newIsotope: PositionableAtom | undefined;
     if ( this.interactivityModeProperty.get() === 'bucketsAndLargeAtoms' ) {
 
       // Create the specified isotope and add it to the appropriate bucket.
-      newIsotope = new MovableAtom(
+      newIsotope = new PositionableAtom(
         isotopeConfig.protonCountProperty.get(),
         isotopeConfig.neutronCountProperty.get(),
         new Vector2( 0, 0 )
@@ -562,7 +562,7 @@ class MixturesModel {
           new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetSlider ),
           isotopeCaptionStringProperty
         );
-        const controllerIsotope = new MovableAtom(
+        const controllerIsotope = new PositionableAtom(
           isotopeConfig.protonCountProperty.get(),
           isotopeConfig.neutronCountProperty.get(),
           new Vector2( 0, 0 ),
@@ -617,9 +617,9 @@ class MixturesModel {
         // add only one. This behavior was requested by the design team.
         numToCreate = 1;
       }
-      const isotopesToAdd: MovableAtom[] = [];
+      const isotopesToAdd: PositionableAtom[] = [];
       for ( let i = 0; i < numToCreate; i++ ) {
-        const newIsotope = new MovableAtom(
+        const newIsotope = new PositionableAtom(
           isotopeConfig.protonCountProperty.get(),
           isotopeConfig.neutronCountProperty.get(),
           this.testChamber.generateRandomPosition(),
@@ -694,7 +694,7 @@ class State {
   public interactivityMode: InteractivityModeType;
   public showingNaturesMix: boolean;
   public readonly bucketList: MonoIsotopeBucket[];
-  public readonly bucketToParticleListMap: Map<MonoIsotopeBucket, MovableAtom[]>;
+  public readonly bucketToParticleListMap: Map<MonoIsotopeBucket, PositionableAtom[]>;
 
   /**
    * @param model - The model to create state from

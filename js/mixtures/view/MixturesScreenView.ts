@@ -40,7 +40,7 @@ import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 import MixturesModel, { InteractivityModeType } from '../model/MixturesModel.js';
 import MonoIsotopeBucket from '../model/MonoIsotopeBucket.js';
-import MovableAtom from '../model/MovableAtom.js';
+import PositionableAtom from '../model/PositionableAtom.js';
 import NumericalIsotopeQuantityControl from '../model/NumericalIsotopeQuantityControl.js';
 import AverageAtomicMassIndicator from './AverageAtomicMassIndicator.js';
 import ControlIsotope from './ControlIsotope.js';
@@ -126,7 +126,7 @@ class MixturesScreenView extends ScreenView {
     mixturesModel.bucketList.forEach( addBucketView );
 
     // isotopes
-    const addIsotopeView = ( addedIsotope: MovableAtom ) => {
+    const addIsotopeView = ( addedIsotope: PositionableAtom ) => {
       const isotopeView = new ParticleView( addedIsotope, this.modelViewTransform, {
         isotopeNodeOptions: {
           baseColor: this.model.getColorForIsotope(
@@ -147,7 +147,7 @@ class MixturesScreenView extends ScreenView {
         }
       };
       addedIsotope.isDraggingProperty.link( moveToFront );
-      mixturesModel.isotopesList.addItemRemovedListener( function removalListener( removedIsotope: MovableAtom ) {
+      mixturesModel.isotopesList.addItemRemovedListener( function removalListener( removedIsotope: PositionableAtom ) {
         if ( removedIsotope === addedIsotope ) {
           isotopeLayer.removeChild( isotopeView );
           addedIsotope.isDraggingProperty.unlink( moveToFront );
@@ -165,7 +165,7 @@ class MixturesScreenView extends ScreenView {
       }
       else {
         this.isotopesLayer.setIsotopes( this.model.isotopesList );
-        const removalListener = ( removedIsotope: MovableAtom ) => {
+        const removalListener = ( removedIsotope: PositionableAtom ) => {
           if ( removedIsotope === addedIsotope ) {
             this.isotopesLayer.setIsotopes( this.model.isotopesList );
             mixturesModel.isotopesList.removeItemRemovedListener( removalListener );

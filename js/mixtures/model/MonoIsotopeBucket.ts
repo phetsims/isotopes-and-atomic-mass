@@ -11,9 +11,9 @@
 
 import SphereBucket, { SphereBucketOptions } from '../../../../phetcommon/js/model/SphereBucket.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import MovableAtom from './MovableAtom.js';
+import PositionableAtom from './PositionableAtom.js';
 
-class MonoIsotopeBucket extends SphereBucket<MovableAtom> {
+class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
 
   public readonly numProtonsInIsotope: number;
   public readonly numNeutronsInIsotope: number;
@@ -33,7 +33,7 @@ class MonoIsotopeBucket extends SphereBucket<MovableAtom> {
   /**
    * Add an isotope to the first open position in the bucket.
    */
-  public addIsotopeInstanceFirstOpen( isotope: MovableAtom, moveImmediately: boolean ): void {
+  public addIsotopeInstanceFirstOpen( isotope: PositionableAtom, moveImmediately: boolean ): void {
     if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount ) ) {
       this.addParticleFirstOpen( isotope, moveImmediately );
     }
@@ -49,7 +49,7 @@ class MonoIsotopeBucket extends SphereBucket<MovableAtom> {
   /**
    * Add an isotope to the nearest open position in the bucket.
    */
-  public addIsotopeInstanceNearestOpen( isotope: MovableAtom, animate: boolean ): void {
+  public addIsotopeInstanceNearestOpen( isotope: PositionableAtom, animate: boolean ): void {
     if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount ) ) {
       this.addParticleNearestOpen( isotope, animate );
     }

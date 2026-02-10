@@ -10,12 +10,12 @@ import { ObservableArray } from '../../../../axon/js/createObservableArray.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import CanvasNode, { CanvasNodeOptions } from '../../../../scenery/js/nodes/CanvasNode.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import MovableAtom from '../model/MovableAtom.js';
+import PositionableAtom from '../model/PositionableAtom.js';
 
 type IsotopeCanvasNodeOptions = CanvasNodeOptions;
 
 class IsotopeCanvasNode extends CanvasNode {
-  private isotopes: ObservableArray<MovableAtom>;
+  private isotopes: ObservableArray<PositionableAtom>;
   private readonly modelViewTransform: ModelViewTransform2;
 
   /**
@@ -24,7 +24,7 @@ class IsotopeCanvasNode extends CanvasNode {
    * @param modelViewTransform - to convert between model and view coordinate frames
    * @param options - that can be passed on to the underlying node
    */
-  public constructor( isotopes: ObservableArray<MovableAtom>,
+  public constructor( isotopes: ObservableArray<PositionableAtom>,
                       modelViewTransform: ModelViewTransform2,
                       options?: IsotopeCanvasNodeOptions ) {
 
@@ -60,7 +60,7 @@ class IsotopeCanvasNode extends CanvasNode {
     }
   }
 
-  public setIsotopes( isotopes: ObservableArray<MovableAtom> ): void {
+  public setIsotopes( isotopes: ObservableArray<PositionableAtom> ): void {
     this.isotopes = isotopes;
     this.invalidatePaint();
   }

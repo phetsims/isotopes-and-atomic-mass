@@ -20,7 +20,7 @@ import Color from '../../../../scenery/js/util/Color.js';
 import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import MixturesModel from './MixturesModel.js';
-import MovableAtom from './MovableAtom.js';
+import PositionableAtom from './PositionableAtom.js';
 
 // constants
 const CAPACITY = 100;
@@ -32,7 +32,7 @@ class NumericalIsotopeQuantityControl {
   public readonly isotopeConfig: NumberAtom;
   public readonly centerPosition: Vector2;
   public readonly caption: string | TReadOnlyProperty<string>;
-  public controllerIsotope?: MovableAtom;
+  public controllerIsotope?: PositionableAtom;
 
   /**
    * @param model - The main model for mixtures
@@ -57,7 +57,7 @@ class NumericalIsotopeQuantityControl {
 
     if ( changeAmount > 0 ) {
       for ( let i = 0; i < changeAmount; i++ ) {
-        const newIsotope = new MovableAtom(
+        const newIsotope = new PositionableAtom(
           this.isotopeConfig.protonCountProperty.get(),
           this.isotopeConfig.neutronCountProperty.get(),
           this.model.testChamber.generateRandomPosition(),

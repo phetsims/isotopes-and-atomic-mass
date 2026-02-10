@@ -1,12 +1,11 @@
 // Copyright 2015-2026, University of Colorado Boulder
 
 /**
- * This class represents an atom that can move around but is otherwise immutable. It was created due to a need to
- * represent atoms as single entities rather than as a collection of particles. At the time of this writing, this class
- * is used only in Isotopes and Atomic Mass of this simulation.
+ * PositionableAtom is a model element that represents an atom that can be positioned in 2D space.  The atom has a
+ * single position and does not track the positions of its individual particles (protons, neutrons, electrons).
  *
- * @author John Blanco
- * @author Jesse Greenberg
+ * @author John Blanco (PhET Interactive Simulations)
+ * @author Jesse Greenberg (PhET Interactive Simulations)
  * @author James Smith
  */
 
@@ -18,11 +17,11 @@ import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import ImmutableAtomConfig from './ImmutableAtomConfig.js';
 
 type SelfOptions = EmptySelfOptions;
-export type MovableAtomOptions = SelfOptions & ParticleOptions;
+export type PositionableAtomOptions = SelfOptions & ParticleOptions;
 
 let instanceCount = 0;
 
-class MovableAtom extends Particle {
+class PositionableAtom extends Particle {
 
   public readonly atomConfiguration: ImmutableAtomConfig;
   public showLabel: boolean;
@@ -35,10 +34,10 @@ class MovableAtom extends Particle {
     numProtons: number,
     numNeutrons: number,
     initialPosition: Vector2,
-    providedOptions?: MovableAtomOptions
+    providedOptions?: PositionableAtomOptions
   ) {
 
-    const options = optionize<MovableAtomOptions, SelfOptions, ParticleOptions>()( {
+    const options = optionize<PositionableAtomOptions, SelfOptions, ParticleOptions>()( {
       particleRadius: 10
     }, providedOptions );
 
@@ -52,5 +51,5 @@ class MovableAtom extends Particle {
   }
 }
 
-isotopesAndAtomicMass.register( 'MovableAtom', MovableAtom );
-export default MovableAtom;
+isotopesAndAtomicMass.register( 'PositionableAtom', PositionableAtom );
+export default PositionableAtom;

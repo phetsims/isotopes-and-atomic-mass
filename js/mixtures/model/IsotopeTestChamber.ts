@@ -18,7 +18,7 @@ import Rectangle from '../../../../dot/js/Rectangle.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import { TReadOnlyNumberAtom } from '../../../../shred/js/model/NumberAtom.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import MovableAtom from './MovableAtom.js';
+import PositionableAtom from './PositionableAtom.js';
 
 // constants
 
@@ -30,12 +30,12 @@ const BUFFER = 1; // isotopes stroke doesn't cross the wall, empirically determi
 
 class IsotopeTestChamber {
 
-  public readonly containedIsotopes: ObservableArray<MovableAtom>;
+  public readonly containedIsotopes: ObservableArray<PositionableAtom>;
   public readonly isotopeCountProperty: Property<number>;
   public readonly averageAtomicMassProperty: Property<number>;
 
   public constructor() {
-    this.containedIsotopes = createObservableArray<MovableAtom>();
+    this.containedIsotopes = createObservableArray<PositionableAtom>();
     this.isotopeCountProperty = new Property<number>( 0 );
     this.averageAtomicMassProperty = new Property<number>( 0 );
   }
@@ -64,14 +64,14 @@ class IsotopeTestChamber {
   /**
    * Test whether an isotope is positioned within the bounds of the chamber.
    */
-  public isIsotopePositionedOverChamber( isotope: MovableAtom ): boolean {
+  public isIsotopePositionedOverChamber( isotope: PositionableAtom ): boolean {
     return TEST_CHAMBER_RECT.containsPoint( isotope.positionProperty.get() );
   }
 
   /**
    * Add the specified isotope to the test chamber.
    */
-  public addParticle( isotope: MovableAtom, performUpdates: boolean ): void {
+  public addParticle( isotope: PositionableAtom, performUpdates: boolean ): void {
 
     // TODO: See https://github.com/phetsims/isotopes-and-atomic-mass/issues/126.  Put the affirm back and remove the
     //       workaround when state is working better.
@@ -125,7 +125,7 @@ class IsotopeTestChamber {
   /**
    * Adds a list of isotopes to the test chamber.
    */
-  public bulkAddIsotopesToChamber( isotopeList: MovableAtom[] ): void {
+  public bulkAddIsotopesToChamber( isotopeList: PositionableAtom[] ): void {
     isotopeList.forEach( isotope => {
       this.addParticle( isotope, false );
     } );
@@ -156,7 +156,7 @@ class IsotopeTestChamber {
   /**
    * Remove a particle from the chamber.
    */
-  public removeParticle( isotope: MovableAtom ): void {
+  public removeParticle( isotope: PositionableAtom ): void {
     this.containedIsotopes.remove( isotope );
     this.updateCountProperty();
     isotope.containerProperty.value = null;
@@ -176,16 +176,16 @@ class IsotopeTestChamber {
   /**
    * Checks if the isotope is contained in the chamber.
    */
-  public includes( isotope: MovableAtom ): boolean {
+  public includes( isotope: PositionableAtom ): boolean {
     return this.containedIsotopes.includes( isotope );
   }
 
   /**
    * Remove an isotope from the chamber that matches the specified atom configuration. Note that electrons are ignored.
    */
-  public removeIsotopeMatchingConfig( isotopeConfig: TReadOnlyNumberAtom ): MovableAtom | null {
+  public removeIsotopeMatchingConfig( isotopeConfig: TReadOnlyNumberAtom ): PositionableAtom | null {
     assert && assert( ( isotopeConfig.protonCountProperty.get() - isotopeConfig.electronCountProperty.get() ) === 0 );
-    let removedIsotope: MovableAtom | null = null;
+    let removedIsotope: PositionableAtom | null = null;
     this.containedIsotopes.forEach( isotope => {
       if ( isotope.atomConfiguration.equals( isotopeConfig ) ) {
         removedIsotope = isotope;
@@ -209,7 +209,7 @@ class IsotopeTestChamber {
   /**
    * Returns the containedIsotopes.
    */
-  public getContainedIsotopes(): ObservableArray<MovableAtom> {
+  public getContainedIsotopes(): ObservableArray<PositionableAtom> {
     return this.containedIsotopes;
   }
 
@@ -251,7 +251,7 @@ class IsotopeTestChamber {
       const interParticleForceConst = 200;
       const wallForceConst = interParticleForceConst * 10;
       const minInterParticleDistance = 5;
-      const mapIsotopesToForces = new Map<MovableAtom, Vector2>();
+      const mapIsotopesToForces = new Map<PositionableAtom, Vector2>();
 
       this.containedIsotopes.forEach( isotope1 => {
 
@@ -365,11 +365,11 @@ class IsotopeTestChamber {
  * state.
  */
 export class IsotopeTestChamberState {
-  public containedIsotopes: ObservableArray<MovableAtom>;
+  public containedIsotopes: ObservableArray<PositionableAtom>;
 
   public constructor( isotopeTestChamber: IsotopeTestChamber ) {
-    this.containedIsotopes = createObservableArray<MovableAtom>();
-    isotopeTestChamber.containedIsotopes.forEach( ( isotope: MovableAtom ) => {
+    this.containedIsotopes = createObservableArray<PositionableAtom>();
+    isotopeTestChamber.containedIsotopes.forEach( ( isotope: PositionableAtom ) => {
       this.containedIsotopes.add( isotope );
     } );
   }
