@@ -129,10 +129,6 @@ class MixturesScreenView extends ScreenView {
     const addIsotopeView = ( addedIsotope: PositionableAtom ) => {
       const isotopeView = new ParticleView( addedIsotope, this.modelViewTransform, {
         isotopeNodeOptions: {
-          baseColor: this.model.getColorForIsotope(
-            addedIsotope.atomConfigurationProperty.value.protonCount,
-            addedIsotope.atomConfigurationProperty.value.neutronCount
-          ),
           protonCount: addedIsotope.atomConfigurationProperty.value.protonCount,
           massNumber: addedIsotope.atomConfigurationProperty.value.getMassNumber()
         }

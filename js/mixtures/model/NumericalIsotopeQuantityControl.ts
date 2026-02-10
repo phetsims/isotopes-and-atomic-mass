@@ -16,7 +16,6 @@
 import Property from '../../../../axon/js/Property.js';
 import { TReadOnlyProperty } from '../../../../axon/js/TReadOnlyProperty.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import Color from '../../../../scenery/js/util/Color.js';
 import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import MixturesModel from './MixturesModel.js';
@@ -64,10 +63,6 @@ class NumericalIsotopeQuantityControl {
           { particleRadius: 4 }
         );
         newIsotope.showLabel = false;
-        newIsotope.color = this.model.getColorForIsotope(
-          newIsotope.atomConfigurationProperty.value.protonCount,
-          newIsotope.atomConfigurationProperty.value.neutronCount
-        );
         this.model.testChamber.addParticle( newIsotope, true );
         this.model.isotopesList.add( newIsotope );
       }
@@ -83,16 +78,10 @@ class NumericalIsotopeQuantityControl {
   }
 
   /**
-   * Returns the base color for this isotope
-   */
-  public getBaseColor(): Color {
-    return this.model.getColorForIsotope( this.isotopeConfig.protonCount, this.isotopeConfig.neutronCount );
-  }
-
-  /**
    * Returns the current quantity in the test chamber
    */
   public getQuantity(): number {
+
     // Verify that the internal property matches that of the test chamber.
     assert && assert( this.quantityProperty.get() === this.model.testChamber.getIsotopeCount( this.isotopeConfig ) );
     // Return the value.

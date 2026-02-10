@@ -111,8 +111,7 @@ class ControlIsotope extends Node {
     controller.quantityProperty.link( changedValue );
 
     const isotopeNode = new IsotopeNode( controller.controllerIsotope!, 6, {
-      showLabel: false,
-      baseColor: controller.getBaseColor()
+      showLabel: false
     } );
     labelLayer.addChild( isotopeNode );
     const captionLabel = new Text( controller.caption, {

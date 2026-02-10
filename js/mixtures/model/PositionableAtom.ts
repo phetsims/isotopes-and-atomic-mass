@@ -13,9 +13,9 @@
 import Property from '../../../../axon/js/Property.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
-import Color from '../../../../scenery/js/util/Color.js';
 import Particle, { ParticleOptions } from '../../../../shred/js/model/Particle.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
+import getIsotopeColor from './getIsotopeColor.js';
 import ImmutableAtomConfig from './ImmutableAtomConfig.js';
 
 type SelfOptions = EmptySelfOptions;
@@ -33,9 +33,6 @@ class PositionableAtom extends Particle {
 
   // Unique identifier for this atom, used for debugging and testing purposes.
   public readonly instanceCount: number;
-
-  // Color to use for the atom, when shown in the view.  Set value to change.
-  public color = Color.GREEN;
 
   public constructor(
     initialProtonCount: number,
@@ -57,6 +54,11 @@ class PositionableAtom extends Particle {
     );
     this.showLabel = true;
     this.instanceCount = instanceCount++;
+
+    // Update the color information - which will be used by the view - based on the atom configuration.
+    this.atomConfigurationProperty.link( atomConfig => {
+      this.colorProperty.value = getIsotopeColor( atomConfig.protonCount, atomConfig.neutronCount );
+    } );
   }
 }
 

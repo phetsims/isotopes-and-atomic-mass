@@ -20,15 +20,15 @@ import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import { roundSymmetric } from '../../../../dot/js/util/roundSymmetric.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import Color from '../../../../scenery/js/util/Color.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
 import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
+import getIsotopeColor from './getIsotopeColor.js';
 import ImmutableAtomConfig from './ImmutableAtomConfig.js';
 import IsotopeTestChamber, { IsotopeTestChamberState } from './IsotopeTestChamber.js';
 import MonoIsotopeBucket from './MonoIsotopeBucket.js';
-import PositionableAtom from './PositionableAtom.js';
 import NumericalIsotopeQuantityControl from './NumericalIsotopeQuantityControl.js';
+import PositionableAtom from './PositionableAtom.js';
 
 // constants
 const DEFAULT_ATOM_CONFIG = new ImmutableAtomConfig( 1, 0, 1 ); // Hydrogen.
@@ -40,9 +40,6 @@ const BUCKET_SIZE = new Dimension2( 120, 50 ); // Size of the buckets that will 
 const LARGE_ISOTOPE_RADIUS = 10;
 const SMALL_ISOTOPE_RADIUS = 4;
 const NUM_LARGE_ISOTOPES_PER_BUCKET = 10; // Numbers of isotopes that are placed into the buckets
-
-// List of colors which will be used to represent the various isotopes.
-const ISOTOPE_COLORS = [ new Color( 180, 82, 205 ), Color.green, new Color( 255, 69, 0 ), new Color( 72, 137, 161 ) ];
 
 // Enum type of the possible interactivity types. The user is dragging large isotopes between the test chamber and a set
 // of buckets. The user is adding and removing small isotopes to/from the chamber using sliders.
@@ -269,7 +266,6 @@ class MixturesModel {
         isotopeConfig.neutronCountProperty.get(),
         new Vector2( 0, 0 )
       );
-      newIsotope.color = this.getColorForIsotope( isotopeConfig.protonCount, isotopeConfig.neutronCount );
 
       const bucket = this.getBucketForIsotope( isotopeConfig );
       if ( bucket ) {
@@ -539,7 +535,7 @@ class MixturesModel {
           {
             position: new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetBucket ),
             size: BUCKET_SIZE,
-            baseColor: this.getColorForIsotope( isotopeConfig.protonCount, isotopeConfig.neutronCount ),
+            baseColor: getIsotopeColor( isotopeConfig.protonCount, isotopeConfig.neutronCount ),
             captionText: isotopeCaptionStringProperty,
             sphereRadius: LARGE_ISOTOPE_RADIUS
           }
@@ -562,15 +558,14 @@ class MixturesModel {
           new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetSlider ),
           isotopeCaptionStringProperty
         );
-        const controllerIsotope = new PositionableAtom(
+
+        // Create a small isotope instance to be used in the controller as a sort of icon.
+        newController.controllerIsotope = new PositionableAtom(
           isotopeConfig.protonCountProperty.get(),
           isotopeConfig.neutronCountProperty.get(),
           new Vector2( 0, 0 ),
           { particleRadius: SMALL_ISOTOPE_RADIUS }
         );
-        controllerIsotope.color = this.getColorForIsotope( isotopeConfig.protonCount, isotopeConfig.neutronCount );
-
-        newController.controllerIsotope = controllerIsotope;
 
         this.numericalControllerList.add( newController );
       }
@@ -579,19 +574,6 @@ class MixturesModel {
 
   public removeNumericalControllers(): void {
     this.numericalControllerList.clear();
-  }
-
-  /**
-   * Get the color for an isotope.
-   */
-  public getColorForIsotope( protonCount: number, neutronCount: number ): Color {
-    const isotope = this.possibleIsotopesProperty.value.find(
-      atom => atom.protonCountProperty.get() === protonCount &&
-              atom.neutronCountProperty.get() === neutronCount
-    );
-    return isotope && this.possibleIsotopesProperty.value.includes( isotope ) ?
-           ISOTOPE_COLORS[ this.possibleIsotopesProperty.value.indexOf( isotope ) ] :
-           Color.PINK;
   }
 
   private showNaturesMix(): void {
@@ -625,7 +607,6 @@ class MixturesModel {
           this.testChamber.generateRandomPosition(),
           { particleRadius: SMALL_ISOTOPE_RADIUS }
         );
-        newIsotope.color = this.getColorForIsotope( isotopeConfig.protonCount, isotopeConfig.neutronCount );
 
         newIsotope.showLabel = false;
         isotopesToAdd.push( newIsotope );

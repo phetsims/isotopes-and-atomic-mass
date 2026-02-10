@@ -23,6 +23,7 @@ import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
 import Panel from '../../../../sun/js/Panel.js';
 import PieChartNode, { PieSlice } from '../../common/view/PieChartNode.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
+import getIsotopeColor from '../model/getIsotopeColor.js';
 import MixturesModel from '../model/MixturesModel.js';
 
 // constants
@@ -171,7 +172,7 @@ class IsotopeProportionsPieChart extends Node {
     let i = 0;
     this.model.possibleIsotopesProperty.get().forEach( isotope => {
       const value = this.model.testChamber.getIsotopeCount( isotope );
-      const color = this.model.getColorForIsotope( isotope.protonCount, isotope.neutronCount );
+      const color = getIsotopeColor( isotope.protonCount, isotope.neutronCount );
       this.slices[ i ] = { value: value, color: color, stroke: Color.BLACK, lineWidth: 0.5 };
       i += 1;
     } );

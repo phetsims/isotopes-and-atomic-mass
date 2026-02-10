@@ -51,7 +51,7 @@ class IsotopeCanvasNode extends CanvasNode {
         const position = isotope.positionProperty.get();
         const x = this.modelViewTransform.modelToViewX( position.x );
         const y = this.modelViewTransform.modelToViewY( position.y );
-        context.fillStyle = isotope.color.toCSS();
+        context.fillStyle = isotope.colorProperty.value.toCSS();
         context.beginPath();
         context.arc( x, y, radius, 0, 2 * Math.PI, true );
         context.fill();
