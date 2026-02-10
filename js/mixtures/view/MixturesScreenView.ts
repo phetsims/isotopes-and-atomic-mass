@@ -130,11 +130,11 @@ class MixturesScreenView extends ScreenView {
       const isotopeView = new ParticleView( addedIsotope, this.modelViewTransform, {
         isotopeNodeOptions: {
           baseColor: this.model.getColorForIsotope(
-            addedIsotope.atomConfiguration.protonCount,
-            addedIsotope.atomConfiguration.neutronCount
+            addedIsotope.atomConfigurationProperty.value.protonCount,
+            addedIsotope.atomConfigurationProperty.value.neutronCount
           ),
-          protonCount: addedIsotope.atomConfiguration.protonCount,
-          massNumber: addedIsotope.atomConfiguration.protonCount + addedIsotope.atomConfiguration.neutronCount
+          protonCount: addedIsotope.atomConfigurationProperty.value.protonCount,
+          massNumber: addedIsotope.atomConfigurationProperty.value.getMassNumber()
         }
       } );
       isotopeView.center = this.modelViewTransform.modelToViewPosition( addedIsotope.positionProperty.get() );

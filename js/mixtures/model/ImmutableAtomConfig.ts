@@ -61,6 +61,13 @@ class ImmutableAtomConfig {
   }
 
   /**
+   * Get the mass number for this isotope configuration, which is the sum of the number of protons and neutrons.
+   */
+  public getMassNumber(): number {
+    return this.protonCount + this.neutronCount;
+  }
+
+  /**
    * String representation, used for debugging.
    */
   public toString(): string {

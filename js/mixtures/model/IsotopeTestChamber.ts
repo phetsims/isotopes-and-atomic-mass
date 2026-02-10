@@ -47,7 +47,7 @@ class IsotopeTestChamber {
     assert && assert( isotopeConfig.protonCountProperty.get() === isotopeConfig.electronCountProperty.get() );
     let isotopeCount = 0;
     this.containedIsotopes.forEach( isotope => {
-      if ( isotope.atomConfiguration.equals( isotopeConfig ) ) {
+      if ( isotope.atomConfigurationProperty.value.equals( isotopeConfig ) ) {
         isotopeCount++;
       }
     } );
@@ -117,7 +117,7 @@ class IsotopeTestChamber {
       this.updateCountProperty();
       this.averageAtomicMassProperty.set(
         ( ( this.averageAtomicMassProperty.get() * ( this.isotopeCountProperty.get() - 1 ) ) +
-          isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCountProperty.get()
+          isotope.atomConfigurationProperty.value.getIsotopeAtomicMass() ) / this.isotopeCountProperty.get()
       );
     }
   }
@@ -144,7 +144,7 @@ class IsotopeTestChamber {
     if ( this.containedIsotopes.length > 0 ) {
       let totalMass = 0;
       this.containedIsotopes.forEach( isotope => {
-        totalMass += isotope.atomConfiguration.getIsotopeAtomicMass();
+        totalMass += isotope.atomConfigurationProperty.value.getIsotopeAtomicMass();
       } );
       this.averageAtomicMassProperty.set( totalMass / this.containedIsotopes.length );
     }
@@ -165,7 +165,7 @@ class IsotopeTestChamber {
     if ( this.isotopeCountProperty.get() > 0 ) {
       this.averageAtomicMassProperty.set(
         ( this.averageAtomicMassProperty.get() * ( this.isotopeCountProperty.get() + 1 ) -
-          isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCountProperty.get()
+          isotope.atomConfigurationProperty.value.getIsotopeAtomicMass() ) / this.isotopeCountProperty.get()
       );
     }
     else {
@@ -187,7 +187,7 @@ class IsotopeTestChamber {
     assert && assert( ( isotopeConfig.protonCountProperty.get() - isotopeConfig.electronCountProperty.get() ) === 0 );
     let removedIsotope: PositionableAtom | null = null;
     this.containedIsotopes.forEach( isotope => {
-      if ( isotope.atomConfiguration.equals( isotopeConfig ) ) {
+      if ( isotope.atomConfigurationProperty.value.equals( isotopeConfig ) ) {
         removedIsotope = isotope;
       }
     } );
@@ -227,7 +227,7 @@ class IsotopeTestChamber {
     assert && assert( isotopeConfig.protonCountProperty.get() - isotopeConfig.electronCountProperty.get() === 0 );
     let isotopeCount = 0;
     this.containedIsotopes.forEach( isotope => {
-      if ( isotope.atomConfiguration.equals( isotopeConfig ) ) {
+      if ( isotope.atomConfigurationProperty.value.equals( isotopeConfig ) ) {
         isotopeCount++;
       }
     } );

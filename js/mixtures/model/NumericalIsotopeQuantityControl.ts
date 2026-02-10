@@ -65,8 +65,8 @@ class NumericalIsotopeQuantityControl {
         );
         newIsotope.showLabel = false;
         newIsotope.color = this.model.getColorForIsotope(
-          newIsotope.atomConfiguration.protonCount,
-          newIsotope.atomConfiguration.neutronCount
+          newIsotope.atomConfigurationProperty.value.protonCount,
+          newIsotope.atomConfigurationProperty.value.neutronCount
         );
         this.model.testChamber.addParticle( newIsotope, true );
         this.model.isotopesList.add( newIsotope );

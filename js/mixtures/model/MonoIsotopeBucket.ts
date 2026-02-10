@@ -34,7 +34,10 @@ class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
    * Add an isotope to the first open position in the bucket.
    */
   public addIsotopeInstanceFirstOpen( isotope: PositionableAtom, moveImmediately: boolean ): void {
-    if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount ) ) {
+    if ( this.isIsotopeAllowed(
+      isotope.atomConfigurationProperty.value.protonCount,
+      isotope.atomConfigurationProperty.value.neutronCount )
+    ) {
       this.addParticleFirstOpen( isotope, moveImmediately );
     }
   }
@@ -50,7 +53,10 @@ class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
    * Add an isotope to the nearest open position in the bucket.
    */
   public addIsotopeInstanceNearestOpen( isotope: PositionableAtom, animate: boolean ): void {
-    if ( this.isIsotopeAllowed( isotope.atomConfiguration.protonCount, isotope.atomConfiguration.neutronCount ) ) {
+    if ( this.isIsotopeAllowed(
+      isotope.atomConfigurationProperty.value.protonCount,
+      isotope.atomConfigurationProperty.value.neutronCount
+    ) ) {
       this.addParticleNearestOpen( isotope, animate );
     }
   }
