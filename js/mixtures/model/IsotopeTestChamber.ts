@@ -72,47 +72,53 @@ class IsotopeTestChamber {
    * Add the specified isotope to the test chamber.
    */
   public addParticle( isotope: MovableAtom, performUpdates: boolean ): void {
-    if ( this.isIsotopePositionedOverChamber( isotope ) ) {
-      this.containedIsotopes.push( isotope );
-      isotope.containerProperty.value = this;
 
-      // If the edges of the isotope are outside the container, move it to be fully inside.
-      let protrusion = isotope.positionProperty.get().x + isotope.radius - TEST_CHAMBER_RECT.maxX + BUFFER;
-      if ( protrusion >= 0 ) {
-        isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x - protrusion,
-          isotope.positionProperty.get().y ) );
-      }
-      else {
-        protrusion = TEST_CHAMBER_RECT.minX + BUFFER - ( isotope.positionProperty.get().x - isotope.radius );
-        if ( protrusion >= 0 ) {
-          isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x + protrusion,
-            isotope.positionProperty.get().y ) );
-        }
-      }
-      protrusion = isotope.positionProperty.get().y + isotope.radius - TEST_CHAMBER_RECT.maxY + BUFFER;
-      if ( protrusion >= 0 ) {
-        isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x,
-          isotope.positionProperty.get().y - protrusion ) );
-      }
-      else {
-        protrusion = TEST_CHAMBER_RECT.minY + BUFFER - ( isotope.positionProperty.get().y - isotope.radius );
-        if ( protrusion >= 0 ) {
-          isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x,
-            isotope.positionProperty.get().y + protrusion ) );
-        }
-      }
-      if ( performUpdates ) {
-        this.updateCountProperty();
-        this.averageAtomicMassProperty.set(
-          ( ( this.averageAtomicMassProperty.get() * ( this.isotopeCountProperty.get() - 1 ) ) +
-            isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCountProperty.get()
-        );
-      }
+    // TODO: See https://github.com/phetsims/isotopes-and-atomic-mass/issues/126.  Put the affirm back and remove the
+    //       workaround when state is working better.
+    // affirm(
+    //   this.isIsotopePositionedOverChamber( isotope ),
+    //   'Isotope is not positioned correctly for being added to the test chamber.'
+    // );
+    if ( !this.isIsotopePositionedOverChamber( isotope ) ) {
+
+      // Workaround - constrain the isotope to be within the chamber, so that it can be added.
+      isotope.positionProperty.value = TEST_CHAMBER_RECT.getConstrainedPoint( isotope.positionProperty.value );
+    }
+
+    this.containedIsotopes.push( isotope );
+    isotope.containerProperty.value = this;
+
+    // If the edges of the isotope are outside the container, move it to be fully inside.
+    let protrusion = isotope.positionProperty.get().x + isotope.radius - TEST_CHAMBER_RECT.maxX + BUFFER;
+    if ( protrusion >= 0 ) {
+      isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x - protrusion,
+        isotope.positionProperty.get().y ) );
     }
     else {
-
-      // This isotope is not positioned correctly.
-      assert && assert( false, 'Isotope is not positioned correctly for being added to the test chamber.' );
+      protrusion = TEST_CHAMBER_RECT.minX + BUFFER - ( isotope.positionProperty.get().x - isotope.radius );
+      if ( protrusion >= 0 ) {
+        isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x + protrusion,
+          isotope.positionProperty.get().y ) );
+      }
+    }
+    protrusion = isotope.positionProperty.get().y + isotope.radius - TEST_CHAMBER_RECT.maxY + BUFFER;
+    if ( protrusion >= 0 ) {
+      isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x,
+        isotope.positionProperty.get().y - protrusion ) );
+    }
+    else {
+      protrusion = TEST_CHAMBER_RECT.minY + BUFFER - ( isotope.positionProperty.get().y - isotope.radius );
+      if ( protrusion >= 0 ) {
+        isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x,
+          isotope.positionProperty.get().y + protrusion ) );
+      }
+    }
+    if ( performUpdates ) {
+      this.updateCountProperty();
+      this.averageAtomicMassProperty.set(
+        ( ( this.averageAtomicMassProperty.get() * ( this.isotopeCountProperty.get() - 1 ) ) +
+          isotope.atomConfiguration.getIsotopeAtomicMass() ) / this.isotopeCountProperty.get()
+      );
     }
   }
 
