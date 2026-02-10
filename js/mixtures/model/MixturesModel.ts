@@ -669,7 +669,6 @@ class MixturesModel {
     this.clearBox();
     this.naturesIsotopesList.clear();
     this.interactivityModeProperty.reset();
-    this.possibleIsotopesProperty.reset();
     this.showingNaturesMixProperty.reset();
 
     // Make sure there is nothing stored for the default configuration so that it doesn't get restored when we set that
