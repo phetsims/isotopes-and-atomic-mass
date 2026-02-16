@@ -62,7 +62,6 @@ class NumericalIsotopeQuantityControl {
           this.model.testChamber.generateRandomPosition(),
           { particleRadius: 4 }
         );
-        newIsotope.showLabel = false;
         this.model.testChamber.addParticle( newIsotope, true );
         this.model.isotopesList.add( newIsotope );
       }

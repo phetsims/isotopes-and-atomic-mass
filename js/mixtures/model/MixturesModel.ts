@@ -608,7 +608,6 @@ class MixturesModel {
           { particleRadius: SMALL_ISOTOPE_RADIUS }
         );
 
-        newIsotope.showLabel = false;
         isotopesToAdd.push( newIsotope );
         this.naturesIsotopesList.push( newIsotope );
       }

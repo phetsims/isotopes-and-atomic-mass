@@ -28,9 +28,6 @@ class PositionableAtom extends Particle {
   // The configuration of this atom, which includes the number of protons, neutrons, and electrons.
   public readonly atomConfigurationProperty: Property<ImmutableAtomConfig>;
 
-  // Whether to show the label for this atom, when shown in the view.
-  public showLabel: boolean;
-
   // Unique identifier for this atom, used for debugging and testing purposes.
   public readonly instanceCount: number;
 
@@ -52,7 +49,6 @@ class PositionableAtom extends Particle {
     this.atomConfigurationProperty = new Property(
       new ImmutableAtomConfig( initialProtonCount, initialNeutronCount, initialProtonCount )
     );
-    this.showLabel = true;
     this.instanceCount = instanceCount++;
 
     // Update the color information - which will be used by the view - based on the atom configuration.
