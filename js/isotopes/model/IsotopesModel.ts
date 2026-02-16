@@ -1,7 +1,7 @@
 // Copyright 2014-2026, University of Colorado Boulder
 
 /**
- * This is the primary model class for the Make Isotopes module. This class acts as the main interface for model
+ * IsotopesModel is the primary model class for the "Isotopes" screen. This class acts as the main interface for model
  * actions, and contains the constituent model elements. It watches all neutrons and, based on where they are placed by
  * the user, moves them between the neutron bucket and the atom. In this model, units are picometers (1E-12).
  *
@@ -11,20 +11,19 @@
  */
 
 import createObservableArray, { ObservableArray } from '../../../../axon/js/createObservableArray.js';
-import Emitter from '../../../../axon/js/Emitter.js';
+import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import affirm from '../../../../perennial-alias/js/browser-and-node/affirm.js';
 import SphereBucket from '../../../../phetcommon/js/model/SphereBucket.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
-import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
 import Particle from '../../../../shred/js/model/Particle.js';
 import ParticleAtom from '../../../../shred/js/model/ParticleAtom.js';
 import ShredConstants from '../../../../shred/js/ShredConstants.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
-import ImmutableAtomConfig from '../../mixtures/model/ImmutableAtomConfig.js';
 
 type IsDraggingListener = ( isDragging: boolean ) => void;
 
@@ -38,20 +37,33 @@ const JUMP_DISTANCES: number[] = [ MAX_NUCLEUS_JUMP * 0.4, MAX_NUCLEUS_JUMP * 0.
 const NUCLEON_CAPTURE_RADIUS = 100;
 const BUCKET_SIZE = new Dimension2( 130, 60 );
 const NEUTRON_BUCKET_POSITION = new Vector2( -220, -180 );
-const DEFAULT_ATOM_CONFIG = new ImmutableAtomConfig( 1, 0, 1 ); // neutral hydrogen atom
 
 class IsotopesModel {
 
-  public readonly particleAtom: ParticleAtom;
-  public readonly numberAtom: NumberAtom;
-  public readonly atomReconfigured: Emitter;
-  public nucleusStable: boolean;
-  private nucleusJumpCountdown: number;
-  private nucleusJumpCount: number;
+  // The proton count of the element that is currently being worked with. Setting this value is the API for how the
+  // currently selected element is changed.
+  public selectedElementProtonCountProperty: NumberProperty;
+
+  // Arrays that contain the subatomic particles, whether they are in the bucket or in the atom.
   public readonly neutrons: ObservableArray<Particle>;
   public readonly protons: ObservableArray<Particle>;
   public readonly electrons: ObservableArray<Particle>;
+
+  // The particle atom that the user interacts with to add and remove neutrons to form different isotopes.  This keeps
+  // track of the protons, neutrons, and electrons that are in the atom
+  public readonly particleAtom: ParticleAtom;
+
+  // The neutron bucket that holds neutrons that are not in the atom.
   public readonly neutronBucket: SphereBucket<Particle>;
+
+  // Variables to track the stability and jump state of the nucleus, which is used to provide visual feedback when the
+  // user creates an unstable isotope.
+  public nucleusStable: boolean;
+  private nucleusJumpCountdown: number;
+  private nucleusJumpCount: number;
+
+  // Map to track the drag listeners for each neutron, so that they can be removed when the neutrons are removed from
+  // the model.
   private readonly mapNeutronsToDragListeners = new Map<Particle, IsDraggingListener>();
 
   /**
@@ -59,20 +71,11 @@ class IsotopesModel {
    */
   public constructor() {
 
-    // Create the particle atom that the user will interact with.
+    this.selectedElementProtonCountProperty = new NumberProperty( 1 ); // default to hydrogen
+
     this.particleAtom = new ParticleAtom( {
       tandem: Tandem.OPT_OUT
     } );
-
-    // Make available a 'number atom' that tracks the state of the particle atom.
-    this.numberAtom = new NumberAtom( {
-      protonCount: DEFAULT_ATOM_CONFIG.protonCount,
-      neutronCount: DEFAULT_ATOM_CONFIG.neutronCount,
-      electronCount: DEFAULT_ATOM_CONFIG.electronCount
-    } );
-
-    // Emitter that notifies listeners when the atom has been reconfigured (protons or neutrons have changed).
-    this.atomReconfigured = new Emitter();
 
     // nucleus stability and jump state
     this.nucleusStable = true;
@@ -96,19 +99,12 @@ class IsotopesModel {
           this.particleAtom.nucleusOffsetProperty.set( Vector2.ZERO );
         }
       }
-      if ( this.particleAtom.protonCountProperty.get() > 0 && this.particleAtom.neutronCountProperty.get() >= 0 ) {
-        this.atomReconfigured.emit();
-      }
     } );
 
-    // Arrays that contain the subatomic particles, whether they are in the bucket or in the atom.  This is part of a
-    // basic assumption about how the model works, which is that the model contains all the particles, and the particles
-    // move back and forth from being in the bucket or in the atom.
     this.neutrons = createObservableArray();
     this.protons = createObservableArray();
     this.electrons = createObservableArray();
 
-    // Create the neutron bucket, which will hold neutrons that are not in the atom.
     this.neutronBucket = new SphereBucket( {
       position: NEUTRON_BUCKET_POSITION,
       size: BUCKET_SIZE,
@@ -117,12 +113,11 @@ class IsotopesModel {
       sphereRadius: ShredConstants.NUCLEON_RADIUS
     } );
 
-    this.numberAtom.atomUpdated.addListener( () => {
-      this.setAtomConfiguration( ImmutableAtomConfig.getConfiguration( this.numberAtom ) );
+    // Monitor the selected element and update the particles when changes occur.
+    this.selectedElementProtonCountProperty.link( protonCount => {
+      affirm( protonCount > 0, 'Proton count must be greater than 0.' );
+      this.initializeParticles( protonCount );
     } );
-
-    // Set the default atom configuration.
-    this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
   }
 
   /**
@@ -131,13 +126,10 @@ class IsotopesModel {
    */
   public step( dt: number ): void {
 
-    this.neutrons.forEach( neutron => {
-      neutron.step( dt );
-    } );
-
-    this.protons.forEach( proton => {
-      proton.step( dt );
-    } );
+    // Step the neutrons and protons.  The electrons do not need to be stepped because they are not interactive and
+    // do not have any animated behavior.
+    this.neutrons.forEach( neutron => neutron.step( dt ) );
+    this.protons.forEach( proton => proton.step( dt ) );
 
     if ( !this.nucleusStable ) {
       this.nucleusJumpCountdown -= dt;
@@ -162,7 +154,7 @@ class IsotopesModel {
    * Places a neutron in the particle atom if it is close enough, otherwise places it in the neutron bucket.
    */
   private placeNucleon( particle: Particle ): void {
-    assert && assert( particle.type === 'neutron', 'Only neutrons should be interactive in the make isotopes model.' );
+    affirm( particle.type === 'neutron', 'Only neutrons should be interactive in the make isotopes model.' );
     if ( particle.positionProperty.get().distance( this.particleAtom.positionProperty.get() ) < NUCLEON_CAPTURE_RADIUS ) {
       this.particleAtom.addParticle( particle );
     }
@@ -176,27 +168,18 @@ class IsotopesModel {
    */
   private addDragListener( neutron: Particle, lazyLink: boolean ): void {
 
-    assert && assert( !this.mapNeutronsToDragListeners.has( neutron ), 'Neutron already has a drag listener linked.' );
+    affirm( !this.mapNeutronsToDragListeners.has( neutron ), 'Neutron already has a drag listener linked.' );
 
     const isDraggingHandler = ( isDragging: boolean ) => {
       if ( isDragging ) {
         if ( neutron.containerProperty.value ) {
 
-          const preRemovalContainer = neutron.containerProperty.value;
-
           // Remove the neutron from its container, which will be either a bucket or the particle atom.
           neutron.containerProperty.value.removeParticle( neutron );
-
-          if ( preRemovalContainer === this.particleAtom ) {
-            this.atomReconfigured.emit();
-          }
         }
       }
       else if ( !isDragging && neutron.containerProperty.value === null ) {
         this.placeNucleon( neutron );
-        if ( neutron.containerProperty.value === this.particleAtom ) {
-          this.atomReconfigured.emit();
-        }
       }
     };
     if ( lazyLink ) {
@@ -212,7 +195,7 @@ class IsotopesModel {
    * Removes the drag listener for the neutron to avoid memory leaks.
    */
   private removeDragListener( neutron: Particle ): void {
-    assert && assert( this.mapNeutronsToDragListeners.has( neutron ), 'Neutron does not have a drag listener linked.' );
+    affirm( this.mapNeutronsToDragListeners.has( neutron ), 'Neutron does not have a drag listener linked.' );
 
     // Remove the drag listener for the neutron.
     const isDraggingHandler = this.mapNeutronsToDragListeners.get( neutron );
@@ -223,13 +206,12 @@ class IsotopesModel {
   }
 
   /**
-   * Set the configuration of the atom that the user interacts with.  Specifically, this sets the particle atom equal
-   * to the provided number atom.  This is done here rather than by directly accessing the atom so that the appropriate
-   * notifications can be sent and the bucket can be reinitialized.
+   * Create the subatomic particles for the atom based on the provided proton count, and add them to the particle atom.
+   * Also create the neutrons for the neutron bucket.
    */
-  private setAtomConfiguration( atomConfiguration: ImmutableAtomConfig ): void {
+  private initializeParticles( protonCount: number ): void {
 
-    // Clear the current atom configuration.
+    // Clear the current set of particles.
     this.particleAtom.clear();
     this.protons.clear();
     this.electrons.clear();
@@ -237,52 +219,49 @@ class IsotopesModel {
     this.neutrons.clear();
     this.neutronBucket.reset();
 
-    // Set the new atom configuration (but not redundantly, or we could get recursion).
-    if ( !atomConfiguration.equals( this.numberAtom ) ) {
-      this.numberAtom.setSubAtomicParticleCount(
-        atomConfiguration.protonCount,
-        atomConfiguration.neutronCount,
-        atomConfiguration.electronCount
-      );
-    }
+    // Identify the most common neutron count for the given proton count, which will be used as the default isotope.
+    const mostCommonNeutronCount = AtomIdentifier.getNumNeutronsInMostCommonIsotope( protonCount );
 
-    // Create the particles for the atom based on the number atom's properties.
-    for ( let i = 0; i < atomConfiguration.electronCount; i++ ) {
-      const electron = new Particle( 'electron' );
-      this.particleAtom.addParticle( electron );
-      this.electrons.add( electron );
-    }
-    for ( let j = 0; j < atomConfiguration.protonCount; j++ ) {
+    // Create the particles for the atom.
+    _.times( protonCount, () => {
       const proton = new Particle( 'proton' );
       this.particleAtom.addParticle( proton );
       this.protons.add( proton );
-    }
-    for ( let k = 0; k < atomConfiguration.neutronCount; k++ ) {
+    } );
+    _.times( mostCommonNeutronCount, () => {
       const neutron = new Particle( 'neutron' );
       this.particleAtom.addParticle( neutron );
       this.neutrons.add( neutron );
       this.addDragListener( neutron, true );
-    }
+    } );
+    _.times( protonCount, () => {
+      const electron = new Particle( 'electron' );
+      this.particleAtom.addParticle( electron );
+      this.electrons.add( electron );
+    } );
+
+    // Move the particles to their destinations so they don't animate.
     this.particleAtom.moveAllParticlesToDestination();
 
-    // Add the neutrons to the neutron bucket.
+    // Add the additional neutrons to the neutron bucket.
     _.times( DEFAULT_NUM_NEUTRONS_IN_BUCKET, () => {
       const neutron = new Particle( 'neutron' );
       this.neutronBucket.addParticleFirstOpen( neutron, false );
       this.addDragListener( neutron, false );
       this.neutrons.add( neutron );
     } );
-
-    // Emit an event to notify that the atom has been reconfigured.
-    this.atomReconfigured.emit();
   }
 
   public reset(): void {
-    this.setAtomConfiguration( DEFAULT_ATOM_CONFIG );
+    this.selectedElementProtonCountProperty.reset();
 
-    // TODO: See https://github.com/phetsims/isotopes-and-atomic-mass/issues/103.  It's lame that this is needed, but
-    //       it currently is.  The refactor for issue 103 should make this unnecessary.
-    this.numberAtom.atomUpdated.emit();
+    // Make sure the neutron count is what it should be for the default isotope.
+    const mostCommonNeutronCount = AtomIdentifier.getNumNeutronsInMostCommonIsotope(
+      this.selectedElementProtonCountProperty.value
+    );
+    if ( this.particleAtom.neutronCountProperty.get() !== mostCommonNeutronCount ) {
+      this.initializeParticles( this.selectedElementProtonCountProperty.value );
+    }
   }
 }
 

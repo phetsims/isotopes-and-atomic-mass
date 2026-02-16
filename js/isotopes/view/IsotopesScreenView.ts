@@ -17,8 +17,6 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
-import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
-import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
 import ShredConstants from '../../../../shred/js/ShredConstants.js';
 import ExpandedPeriodicTableNode from '../../../../shred/js/view/ExpandedPeriodicTableNode.js';
 import ParticleCountDisplay from '../../../../shred/js/view/ParticleCountDisplay.js';
@@ -96,30 +94,13 @@ class IsotopesScreenView extends ScreenView {
 
     // Add the interactive periodic table that allows the user to select the current element.  The heaviest interactive
     // element is neon for this sim.
-    const periodicTableNode = new ExpandedPeriodicTableNode( isotopesModel.numberAtom.protonCountProperty, 10, {
+    const periodicTableNode = new ExpandedPeriodicTableNode( isotopesModel.selectedElementProtonCountProperty, 10, {
       tandem: tandem
     } );
     periodicTableNode.scale( 0.65 );
     periodicTableNode.top = 10;
     periodicTableNode.right = this.layoutBounds.width - 10;
     this.addChild( periodicTableNode );
-
-    isotopesModel.numberAtom.protonCountProperty.lazyLink( protonCount => {
-
-      // When the number of protons changes, this signals that a new element has been selected, so we need to set the
-      // model to the default isotope for that element.
-      const mostCommonIsotope = new NumberAtom( {
-        protonCount: protonCount,
-        neutronCount: AtomIdentifier.getNumNeutronsInMostCommonIsotope( protonCount ),
-        electronCount: protonCount // neutral atom
-      } );
-      // const mostCommonIsotope = new ImmutableAtomConfig(
-      //   protonCount,
-      //   AtomIdentifier.getNumNeutronsInMostCommonIsotope( protonCount ),
-      //   protonCount // neutral atom
-      // );
-      isotopesModel.numberAtom.set( mostCommonIsotope );
-    } );
 
     // Add the legend/particle count indicator.
     const particleCountLegend = new ParticleCountDisplay( isotopesModel.particleAtom, {

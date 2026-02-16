@@ -11,6 +11,7 @@
 
 import { ObservableArray } from '../../../../axon/js/createObservableArray.js';
 import DerivedStringProperty from '../../../../axon/js/DerivedStringProperty.js';
+import Multilink from '../../../../axon/js/Multilink.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import BucketFront from '../../../../scenery-phet/js/bucket/BucketFront.js';
@@ -303,24 +304,18 @@ class InteractiveIsotopeNode extends Node {
     this.addChild( nucleonLayersNode );
     this.addChild( neutronBucketFront );
 
-    isotopesModel.atomReconfigured.addListener( (): void => {
-      updateElementNamePosition(
-        isotopesModel.particleAtom.protonCountProperty.get()
-      );
-      updateStabilityIndicator(
-        isotopesModel.particleAtom.protonCountProperty.get(),
-        isotopesModel.particleAtom.neutronCountProperty.get()
-      );
-      myIsotopeLabel.bottom = isotopeAtomNode.top - 5;
-    } );
-
-    // initial update of element name and stability indicator
-    updateElementNamePosition(
-      isotopesModel.particleAtom.protonCountProperty.get()
-    );
-    updateStabilityIndicator(
-      isotopesModel.particleAtom.protonCountProperty.get(),
-      isotopesModel.particleAtom.neutronCountProperty.get()
+    Multilink.multilink(
+      [
+        isotopesModel.particleAtom.protonCountProperty,
+        isotopesModel.particleAtom.neutronCountProperty
+      ],
+      ( protonCount, neutronCount ) => {
+        if ( protonCount > 0 ) {
+          updateElementNamePosition( protonCount );
+          updateStabilityIndicator( protonCount, neutronCount );
+          myIsotopeLabel.bottom = isotopeAtomNode.top - 5;
+        }
+      }
     );
   }
 }
