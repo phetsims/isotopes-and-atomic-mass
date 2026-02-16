@@ -23,7 +23,6 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
 import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import getIsotopeColor from './getIsotopeColor.js';
 import ImmutableAtomConfig from './ImmutableAtomConfig.js';
 import IsotopeTestChamber, { IsotopeTestChamberState } from './IsotopeTestChamber.js';
 import MonoIsotopeBucket from './MonoIsotopeBucket.js';
@@ -464,7 +463,7 @@ class MixturesModel {
       } ) );
     } );
 
-    // Sort from lightest to heaviest. Do not change this without careful considerations, since several areas of the
+    // Sort from lightest to heaviest. Do not change this without careful consideration, since several areas of the
     // code count on this. This is kept in case someone adds another isotope to AtomIdentifier and doesn't add it
     // in order.
     newIsotopesList.sort( ( atom1, atom2 ) => atom1.getIsotopeAtomicMass() - atom2.getIsotopeAtomicMass() );
@@ -535,7 +534,6 @@ class MixturesModel {
           {
             position: new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetBucket ),
             size: BUCKET_SIZE,
-            baseColor: getIsotopeColor( isotopeConfig.protonCount, isotopeConfig.neutronCount ),
             captionText: isotopeCaptionStringProperty,
             sphereRadius: LARGE_ISOTOPE_RADIUS
           }

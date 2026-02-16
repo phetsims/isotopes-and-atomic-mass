@@ -2,28 +2,41 @@
 
 /**
  * A particle bucket that can only contain one configuration of isotope, though it may contain multiple instances
- * of that isotope.
+ * (i.e. atoms) of that isotope.
  *
  * @author John Blanco
  * @author Jesse Greenberg
  * @author James Smith
  */
 
+import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import SphereBucket, { SphereBucketOptions } from '../../../../phetcommon/js/model/SphereBucket.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
+import getIsotopeColor from './getIsotopeColor.js';
 import PositionableAtom from './PositionableAtom.js';
+
+type SelfOptions = EmptySelfOptions;
+export type MonoIsotopeBucketOptions = SelfOptions & StrictOmit<SphereBucketOptions, 'baseColor'>;
 
 class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
 
   public readonly numProtonsInIsotope: number;
   public readonly numNeutronsInIsotope: number;
 
-  /**
-   * @param numProtonsInIsotope - Number of protons in the isotope this bucket holds
-   * @param numNeutronsInIsotope - Number of neutrons in the isotope this bucket holds
-   * @param options - Options that control the appearance and behavior of the bucket
-   */
-  public constructor( numProtonsInIsotope: number, numNeutronsInIsotope: number, options?: SphereBucketOptions ) {
+  public constructor(
+    numProtonsInIsotope: number,
+    numNeutronsInIsotope: number,
+    providedOptions?: MonoIsotopeBucketOptions
+  ) {
+
+    const options = optionize<MonoIsotopeBucketOptions, SelfOptions, SphereBucketOptions>()( {
+
+      // Derive the color of the bucket from the isotope it holds.
+      baseColor: getIsotopeColor( numProtonsInIsotope, numNeutronsInIsotope )
+
+    }, providedOptions );
+
     super( options );
 
     this.numProtonsInIsotope = numProtonsInIsotope;
