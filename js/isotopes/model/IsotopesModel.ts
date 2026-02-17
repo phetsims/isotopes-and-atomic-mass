@@ -10,9 +10,10 @@
  * @author Aadish Gupta
  */
 
-import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import createObservableArray, { ObservableArray } from '../../../../axon/js/createObservableArray.js';
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
+import { TReadOnlyProperty } from '../../../../axon/js/TReadOnlyProperty.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import affirm from '../../../../perennial-alias/js/browser-and-node/affirm.js';
@@ -59,7 +60,7 @@ class IsotopesModel {
 
   // Variables to track the stability and jump state of the nucleus, which is used to provide visual feedback when the
   // user creates an unstable isotope.
-  public nucleusStableProperty: BooleanProperty;
+  private nucleusStableProperty: TReadOnlyProperty<boolean>;
   private nucleusJumpCountdown: number;
   private nucleusJumpCount: number;
 
@@ -78,28 +79,26 @@ class IsotopesModel {
       tandem: Tandem.OPT_OUT
     } );
 
-    // nucleus stability and jump state
-    this.nucleusStableProperty = new BooleanProperty( true );
+    // The nucleus is considered stable if the current number of protons and neutrons corresponds to a stable isotope.
+    this.nucleusStableProperty = new DerivedProperty(
+      [ this.particleAtom.massNumberProperty ],
+      ( massNumber: number ) => {
+        return massNumber > 0 ?
+               AtomIdentifier.isStable(
+                 this.particleAtom.protonCountProperty.get(),
+                 this.particleAtom.neutronCountProperty.get()
+               ) : true;
+      }
+    );
+
+    // Initialize the variable used to control the stability animation.
     this.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
     this.nucleusJumpCount = 0;
 
-    // Link the particle atom's mass number property to monitor stability changes.  No unlink is necessary, as this
-    // model will exist for the lifetime of the sim.
-    this.particleAtom.massNumberProperty.link( ( massNumber: number ) => {
-      const stable = massNumber > 0 ?
-                     AtomIdentifier.isStable(
-                       this.particleAtom.protonCountProperty.get(),
-                       this.particleAtom.neutronCountProperty.get()
-                     ) : true;
-      if ( this.nucleusStableProperty.value !== stable ) {
-
-        // Nucleus stability has changed.
-        this.nucleusStableProperty.value = stable;
-        if ( stable ) {
-          this.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
-          this.particleAtom.nucleusOffsetProperty.set( Vector2.ZERO );
-        }
-      }
+    // Reset the nucleus jump state whenever the stability of the nucleus changes.
+    this.nucleusStableProperty.lazyLink( () => {
+      this.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
+      this.particleAtom.nucleusOffsetProperty.set( Vector2.ZERO );
     } );
 
     this.neutrons = createObservableArray();
@@ -132,6 +131,7 @@ class IsotopesModel {
     this.neutrons.forEach( neutron => neutron.step( dt ) );
     this.protons.forEach( proton => proton.step( dt ) );
 
+    // Animate the nucleus if it is unstable by making it "jump".
     if ( !this.nucleusStableProperty.value ) {
       this.nucleusJumpCountdown -= dt;
       if ( this.nucleusJumpCountdown <= 0 ) {
