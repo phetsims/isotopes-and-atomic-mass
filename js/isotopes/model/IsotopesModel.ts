@@ -10,6 +10,7 @@
  * @author Aadish Gupta
  */
 
+import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import createObservableArray, { ObservableArray } from '../../../../axon/js/createObservableArray.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
@@ -58,7 +59,7 @@ class IsotopesModel {
 
   // Variables to track the stability and jump state of the nucleus, which is used to provide visual feedback when the
   // user creates an unstable isotope.
-  public nucleusStable: boolean;
+  public nucleusStableProperty: BooleanProperty;
   private nucleusJumpCountdown: number;
   private nucleusJumpCount: number;
 
@@ -78,7 +79,7 @@ class IsotopesModel {
     } );
 
     // nucleus stability and jump state
-    this.nucleusStable = true;
+    this.nucleusStableProperty = new BooleanProperty( true );
     this.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
     this.nucleusJumpCount = 0;
 
@@ -90,10 +91,10 @@ class IsotopesModel {
                        this.particleAtom.protonCountProperty.get(),
                        this.particleAtom.neutronCountProperty.get()
                      ) : true;
-      if ( this.nucleusStable !== stable ) {
+      if ( this.nucleusStableProperty.value !== stable ) {
 
         // Nucleus stability has changed.
-        this.nucleusStable = stable;
+        this.nucleusStableProperty.value = stable;
         if ( stable ) {
           this.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
           this.particleAtom.nucleusOffsetProperty.set( Vector2.ZERO );
@@ -131,7 +132,7 @@ class IsotopesModel {
     this.neutrons.forEach( neutron => neutron.step( dt ) );
     this.protons.forEach( proton => proton.step( dt ) );
 
-    if ( !this.nucleusStable ) {
+    if ( !this.nucleusStableProperty.value ) {
       this.nucleusJumpCountdown -= dt;
       if ( this.nucleusJumpCountdown <= 0 ) {
         this.nucleusJumpCountdown = NUCLEUS_JUMP_PERIOD;
