@@ -21,16 +21,14 @@ import Dimension2 from '../../../../dot/js/Dimension2.js';
 import { roundSymmetric } from '../../../../dot/js/util/roundSymmetric.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
-import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import ImmutableAtomConfig from './ImmutableAtomConfig.js';
 import IsotopeTestChamber, { IsotopeTestChamberState } from './IsotopeTestChamber.js';
 import MonoIsotopeBucket from './MonoIsotopeBucket.js';
+import NucleusConfig from './NucleusConfig.js';
 import NumericalIsotopeQuantityControl from './NumericalIsotopeQuantityControl.js';
 import PositionableAtom from './PositionableAtom.js';
 
 // constants
-const DEFAULT_ATOM_CONFIG = new ImmutableAtomConfig( 1, 0, 1 ); // Hydrogen.
 const BUCKET_SIZE = new Dimension2( 120, 50 ); // Size of the buckets that will hold the isotopes.
 
 // Within this model, the isotopes come in two sizes, small and large, and atoms are either one size or another,
@@ -61,7 +59,7 @@ class MixturesModel {
   // The list of isotopes that exist in nature as variations of the current "prototype isotope". In other words, this
   // contains a list of all stable isotopes that match the atomic number of the currently configured isotope. There
   // should be only one of each possible isotope.
-  public readonly possibleIsotopesProperty = new Property<NumberAtom[]>( [] );
+  public readonly possibleIsotopesProperty = new Property<NucleusConfig[]>( [] );
 
   // A Property that indicates whether "Nature's Mix" is being shown or the user-created mix.
   public readonly showingNaturesMixProperty = new Property<boolean>( false );
@@ -255,14 +253,14 @@ class MixturesModel {
    * Create and add an isotope of the specified configuration.  Where the isotope is initially placed depends upon the
    * current interactivity mode.
    */
-  private createAndAddIsotope( isotopeConfig: NumberAtom, animate: boolean ): PositionableAtom | undefined {
+  private createAndAddIsotope( isotopeConfig: NucleusConfig, animate: boolean ): PositionableAtom | undefined {
     let newIsotope: PositionableAtom | undefined;
     if ( this.interactivityModeProperty.get() === 'bucketsAndLargeAtoms' ) {
 
       // Create the specified isotope and add it to the appropriate bucket.
       newIsotope = new PositionableAtom(
-        isotopeConfig.protonCountProperty.get(),
-        isotopeConfig.neutronCountProperty.get(),
+        isotopeConfig.protonCount,
+        isotopeConfig.neutronCount,
         new Vector2( 0, 0 )
       );
 
@@ -292,10 +290,10 @@ class MixturesModel {
   /**
    * Get the bucket where the given isotope can be placed.
    */
-  public getBucketForIsotope( isotope: NumberAtom ): MonoIsotopeBucket | null {
+  public getBucketForIsotope( isotope: NucleusConfig ): MonoIsotopeBucket | null {
     let isotopeBucket: MonoIsotopeBucket | null = null;
     this.bucketList.forEach( bucket => {
-      if ( bucket.isIsotopeAllowed( isotope.protonCountProperty.get(), isotope.neutronCountProperty.get() ) ) {
+      if ( bucket.isIsotopeAllowed( isotope.protonCount, isotope.neutronCount ) ) {
         isotopeBucket = bucket;
       }
     } );
@@ -454,19 +452,15 @@ class MixturesModel {
    */
   private updatePossibleIsotopesList( elementProtonCount: number ): void {
     const stableIsotopes = AtomIdentifier.getStableIsotopesOfElement( elementProtonCount );
-    const newIsotopesList: NumberAtom[] = [];
+    const newIsotopesList: NucleusConfig[] = [];
     Object.entries( stableIsotopes ).forEach( ( [ index, isotope ] ) => {
-      newIsotopesList.push( new NumberAtom( {
-        protonCount: isotope[ 0 ],
-        neutronCount: isotope[ 1 ],
-        electronCount: isotope[ 2 ]
-      } ) );
+      newIsotopesList.push( new NucleusConfig( isotope[ 0 ], isotope[ 1 ] ) );
     } );
 
     // Sort from lightest to heaviest. Do not change this without careful consideration, since several areas of the
     // code count on this. This is kept in case someone adds another isotope to AtomIdentifier and doesn't add it
     // in order.
-    newIsotopesList.sort( ( atom1, atom2 ) => atom1.getIsotopeAtomicMass() - atom2.getIsotopeAtomicMass() );
+    newIsotopesList.sort( ( atom1, atom2 ) => atom1.getAtomicMass() - atom2.getAtomicMass() );
 
     // Update the list of possible isotopes for this atomic configuration.
     this.possibleIsotopesProperty.set( newIsotopesList );
@@ -521,16 +515,14 @@ class MixturesModel {
       const isotopeConfig = this.possibleIsotopesProperty.get()[ i ];
 
       const isotopeCaptionStringProperty = new DerivedStringProperty(
-        [
-          AtomIdentifier.getName( isotopeConfig.protonCountProperty.get() ),
-          isotopeConfig.massNumberProperty
-        ], ( name: string, massNumber: number ) => `${name}-${massNumber}`
+        [ AtomIdentifier.getName( isotopeConfig.protonCount ) ],
+        ( name: string ) => `${name}-${isotopeConfig.getMassNumber()}`
       );
 
       if ( buckets ) {
         const newBucket = new MonoIsotopeBucket(
-          isotopeConfig.protonCountProperty.get(),
-          isotopeConfig.neutronCountProperty.get(),
+          isotopeConfig.protonCount,
+          isotopeConfig.neutronCount,
           {
             position: new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetBucket ),
             size: BUCKET_SIZE,
@@ -559,8 +551,8 @@ class MixturesModel {
 
         // Create a small isotope instance to be used in the controller as a sort of icon.
         newController.controllerIsotope = new PositionableAtom(
-          isotopeConfig.protonCountProperty.get(),
-          isotopeConfig.neutronCountProperty.get(),
+          isotopeConfig.protonCount,
+          isotopeConfig.neutronCount,
           new Vector2( 0, 0 ),
           { particleRadius: SMALL_ISOTOPE_RADIUS }
         );
@@ -585,12 +577,16 @@ class MixturesModel {
     // assuring that they will be visible.
     const possibleIsotopesCopy = this.possibleIsotopesProperty.get().slice( 0 );
     const numDigitsForComparison = 10;
-    possibleIsotopesCopy.sort( ( atom1, atom2 ) => AtomIdentifier.getNaturalAbundance( atom2, numDigitsForComparison ) -
-                                                   AtomIdentifier.getNaturalAbundance( atom1, numDigitsForComparison ) );
+    possibleIsotopesCopy.sort(
+      ( atom1, atom2 ) => AtomIdentifier.getNaturalAbundance( atom2.toNumberAtom(), numDigitsForComparison ) -
+                          AtomIdentifier.getNaturalAbundance( atom1.toNumberAtom(), numDigitsForComparison )
+    );
 
     // Add the isotopes.
     possibleIsotopesCopy.forEach( isotopeConfig => {
-      let numToCreate = roundSymmetric( NUM_NATURES_MIX_ATOMS * AtomIdentifier.getNaturalAbundance( isotopeConfig, 5 ) );
+      let numToCreate = roundSymmetric(
+        NUM_NATURES_MIX_ATOMS * AtomIdentifier.getNaturalAbundance( isotopeConfig.toNumberAtom(), 5 )
+      );
       if ( numToCreate === 0 ) {
 
         // The calculated quantity was 0, but we don't want to have zero instances of this isotope in the chamber, so
@@ -600,8 +596,8 @@ class MixturesModel {
       const isotopesToAdd: PositionableAtom[] = [];
       for ( let i = 0; i < numToCreate; i++ ) {
         const newIsotope = new PositionableAtom(
-          isotopeConfig.protonCountProperty.get(),
-          isotopeConfig.neutronCountProperty.get(),
+          isotopeConfig.protonCount,
+          isotopeConfig.neutronCount,
           this.testChamber.generateRandomPosition(),
           { particleRadius: SMALL_ISOTOPE_RADIUS }
         );
@@ -644,14 +640,15 @@ class MixturesModel {
    * Resets the model. Returns to the default settings.
    */
   public reset(): void {
+
+    // Make sure there is nothing stored for the default element.  This is necessary so that no state is restored when
+    // we set the default element.
+    this.mapIsotopeConfigToUserMixState.delete( this.selectedElementProtonCountProperty.initialValue );
+
     this.clearBox();
     this.naturesIsotopesList.clear();
     this.interactivityModeProperty.reset();
     this.showingNaturesMixProperty.reset();
-
-    // Make sure there is nothing stored for the default configuration so that it doesn't get restored when we set that
-    // as the initial configuration.
-    this.mapIsotopeConfigToUserMixState.delete( DEFAULT_ATOM_CONFIG.protonCount );
 
     // Reset the selected element.
     this.selectedElementProtonCountProperty.reset();

@@ -16,9 +16,9 @@
 import Property from '../../../../axon/js/Property.js';
 import { TReadOnlyProperty } from '../../../../axon/js/TReadOnlyProperty.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import MixturesModel from './MixturesModel.js';
+import NucleusConfig from './NucleusConfig.js';
 import PositionableAtom from './PositionableAtom.js';
 
 // constants
@@ -28,7 +28,7 @@ class NumericalIsotopeQuantityControl {
 
   public readonly quantityProperty: Property<number>;
   private readonly model: MixturesModel;
-  public readonly isotopeConfig: NumberAtom;
+  public readonly isotopeConfig: NucleusConfig;
   public readonly centerPosition: Vector2;
   public readonly caption: string | TReadOnlyProperty<string>;
   public controllerIsotope?: PositionableAtom;
@@ -39,7 +39,12 @@ class NumericalIsotopeQuantityControl {
    * @param position - Position of the control in model coordinates
    * @param caption - Text label for the control
    */
-  public constructor( model: MixturesModel, isotopeConfig: NumberAtom, position: Vector2, caption: string | TReadOnlyProperty<string> ) {
+  public constructor(
+    model: MixturesModel,
+    isotopeConfig: NucleusConfig,
+    position: Vector2,
+    caption: string | TReadOnlyProperty<string>
+  ) {
     this.quantityProperty = new Property<number>( model.testChamber.getIsotopeCount( isotopeConfig ) );
     this.model = model;
     this.isotopeConfig = isotopeConfig;
@@ -57,8 +62,8 @@ class NumericalIsotopeQuantityControl {
     if ( changeAmount > 0 ) {
       for ( let i = 0; i < changeAmount; i++ ) {
         const newIsotope = new PositionableAtom(
-          this.isotopeConfig.protonCountProperty.get(),
-          this.isotopeConfig.neutronCountProperty.get(),
+          this.isotopeConfig.protonCount,
+          this.isotopeConfig.neutronCount,
           this.model.testChamber.generateRandomPosition(),
           { particleRadius: 4 }
         );

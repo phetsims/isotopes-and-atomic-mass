@@ -21,11 +21,11 @@ import RichText from '../../../../scenery/js/nodes/RichText.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
-import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
 import Panel from '../../../../sun/js/Panel.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 import MixturesModel from '../model/MixturesModel.js';
+import NucleusConfig from '../model/NucleusConfig.js';
 
 // constants
 const INDICATOR_WIDTH = 200;
@@ -41,7 +41,7 @@ const amuString = IsotopesAndAtomicMassStrings.amu;
 /**
  * Convenience function for creating tick marks. This includes both the actual mark and the label.
  */
-function IsotopeTickMark( isotopeConfig: NumberAtom ): Node {
+function IsotopeTickMark( isotopeConfig: NucleusConfig ): Node {
   const node = new Node();
 
   // Create the tick mark itself.  It is positioned such that (0,0) is the center of the mark.
@@ -53,7 +53,7 @@ function IsotopeTickMark( isotopeConfig: NumberAtom ): Node {
 
   // Create the label that goes above the tick mark.
   const label = new RichText(
-    ` <sup>${isotopeConfig.massNumberProperty.get()}</sup>${AtomIdentifier.getSymbol( isotopeConfig.protonCountProperty.get() )}`,
+    ` <sup>${isotopeConfig.getMassNumber()}</sup>${AtomIdentifier.getSymbol( isotopeConfig.protonCount )}`,
     {
       font: new PhetFont( 12 )
     }
@@ -159,7 +159,7 @@ class AverageAtomicMassIndicator extends Node {
       let heaviestIsotopeMass = 0;
       this.minMass = Number.POSITIVE_INFINITY;
       possibleIsotopesList.forEach( isotope => {
-        const mass = isotope.getIsotopeAtomicMass();
+        const mass = isotope.getAtomicMass();
         if ( mass > heaviestIsotopeMass ) {
           heaviestIsotopeMass = mass;
         }
@@ -180,7 +180,7 @@ class AverageAtomicMassIndicator extends Node {
       // Add the new tick marks.
       model.possibleIsotopesProperty.get().forEach( isotope => {
         const tickMark = IsotopeTickMark( isotope );
-        tickMark.centerX = this.calcXOffsetFromAtomicMass( isotope.getIsotopeAtomicMass() );
+        tickMark.centerX = this.calcXOffsetFromAtomicMass( isotope.getAtomicMass() );
         tickMarkLayer.addChild( tickMark );
       } );
     } );

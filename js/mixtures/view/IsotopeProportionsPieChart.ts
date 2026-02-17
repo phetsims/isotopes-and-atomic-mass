@@ -19,12 +19,12 @@ import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
-import NumberAtom from '../../../../shred/js/model/NumberAtom.js';
 import Panel from '../../../../sun/js/Panel.js';
 import PieChartNode, { PieSlice } from '../../common/view/PieChartNode.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import getIsotopeColor from '../model/getIsotopeColor.js';
 import MixturesModel from '../model/MixturesModel.js';
+import NucleusConfig from '../model/NucleusConfig.js';
 
 // constants
 const PIE_CHART_RADIUS = 40;
@@ -35,24 +35,24 @@ const CHEMICAL_SYMBOL_FONT = new PhetFont( 16 );
 const SUPERSCRIPT_SUBSCRIPT_FONT = new PhetFont( 14 );
 const NUMBER_DECIMALS = 4;
 
-function chemSymbolWithNumbersNode( isotopeConfig: NumberAtom ): Node {
+function chemSymbolWithNumbersNode( isotopeConfig: NucleusConfig ): Node {
   const node = new Node();
 
-  const symbol = new Text( AtomIdentifier.getSymbol( isotopeConfig.protonCountProperty.get() ), {
+  const symbol = new Text( AtomIdentifier.getSymbol( isotopeConfig.protonCount ), {
     font: CHEMICAL_SYMBOL_FONT,
     centerX: 0,
     centerY: 0
   } );
   node.addChild( symbol );
 
-  const massNumber = new Text( isotopeConfig.massNumberProperty.get().toString(), {
+  const massNumber = new Text( isotopeConfig.getMassNumber().toString(), {
     font: SUPERSCRIPT_SUBSCRIPT_FONT,
     centerY: symbol.top
   } );
   massNumber.right = symbol.left;
   node.addChild( massNumber );
 
-  const atomicNumber = new Text( isotopeConfig.protonCountProperty.get().toString(), {
+  const atomicNumber = new Text( isotopeConfig.protonCount.toString(), {
     font: SUPERSCRIPT_SUBSCRIPT_FONT,
     centerY: symbol.bottom
   } );
@@ -69,7 +69,7 @@ class SliceLabelNode extends Node {
 }
 
 function sliceLabelNode(
-  isotopeConfig: NumberAtom,
+  isotopeConfig: NucleusConfig,
   isotopePercentage: number,
   labelOnLeft: boolean,
   numberOfDecimals: number
@@ -116,13 +116,13 @@ function sliceLabelNode(
 
 class IsotopeProportionsPieChart extends Node {
 
-  private model: MixturesModel;
-  private labelLayer: Node;
-  private pieChartBoundingRectangle: Rectangle;
-  private emptyCircle: Circle;
+  private readonly model: MixturesModel;
+  private readonly labelLayer: Node;
+  private readonly pieChartBoundingRectangle: Rectangle;
+  private readonly emptyCircle: Circle;
   private slices: PieSlice[];
   private sliceLabels: SliceLabelNode[];
-  private pieChart: PieChartNode;
+  private readonly pieChart: PieChartNode;
 
   /**
    * @param model - MixturesModel instance
@@ -182,16 +182,19 @@ class IsotopeProportionsPieChart extends Node {
   }
 
   /**
-   * @param possibleIsotopes - Array of NumberAtom
+   * Update the labels that correspond to each slice of the pie chart.  This includes both the text of the label and its
+   * position.  The position is determined by first finding a position that is directly out from the center of the pie
+   * chart at the angle corresponding to the middle of the slice, and then adjusting that position so that the label
+   * doesn't overlap with the pie chart and so that labels don't overlap with each other.
    */
-  private updateLabels( possibleIsotopes: NumberAtom[] ): void {
+  private updateLabels( possibleIsotopes: NucleusConfig[] ): void {
     this.labelLayer.removeAllChildren();
     this.sliceLabels = [];
     let i = 0;
     possibleIsotopes.forEach( isotope => {
       let proportion: number;
       if ( this.model.showingNaturesMixProperty.get() ) {
-        proportion = AtomIdentifier.getNaturalAbundance( isotope, NUMBER_DECIMALS + 2 );
+        proportion = AtomIdentifier.getNaturalAbundance( isotope.toNumberAtom(), NUMBER_DECIMALS + 2 );
       }
       else {
         proportion = this.model.testChamber.getIsotopeProportion( isotope );

@@ -16,8 +16,8 @@ import Dimension2 from '../../../../dot/js/Dimension2.js';
 import dotRandom from '../../../../dot/js/dotRandom.js';
 import Rectangle from '../../../../dot/js/Rectangle.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import { TReadOnlyNumberAtom } from '../../../../shred/js/model/NumberAtom.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
+import NucleusConfig from './NucleusConfig.js';
 import PositionableAtom from './PositionableAtom.js';
 
 // constants
@@ -43,8 +43,7 @@ class IsotopeTestChamber {
   /**
    * Get the number of isotopes currently in the chamber that match the specified configuration.
    */
-  public getIsotopeCount( isotopeConfig: TReadOnlyNumberAtom ): number {
-    assert && assert( isotopeConfig.protonCountProperty.get() === isotopeConfig.electronCountProperty.get() );
+  public getIsotopeCount( isotopeConfig: NucleusConfig ): number {
     let isotopeCount = 0;
     this.containedIsotopes.forEach( isotope => {
       if ( isotope.atomConfigurationProperty.value.equals( isotopeConfig ) ) {
@@ -117,7 +116,7 @@ class IsotopeTestChamber {
       this.updateCountProperty();
       this.averageAtomicMassProperty.set(
         ( ( this.averageAtomicMassProperty.get() * ( this.isotopeCountProperty.get() - 1 ) ) +
-          isotope.atomConfigurationProperty.value.getIsotopeAtomicMass() ) / this.isotopeCountProperty.get()
+          isotope.atomConfigurationProperty.value.getAtomicMass() ) / this.isotopeCountProperty.get()
       );
     }
   }
@@ -144,7 +143,7 @@ class IsotopeTestChamber {
     if ( this.containedIsotopes.length > 0 ) {
       let totalMass = 0;
       this.containedIsotopes.forEach( isotope => {
-        totalMass += isotope.atomConfigurationProperty.value.getIsotopeAtomicMass();
+        totalMass += isotope.atomConfigurationProperty.value.getAtomicMass();
       } );
       this.averageAtomicMassProperty.set( totalMass / this.containedIsotopes.length );
     }
@@ -165,7 +164,7 @@ class IsotopeTestChamber {
     if ( this.isotopeCountProperty.get() > 0 ) {
       this.averageAtomicMassProperty.set(
         ( this.averageAtomicMassProperty.get() * ( this.isotopeCountProperty.get() + 1 ) -
-          isotope.atomConfigurationProperty.value.getIsotopeAtomicMass() ) / this.isotopeCountProperty.get()
+          isotope.atomConfigurationProperty.value.getAtomicMass() ) / this.isotopeCountProperty.get()
       );
     }
     else {
@@ -183,8 +182,7 @@ class IsotopeTestChamber {
   /**
    * Remove an isotope from the chamber that matches the specified atom configuration. Note that electrons are ignored.
    */
-  public removeIsotopeMatchingConfig( isotopeConfig: TReadOnlyNumberAtom ): PositionableAtom | null {
-    assert && assert( ( isotopeConfig.protonCountProperty.get() - isotopeConfig.electronCountProperty.get() ) === 0 );
+  public removeIsotopeMatchingConfig( isotopeConfig: NucleusConfig ): PositionableAtom | null {
     let removedIsotope: PositionableAtom | null = null;
     this.containedIsotopes.forEach( isotope => {
       if ( isotope.atomConfigurationProperty.value.equals( isotopeConfig ) ) {
@@ -223,8 +221,7 @@ class IsotopeTestChamber {
   /**
    * Get the proportion of isotopes currently within the chamber that match the specified configuration.
    */
-  public getIsotopeProportion( isotopeConfig: TReadOnlyNumberAtom ): number {
-    assert && assert( isotopeConfig.protonCountProperty.get() - isotopeConfig.electronCountProperty.get() === 0 );
+  public getIsotopeProportion( isotopeConfig: NucleusConfig ): number {
     let isotopeCount = 0;
     this.containedIsotopes.forEach( isotope => {
       if ( isotope.atomConfigurationProperty.value.equals( isotopeConfig ) ) {
