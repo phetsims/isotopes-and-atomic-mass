@@ -8,7 +8,10 @@
  */
 
 import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import DynamicProperty from '../../../../axon/js/DynamicProperty.js';
 import Multilink from '../../../../axon/js/Multilink.js';
+import StringProperty from '../../../../axon/js/StringProperty.js';
+import { TReadOnlyProperty } from '../../../../axon/js/TReadOnlyProperty.js';
 import { toFixedNumber } from '../../../../dot/js/util/toFixedNumber.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
@@ -44,7 +47,7 @@ class TwoItemPieChartNode extends Node {
     super();
 
     // Create a bounding rectangle for the pie chart.  This is needed because the pie chart can disappear if none of
-    // its slices have a value greater than zero, which messes with layout.  The rectangle is invisible
+    // its slices have a value greater than zero, which messes with layout.  The rectangle is invisible.
     const pieChartBoundingRectangle = new Rectangle( 150, 0, PIE_CHART_RADIUS * 2, PIE_CHART_RADIUS * 2, 0, 0 );
     this.addChild( pieChartBoundingRectangle );
 
@@ -112,7 +115,29 @@ class TwoItemPieChartNode extends Node {
     this.addChild( leftConnectingLine );
     leftConnectingLine.moveToBack();
 
-    const otherIsotopeLabel = new RichText( '', {
+    // Create the string for the element name.  This has to be a dynamic property because the proton count can change
+    // the selected element, but changing the locale can change that element's name.
+    const emptyStringProperty = new StringProperty( '' );
+    const elementNameProperty = new DerivedProperty(
+      [ particleAtom.protonCountProperty ],
+      protonCount => {
+        if ( protonCount > 0 ) {
+          return AtomIdentifier.getName( protonCount );
+        }
+        else {
+          return emptyStringProperty;
+        }
+      }
+    );
+    const elementNameDynamicProperty: TReadOnlyProperty<string> = new DynamicProperty( elementNameProperty );
+
+    // Create a derived property for the "other isotopes" label that depends on the element name and the string pattern.
+    const otherIsotopesStringProperty = new DerivedProperty(
+      [ elementNameDynamicProperty, otherIsotopesPatternStringProperty ],
+      ( elementName: string, otherIsotopesPatternString ) => StringUtils.format( otherIsotopesPatternString, elementName )
+    );
+
+    const otherIsotopeLabel = new RichText( otherIsotopesStringProperty, {
       font: new PhetFont( { size: 12 } ),
       fill: 'black',
       maxWidth: 60,
@@ -145,9 +170,7 @@ class TwoItemPieChartNode extends Node {
 
     function updateOtherIsotopeLabel( isotope: TReadOnlyNumberAtom ): void {
       const abundanceTo6Digits = AtomIdentifier.getNaturalAbundance( isotope, 6 );
-      const name = AtomIdentifier.getName( particleAtom.protonCountProperty.get() ).value;
       if ( particleAtom.protonCountProperty.get() > 0 && abundanceTo6Digits < 1 ) {
-        otherIsotopeLabel.string = StringUtils.format( otherIsotopesPatternStringProperty.value, name );
         otherIsotopeLabel.visible = true;
         rightConnectingLine.visible = true;
       }
