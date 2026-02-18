@@ -520,16 +520,12 @@ class MixturesModel {
       );
 
       if ( buckets ) {
-        const newBucket = new MonoIsotopeBucket(
-          isotopeConfig.protonCount,
-          isotopeConfig.neutronCount,
-          {
-            position: new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetBucket ),
-            size: BUCKET_SIZE,
-            captionText: isotopeCaptionStringProperty,
-            sphereRadius: LARGE_ISOTOPE_RADIUS
-          }
-        );
+        const newBucket = new MonoIsotopeBucket( isotopeConfig, {
+          position: new Vector2( controllerXOffset + interControllerDistanceX * i, controllerYOffsetBucket ),
+          size: BUCKET_SIZE,
+          captionText: isotopeCaptionStringProperty,
+          sphereRadius: LARGE_ISOTOPE_RADIUS
+        } );
         this.addBucket( newBucket );
         if ( !this.showingNaturesMixProperty.get() ) {
 

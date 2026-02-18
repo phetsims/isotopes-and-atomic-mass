@@ -9,38 +9,49 @@
  * @author James Smith
  */
 
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import Property from '../../../../axon/js/Property.js';
+import TProperty from '../../../../axon/js/TProperty.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import SphereBucket, { SphereBucketOptions } from '../../../../phetcommon/js/model/SphereBucket.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import getIsotopeColor from './getIsotopeColor.js';
+import NucleusConfig from './NucleusConfig.js';
 import PositionableAtom from './PositionableAtom.js';
 
 type SelfOptions = EmptySelfOptions;
 export type MonoIsotopeBucketOptions = SelfOptions & StrictOmit<SphereBucketOptions, 'baseColor'>;
 
+// TODO: See https://github.com/phetsims/isotopes-and-atomic-mass/issues/103.  There are some decisions to be made about
+//       the state behavior of buckets that I (jbphet) have deferred until the state refactor is a little further along.
+//       One specific example is what should happen to particles in a bucket when it is reconfigured.  Also, should
+//       buckets have an active property to control whether it appears in the view?  That sort of thing.  Come back to
+//       this.
+
 class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
 
-  public readonly numProtonsInIsotope: number;
-  public readonly numNeutronsInIsotope: number;
+  // The configuration of the isotope that this bucket can hold. This is used to determine if an isotope can be added to
+  // the bucket, and to determine the color of the bucket.  Clients can change the configuration of the bucket by
+  // setting this Property.
+  public readonly isotopeConfigProperty: TProperty<NucleusConfig>;
 
-  public constructor(
-    numProtonsInIsotope: number,
-    numNeutronsInIsotope: number,
-    providedOptions?: MonoIsotopeBucketOptions
-  ) {
+  public constructor( initialIsotopeConfig: NucleusConfig, providedOptions?: MonoIsotopeBucketOptions ) {
+
+    const isotopeConfigProperty = new Property<NucleusConfig>( initialIsotopeConfig );
 
     const options = optionize<MonoIsotopeBucketOptions, SelfOptions, SphereBucketOptions>()( {
 
       // Derive the color of the bucket from the isotope it holds.
-      baseColor: getIsotopeColor( numProtonsInIsotope, numNeutronsInIsotope )
+      baseColor: new DerivedProperty( [ isotopeConfigProperty ], ( isotopeConfig: NucleusConfig ) => {
+        return getIsotopeColor( isotopeConfig.protonCount, isotopeConfig.neutronCount );
+      } )
 
     }, providedOptions );
 
     super( options );
 
-    this.numProtonsInIsotope = numProtonsInIsotope;
-    this.numNeutronsInIsotope = numNeutronsInIsotope;
+    this.isotopeConfigProperty = isotopeConfigProperty;
   }
 
   /**
@@ -56,10 +67,11 @@ class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
   }
 
   /**
-   * Tests to see if an isotope matches the MonoIsotopeBucket.
+   * Tests to see if an isotope is allowed in this instance based on the current configuration.
    */
   public isIsotopeAllowed( numProtons: number, numNeutrons: number ): boolean {
-    return this.numProtonsInIsotope === numProtons && this.numNeutronsInIsotope === numNeutrons;
+    return this.isotopeConfigProperty.value.protonCount === numProtons &&
+           this.isotopeConfigProperty.value.neutronCount === numNeutrons;
   }
 
   /**
