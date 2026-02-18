@@ -1,14 +1,15 @@
 // Copyright 2015-2026, University of Colorado Boulder
 
 /**
- * monitors the average atomic mass of a set of isotopes in a model and displays it.
+ * AverageAtomicMassIndicator monitors the average atomic mass of a set of isotopes in a model and displays it.
  *
- * @author John Blanco
+ * @author John Blanco (PhET Interactive Simulations)
  * @author James Smith
  * @author Aadish Gupta
- *
  */
 
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
+import { TReadOnlyProperty } from '../../../../axon/js/TReadOnlyProperty.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
 import { toFixed } from '../../../../dot/js/util/toFixed.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
@@ -35,98 +36,7 @@ const SIZE = new Dimension2( 75, 25 );
 const TRIANGULAR_POINTER_HEIGHT = 15;
 const TRIANGULAR_POINTER_WIDTH = 20;
 const NUMBER_DECIMALS = 5;
-
-const amuString = IsotopesAndAtomicMassStrings.amu;
-
-/**
- * Convenience function for creating tick marks. This includes both the actual mark and the label.
- */
-function IsotopeTickMark( isotopeConfig: NucleusConfig ): Node {
-  const node = new Node();
-
-  // Create the tick mark itself.  It is positioned such that (0,0) is the center of the mark.
-  const shape = new Line( 0, -TICK_MARK_LINE_HEIGHT / 2, 0, TICK_MARK_LINE_HEIGHT / 2, {
-    lineWidth: TICK_MARK_LINE_WIDTH,
-    stroke: 'black'
-  } );
-  node.addChild( shape );
-
-  // Create the label that goes above the tick mark.
-  const label = new RichText(
-    ` <sup>${isotopeConfig.getMassNumber()}</sup>${AtomIdentifier.getSymbol( isotopeConfig.protonCount )}`,
-    {
-      font: new PhetFont( 12 )
-    }
-  );
-  label.centerX = shape.centerX;
-  label.bottom = shape.top;
-  node.addChild( label );
-
-  return node;
-}
-
-/**
- * This convenience defines the "readout pointer", which is an indicator that contains a textual indication of the
- * average atomic mass and also has a pointer on the top that can be used to indicate the position on a linear scale.
- * This node is set up such that the (0,0) point is at the top center of the node, which is where the point of the
- * pointer exists. This is done to make it easy to position the node under the mass indication line.
- */
-function ReadoutPointer( model: MixturesModel ): Node {
-  const node = new Node();
-
-  // Add the triangular pointer. This is created such that the point of the triangle is at (0,0) for this node.
-  const vertices = [
-    new Vector2( -TRIANGULAR_POINTER_WIDTH / 2, TRIANGULAR_POINTER_HEIGHT ),
-    new Vector2( TRIANGULAR_POINTER_WIDTH / 2, TRIANGULAR_POINTER_HEIGHT ),
-    new Vector2( 0, 0 )
-  ];
-
-  const triangle = new Path( Shape.polygon( vertices ), {
-    fill: new Color( 0, 143, 212 ),
-    lineWidth: 1
-  } );
-  node.addChild( triangle );
-
-  const readoutText = new Text( '', {
-    font: new PhetFont( 14 ),
-    maxWidth: 0.9 * SIZE.width,
-    maxHeight: 0.9 * SIZE.height
-  } );
-
-  const readoutPanel = new Panel( readoutText, {
-    minWidth: SIZE.width,
-    minHeight: SIZE.height,
-    resize: false,
-    cornerRadius: 2,
-    lineWidth: 1,
-    align: 'center',
-    fill: 'white'
-  } );
-
-  readoutPanel.top = triangle.bottom;
-  readoutPanel.centerX = triangle.centerX;
-  node.addChild( readoutPanel );
-
-  function updateReadout( averageAtomicMass: number ): void {
-    let weight: number;
-    if ( model.showingNaturesMixProperty.get() ) {
-      weight = AtomIdentifier.getStandardAtomicMass( model.selectedElementProtonCountProperty.value );
-    }
-    else {
-      weight = averageAtomicMass;
-    }
-    readoutText.setString( `${toFixed( weight, NUMBER_DECIMALS )} ${amuString}` );
-    readoutText.centerX = SIZE.width / 2;
-  }
-
-  // Observe the average atomic weight property in the model and update the textual readout whenever it changes.
-  // Doesn't need unlink as it stays through out the sim life
-  model.testChamber.averageAtomicMassProperty.link( ( averageAtomicMass: number ) => {
-    updateReadout( averageAtomicMass );
-  } );
-
-  return node;
-}
+const amuStringProperty = IsotopesAndAtomicMassStrings.amuStringProperty;
 
 class AverageAtomicMassIndicator extends Node {
 
@@ -179,14 +89,14 @@ class AverageAtomicMassIndicator extends Node {
 
       // Add the new tick marks.
       model.possibleIsotopesProperty.get().forEach( isotope => {
-        const tickMark = IsotopeTickMark( isotope );
+        const tickMark = new IsotopeTickMark( isotope );
         tickMark.centerX = this.calcXOffsetFromAtomicMass( isotope.getAtomicMass() );
         tickMarkLayer.addChild( tickMark );
       } );
     } );
 
     // Add the moving readout.
-    const readoutPointer = ReadoutPointer( model );
+    const readoutPointer = new ReadoutPointer( model );
     readoutPointer.top = barNode.bottom;
     readoutPointer.centerX = barNode.centerX;
     this.addChild( readoutPointer );
@@ -210,6 +120,98 @@ class AverageAtomicMassIndicator extends Node {
     return Math.max( ( ( atomicMass - this.minMass ) / this.massSpan ) * INDICATOR_WIDTH, 0 );
   }
 }
+
+/**
+ * Inner class that defines the "readout pointer", which is an indicator that contains a textual indication of the
+ * average atomic mass and also has a pointer on the top that can be used to indicate the position on a linear scale.
+ * This node is set up such that the (0,0) point is at the top center of the node, which is where the point of the
+ * pointer exists. This is done to make it easy to position the node under the mass indication line.
+ */
+class ReadoutPointer extends Node {
+  public constructor( model: MixturesModel ) {
+    super();
+
+    // Add the triangular pointer. This is created such that the point of the triangle is at (0,0) for this node.
+    const vertices = [
+      new Vector2( -TRIANGULAR_POINTER_WIDTH / 2, TRIANGULAR_POINTER_HEIGHT ),
+      new Vector2( TRIANGULAR_POINTER_WIDTH / 2, TRIANGULAR_POINTER_HEIGHT ),
+      new Vector2( 0, 0 )
+    ];
+
+    const triangle = new Path( Shape.polygon( vertices ), {
+      fill: new Color( 0, 143, 212 ),
+      lineWidth: 1
+    } );
+    this.addChild( triangle );
+
+    const readoutStringProperty: TReadOnlyProperty<string> = new DerivedProperty(
+      [
+        model.testChamber.averageAtomicMassProperty,
+        model.showingNaturesMixProperty,
+        amuStringProperty
+      ],
+      ( averageAtomicMass: number, showingNaturesMix, amuString: string ) => {
+        let weight: number;
+        if ( showingNaturesMix ) {
+          weight = AtomIdentifier.getStandardAtomicMass( model.selectedElementProtonCountProperty.value );
+        }
+        else {
+          weight = averageAtomicMass;
+        }
+        return `${toFixed( weight, NUMBER_DECIMALS )} ${amuString}`;
+      }
+    );
+
+    const readoutText = new Text( readoutStringProperty, {
+      font: new PhetFont( 14 ),
+      maxWidth: 0.9 * SIZE.width,
+      maxHeight: 0.9 * SIZE.height
+    } );
+
+    const readoutPanel = new Panel( readoutText, {
+      fill: 'white',
+      align: 'center',
+      cornerRadius: 2,
+      lineWidth: 1,
+      top: triangle.bottom,
+      centerX: triangle.centerX,
+      minWidth: SIZE.width,
+      minHeight: SIZE.height,
+      resize: false
+    } );
+
+    this.addChild( readoutPanel );
+  }
+}
+
+/**
+ * Inner class that defines the tick marks that indicate the position of isotopes on the line.  Each tick mark contains
+ * a line and a label above it that indicates the isotope configuration.
+ */
+class IsotopeTickMark extends Node {
+  public constructor( isotopeConfig: NucleusConfig ) {
+    super();
+
+    // Create the tick mark itself.  It is positioned such that (0,0) is the center of the mark.
+    const shape = new Line( 0, -TICK_MARK_LINE_HEIGHT / 2, 0, TICK_MARK_LINE_HEIGHT / 2, {
+      lineWidth: TICK_MARK_LINE_WIDTH,
+      stroke: 'black'
+    } );
+    this.addChild( shape );
+
+    // Create the label that goes above the tick mark.
+    const label = new RichText(
+      ` <sup>${isotopeConfig.getMassNumber()}</sup>${AtomIdentifier.getSymbol( isotopeConfig.protonCount )}`,
+      {
+        font: new PhetFont( 12 )
+      }
+    );
+    label.centerX = shape.centerX;
+    label.bottom = shape.top;
+    this.addChild( label );
+  }
+}
+
 
 isotopesAndAtomicMass.register( 'AverageAtomicMassIndicator', AverageAtomicMassIndicator );
 export default AverageAtomicMassIndicator;
