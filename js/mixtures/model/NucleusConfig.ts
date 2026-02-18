@@ -1,4 +1,4 @@
-// Copyright 2019-2026, University of Colorado Boulder
+// Copyright 2026, University of Colorado Boulder
 
 /**
  * NucleusConfig is an immutable configuration for an atomic nucleus, including the number of protons and neutrons.
