@@ -13,42 +13,24 @@ import isotopesAndAtomicMass from './isotopesAndAtomicMass.js';
 
 type StringsType = {
   'isotopes-and-atomic-mass': {
-    'title': string;
     'titleStringProperty': LocalizedStringProperty;
   };
-  'isotopes': string;
   'isotopesStringProperty': LocalizedStringProperty;
-  'mixtures': string;
   'mixturesStringProperty': LocalizedStringProperty;
-  'neutrons': string;
   'neutronsStringProperty': LocalizedStringProperty;
-  'massNumber': string;
   'massNumberStringProperty': LocalizedStringProperty;
-  'atomicMass': string;
   'atomicMassStringProperty': LocalizedStringProperty;
-  'symbol': string;
   'symbolStringProperty': LocalizedStringProperty;
-  'abundanceInNature': string;
   'abundanceInNatureStringProperty': LocalizedStringProperty;
-  'myIsotope': string;
   'myIsotopeStringProperty': LocalizedStringProperty;
-  'thisIsotope': string;
   'thisIsotopeStringProperty': LocalizedStringProperty;
-  'otherIsotopesPattern': string;
   'otherIsotopesPatternStringProperty': LocalizedStringProperty;
-  'amu': string;
   'amuStringProperty': LocalizedStringProperty;
-  'myMix': string;
   'myMixStringProperty': LocalizedStringProperty;
-  'naturesMix': string;
   'naturesMixStringProperty': LocalizedStringProperty;
-  'isotopeMixture': string;
   'isotopeMixtureStringProperty': LocalizedStringProperty;
-  'percentComposition': string;
   'percentCompositionStringProperty': LocalizedStringProperty;
-  'averageAtomicMass': string;
   'averageAtomicMassStringProperty': LocalizedStringProperty;
-  'trace': string;
   'traceStringProperty': LocalizedStringProperty;
 };
 
