@@ -1,9 +1,11 @@
 // Copyright 2015-2026, University of Colorado Boulder
 
 /**
- * Node that represents a pie chart with two slices and their labels positioned accordingly
+ * TwoItemPieChartNode represents a pie chart with two slices and their labels. The first slice represents the abundance
+ * of the current isotope, and the second slice represents the abundance of all other isotopes of the same element that
+ * exist in nature (and are stable).
  *
- * @author John Blanco
+ * @author John Blanco (PhET Interactive Simulations)
  * @author Aadish Gupta
  */
 
@@ -15,6 +17,7 @@ import { TReadOnlyProperty } from '../../../../axon/js/TReadOnlyProperty.js';
 import { toFixedNumber } from '../../../../dot/js/util/toFixedNumber.js';
 import StringUtils from '../../../../phetcommon/js/util/StringUtils.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
+import HBox from '../../../../scenery/js/layout/nodes/HBox.js';
 import Line from '../../../../scenery/js/nodes/Line.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
@@ -22,7 +25,6 @@ import RichText from '../../../../scenery/js/nodes/RichText.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
-import { TReadOnlyNumberAtom } from '../../../../shred/js/model/NumberAtom.js';
 import ParticleAtom from '../../../../shred/js/model/ParticleAtom.js';
 import Panel from '../../../../sun/js/Panel.js';
 import PieChartNode, { PieSlice } from '../../common/view/PieChartNode.js';
@@ -37,6 +39,7 @@ const TRACE_ABUNDANCE_IN_PIE_CHART = 1E-6; // empirically chosen value used to r
 const ABUNDANCE_DECIMAL_PLACES = 4; // number of decimal places to show in abundance readout
 const READOUT_TO_PIE_CHART_DISTANCE = 50; // distance between the abundance readout and the pie chart
 
+// string Properties
 const otherIsotopesPatternStringProperty = IsotopesAndAtomicMassStrings.otherIsotopesPatternStringProperty;
 const thisIsotopeStringProperty = IsotopesAndAtomicMassStrings.thisIsotopeStringProperty;
 const traceStringProperty = IsotopesAndAtomicMassStrings.traceStringProperty;
@@ -44,12 +47,17 @@ const traceStringProperty = IsotopesAndAtomicMassStrings.traceStringProperty;
 class TwoItemPieChartNode extends Node {
 
   public constructor( particleAtom: ParticleAtom ) {
-    super();
 
     // Create a bounding rectangle for the pie chart.  This is needed because the pie chart can disappear if none of
-    // its slices have a value greater than zero, which messes with layout.  The rectangle is invisible.
-    const pieChartBoundingRectangle = new Rectangle( 150, 0, PIE_CHART_RADIUS * 2, PIE_CHART_RADIUS * 2, 0, 0 );
-    this.addChild( pieChartBoundingRectangle );
+    // its slices have a value greater than zero, which messes with layout.  The rectangle is invisible, but can be made
+    // visible for debugging purposes.  Everything else (pie chart, labels, connecting lines) will be positioned
+    // relative to this rectangle.
+    const pieChartBoundingRectangle = new Rectangle(
+      -PIE_CHART_RADIUS,
+      -PIE_CHART_RADIUS,
+      PIE_CHART_RADIUS * 2,
+      PIE_CHART_RADIUS * 2
+    );
 
     // Create the default slices and color coding.  The first slice is for the user-created isotope, the second is for
     // all other isotopes that exist in nature (and are stable).
@@ -97,14 +105,12 @@ class TwoItemPieChartNode extends Node {
         yMargin: 4
       }
     );
-    this.addChild( abundanceDisplay );
 
     const thisIsotopeLabel = new Text( thisIsotopeStringProperty, {
       font: new PhetFont( { size: 12 } ),
       fill: 'black',
       maxWidth: 60
     } );
-    this.addChild( thisIsotopeLabel );
 
     // Create the dashed line that connects the abundance readout panel to the pie chart.  The initial size is
     // arbitrary, it will be updated when the readout panel is positioned.
@@ -112,8 +118,6 @@ class TwoItemPieChartNode extends Node {
       stroke: FIRST_SLICE_COLOR,
       lineDash: [ 3, 1 ]
     } );
-    this.addChild( leftConnectingLine );
-    leftConnectingLine.moveToBack();
 
     // Create the string for the element name.  This has to be a dynamic property because the proton count can change
     // the selected element, but changing the locale can change that element's name.
@@ -143,16 +147,13 @@ class TwoItemPieChartNode extends Node {
       maxWidth: 60,
       align: 'center'
     } );
-    this.addChild( otherIsotopeLabel );
 
     // Create the dashed line that connects the other isotope label to the pie chart.  The initial size is arbitrary, it
     // will be updated when the label is positioned.
-    const rightConnectingLine = new Line( 0, 0, 20, 0, {
+    const rightConnectingLine = new Line( 0, 0, 10, 0, {
       stroke: SECOND_SLICE_COLOR,
       lineDash: [ 3, 1 ]
     } );
-    this.addChild( rightConnectingLine );
-    rightConnectingLine.moveToBack();
 
     // Align the number display and its connecting line when the number display changes.
     abundanceDisplay.localBoundsProperty.link( () => {
@@ -168,63 +169,83 @@ class TwoItemPieChartNode extends Node {
       );
     } );
 
-    function updateOtherIsotopeLabel( isotope: TReadOnlyNumberAtom ): void {
-      const abundanceTo6Digits = AtomIdentifier.getNaturalAbundance( isotope, 6 );
-      if ( particleAtom.protonCountProperty.get() > 0 && abundanceTo6Digits < 1 ) {
-        otherIsotopeLabel.visible = true;
-        rightConnectingLine.visible = true;
-      }
-      else {
-        otherIsotopeLabel.visible = false;
-        rightConnectingLine.visible = false;
-      }
-      otherIsotopeLabel.centerY = pieChartBoundingRectangle.centerY;
-      otherIsotopeLabel.left = pieChartBoundingRectangle.right + 10;
-      rightConnectingLine.setLine(
-        otherIsotopeLabel.left - 2,
-        pieChartBoundingRectangle.centerY,
-        pieChartBoundingRectangle.centerX,
-        pieChartBoundingRectangle.centerY
-      );
-    }
+    // Create a derived property that will determine whether the other isotopes label and its connecting line should be
+    // visible.
+    const otherIsotopesIndicatorVisibleProperty = new DerivedProperty(
+      [ particleAtom.protonCountProperty, particleAtom.neutronCountProperty ],
+      protonCount => {
+        let visible = false;
+        if ( protonCount > 0 ) {
 
-    function updatePieChart(): void {
-      const thisIsotopeAbundanceTo6Digits = AtomIdentifier.getNaturalAbundance( particleAtom, 6 );
-      const otherIsotopesAbundance = 1 - thisIsotopeAbundanceTo6Digits;
-
-      // set the slice value for the current isotope
-      if ( thisIsotopeAbundanceTo6Digits === 0 && AtomIdentifier.existsInTraceAmounts( particleAtom ) ) {
-        slices[ 0 ].value = TRACE_ABUNDANCE_IN_PIE_CHART;
+          // If the abundance is less than 1, then we want to show the other isotopes label and connecting line.
+          const abundanceTo6Digits = AtomIdentifier.getNaturalAbundance( particleAtom, 6 );
+          visible = abundanceTo6Digits < 1;
+        }
+        return visible;
       }
-      else {
-        slices[ 0 ].value = thisIsotopeAbundanceTo6Digits;
-      }
+    );
 
-      // set up the slice value for all other isotopes
-      slices[ 1 ].value = otherIsotopesAbundance;
-
-      // update the pie and the labels
-      pieChart.setAngleAndValues(
-        Math.PI * 2 * slices[ 1 ].value / ( slices[ 0 ].value + slices[ 1 ].value ) / 2,
-        slices
-      );
-      updateOtherIsotopeLabel( particleAtom );
-    }
+    // Put the other isotope label and its connecting line in an HBox so that they will be laid out together.  The HBox
+    // is positioned relative to the bounding rectangle.
+    const otherIsotopesIndicator = new HBox( {
+      spacing: 3,
+      children: [
+        rightConnectingLine,
+        otherIsotopeLabel
+      ],
+      left: pieChartBoundingRectangle.right,
+      centerY: pieChartBoundingRectangle.centerY,
+      visibleProperty: otherIsotopesIndicatorVisibleProperty
+    } );
 
     // Update the pie chart when the proton or neutron counts change. Also when the string pattern changes.
     Multilink.multilink(
       [ particleAtom.protonCountProperty, particleAtom.neutronCountProperty, otherIsotopesPatternStringProperty ],
       protonCount => {
+
         if ( protonCount > 0 ) {
-          updatePieChart();
-          leftConnectingLine.visible = AtomIdentifier.getNaturalAbundance( particleAtom, ABUNDANCE_DECIMAL_PLACES ) > 0 ||
-                                       AtomIdentifier.existsInTraceAmounts( particleAtom );
+
+          const thisIsotopeAbundanceTo6Digits = AtomIdentifier.getNaturalAbundance( particleAtom, 6 );
+          const otherIsotopesAbundance = 1 - thisIsotopeAbundanceTo6Digits;
+
+          // set the slice value for the current isotope
+          if ( thisIsotopeAbundanceTo6Digits === 0 && AtomIdentifier.existsInTraceAmounts( particleAtom ) ) {
+            slices[ 0 ].value = TRACE_ABUNDANCE_IN_PIE_CHART;
+          }
+          else {
+            slices[ 0 ].value = thisIsotopeAbundanceTo6Digits;
+          }
+
+          // set up the slice value for all other isotopes
+          slices[ 1 ].value = otherIsotopesAbundance;
         }
+        else {
+
+          // This condition (i.e. where the proton count is zero) should only exist as a transient state, so the values
+          // assigned here are essentially arbitrary.
+          slices[ 0 ].value = 1;
+          slices[ 1 ].value = 0;
+        }
+
+        // Update the pie chart.
+        pieChart.setAngleAndValues(
+          Math.PI * 2 * slices[ 1 ].value / ( slices[ 0 ].value + slices[ 1 ].value ) / 2,
+          slices
+        );
+
+        leftConnectingLine.visible = slices[ 0 ].value > 0;
       }
     );
 
-    // do initial update to the pie chart
-    updatePieChart();
+    super( {
+      children: [
+        pieChartBoundingRectangle,
+        leftConnectingLine,
+        abundanceDisplay,
+        thisIsotopeLabel,
+        otherIsotopesIndicator
+      ]
+    } );
   }
 }
 

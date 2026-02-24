@@ -156,7 +156,8 @@ class IsotopesScreenView extends ScreenView {
       expandCollapseButtonOptions: {
         touchAreaXDilation: OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION,
         touchAreaYDilation: OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION
-      }
+      },
+      resize: false
     } );
     abundanceBox.left = symbolBox.left;
     abundanceBox.top = symbolBox.bottom + 10;
