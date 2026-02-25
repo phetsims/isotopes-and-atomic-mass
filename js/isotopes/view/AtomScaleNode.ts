@@ -17,7 +17,7 @@ import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import { TReadOnlyNumberAtom } from '../../../../shred/js/model/NumberAtom.js';
 import ParticleAtom from '../../../../shred/js/model/ParticleAtom.js';
-import AquaRadioButton from '../../../../sun/js/AquaRadioButton.js';
+import AquaRadioButtonGroup, { AquaRadioButtonGroupItem } from '../../../../sun/js/AquaRadioButtonGroup.js';
 import Panel from '../../../../sun/js/Panel.js';
 import scale_png from '../../../mipmaps/scale_png.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
@@ -26,11 +26,15 @@ import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js'
 const atomicMassStringProperty = IsotopesAndAtomicMassStrings.atomicMassStringProperty;
 const massNumberStringProperty = IsotopesAndAtomicMassStrings.massNumberStringProperty;
 
-const DISPLAY_MODE = { MASS_NUMBER: 'mass number', ATOMIC_MASS: 'atomic mass' } as const;
-type DisplayMode = typeof DISPLAY_MODE[keyof typeof DISPLAY_MODE];
+type DisplayMode = 'massNumber' | 'atomicMass';
 
-const SCALE_WIDTH = 275;
+const WEIGH_SCALE_WIDTH = 275;
 const READOUT_SIZE = new Dimension2( 88, 35 );
+const RADIO_BUTTON_LABEL_OPTIONS = {
+  font: new PhetFont( 14 ),
+  maxWidth: 125,
+  fill: 'white'
+};
 
 class ScaleReadoutNode extends Panel {
   private readonly atom: TReadOnlyNumberAtom;
@@ -64,7 +68,7 @@ class ScaleReadoutNode extends Panel {
     this.readoutText = readoutText;
 
     const updateReadout = (): void => {
-      if ( this.displayModeProperty.get() === DISPLAY_MODE.MASS_NUMBER ) {
+      if ( this.displayModeProperty.get() === 'massNumber' ) {
         this.readoutText.string = this.atom.massNumberProperty.get().toString();
       }
       else {
@@ -81,67 +85,57 @@ class ScaleReadoutNode extends Panel {
   }
 }
 
-class DisplayModeSelectionNode extends Node {
-  public constructor( displayModeProperty: Property<DisplayMode> ) {
-    super();
-    const radioButtonRadius = 6;
-    const LABEL_FONT = new PhetFont( 14 );
-    const massNumberButton = new AquaRadioButton(
-      displayModeProperty,
-      DISPLAY_MODE.MASS_NUMBER,
-      new Text( massNumberStringProperty, {
-        font: LABEL_FONT,
-        maxWidth: 125,
-        fill: 'white'
-      } ),
-      { radius: radioButtonRadius }
-    );
-    const atomicMassButton = new AquaRadioButton(
-      displayModeProperty,
-      DISPLAY_MODE.ATOMIC_MASS,
-      new Text( atomicMassStringProperty, {
-        font: LABEL_FONT,
-        maxWidth: 125,
-        fill: 'white'
-      } ),
-      { radius: radioButtonRadius }
-    );
-    this.addChild( massNumberButton );
-    atomicMassButton.top = massNumberButton.bottom + 8;
-    atomicMassButton.left = this.left;
-    this.addChild( atomicMassButton );
-  }
-}
-
 class AtomScaleNode extends Node {
   private readonly displayModeProperty: Property<DisplayMode>;
 
   public constructor( atom: ParticleAtom ) {
     super();
 
-    this.displayModeProperty = new Property<DisplayMode>( DISPLAY_MODE.MASS_NUMBER );
+    this.displayModeProperty = new Property<DisplayMode>( 'massNumber' );
 
-    // Add the scale image, scaled to the desired width.
+    // Add the image of the weigh scale, scaled to the desired width.
     const weighScaleImage = new Image( scale_png );
-    weighScaleImage.scale( SCALE_WIDTH / weighScaleImage.width );
+    weighScaleImage.scale( WEIGH_SCALE_WIDTH / weighScaleImage.width );
     this.addChild( weighScaleImage );
 
     // Add the readout of the atom's mass number or atomic mass.
     const scaleReadoutNode = new ScaleReadoutNode( atom, this.displayModeProperty );
-    scaleReadoutNode.left = SCALE_WIDTH * 0.075;
+    scaleReadoutNode.left = WEIGH_SCALE_WIDTH * 0.075;
     scaleReadoutNode.centerY = weighScaleImage.height * 0.7;
     this.addChild( scaleReadoutNode );
 
-    // Add the display mode selector to the scale base, positioned between the readout and the right edge of the scale.
-    const displayModeSelectionNode = new DisplayModeSelectionNode( this.displayModeProperty );
-    displayModeSelectionNode.centerX = ( scaleReadoutNode.right + weighScaleImage.width - 5 ) / 2;
-    displayModeSelectionNode.centerY = weighScaleImage.height * 0.7;
-    this.addChild( displayModeSelectionNode );
+    // Define the items for the radio button group that will allow the user to select whether to display the mass number
+    // or atomic mass.
+    const radioButtonGroupItems: AquaRadioButtonGroupItem<DisplayMode>[] = [
+      {
+        value: 'massNumber',
+        createNode: () => new Text( massNumberStringProperty, RADIO_BUTTON_LABEL_OPTIONS )
+      },
+      {
+        value: 'atomicMass',
+        createNode: () => new Text( atomicMassStringProperty, RADIO_BUTTON_LABEL_OPTIONS )
+      }
+    ];
+
+    // Create and add the radio button group that selects the display mode.
+    const displayModeSelector = new AquaRadioButtonGroup<DisplayMode>(
+      this.displayModeProperty,
+      radioButtonGroupItems,
+      {
+        spacing: 8,
+        align: 'left',
+        radioButtonOptions: {
+          radius: 7
+        },
+        touchAreaXDilation: 10,
+        mouseAreaXDilation: 10,
+        centerX: ( scaleReadoutNode.right + weighScaleImage.width - 5 ) / 2,
+        centerY: weighScaleImage.height * 0.7
+      }
+    );
+    this.addChild( displayModeSelector );
   }
 
-  /**
-   * Reset the atom scale node to its initial state by resetting the display mode property.
-   */
   public reset(): void {
     this.displayModeProperty.reset();
   }
