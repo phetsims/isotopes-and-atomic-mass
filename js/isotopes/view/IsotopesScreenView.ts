@@ -106,11 +106,11 @@ class IsotopesScreenView extends ScreenView {
     const particleCountLegend = new ParticleCountDisplay( isotopesModel.particleAtom, {
       maxParticles: 14,
       maxWidth: 350,
+      left: 20,
+      top: periodicTableNode.visibleBounds.minY,
       tandem: Tandem.OPT_OUT
     } );
     particleCountLegend.scale( 1.1 );
-    particleCountLegend.left = 20;
-    particleCountLegend.top = periodicTableNode.visibleBounds.minY;
     indicatorLayer.addChild( particleCountLegend );
 
     // Add the node for the atomic symbol.
