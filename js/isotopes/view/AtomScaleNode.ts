@@ -1,24 +1,28 @@
 // Copyright 2014-2026, University of Colorado Boulder
 
 /**
- * Node that represents a scale on which an atom can be weighed.
+ * AtomScaleNode is a Node that represents a scale on which an atom can be weighed.
  *
  * @author John Blanco
  * @author Jesse Greenberg
  * @author Aadish Gupta
  */
 
+import DerivedProperty from '../../../../axon/js/DerivedProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import Dimension2 from '../../../../dot/js/Dimension2.js';
+import Range from '../../../../dot/js/Range.js';
 import { toFixed } from '../../../../dot/js/util/toFixed.js';
+import { toFixedNumber } from '../../../../dot/js/util/toFixedNumber.js';
+import NumberDisplay from '../../../../scenery-phet/js/NumberDisplay.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
+import HBox from '../../../../scenery/js/layout/nodes/HBox.js';
 import Image from '../../../../scenery/js/nodes/Image.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
-import { TReadOnlyNumberAtom } from '../../../../shred/js/model/NumberAtom.js';
+import Color from '../../../../scenery/js/util/Color.js';
 import ParticleAtom from '../../../../shred/js/model/ParticleAtom.js';
 import AquaRadioButtonGroup, { AquaRadioButtonGroupItem } from '../../../../sun/js/AquaRadioButtonGroup.js';
-import Panel from '../../../../sun/js/Panel.js';
 import scale_png from '../../../mipmaps/scale_png.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
@@ -36,55 +40,6 @@ const RADIO_BUTTON_LABEL_OPTIONS = {
   fill: 'white'
 };
 
-class ScaleReadoutNode extends Panel {
-  private readonly atom: TReadOnlyNumberAtom;
-  private readonly displayModeProperty: Property<DisplayMode>;
-  private readonly readoutText: Text;
-
-  public constructor(
-    atom: TReadOnlyNumberAtom,
-    displayModeProperty: Property<DisplayMode>
-  ) {
-
-    const readoutText = new Text( '', {
-      font: new PhetFont( 20 ),
-      maxWidth: 0.9 * READOUT_SIZE.width,
-      maxHeight: 0.9 * READOUT_SIZE.height
-    } );
-
-    super( readoutText, {
-      minWidth: READOUT_SIZE.width,
-      maxWidth: READOUT_SIZE.width,
-      minHeight: READOUT_SIZE.height,
-      maxHeight: READOUT_SIZE.height,
-      resize: false,
-      cornerRadius: 5,
-      lineWidth: 3,
-      align: 'center'
-    } );
-
-    this.atom = atom;
-    this.displayModeProperty = displayModeProperty;
-    this.readoutText = readoutText;
-
-    const updateReadout = (): void => {
-      if ( this.displayModeProperty.get() === 'massNumber' ) {
-        this.readoutText.string = this.atom.massNumberProperty.get().toString();
-      }
-      else {
-        const isotopeAtomicMass = this.atom.getIsotopeAtomicMass();
-        this.readoutText.string = isotopeAtomicMass > 0 ? toFixed( isotopeAtomicMass, 5 ) : '--';
-      }
-      this.readoutText.centerX = READOUT_SIZE.width / 2;
-      this.readoutText.centerY = READOUT_SIZE.height / 2;
-    };
-
-    this.displayModeProperty.link( updateReadout );
-    this.atom.massNumberProperty.link( updateReadout );
-    updateReadout();
-  }
-}
-
 class AtomScaleNode extends Node {
   private readonly displayModeProperty: Property<DisplayMode>;
 
@@ -98,11 +53,46 @@ class AtomScaleNode extends Node {
     weighScaleImage.scale( WEIGH_SCALE_WIDTH / weighScaleImage.width );
     this.addChild( weighScaleImage );
 
-    // Add the readout of the atom's mass number or atomic mass.
-    const scaleReadoutNode = new ScaleReadoutNode( atom, this.displayModeProperty );
-    scaleReadoutNode.left = WEIGH_SCALE_WIDTH * 0.075;
-    scaleReadoutNode.centerY = weighScaleImage.height * 0.7;
-    this.addChild( scaleReadoutNode );
+    // Create a derived Property for the number that will be displayed.
+    const readoutNumberProperty = new DerivedProperty(
+      [ this.displayModeProperty, atom.massNumberProperty ],
+      ( displayMode, massNumber ) => {
+        if ( displayMode === 'massNumber' ) {
+          return massNumber;
+        }
+        else {
+          const isotopeAtomicMass = atom.getIsotopeAtomicMass();
+          return isotopeAtomicMass > 0 ? toFixedNumber( isotopeAtomicMass, 5 ) : 0;
+        }
+      }
+    );
+
+    // Create the readout of the atom's mass number or atomic mass.
+    const readoutNode = new NumberDisplay(
+      readoutNumberProperty,
+      new Range( 1, 20.99999 ),
+      {
+        backgroundFill: Color.WHITE,
+        cornerRadius: 3,
+        backgroundLineWidth: 2,
+        centerX: WEIGH_SCALE_WIDTH * 0.075 + READOUT_SIZE.width / 2,
+        centerY: weighScaleImage.height * 0.7,
+        align: 'center',
+        xMargin: 1,
+        yMargin: 3,
+        textOptions: {
+          font: new PhetFont( 19 )
+        },
+        numberFormatter: ( value: number ) => {
+          if ( this.displayModeProperty.get() === 'massNumber' ) {
+            return value.toString();
+          }
+          else {
+            return value > 0 ? toFixed( value, 5 ) : '--';
+          }
+        }
+      }
+    );
 
     // Define the items for the radio button group that will allow the user to select whether to display the mass number
     // or atomic mass.
@@ -129,11 +119,18 @@ class AtomScaleNode extends Node {
         },
         touchAreaXDilation: 10,
         mouseAreaXDilation: 10,
-        centerX: ( scaleReadoutNode.right + weighScaleImage.width - 5 ) / 2,
+        centerX: ( readoutNode.right + weighScaleImage.width - 5 ) / 2,
         centerY: weighScaleImage.height * 0.7
       }
     );
-    this.addChild( displayModeSelector );
+
+    const faceControls = new HBox( {
+      children: [ readoutNode, displayModeSelector ],
+      spacing: 10,
+      centerX: weighScaleImage.width / 2,
+      bottom: weighScaleImage.bottom - 12
+    } );
+    this.addChild( faceControls );
   }
 
   public reset(): void {
