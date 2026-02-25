@@ -104,8 +104,8 @@ class IsotopesScreenView extends ScreenView {
 
     // Add the legend/particle count indicator.
     const particleCountLegend = new ParticleCountDisplay( isotopesModel.particleAtom, {
-      maxParticles: 13,
-      maxWidth: 250,
+      maxParticles: 14,
+      maxWidth: 350,
       tandem: Tandem.OPT_OUT
     } );
     particleCountLegend.scale( 1.1 );
