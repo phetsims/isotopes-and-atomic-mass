@@ -4,7 +4,7 @@
  * A particle bucket that can only contain one configuration of isotope, though it may contain multiple instances
  * (i.e. atoms) of that isotope.
  *
- * @author John Blanco
+ * @author John Blanco (PhET Interactive Simulations)
  * @author Jesse Greenberg
  * @author James Smith
  */

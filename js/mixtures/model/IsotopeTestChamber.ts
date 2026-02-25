@@ -5,7 +5,7 @@
  * average atomic mass and the proportions of the various isotopes. It is intended to be contained in the
  * main model class.
  *
- * @author John Blanco
+ * @author John Blanco (PhET Interactive Simulations)
  * @author James Smith
  * @author Aadish Gupta
  */

@@ -3,7 +3,7 @@
 /**
  * The "Mixtures" screen
  *
- * @author John Blanco
+ * @author John Blanco (PhET Interactive Simulations)
  * @author Jesse Greenberg
  * @author James Smith
  */

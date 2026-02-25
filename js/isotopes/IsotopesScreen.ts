@@ -3,7 +3,7 @@
 /**
  * The "Isotopes" screen
  *
- * @author John Blanco
+ * @author John Blanco (PhET Interactive Simulations)
  * @author Jesse Greenberg
  */
 

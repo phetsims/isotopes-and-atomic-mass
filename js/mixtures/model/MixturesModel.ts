@@ -6,7 +6,7 @@
  * do this by moving atoms into and out of a test chamber. The model keeps track of which isotopes are in the test
  * chamber and tracks the average atomic mass of the mixture in the chamber.
  *
- * @author John Blanco
+ * @author John Blanco (PhET Interactive Simulations)
  * @author Jesse Greenberg
  * @author James Smith
  * @author Aadish Gupta

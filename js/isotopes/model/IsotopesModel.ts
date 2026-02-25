@@ -5,7 +5,7 @@
  * actions, and contains the constituent model elements. It watches all neutrons and, based on where they are placed by
  * the user, moves them between the neutron bucket and the atom. In this model, units are picometers (1E-12).
  *
- * @author John Blanco
+ * @author John Blanco (PhET Interactive Simulations)
  * @author Jesse Greenberg
  * @author Aadish Gupta
  */

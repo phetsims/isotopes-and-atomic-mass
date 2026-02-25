@@ -4,7 +4,7 @@
  * This class defines a Node that represents an atom in made out of particles and allows users to add or remove
  * neutrons to form different isotopes.  The neutrons that are not part of the atom reside in a bucket.
  *
- * @author John Blanco
+ * @author John Blanco (PhET Interactive Simulations)
  * @author Jesse Greenberg
  * @author Aadish Gupta
  */

@@ -3,7 +3,7 @@
 /**
  * Screen view where the user makes isotopes of a given element by adding and removing neutrons.
  *
- * @author John Blanco
+ * @author John Blanco (PhET Interactive Simulations)
  * @author Jesse Greenberg
  * @author Aadish Gupta
  */

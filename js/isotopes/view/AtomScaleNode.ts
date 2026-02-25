@@ -3,7 +3,7 @@
 /**
  * AtomScaleNode is a Node that represents a scale on which an atom can be weighed.
  *
- * @author John Blanco
+ * @author John Blanco (PhET Interactive Simulations)
  * @author Jesse Greenberg
  * @author Aadish Gupta
  */
