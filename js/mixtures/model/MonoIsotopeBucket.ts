@@ -57,12 +57,12 @@ class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
   /**
    * Add an isotope to the first open position in the bucket.
    */
-  public addIsotopeInstanceFirstOpen( isotope: PositionableAtom, moveImmediately: boolean ): void {
+  public addIsotopeInstanceFirstOpen( isotope: PositionableAtom, animate = false ): void {
     if ( this.isIsotopeAllowed(
       isotope.atomConfigurationProperty.value.protonCount,
       isotope.atomConfigurationProperty.value.neutronCount )
     ) {
-      this.addParticleFirstOpen( isotope, moveImmediately );
+      this.addParticleFirstOpen( isotope, animate );
     }
   }
 

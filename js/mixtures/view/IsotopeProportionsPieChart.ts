@@ -151,7 +151,7 @@ class IsotopeProportionsPieChart extends Node {
    * Update the complete node based on isotopeCount
    */
   public update(): void {
-    if ( this.model.testChamber.isotopeCountProperty.get() > 0 ) {
+    if ( this.model.testChamber.getTotalIsotopeCount() > 0 ) {
       this.emptyCircle.setVisible( false );
       this.updatePieChart();
       this.pieChart.setVisible( true );
@@ -165,7 +165,7 @@ class IsotopeProportionsPieChart extends Node {
   }
 
   /**
-   * Update the pie chart
+   * Update the pie chart.
    */
   public updatePieChart(): void {
     this.slices = [];
@@ -176,7 +176,7 @@ class IsotopeProportionsPieChart extends Node {
       this.slices[ i ] = { value: value, color: color, stroke: Color.BLACK, lineWidth: 0.5 };
       i += 1;
     } );
-    const lightestIsotopeProportion = this.slices[ 0 ].value / this.model.testChamber.isotopeCountProperty.get();
+    const lightestIsotopeProportion = this.slices[ 0 ].value / this.model.testChamber.getTotalIsotopeCount();
     this.pieChart.setAngleAndValues( Math.PI - ( lightestIsotopeProportion * Math.PI ), this.slices );
     this.updateLabels( this.model.possibleIsotopesProperty.get() );
   }

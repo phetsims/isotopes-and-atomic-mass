@@ -38,7 +38,7 @@ import HSlider from '../../../../sun/js/HSlider.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
-import MixturesModel, { InteractivityModeType } from '../model/MixturesModel.js';
+import MixturesModel, { InteractivityMode } from '../model/MixturesModel.js';
 import MonoIsotopeBucket from '../model/MonoIsotopeBucket.js';
 import PositionableAtom from '../model/PositionableAtom.js';
 import NumericalIsotopeQuantityControl from '../model/NumericalIsotopeQuantityControl.js';
@@ -91,7 +91,7 @@ class MixturesScreenView extends ScreenView {
       1.0
     );
 
-    // Layer setup
+    // layer setup
     const controlsLayer = new Node();
     this.addChild( controlsLayer );
     const bucketHoleLayer = new Node();
@@ -171,7 +171,7 @@ class MixturesScreenView extends ScreenView {
       }
     } );
 
-    // Numeric controllers
+    // numeric controllers
     mixturesModel.numericalControllerList.addItemAddedListener( addedController => {
       const controllerView = new ControlIsotope( addedController, 0, 100 );
       const center_pos = this.modelViewTransform.modelToViewPosition( addedController.centerPosition );
@@ -188,7 +188,7 @@ class MixturesScreenView extends ScreenView {
       } );
     } );
 
-    // Test chamber
+    // test chamber
     const testChamberNode = new Rectangle( this.modelViewTransform.modelToViewBounds(
       this.model.testChamber.getTestChamberRect() ), {
       fill: 'black',
@@ -207,7 +207,7 @@ class MixturesScreenView extends ScreenView {
     const clearBoxButton = new EraserButton( {
       baseColor: ShredConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
       listener: () => {
-        mixturesModel.clearBox();
+        mixturesModel.clearTestChamber();
       }
     } );
     this.addChild( clearBoxButton );
@@ -215,9 +215,13 @@ class MixturesScreenView extends ScreenView {
     clearBoxButton.left = chamberLayer.left;
 
     // periodic table
-    const periodicTableNode = new ExpandedPeriodicTableNode( mixturesModel.selectedElementProtonCountProperty, 18, {
-      tandem: tandem
-    } );
+    const periodicTableNode = new ExpandedPeriodicTableNode(
+      mixturesModel.selectedElementProtonCountProperty,
+      MixturesModel.MAX_ATOMIC_NUMBER,
+      {
+        tandem: tandem
+      }
+    );
 
     // size and position - empirically determined to match design
     periodicTableNode.scale( 0.55 );
@@ -246,7 +250,8 @@ class MixturesScreenView extends ScreenView {
       expandCollapseButtonOptions: {
         touchAreaXDilation: 16,
         touchAreaYDilation: 16
-      }
+      },
+      resize: false
     } );
     compositionBox.left = periodicTableNode.left;
     compositionBox.top = periodicTableNode.bottom + 15;
@@ -333,7 +338,7 @@ class MixturesScreenView extends ScreenView {
 
     // Set the flag to cause the pie chart to get updated when the isotope count changes, doesn't need unlink as it
     // stays throughout the sim life.
-    mixturesModel.testChamber.isotopeCountProperty.link( () => {
+    mixturesModel.testChamber.averageAtomicMassProperty.link( () => {
       this.updatePieChart = true;
     } );
 
@@ -397,7 +402,7 @@ class IsotopeMixtureSelectionNode extends Node {
 /**
  * selector node containing radio buttons to select Buckets or Sliders in "My Mix" mode
  */
-class InteractivityModeSelectionNode extends RectangularRadioButtonGroup<InteractivityModeType> {
+class InteractivityModeSelectionNode extends RectangularRadioButtonGroup<InteractivityMode> {
 
   public constructor( model: MixturesModel, modelViewTransform: ModelViewTransform2 ) {
     const bucketNode = new Node();
@@ -422,7 +427,7 @@ class InteractivityModeSelectionNode extends RectangularRadioButtonGroup<Interac
     slider.addMajorTick( 100 );
     slider.scale( 0.5 );
 
-    const radioButtonContent: RectangularRadioButtonGroupItem<InteractivityModeType>[] = [
+    const radioButtonContent: RectangularRadioButtonGroupItem<InteractivityMode>[] = [
       { value: 'bucketsAndLargeAtoms', createNode: () => bucketNode },
       { value: 'slidersAndSmallAtoms', createNode: () => slider }
     ];

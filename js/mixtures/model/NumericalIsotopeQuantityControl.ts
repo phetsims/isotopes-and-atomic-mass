@@ -61,14 +61,14 @@ class NumericalIsotopeQuantityControl {
 
     if ( changeAmount > 0 ) {
       for ( let i = 0; i < changeAmount; i++ ) {
-        const newIsotope = new PositionableAtom(
+        const newAtom = new PositionableAtom(
           this.isotopeConfig.protonCount,
           this.isotopeConfig.neutronCount,
           this.model.testChamber.generateRandomPosition(),
           { particleRadius: 4 }
         );
-        this.model.testChamber.addParticle( newIsotope, true );
-        this.model.isotopesList.add( newIsotope );
+        this.model.testChamber.addParticle( newAtom );
+        this.model.isotopesList.add( newAtom );
       }
     }
     else if ( changeAmount < 0 ) {
@@ -79,17 +79,6 @@ class NumericalIsotopeQuantityControl {
         }
       }
     }
-  }
-
-  /**
-   * Returns the current quantity in the test chamber
-   */
-  public getQuantity(): number {
-
-    // Verify that the internal property matches that of the test chamber.
-    assert && assert( this.quantityProperty.get() === this.model.testChamber.getIsotopeCount( this.isotopeConfig ) );
-    // Return the value.
-    return this.quantityProperty.get();
   }
 }
 

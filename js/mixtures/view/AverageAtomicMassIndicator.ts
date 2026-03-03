@@ -61,7 +61,7 @@ class AverageAtomicMassIndicator extends Node {
     this.addChild( tickMarkLayer );
 
     // Listen for changes to the list of possible isotopes and update the tick marks when changes occur.
-    // Doesn't need unlink as it stays through out the sim life
+    // Doesn't need unlink as it stays throughout the sim life
     model.possibleIsotopesProperty.link( () => {
       tickMarkLayer.removeAllChildren();
       const possibleIsotopesList = model.possibleIsotopesProperty.get();
@@ -101,9 +101,9 @@ class AverageAtomicMassIndicator extends Node {
     readoutPointer.centerX = barNode.centerX;
     this.addChild( readoutPointer );
 
-    // Doesn't need unlink as it stays through out the sim life
+    // Doesn't need unlink as it stays throughout the sim life.
     model.testChamber.averageAtomicMassProperty.link( ( averageAtomicMass: number ) => {
-      if ( model.testChamber.isotopeCountProperty.get() > 0 ) {
+      if ( model.testChamber.getTotalIsotopeCount() > 0 ) {
         readoutPointer.centerX = this.calcXOffsetFromAtomicMass( averageAtomicMass );
         readoutPointer.setVisible( true );
       }

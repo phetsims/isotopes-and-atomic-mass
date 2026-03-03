@@ -31,13 +31,24 @@ const BUFFER = 1; // isotopes stroke doesn't cross the wall, empirically determi
 class IsotopeTestChamber {
 
   public readonly containedIsotopes: ObservableArray<PositionableAtom>;
-  public readonly isotopeCountProperty: Property<number>;
   public readonly averageAtomicMassProperty: Property<number>;
 
   public constructor() {
     this.containedIsotopes = createObservableArray<PositionableAtom>();
-    this.isotopeCountProperty = new Property<number>( 0 );
     this.averageAtomicMassProperty = new Property<number>( 0 );
+
+    this.containedIsotopes.lengthProperty.link( () => {
+      if ( this.containedIsotopes.length > 0 ) {
+        let totalMass = 0;
+        this.containedIsotopes.forEach( isotope => {
+          totalMass += isotope.atomConfigurationProperty.value.getAtomicMass();
+        } );
+        this.averageAtomicMassProperty.set( totalMass / this.containedIsotopes.length );
+      }
+      else {
+        this.averageAtomicMassProperty.set( 0 );
+      }
+    } );
   }
 
   /**
@@ -68,56 +79,49 @@ class IsotopeTestChamber {
   }
 
   /**
-   * Add the specified isotope to the test chamber.
+   * Add the specified atom to the test chamber.
    */
-  public addParticle( isotope: PositionableAtom, performUpdates: boolean ): void {
+  public addParticle( atom: PositionableAtom ): void {
 
     // TODO: See https://github.com/phetsims/isotopes-and-atomic-mass/issues/126.  Put the affirm back and remove the
     //       workaround when state is working better.
     // affirm(
-    //   this.isIsotopePositionedOverChamber( isotope ),
+    //   this.isIsotopePositionedOverChamber( atom ),
     //   'Isotope is not positioned correctly for being added to the test chamber.'
     // );
-    if ( !this.isIsotopePositionedOverChamber( isotope ) ) {
+    if ( !this.isIsotopePositionedOverChamber( atom ) ) {
 
-      // Workaround - constrain the isotope to be within the chamber, so that it can be added.
-      isotope.positionProperty.value = TEST_CHAMBER_RECT.getConstrainedPoint( isotope.positionProperty.value );
+      // Workaround - constrain the atom to be within the chamber, so that it can be added.
+      atom.positionProperty.value = TEST_CHAMBER_RECT.getConstrainedPoint( atom.positionProperty.value );
     }
 
-    this.containedIsotopes.push( isotope );
-    isotope.containerProperty.value = this;
+    this.containedIsotopes.push( atom );
+    atom.containerProperty.value = this;
 
-    // If the edges of the isotope are outside the container, move it to be fully inside.
-    let protrusion = isotope.positionProperty.get().x + isotope.radius - TEST_CHAMBER_RECT.maxX + BUFFER;
+    // If the edges of the atom are outside the container, move it to be fully inside.
+    let protrusion = atom.positionProperty.get().x + atom.radius - TEST_CHAMBER_RECT.maxX + BUFFER;
     if ( protrusion >= 0 ) {
-      isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x - protrusion,
-        isotope.positionProperty.get().y ) );
+      atom.setPositionAndDestination( new Vector2( atom.positionProperty.get().x - protrusion,
+        atom.positionProperty.get().y ) );
     }
     else {
-      protrusion = TEST_CHAMBER_RECT.minX + BUFFER - ( isotope.positionProperty.get().x - isotope.radius );
+      protrusion = TEST_CHAMBER_RECT.minX + BUFFER - ( atom.positionProperty.get().x - atom.radius );
       if ( protrusion >= 0 ) {
-        isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x + protrusion,
-          isotope.positionProperty.get().y ) );
+        atom.setPositionAndDestination( new Vector2( atom.positionProperty.get().x + protrusion,
+          atom.positionProperty.get().y ) );
       }
     }
-    protrusion = isotope.positionProperty.get().y + isotope.radius - TEST_CHAMBER_RECT.maxY + BUFFER;
+    protrusion = atom.positionProperty.get().y + atom.radius - TEST_CHAMBER_RECT.maxY + BUFFER;
     if ( protrusion >= 0 ) {
-      isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x,
-        isotope.positionProperty.get().y - protrusion ) );
+      atom.setPositionAndDestination( new Vector2( atom.positionProperty.get().x,
+        atom.positionProperty.get().y - protrusion ) );
     }
     else {
-      protrusion = TEST_CHAMBER_RECT.minY + BUFFER - ( isotope.positionProperty.get().y - isotope.radius );
+      protrusion = TEST_CHAMBER_RECT.minY + BUFFER - ( atom.positionProperty.get().y - atom.radius );
       if ( protrusion >= 0 ) {
-        isotope.setPositionAndDestination( new Vector2( isotope.positionProperty.get().x,
-          isotope.positionProperty.get().y + protrusion ) );
+        atom.setPositionAndDestination( new Vector2( atom.positionProperty.get().x,
+          atom.positionProperty.get().y + protrusion ) );
       }
-    }
-    if ( performUpdates ) {
-      this.updateCountProperty();
-      this.averageAtomicMassProperty.set(
-        ( ( this.averageAtomicMassProperty.get() * ( this.isotopeCountProperty.get() - 1 ) ) +
-          isotope.atomConfigurationProperty.value.getAtomicMass() ) / this.isotopeCountProperty.get()
-      );
     }
   }
 
@@ -126,30 +130,8 @@ class IsotopeTestChamber {
    */
   public bulkAddIsotopesToChamber( isotopeList: PositionableAtom[] ): void {
     isotopeList.forEach( isotope => {
-      this.addParticle( isotope, false );
+      this.addParticle( isotope );
     } );
-    this.updateCountProperty();
-    this.updateAverageAtomicMassProperty();
-  }
-
-  /**
-   * Convenience function to set the isotopeCount property equal to the number of isotopes contained in this test chamber.
-   */
-  private updateCountProperty(): void {
-    this.isotopeCountProperty.set( this.containedIsotopes.length );
-  }
-
-  private updateAverageAtomicMassProperty(): void {
-    if ( this.containedIsotopes.length > 0 ) {
-      let totalMass = 0;
-      this.containedIsotopes.forEach( isotope => {
-        totalMass += isotope.atomConfigurationProperty.value.getAtomicMass();
-      } );
-      this.averageAtomicMassProperty.set( totalMass / this.containedIsotopes.length );
-    }
-    else {
-      this.averageAtomicMassProperty.set( 0 );
-    }
   }
 
   /**
@@ -157,19 +139,7 @@ class IsotopeTestChamber {
    */
   public removeParticle( isotope: PositionableAtom ): void {
     this.containedIsotopes.remove( isotope );
-    this.updateCountProperty();
     isotope.containerProperty.value = null;
-
-    // Update the average atomic mass.
-    if ( this.isotopeCountProperty.get() > 0 ) {
-      this.averageAtomicMassProperty.set(
-        ( this.averageAtomicMassProperty.get() * ( this.isotopeCountProperty.get() + 1 ) -
-          isotope.atomConfigurationProperty.value.getAtomicMass() ) / this.isotopeCountProperty.get()
-      );
-    }
-    else {
-      this.averageAtomicMassProperty.set( 0 );
-    }
   }
 
   /**
@@ -200,22 +170,13 @@ class IsotopeTestChamber {
    */
   public removeAllIsotopes(): void {
     this.containedIsotopes.clear();
-    this.updateCountProperty();
-    this.averageAtomicMassProperty.set( 0 );
-  }
-
-  /**
-   * Returns the containedIsotopes.
-   */
-  public getContainedIsotopes(): ObservableArray<PositionableAtom> {
-    return this.containedIsotopes;
   }
 
   /**
    * Get a count of the total number of isotopes in the chamber.
    */
   public getTotalIsotopeCount(): number {
-    return this.isotopeCountProperty.get();
+    return this.containedIsotopes.length;
   }
 
   /**
