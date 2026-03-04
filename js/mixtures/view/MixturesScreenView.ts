@@ -273,7 +273,8 @@ class MixturesScreenView extends ScreenView {
       expandCollapseButtonOptions: {
         touchAreaXDilation: 16,
         touchAreaYDilation: 16
-      }
+      },
+      resize: false
     } );
     averageAtomicMassBox.left = compositionBox.left;
     averageAtomicMassBox.top = compositionBox.bottom + 10;

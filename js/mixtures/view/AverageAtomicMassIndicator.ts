@@ -108,6 +108,7 @@ class AverageAtomicMassIndicator extends Node {
         readoutPointer.setVisible( true );
       }
       else {
+        readoutPointer.centerX = barNode.centerX;
         readoutPointer.setVisible( false );
       }
     } );
