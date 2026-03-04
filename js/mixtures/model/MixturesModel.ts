@@ -244,20 +244,31 @@ class MixturesModel {
    * from the bucket and when it is dropped somewhere it is either added to the test chamber or put back in a bucket
    * depending on its position.
    */
-  private addIsotopeDragListener( isotope: PositionableAtom, bucket: MonoIsotopeBucket ): void {
+  private addIsotopeDragListener( isotope: PositionableAtom ): void {
     isotope.isDraggingProperty.lazyLink( isDragging => {
       if ( isDragging ) {
         if ( isotope.containerProperty.value ) {
 
-          // Remove the atom from its container, which will be either a bucket or the particle atom.
+          // Remove the atom from its container, which will be either a bucket or the test chamber.
           isotope.containerProperty.value.removeParticle( isotope );
         }
       }
       else {
 
+        let destinationBucket: MonoIsotopeBucket | null = null;
+        this.bucketList.forEach( bucket => {
+          const config = bucket.isotopeConfigProperty.value;
+          if ( config.protonCount === isotope.atomConfigurationProperty.value.protonCount &&
+               config.neutronCount === isotope.atomConfigurationProperty.value.neutronCount ) {
+            destinationBucket = bucket;
+          }
+        } );
+
+        affirm( destinationBucket, 'No bucket found for isotope config' );
+
         // This isotope instance was being dragged and has now been dropped.  Place it in the appropriate
         // bucket or in the test chamber depending on where it was dropped.
-        this.placeIsotope( isotope, bucket, this.testChamber );
+        this.placeIsotope( isotope, destinationBucket, this.testChamber );
       }
     } );
   }
@@ -355,7 +366,7 @@ class MixturesModel {
           // Add a drag listener to each isotope instance so that when it is dragged out of the bucket it is removed
           // from the bucket and when it is dropped somewhere it is either added to the test chamber or put back in
           // a bucket depending on its position.
-          this.addIsotopeDragListener( newAtom, bucket );
+          this.addIsotopeDragListener( newAtom );
         }
       }
     }
