@@ -53,7 +53,7 @@ class MixturesModel {
 
   // The proton count of the element that is currently being worked with. This is used to determine which isotopes are
   // available for the user to work with.  Setting this value is how the current element is changed.
-  public selectedElementProtonCountProperty: NumberProperty;
+  public readonly selectedElementProtonCountProperty: NumberProperty;
 
   // The mode through which the user is controlling the set of isotope instances in the test chamber, either through the
   // buckets (smaller quantities) or the sliders (larger quantities).
@@ -121,8 +121,11 @@ class MixturesModel {
         `Proton count must be between 1 and ${MAX_ATOMIC_NUMBER}`
       );
 
+      // Update the list of possible isotopes for the newly selected element.  A number of other model and view state
+      // elements depend on this list, so we need to update it before doing anything else.
+      this.updatePossibleIsotopesList( newProtonCount );
+
       if ( this.showingNaturesMixProperty.value ) {
-        this.updatePossibleIsotopesList( newProtonCount );
         this.showNaturesMix( this.possibleIsotopesProperty.value );
       }
       else {
@@ -135,9 +138,6 @@ class MixturesModel {
 
         // Remove all atoms - we will create the needed ones for the newly selected element below.
         this.removeAllIsotopesFromTestChamberAndModel();
-
-        // Update the list of isotopes that are available for the new element.
-        this.updatePossibleIsotopesList( newProtonCount );
 
         // If particle state information was previously saved for this element, add those particles back into the test
         // chamber.  This state information should exist if the user has switched to a different element and then switched
@@ -158,7 +158,12 @@ class MixturesModel {
     // Listen to the Property that indicates whether "Nature's Mix" is being shown and show/hide the appropriate isotope
     // instances when the value changes.  This doesn't need an unlink as it stays throughout the life of the sim.
     this.showingNaturesMixProperty.lazyLink( showingNaturesMix => {
+
+      // Update the list of possible isotopes for the currently selected element.  During normal sim operation, this is
+      // not needed in this handler, but because of the way phet-io state updates work, it's important to make sure this
+      // is set correctly before doing any other state updates.
       this.updatePossibleIsotopesList( this.selectedElementProtonCountProperty.value );
+
       if ( showingNaturesMix ) {
 
         // Save the user-created mix state for the current element and interactivity mode before we switch to showing
@@ -193,6 +198,11 @@ class MixturesModel {
     // mix state for the current element and interactivity mode, and then restore any previously saved state for the
     // new interactivity mode.  This doesn't need an unlink as it stays throughout the sim life.
     this.interactivityModeProperty.lazyLink( ( interactivityMode, oldInteractivityMode ) => {
+
+      // Update the list of possible isotopes for the currently selected element.  During normal sim operation, this is
+      // not needed in this handler, but because of the way phet-io state updates work, it's important to make sure this
+      // is set correctly before doing any other state updates.
+      this.updatePossibleIsotopesList( this.selectedElementProtonCountProperty.value );
 
       // Save any user-created mix state for the interactivity mode that being changed out.
       this.saveTestChamberParticleState( this.selectedElementProtonCountProperty.value, oldInteractivityMode );
@@ -240,17 +250,17 @@ class MixturesModel {
   }
 
   /**
-   * Add a drag listener to the provided isotope instance so that when it is dragged out of the bucket it is removed
-   * from the bucket and when it is dropped somewhere it is either added to the test chamber or put back in a bucket
+   * Add a drag listener to the provided atom instance so that when it is dragged out of the bucket it is removed from
+   * the bucket and when it is dropped somewhere it is either added to the test chamber or put back in a bucket
    * depending on its position.
    */
-  private addIsotopeDragListener( isotope: PositionableAtom ): void {
-    isotope.isDraggingProperty.lazyLink( isDragging => {
+  private addAtomDragListener( atom: PositionableAtom ): void {
+    atom.isDraggingProperty.lazyLink( isDragging => {
       if ( isDragging ) {
-        if ( isotope.containerProperty.value ) {
+        if ( atom.containerProperty.value ) {
 
           // Remove the atom from its container, which will be either a bucket or the test chamber.
-          isotope.containerProperty.value.removeParticle( isotope );
+          atom.containerProperty.value.removeParticle( atom );
         }
       }
       else {
@@ -258,17 +268,17 @@ class MixturesModel {
         let destinationBucket: MonoIsotopeBucket | null = null;
         this.bucketList.forEach( bucket => {
           const config = bucket.isotopeConfigProperty.value;
-          if ( config.protonCount === isotope.atomConfigurationProperty.value.protonCount &&
-               config.neutronCount === isotope.atomConfigurationProperty.value.neutronCount ) {
+          if ( config.protonCount === atom.atomConfigurationProperty.value.protonCount &&
+               config.neutronCount === atom.atomConfigurationProperty.value.neutronCount ) {
             destinationBucket = bucket;
           }
         } );
 
-        affirm( destinationBucket, 'No bucket found for isotope config' );
+        affirm( destinationBucket, 'No bucket found for atom config' );
 
-        // This isotope instance was being dragged and has now been dropped.  Place it in the appropriate
+        // This atom instance was being dragged and has now been dropped.  Place it in the appropriate
         // bucket or in the test chamber depending on where it was dropped.
-        this.placeIsotope( isotope, destinationBucket, this.testChamber );
+        this.placeIsotope( atom, destinationBucket, this.testChamber );
       }
     } );
   }
@@ -366,34 +376,28 @@ class MixturesModel {
           // Add a drag listener to each isotope instance so that when it is dragged out of the bucket it is removed
           // from the bucket and when it is dropped somewhere it is either added to the test chamber or put back in
           // a bucket depending on its position.
-          this.addIsotopeDragListener( newAtom );
+          this.addAtomDragListener( newAtom );
         }
       }
     }
   }
 
   /**
-   * Get the list of possible isotopes for the given element, sorted from lightest to heaviest.
+   * Update the list of the possible isotopes based on the provided element, sorted from lightest to heaviest.
+   * @param elementProtonCount - the proton count of the element for which the possible isotopes list should be updated
    */
-  private getPossibleIsotopes( elementProtonCount: number ): NucleusConfig[] {
+  private updatePossibleIsotopesList( elementProtonCount: number ): void {
+
+    // Get the list of stable isotopes for the provided element and convert it to a list of NucleusConfigs.
     const stableIsotopes = AtomIdentifier.getStableIsotopesOfElement( elementProtonCount );
-    const isotopesList: NucleusConfig[] = [];
-    Object.entries( stableIsotopes ).forEach( ( [ index, isotope ] ) => {
-      isotopesList.push( new NucleusConfig( isotope[ 0 ], isotope[ 1 ] ) );
-    } );
+    const isotopesList: NucleusConfig[] = Object.values( stableIsotopes ).map(
+      isotope => new NucleusConfig( isotope[ 0 ], isotope[ 1 ] )
+    );
 
     // Sort from lightest to heaviest.
     isotopesList.sort( ( atom1, atom2 ) => atom1.getAtomicMass() - atom2.getAtomicMass() );
 
-    return isotopesList;
-  }
-
-  /**
-   * Update the list of the possible isotopes based on the provided element, sorted from lightest to heaviest.
-   * @param elementProtonCount - the proton count of the element for which the possible isotopes list should be updated.
-   */
-  private updatePossibleIsotopesList( elementProtonCount: number ): void {
-    this.possibleIsotopesProperty.set( this.getPossibleIsotopes( elementProtonCount ) );
+    this.possibleIsotopesProperty.set( isotopesList );
   }
 
   /**
@@ -419,7 +423,7 @@ class MixturesModel {
 
       // We can fit 3 or less cleanly under the test chamber.
       interControllerDistanceX = this.testChamber.getTestChamberRect().getWidth() /
-                                 this.possibleIsotopesProperty.get().length;
+                                 this.possibleIsotopesProperty.value.length;
       controllerXOffset = this.testChamber.getTestChamberRect().minX + interControllerDistanceX / 2;
     }
     else {
@@ -427,7 +431,7 @@ class MixturesModel {
       // Four controllers don't fit well under the chamber, so use a positioning algorithm where they are extended
       // a bit to the right.
       interControllerDistanceX = ( this.testChamber.getTestChamberRect().getWidth() * 1.10 ) /
-                                 this.possibleIsotopesProperty.get().length;
+                                 this.possibleIsotopesProperty.value.length;
       controllerXOffset = -180;
     }
 
@@ -603,7 +607,6 @@ class MixturesModel {
     // controllers to match the default state.
     const preResetProtonCount = this.selectedElementProtonCountProperty.value;
     this.selectedElementProtonCountProperty.reset();
-    this.updatePossibleIsotopesList( this.selectedElementProtonCountProperty.value );
     if ( this.selectedElementProtonCountProperty.value === preResetProtonCount ) {
       this.setControllers( this.interactivityModeProperty.value );
       if ( this.interactivityModeProperty.value === 'bucketsAndLargeAtoms' ) {
