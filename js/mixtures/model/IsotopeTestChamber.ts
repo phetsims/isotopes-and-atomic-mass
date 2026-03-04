@@ -16,6 +16,7 @@ import Dimension2 from '../../../../dot/js/Dimension2.js';
 import dotRandom from '../../../../dot/js/dotRandom.js';
 import Rectangle from '../../../../dot/js/Rectangle.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
+import affirm from '../../../../perennial-alias/js/browser-and-node/affirm.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import NucleusConfig from './NucleusConfig.js';
 import PositionableAtom from './PositionableAtom.js';
@@ -83,17 +84,10 @@ class IsotopeTestChamber {
    */
   public addParticle( atom: PositionableAtom ): void {
 
-    // TODO: See https://github.com/phetsims/isotopes-and-atomic-mass/issues/126.  Put the affirm back and remove the
-    //       workaround when state is working better.
-    // affirm(
-    //   this.isIsotopePositionedOverChamber( atom ),
-    //   'Isotope is not positioned correctly for being added to the test chamber.'
-    // );
-    if ( !this.isIsotopePositionedOverChamber( atom ) ) {
-
-      // Workaround - constrain the atom to be within the chamber, so that it can be added.
-      atom.positionProperty.value = TEST_CHAMBER_RECT.getConstrainedPoint( atom.positionProperty.value );
-    }
+    affirm(
+      this.isIsotopePositionedOverChamber( atom ),
+      'Isotope is not positioned correctly for being added to the test chamber.'
+    );
 
     this.containedIsotopes.push( atom );
     atom.containerProperty.value = this;
