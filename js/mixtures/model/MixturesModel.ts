@@ -86,7 +86,7 @@ class MixturesModel {
   // Define the structure which will hold the particle state that the user has set up for an element.  This is an array
   // where the index corresponds to the atomic number of an element, and the map holds a set of particles that the user
   // put into the isotope test chamber for each interactivity mode.
-  public readonly savedParticleStates: Map<InteractivityMode, PositionableAtom[]>[] = [];
+  private readonly savedParticleStates: Map<InteractivityMode, PositionableAtom[]>[] = [];
 
   // An emitter that notifies listeners when nature's isotopes have been updated.  This is used so that the view can
   // essentially get one notification when all of nature's isotopes have been added to the test chamber instead of
@@ -293,7 +293,7 @@ class MixturesModel {
   /**
    * Remove all controllers, meaning the buckets and the numerical controllers.
    */
-  public removeAllControllers(): void {
+  private removeAllControllers(): void {
     this.removeNumericalControllers();
     this.removeBuckets();
   }
@@ -303,7 +303,7 @@ class MixturesModel {
    * mode.  If there are no particles in the test chamber, nothing will be saved.  This is generally called when
    * switching between the various model configurations.
    */
-  public saveTestChamberParticleState( protonCount: number, interactivityMode: InteractivityMode ): void {
+  private saveTestChamberParticleState( protonCount: number, interactivityMode: InteractivityMode ): void {
     if ( this.testChamber.containedIsotopes.length > 0 ) {
       const particlesToSave = this.testChamber.containedIsotopes.slice( 0 );
       this.savedParticleStates[ protonCount ].set( interactivityMode, particlesToSave );
@@ -561,7 +561,7 @@ class MixturesModel {
    * Remove all isotopes from the test chamber, and then remove them from the model. This method does not add removed
    * isotopes back to the buckets or update the controllers.
    */
-  public removeAllIsotopesFromTestChamberAndModel(): void {
+  private removeAllIsotopesFromTestChamberAndModel(): void {
 
     // Remove the isotopes from the test chamber.
     this.testChamber.removeAllIsotopes();
