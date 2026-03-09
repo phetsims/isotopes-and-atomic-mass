@@ -407,7 +407,10 @@ class MixturesModel {
    */
   private removeBuckets(): void {
     this.bucketList.forEach( bucket => {
+
+      // Reset the bucket so that it doesn't have references to the particles, and then dispose it.
       bucket.reset();
+      bucket.dispose();
     } );
     this.bucketList.clear();
   }

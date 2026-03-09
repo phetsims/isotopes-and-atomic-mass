@@ -40,6 +40,8 @@ class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
   // setting this Property.
   public readonly isotopeConfigProperty: TProperty<NucleusConfig>;
 
+  private readonly disposeMonoIsotopeBucket: () => void;
+
   public constructor( initialIsotopeConfig: NucleusConfig, providedOptions?: MonoIsotopeBucketOptions ) {
 
     const isotopeConfigProperty = new Property<NucleusConfig>( initialIsotopeConfig );
@@ -86,6 +88,12 @@ class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
     super( options );
 
     this.isotopeConfigProperty = isotopeConfigProperty;
+
+    this.disposeMonoIsotopeBucket = () => {
+      isotopeConfigProperty.dispose();
+      elementNameProperty.dispose();
+      isotopeNameProperty.dispose();
+    };
   }
 
   /**
@@ -118,6 +126,14 @@ class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
     ) ) {
       this.addParticleNearestOpen( isotope, animate );
     }
+  }
+
+  /**
+   * release memory references
+   */
+  public override dispose(): void {
+    this.disposeMonoIsotopeBucket();
+    super.dispose();
   }
 }
 
