@@ -93,6 +93,8 @@ class MixturesModel {
   // hundreds of separate notifications.
   public readonly naturesIsotopeUpdated = new Emitter();
 
+  public static readonly MAX_ATOMIC_NUMBER = MAX_ATOMIC_NUMBER;
+
   public constructor() {
 
     // Start off with hydrogen as the default element, which has one proton.
@@ -614,8 +616,6 @@ class MixturesModel {
       }
     }
   }
-
-  public static readonly MAX_ATOMIC_NUMBER = MAX_ATOMIC_NUMBER;
 }
 
 isotopesAndAtomicMass.register( 'MixturesModel', MixturesModel );
