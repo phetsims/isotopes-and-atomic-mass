@@ -451,14 +451,10 @@ class MixturesModel {
     const yOffset = -250; // empirically determined to match design
 
     isotopes.forEach( ( isotopeConfig, index ) => {
-      const isotopeCaptionStringProperty = new DerivedStringProperty(
-        [ AtomIdentifier.getName( isotopeConfig.protonCount ) ],
-        ( name: string ) => `${name}-${isotopeConfig.getMassNumber()}`
-      );
+
       const newBucket = new MonoIsotopeBucket( isotopeConfig, {
         position: new Vector2( this.getControllerXOffset( index, isotopes.length ), yOffset ),
         size: BUCKET_SIZE,
-        captionText: isotopeCaptionStringProperty,
         sphereRadius: LARGE_ISOTOPE_RADIUS
       } );
       this.addBucket( newBucket );
