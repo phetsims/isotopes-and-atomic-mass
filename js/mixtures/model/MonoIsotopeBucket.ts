@@ -27,6 +27,7 @@ import PositionableAtom from './PositionableAtom.js';
 type SelfOptions = EmptySelfOptions;
 export type MonoIsotopeBucketOptions = SelfOptions & StrictOmit<SphereBucketOptions, 'baseColor' | 'captionText'>;
 
+// TODO REVIEW: Can this TODO be removed? https://github.com/phetsims/isotopes-and-atomic-mass/issues/103
 // TODO: See https://github.com/phetsims/isotopes-and-atomic-mass/issues/103.  There are some decisions to be made about
 //       the state behavior of buckets that I (jbphet) have deferred until the state refactor is a little further along.
 //       One specific example is what should happen to particles in a bucket when it is reconfigured.  Also, should

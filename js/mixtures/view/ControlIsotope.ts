@@ -114,7 +114,7 @@ class ControlIsotope extends Node {
       showLabel: false
     } );
     labelLayer.addChild( isotopeNode );
-    const captionLabel = new Text( controller.captionProperty, {
+    const captionLabel = new Text( controller.caption, {
       font: new PhetFont( { size: 14 } ),
       fill: 'black',
       maxWidth: 60
@@ -129,8 +129,6 @@ class ControlIsotope extends Node {
 
     this.disposeControlIsotope = (): void => {
       controller.quantityProperty.unlink( changedValue );
-      isotopeNode.dispose();
-      captionLabel.dispose();
     };
   }
 

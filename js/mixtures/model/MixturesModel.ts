@@ -13,6 +13,7 @@
  */
 
 import createObservableArray, { ObservableArray } from '../../../../axon/js/createObservableArray.js';
+import DerivedStringProperty from '../../../../axon/js/DerivedStringProperty.js';
 import Emitter from '../../../../axon/js/Emitter.js';
 import NumberProperty from '../../../../axon/js/NumberProperty.js';
 import Property from '../../../../axon/js/Property.js';
@@ -93,7 +94,6 @@ class MixturesModel {
   public readonly naturesIsotopeUpdated = new Emitter();
 
   public static readonly MAX_ATOMIC_NUMBER = MAX_ATOMIC_NUMBER;
-  public static readonly SMALL_ISOTOPE_RADIUS = SMALL_ISOTOPE_RADIUS;
 
   public constructor() {
 
@@ -244,6 +244,9 @@ class MixturesModel {
   private placeIsotope( isotope: PositionableAtom, bucket: MonoIsotopeBucket, testChamber: IsotopeTestChamber ): void {
     if ( testChamber.isIsotopePositionedOverChamber( isotope ) ) {
       testChamber.addParticle( isotope );
+
+      // TODO REVIEW: addParticle is already correcting edge overlaps. Also, this method adjusts ALL particles, which seems
+      //  inefficient. Consider removing entirely, since it's not used anywhere else. https://github.com/phetsims/isotopes-and-atomic-mass/issues/103
       testChamber.adjustForOverlap();
     }
     else {
@@ -473,10 +476,24 @@ class MixturesModel {
     const numControllers = this.possibleIsotopesProperty.value.length;
     this.possibleIsotopesProperty.value.forEach( ( isotopeConfig, index ) => {
 
+      const isotopeCaptionStringProperty = new DerivedStringProperty(
+        [ AtomIdentifier.getName( isotopeConfig.protonCount ) ],
+        ( name: string ) => `${name}-${isotopeConfig.getMassNumber()}`
+      );
+
       const newController = new NumericalIsotopeQuantityControl(
         this,
         isotopeConfig,
-        new Vector2( this.getControllerXOffset( index, numControllers ), controllerYOffsetSlider )
+        new Vector2( this.getControllerXOffset( index, numControllers ), controllerYOffsetSlider ),
+        isotopeCaptionStringProperty
+      );
+
+      // Create a small isotope instance to be used in the controller as a sort of icon.
+      newController.controllerIsotope = new PositionableAtom(
+        isotopeConfig.protonCount,
+        isotopeConfig.neutronCount,
+        new Vector2( 0, 0 ),
+        { particleRadius: SMALL_ISOTOPE_RADIUS }
       );
 
       this.numericalControllerList.add( newController );
@@ -487,7 +504,6 @@ class MixturesModel {
    * Remove the numerical controllers.
    */
   private removeNumericalControllers(): void {
-    this.numericalControllerList.forEach( controller => { controller.dispose(); } );
     this.numericalControllerList.clear();
   }
 

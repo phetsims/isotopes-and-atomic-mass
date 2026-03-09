@@ -31,6 +31,7 @@ class PositionableAtom extends Particle {
   // The configuration of this atom, which includes the number of protons, neutrons, and electrons.
   public readonly atomConfigurationProperty: Property<NucleusConfig>;
 
+  // TODO REVIEW: Now that code is in a good state, should this still exist? It is not used anywhere else. https://github.com/phetsims/isotopes-and-atomic-mass/issues/103
   // Unique identifier for this atom, used for debugging and testing purposes.
   public readonly instanceCount: number;
 
@@ -47,6 +48,8 @@ class PositionableAtom extends Particle {
 
     super( 'isotope', options );
 
+    // TODO REVIEW: Why do we need to set destination property at all, it's not used anywhere else in the sim.
+    //  But if it's needed, I'd recommend rather using setPositionAndDestination() https://github.com/phetsims/isotopes-and-atomic-mass/issues/103
     this.positionProperty.set( initialPosition );
     this.destinationProperty.set( initialPosition );
     this.atomConfigurationProperty = new Property(

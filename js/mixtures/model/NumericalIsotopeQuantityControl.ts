@@ -13,11 +13,9 @@
  * @author John Blanco (PhET Interactive Simulations)
  */
 
-import DerivedStringProperty from '../../../../axon/js/DerivedStringProperty.js';
 import Property from '../../../../axon/js/Property.js';
 import { TReadOnlyProperty } from '../../../../axon/js/TReadOnlyProperty.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import MixturesModel from './MixturesModel.js';
 import NucleusConfig from './NucleusConfig.js';
@@ -30,37 +28,28 @@ class NumericalIsotopeQuantityControl {
 
   public readonly quantityProperty: Property<number>;
   private readonly model: MixturesModel;
+  public readonly isotopeConfig: NucleusConfig;
   public readonly centerPosition: Vector2;
-  public readonly controllerIsotope?: PositionableAtom;
-  public readonly captionProperty: TReadOnlyProperty<string>;
-  private readonly isotopeConfig: NucleusConfig;
+  public readonly caption: string | TReadOnlyProperty<string>;
+  public controllerIsotope?: PositionableAtom;
 
   /**
    * @param model - The main model for mixtures
    * @param isotopeConfig - Configuration for the isotope controlled by this control
    * @param position - Position of the control in model coordinates
+   * @param caption - Text label for the control
    */
   public constructor(
     model: MixturesModel,
     isotopeConfig: NucleusConfig,
-    position: Vector2
+    position: Vector2,
+    caption: string | TReadOnlyProperty<string>
   ) {
     this.quantityProperty = new Property<number>( model.testChamber.getIsotopeCount( isotopeConfig ) );
     this.model = model;
     this.isotopeConfig = isotopeConfig;
     this.centerPosition = position;
-    this.captionProperty = new DerivedStringProperty(
-      [ AtomIdentifier.getName( isotopeConfig.protonCount ) ],
-      ( name: string ) => `${name}-${isotopeConfig.getMassNumber()}`
-    );
-
-    // Create a small isotope instance to be used in the controller as a sort of icon.
-    this.controllerIsotope = new PositionableAtom(
-      isotopeConfig.protonCount,
-      isotopeConfig.neutronCount,
-      new Vector2( 0, 0 ),
-      { particleRadius: MixturesModel.SMALL_ISOTOPE_RADIUS }
-    );
+    this.caption = caption;
   }
 
   /**
@@ -90,13 +79,6 @@ class NumericalIsotopeQuantityControl {
         }
       }
     }
-  }
-
-  /**
-   * release memory references
-   */
-  public dispose(): void {
-    this.captionProperty.dispose();
   }
 }
 
