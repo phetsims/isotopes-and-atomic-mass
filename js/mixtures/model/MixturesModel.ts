@@ -255,40 +255,6 @@ class MixturesModel {
   }
 
   /**
-   * Add a drag listener to the provided atom instance so that when it is dragged out of the bucket it is removed from
-   * the bucket and when it is dropped somewhere it is either added to the test chamber or put back in a bucket
-   * depending on its position.
-   */
-  private addAtomDragListener( atom: PositionableAtom ): void {
-    atom.isDraggingProperty.lazyLink( isDragging => {
-      if ( isDragging ) {
-        if ( atom.containerProperty.value ) {
-
-          // Remove the atom from its container, which will be either a bucket or the test chamber.
-          atom.containerProperty.value.removeParticle( atom );
-        }
-      }
-      else {
-
-        let destinationBucket: MonoIsotopeBucket | null = null;
-        this.bucketList.forEach( bucket => {
-          const config = bucket.isotopeConfigProperty.value;
-          if ( config.protonCount === atom.atomConfigurationProperty.value.protonCount &&
-               config.neutronCount === atom.atomConfigurationProperty.value.neutronCount ) {
-            destinationBucket = bucket;
-          }
-        } );
-
-        affirm( destinationBucket, 'No bucket found for atom config' );
-
-        // This atom instance was being dragged and has now been dropped.  Place it in the appropriate
-        // bucket or in the test chamber depending on where it was dropped.
-        this.placeIsotope( atom, destinationBucket, this.testChamber );
-      }
-    } );
-  }
-
-  /**
    * Add newBucket to bucketList.
    */
   private addBucket( newBucket: MonoIsotopeBucket ): void {
@@ -378,10 +344,38 @@ class MixturesModel {
           // Add the new isotope to the appropriate bucket.
           bucket.addIsotopeInstanceFirstOpen( newAtom );
 
-          // Add a drag listener to each isotope instance so that when it is dragged out of the bucket it is removed
-          // from the bucket and when it is dropped somewhere it is either added to the test chamber or put back in
-          // a bucket depending on its position.
-          this.addAtomDragListener( newAtom );
+          // Add a listener to each isotope instance so that when it is dragged out of the bucket it is removed from the
+          // bucket and when it is dropped somewhere it is either added to the test chamber or put back in a bucket
+          // depending on its position.
+          newAtom.isDraggingProperty.lazyLink( isDragging => {
+            if ( isDragging ) {
+              if ( newAtom.containerProperty.value ) {
+
+                // Remove the atom from its container, which will be either a bucket or the test chamber.
+                newAtom.containerProperty.value.removeParticle( newAtom );
+              }
+            }
+            else {
+
+              let destinationBucket: MonoIsotopeBucket | null = null;
+              this.bucketList.forEach( bucket => {
+                const config = bucket.isotopeConfigProperty.value;
+                if ( config.protonCount === newAtom.atomConfigurationProperty.value.protonCount &&
+                     config.neutronCount === newAtom.atomConfigurationProperty.value.neutronCount ) {
+                  destinationBucket = bucket;
+                }
+              } );
+
+              // There is a multitouch race condition where the atom is released but the bucket that it should be placed
+              // in has already been removed, so we need to check to make sure the bucket still exists.
+              if ( destinationBucket ) {
+
+                // This atom instance was being dragged and has now been dropped.  Place it in the appropriate bucket or
+                // in the test chamber depending on where it was dropped.
+                this.placeIsotope( newAtom, destinationBucket, this.testChamber );
+              }
+            }
+          } );
         }
       }
     }

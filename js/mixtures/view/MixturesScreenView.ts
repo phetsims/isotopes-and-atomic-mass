@@ -105,7 +105,8 @@ class MixturesScreenView extends ScreenView {
     const addBucketView = ( addedBucket: MonoIsotopeBucket ) => {
       const bucketHole = new BucketHole( addedBucket, this.modelViewTransform );
       const bucketFront = new BucketFront( addedBucket, this.modelViewTransform );
-      bucketFront.addInputListener( new BucketDragListener( addedBucket, bucketFront, this.modelViewTransform ) );
+      const dragListener = new BucketDragListener( addedBucket, bucketFront, this.modelViewTransform );
+      bucketFront.addInputListener( dragListener );
 
       // Bucket hole is first item added to view for proper layering.
       bucketHoleLayer.addChild( bucketHole );
@@ -116,6 +117,7 @@ class MixturesScreenView extends ScreenView {
         if ( removedBucket === addedBucket ) {
           bucketHoleLayer.removeChild( bucketHole );
           bucketFront.interruptSubtreeInput();
+          bucketFront.removeInputListener( dragListener );
           bucketFrontLayer.removeChild( bucketFront );
           mixturesModel.bucketList.removeItemRemovedListener( removalListener );
         }
