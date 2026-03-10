@@ -28,6 +28,9 @@ let instanceCount = 0;
 
 class PositionableAtom extends Particle {
 
+  // TODO REVIEW: It seems that atom configuration was changed to nucleus configuration,
+  //  so electrons are no longer tracked and there's comments like this around... I feel like going back to AtomConfig
+  //  would solve some of that, even if electrons are not really relevant to this sim. https://github.com/phetsims/isotopes-and-atomic-mass/issues/103
   // The configuration of this atom, which includes the number of protons, neutrons, and electrons.
   public readonly atomConfigurationProperty: Property<NucleusConfig>;
 
