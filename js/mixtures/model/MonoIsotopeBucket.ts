@@ -19,9 +19,9 @@ import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import SphereBucket, { SphereBucketOptions } from '../../../../phetcommon/js/model/SphereBucket.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
+import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import getIsotopeColor from './getIsotopeColor.js';
-import NucleusConfig from './NucleusConfig.js';
 import PositionableAtom from './PositionableAtom.js';
 
 type SelfOptions = EmptySelfOptions;
@@ -32,13 +32,13 @@ class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
   // The configuration of the isotope that this bucket can hold. This is used to determine if an isotope can be added to
   // the bucket, and to determine the color of the bucket.  Clients can change the configuration of the bucket by
   // setting this Property.
-  public readonly isotopeConfigProperty: TProperty<NucleusConfig>;
+  public readonly isotopeConfigProperty: TProperty<AtomConfig>;
 
   private readonly disposeMonoIsotopeBucket: () => void;
 
-  public constructor( initialIsotopeConfig: NucleusConfig, providedOptions?: MonoIsotopeBucketOptions ) {
+  public constructor( initialIsotopeConfig: AtomConfig, providedOptions?: MonoIsotopeBucketOptions ) {
 
-    const isotopeConfigProperty = new Property<NucleusConfig>( initialIsotopeConfig );
+    const isotopeConfigProperty = new Property<AtomConfig>( initialIsotopeConfig );
 
     // Create the string for the element name.  This has to be a dynamic property because the proton count can change
     // the selected element, but changing the locale can change that element's name.
@@ -72,7 +72,7 @@ class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
     const options = optionize<MonoIsotopeBucketOptions, SelfOptions, SphereBucketOptions>()( {
 
       // Derive the color of the bucket from the isotope it holds.
-      baseColor: new DerivedProperty( [ isotopeConfigProperty ], ( isotopeConfig: NucleusConfig ) => {
+      baseColor: new DerivedProperty( [ isotopeConfigProperty ], ( isotopeConfig: AtomConfig ) => {
         return getIsotopeColor( isotopeConfig.protonCount, isotopeConfig.neutronCount );
       } ),
       captionText: isotopeNameProperty

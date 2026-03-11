@@ -19,12 +19,12 @@ import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
+import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
 import Panel from '../../../../sun/js/Panel.js';
 import PieChartNode, { PieSlice } from '../../common/view/PieChartNode.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import getIsotopeColor from '../model/getIsotopeColor.js';
 import MixturesModel from '../model/MixturesModel.js';
-import NucleusConfig from '../model/NucleusConfig.js';
 
 // constants
 const PIE_CHART_RADIUS = 40;
@@ -35,7 +35,7 @@ const CHEMICAL_SYMBOL_FONT = new PhetFont( 16 );
 const SUPERSCRIPT_SUBSCRIPT_FONT = new PhetFont( 14 );
 const NUMBER_DECIMALS = 4;
 
-function chemSymbolWithNumbersNode( isotopeConfig: NucleusConfig ): Node {
+function chemSymbolWithNumbersNode( isotopeConfig: AtomConfig ): Node {
   const node = new Node();
 
   const symbol = new Text( AtomIdentifier.getSymbol( isotopeConfig.protonCount ), {
@@ -69,7 +69,7 @@ class SliceLabelNode extends Node {
 }
 
 function sliceLabelNode(
-  isotopeConfig: NucleusConfig,
+  isotopeConfig: AtomConfig,
   isotopePercentage: number,
   labelOnLeft: boolean,
   numberOfDecimals: number
@@ -187,7 +187,7 @@ class IsotopeProportionsPieChart extends Node {
    * chart at the angle corresponding to the middle of the slice, and then adjusting that position so that the label
    * doesn't overlap with the pie chart and so that labels don't overlap with each other.
    */
-  private updateLabels( possibleIsotopes: NucleusConfig[] ): void {
+  private updateLabels( possibleIsotopes: AtomConfig[] ): void {
     this.labelLayer.removeAllChildren();
     this.sliceLabels = [];
     let i = 0;

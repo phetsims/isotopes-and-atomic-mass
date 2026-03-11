@@ -17,8 +17,8 @@ import dotRandom from '../../../../dot/js/dotRandom.js';
 import Rectangle from '../../../../dot/js/Rectangle.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import affirm from '../../../../perennial-alias/js/browser-and-node/affirm.js';
+import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
-import NucleusConfig from './NucleusConfig.js';
 import PositionableAtom from './PositionableAtom.js';
 
 // constants
@@ -55,7 +55,7 @@ class IsotopeTestChamber {
   /**
    * Get the number of isotopes currently in the chamber that match the specified configuration.
    */
-  public getIsotopeCount( isotopeConfig: NucleusConfig ): number {
+  public getIsotopeCount( isotopeConfig: AtomConfig ): number {
     let isotopeCount = 0;
     this.containedIsotopes.forEach( isotope => {
       if ( isotope.atomConfigurationProperty.value.equals( isotopeConfig ) ) {
@@ -146,7 +146,7 @@ class IsotopeTestChamber {
   /**
    * Remove an isotope from the chamber that matches the specified atom configuration. Note that electrons are ignored.
    */
-  public removeIsotopeMatchingConfig( isotopeConfig: NucleusConfig ): PositionableAtom | null {
+  public removeIsotopeMatchingConfig( isotopeConfig: AtomConfig ): PositionableAtom | null {
     let removedIsotope: PositionableAtom | null = null;
     this.containedIsotopes.forEach( isotope => {
       if ( isotope.atomConfigurationProperty.value.equals( isotopeConfig ) ) {
@@ -176,7 +176,7 @@ class IsotopeTestChamber {
   /**
    * Get the proportion of isotopes currently within the chamber that match the specified configuration.
    */
-  public getIsotopeProportion( isotopeConfig: NucleusConfig ): number {
+  public getIsotopeProportion( isotopeConfig: AtomConfig ): number {
     let isotopeCount = 0;
     this.containedIsotopes.forEach( isotope => {
       if ( isotope.atomConfigurationProperty.value.equals( isotopeConfig ) ) {

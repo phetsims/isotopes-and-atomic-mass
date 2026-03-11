@@ -23,13 +23,14 @@ const getIsotopeColor = ( protonCount: number, neutronCount: number ): Color => 
   // Use the cached color if it has already been calculated for this isotope configuration.
   if ( !isotopeColorCache[ protonCount ] || !isotopeColorCache[ protonCount ][ neutronCount ] ) {
 
+    // Sort by mass number.
     const stableIsotopes = AtomIdentifier.getStableIsotopesOfElement( protonCount );
-    stableIsotopes.sort( ( isotope1, isotope2 ) => isotope1[ 1 ] - isotope2[ 1 ] );
+    stableIsotopes.sort( ( isotope1, isotope2 ) => isotope1.neutronCount - isotope2.neutronCount );
 
     isotopeColorCache[ protonCount ] = [];
     stableIsotopes.forEach( ( isotopeConfig, index ) => {
       affirm( ISOTOPE_COLORS[ index ], 'not enough colors defined for the number of isotopes' );
-      isotopeColorCache[ protonCount ][ isotopeConfig[ 1 ] ] = ISOTOPE_COLORS[ index ];
+      isotopeColorCache[ protonCount ][ isotopeConfig.neutronCount ] = ISOTOPE_COLORS[ index ];
     } );
   }
 

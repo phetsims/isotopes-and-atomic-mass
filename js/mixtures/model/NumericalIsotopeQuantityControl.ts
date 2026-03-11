@@ -18,9 +18,9 @@ import Property from '../../../../axon/js/Property.js';
 import { TReadOnlyProperty } from '../../../../axon/js/TReadOnlyProperty.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
+import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import MixturesModel from './MixturesModel.js';
-import NucleusConfig from './NucleusConfig.js';
 import PositionableAtom from './PositionableAtom.js';
 
 // constants
@@ -33,7 +33,7 @@ class NumericalIsotopeQuantityControl {
   public readonly centerPosition: Vector2;
   public readonly controllerIsotope?: PositionableAtom;
   public readonly captionProperty: TReadOnlyProperty<string>;
-  private readonly isotopeConfig: NucleusConfig;
+  private readonly isotopeConfig: AtomConfig;
 
   /**
    * @param model - The main model for mixtures
@@ -42,7 +42,7 @@ class NumericalIsotopeQuantityControl {
    */
   public constructor(
     model: MixturesModel,
-    isotopeConfig: NucleusConfig,
+    isotopeConfig: AtomConfig,
     position: Vector2
   ) {
     this.quantityProperty = new Property<number>( model.testChamber.getIsotopeCount( isotopeConfig ) );
@@ -55,12 +55,9 @@ class NumericalIsotopeQuantityControl {
     );
 
     // Create a small isotope instance to be used in the controller as a sort of icon.
-    this.controllerIsotope = new PositionableAtom(
-      isotopeConfig.protonCount,
-      isotopeConfig.neutronCount,
-      new Vector2( 0, 0 ),
-      { particleRadius: MixturesModel.SMALL_ISOTOPE_RADIUS }
-    );
+    this.controllerIsotope = new PositionableAtom( isotopeConfig, new Vector2( 0, 0 ), {
+      particleRadius: MixturesModel.SMALL_ISOTOPE_RADIUS
+    } );
   }
 
   /**
@@ -72,12 +69,9 @@ class NumericalIsotopeQuantityControl {
 
     if ( changeAmount > 0 ) {
       for ( let i = 0; i < changeAmount; i++ ) {
-        const newAtom = new PositionableAtom(
-          this.isotopeConfig.protonCount,
-          this.isotopeConfig.neutronCount,
-          this.model.testChamber.generateRandomPosition(),
-          { particleRadius: 4 }
-        );
+        const newAtom = new PositionableAtom( this.isotopeConfig, this.model.testChamber.generateRandomPosition(), {
+          particleRadius: 4
+        } );
         this.model.testChamber.addParticle( newAtom );
         this.model.isotopesList.add( newAtom );
       }

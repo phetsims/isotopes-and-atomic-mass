@@ -22,11 +22,11 @@ import RichText from '../../../../scenery/js/nodes/RichText.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
+import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
 import Panel from '../../../../sun/js/Panel.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 import MixturesModel from '../model/MixturesModel.js';
-import NucleusConfig from '../model/NucleusConfig.js';
 
 // constants
 const INDICATOR_WIDTH = 200;
@@ -82,9 +82,11 @@ class AverageAtomicMassIndicator extends Node {
       if ( this.massSpan < 2 ) {
         this.massSpan = 2; // Mass span must be at least 2 or the spacing doesn't look good.
       }
+
       // Adjust the span so that there is some space at the ends of the line.
       this.massSpan *= 1.2;
-      // Set the low end of the mass range, needed for positioning on line.
+
+      // Set the low end of the mass range, needed for positioning on the line.
       this.minMass = ( heaviestIsotopeMass + lightestIsotopeMass ) / 2 - this.massSpan / 2;
 
       // Add the new tick marks.
@@ -190,7 +192,7 @@ class ReadoutPointer extends Node {
  * a line and a label above it that indicates the isotope configuration.
  */
 class IsotopeTickMark extends Node {
-  public constructor( isotopeConfig: NucleusConfig ) {
+  public constructor( isotopeConfig: AtomConfig ) {
     super();
 
     // Create the tick mark itself.  It is positioned such that (0,0) is the center of the mark.

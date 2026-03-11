@@ -22,10 +22,10 @@ import { roundSymmetric } from '../../../../dot/js/util/roundSymmetric.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import affirm from '../../../../perennial-alias/js/browser-and-node/affirm.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
+import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopeTestChamber from './IsotopeTestChamber.js';
 import MonoIsotopeBucket from './MonoIsotopeBucket.js';
-import NucleusConfig from './NucleusConfig.js';
 import NumericalIsotopeQuantityControl from './NumericalIsotopeQuantityControl.js';
 import PositionableAtom from './PositionableAtom.js';
 
@@ -61,7 +61,7 @@ class MixturesModel {
   // The list of isotopes that exist in nature as variations of the current "prototype isotope". In other words, this
   // contains a list of all stable isotopes that match the atomic number of the currently configured isotope. There
   // should be only one of each possible isotope.
-  public readonly possibleIsotopesProperty = new Property<NucleusConfig[]>( [] );
+  public readonly possibleIsotopesProperty = new Property<AtomConfig[]>( [] );
 
   // A Property that indicates whether "Nature's Mix" is being shown or the user-created mix.
   public readonly showingNaturesMixProperty = new Property<boolean>( false );
@@ -333,11 +333,7 @@ class MixturesModel {
       if ( isotopeCountInChamber < NUM_LARGE_ISOTOPES_PER_BUCKET ) {
         const numberToAdd = NUM_LARGE_ISOTOPES_PER_BUCKET - isotopeCountInChamber;
         for ( let i = 0; i < numberToAdd; i++ ) {
-          const newAtom = new PositionableAtom(
-            isotopeConfig.protonCount,
-            isotopeConfig.neutronCount,
-            new Vector2( 0, 0 )
-          );
+          const newAtom = new PositionableAtom( isotopeConfig, new Vector2( 0, 0 ) );
           this.isotopesList.add( newAtom );
 
           // Add the new isotope to the appropriate bucket.
@@ -386,16 +382,13 @@ class MixturesModel {
    */
   private updatePossibleIsotopesList( elementProtonCount: number ): void {
 
-    // Get the list of stable isotopes for the provided element and convert it to a list of NucleusConfigs.
+    // Get the list of stable isotopes for the provided element.
     const stableIsotopes = AtomIdentifier.getStableIsotopesOfElement( elementProtonCount );
-    const isotopesList: NucleusConfig[] = Object.values( stableIsotopes ).map(
-      isotope => new NucleusConfig( isotope[ 0 ], isotope[ 1 ] )
-    );
 
     // Sort from lightest to heaviest.
-    isotopesList.sort( ( atom1, atom2 ) => atom1.getAtomicMass() - atom2.getAtomicMass() );
+    stableIsotopes.sort( ( atom1, atom2 ) => atom1.getAtomicMass() - atom2.getAtomicMass() );
 
-    this.possibleIsotopesProperty.set( isotopesList );
+    this.possibleIsotopesProperty.set( stableIsotopes );
   }
 
   /**
@@ -442,7 +435,7 @@ class MixturesModel {
   /**
    * Add the buckets based on the provided list of isotopes.
    */
-  private addBuckets( isotopes: NucleusConfig[] ): void {
+  private addBuckets( isotopes: AtomConfig[] ): void {
 
     affirm( this.bucketList.length === 0, 'Buckets should have already been removed before adding new ones' );
 
@@ -491,7 +484,7 @@ class MixturesModel {
    * Set up the test chamber to show nature's mix, which is a representation of the natural abundance of the isotopes for
    * the currently selected element.
    */
-  private showNaturesMix( isotopeList: NucleusConfig[] ): void {
+  private showNaturesMix( isotopeList: AtomConfig[] ): void {
 
     affirm( this.showingNaturesMixProperty.value, 'Nature\'s mix should be showing to show nature\'s mix' );
 
@@ -522,8 +515,7 @@ class MixturesModel {
       const isotopesToAdd: PositionableAtom[] = [];
       for ( let i = 0; i < numToCreate; i++ ) {
         const newIsotope = new PositionableAtom(
-          isotopeConfig.protonCount,
-          isotopeConfig.neutronCount,
+          isotopeConfig,
           this.testChamber.generateRandomPosition(),
           { particleRadius: SMALL_ISOTOPE_RADIUS }
         );
