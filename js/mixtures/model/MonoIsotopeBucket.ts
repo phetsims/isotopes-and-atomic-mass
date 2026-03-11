@@ -69,12 +69,14 @@ class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
       }
     );
 
+    // Derive the color of the bucket from the isotope it holds.
+    const baseColorProperty = new DerivedProperty( [ isotopeConfigProperty ], ( isotopeConfig: AtomConfig ) => {
+      return getIsotopeColor( isotopeConfig.protonCount, isotopeConfig.neutronCount );
+    } );
+
     const options = optionize<MonoIsotopeBucketOptions, SelfOptions, SphereBucketOptions>()( {
 
-      // Derive the color of the bucket from the isotope it holds.
-      baseColor: new DerivedProperty( [ isotopeConfigProperty ], ( isotopeConfig: AtomConfig ) => {
-        return getIsotopeColor( isotopeConfig.protonCount, isotopeConfig.neutronCount );
-      } ),
+      baseColor: baseColorProperty,
       captionText: isotopeNameProperty
 
     }, providedOptions );
@@ -86,7 +88,9 @@ class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
     this.disposeMonoIsotopeBucket = () => {
       isotopeConfigProperty.dispose();
       elementNameProperty.dispose();
+      elementNameDynamicProperty.dispose();
       isotopeNameProperty.dispose();
+      baseColorProperty.dispose();
     };
   }
 

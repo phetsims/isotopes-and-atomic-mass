@@ -40,11 +40,8 @@ class NumericalIsotopeQuantityControl {
    * @param isotopeConfig - Configuration for the isotope controlled by this control
    * @param position - Position of the control in model coordinates
    */
-  public constructor(
-    model: MixturesModel,
-    isotopeConfig: AtomConfig,
-    position: Vector2
-  ) {
+  public constructor( model: MixturesModel, isotopeConfig: AtomConfig, position: Vector2 ) {
+
     this.quantityProperty = new Property<number>( model.testChamber.getIsotopeCount( isotopeConfig ) );
     this.model = model;
     this.isotopeConfig = isotopeConfig;
