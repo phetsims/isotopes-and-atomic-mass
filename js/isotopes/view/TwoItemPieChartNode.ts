@@ -186,6 +186,11 @@ class TwoItemPieChartNode extends Node {
       visibleProperty: otherIsotopesIndicatorVisibleProperty
     } );
 
+    // Realign the other isotope label and its connecting line when the label bounds change.
+    otherIsotopesIndicator.localBoundsProperty.lazyLink( () => {
+      otherIsotopesIndicator.centerY = pieChart.centerY;
+    } );
+
     // Update the pie chart when the proton or neutron counts change, or when the string pattern changes.
     Multilink.multilink(
       [ particleAtom.protonCountProperty, particleAtom.neutronCountProperty, otherIsotopesPatternStringProperty ],
