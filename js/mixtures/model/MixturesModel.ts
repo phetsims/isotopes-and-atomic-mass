@@ -245,8 +245,7 @@ class MixturesModel {
     if ( testChamber.isIsotopePositionedOverChamber( isotope ) ) {
       testChamber.addParticle( isotope );
 
-      // TODO REVIEW: addParticle is already correcting edge overlaps. Also, this method adjusts ALL particles, which seems
-      //  inefficient. Consider removing entirely, since it's not used anywhere else. https://github.com/phetsims/isotopes-and-atomic-mass/issues/103
+      // Make sure particle don't overlap with one another or the walls of the chamber after being added.
       testChamber.adjustForOverlap();
     }
     else {

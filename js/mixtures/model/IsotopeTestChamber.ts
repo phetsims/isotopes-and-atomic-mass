@@ -192,7 +192,7 @@ class IsotopeTestChamber {
   public adjustForOverlap(): void {
     assert && assert(
       this.getTotalIsotopeCount() <= 100,
-      'Ignoring request to adjust for overlap - too many particles in the chamber for that'
+      'Too many particles in the chamber to adjust for overlap'
     );
 
     // Check for overlap and adjust particle positions until none exists.
@@ -209,7 +209,7 @@ class IsotopeTestChamber {
 
         const totalForce = new Vector2( 0, 0 );
 
-        // Check this isotope against all others, and calculate the forces on it.
+        // Check this isotope against all others, and calculate the resulting forces on it.
         for ( let j = 0; j < this.containedIsotopes.length; j++ ) {
           const isotope2 = this.containedIsotopes.get( j );
           if ( isotope1 === isotope2 ) {
@@ -260,7 +260,7 @@ class IsotopeTestChamber {
 
       // Apply the forces to the isotopes.
       for ( const [ isotope, force ] of mapIsotopesToForces ) {
-        isotope.setPositionAndDestination( isotope.positionProperty.value.add( force ) );
+        isotope.setPositionAndDestination( isotope.positionProperty.value.plus( force ) );
       }
     }
   }

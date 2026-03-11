@@ -27,13 +27,6 @@ import PositionableAtom from './PositionableAtom.js';
 type SelfOptions = EmptySelfOptions;
 export type MonoIsotopeBucketOptions = SelfOptions & StrictOmit<SphereBucketOptions, 'baseColor' | 'captionText'>;
 
-// TODO REVIEW: Can this TODO be removed? https://github.com/phetsims/isotopes-and-atomic-mass/issues/103
-// TODO: See https://github.com/phetsims/isotopes-and-atomic-mass/issues/103.  There are some decisions to be made about
-//       the state behavior of buckets that I (jbphet) have deferred until the state refactor is a little further along.
-//       One specific example is what should happen to particles in a bucket when it is reconfigured.  Also, should
-//       buckets have an active property to control whether it appears in the view?  That sort of thing.  Come back to
-//       this.
-
 class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
 
   // The configuration of the isotope that this bucket can hold. This is used to determine if an isotope can be added to
