@@ -19,7 +19,7 @@ import BucketHole from '../../../../scenery-phet/js/bucket/BucketHole.js';
 import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
-import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
+import AtomInfoUtils from '../../../../shred/js/AtomInfoUtils.js';
 import AtomNameUtils from '../../../../shred/js/AtomNameUtils.js';
 import Particle from '../../../../shred/js/model/Particle.js';
 import ShredStrings from '../../../../shred/js/ShredStrings.js';
@@ -282,7 +282,7 @@ class InteractiveIsotopeNode extends Node {
 
       // Set the stability indicator text.
       if ( numProtons > 0 ) {
-        if ( AtomIdentifier.isStable( numProtons, numNeutrons ) ) {
+        if ( AtomInfoUtils.isStable( numProtons, numNeutrons ) ) {
           stabilityIndicator.stringProperty = stableStringProperty;
         }
         else {

@@ -21,7 +21,7 @@ import Path from '../../../../scenery/js/nodes/Path.js';
 import RichText from '../../../../scenery/js/nodes/RichText.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
-import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
+import AtomInfoUtils from '../../../../shred/js/AtomInfoUtils.js';
 import AtomNameUtils from '../../../../shred/js/AtomNameUtils.js';
 import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
 import Panel from '../../../../sun/js/Panel.js';
@@ -157,7 +157,7 @@ class ReadoutPointer extends Node {
       ( averageAtomicMass: number, showingNaturesMix, amuString: string ) => {
         let weight: number;
         if ( showingNaturesMix ) {
-          weight = AtomIdentifier.getStandardAtomicMass( model.selectedElementProtonCountProperty.value );
+          weight = AtomInfoUtils.getStandardAtomicMass( model.selectedElementProtonCountProperty.value );
         }
         else {
           weight = averageAtomicMass;

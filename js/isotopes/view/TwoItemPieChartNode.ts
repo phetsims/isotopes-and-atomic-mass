@@ -23,7 +23,7 @@ import Node from '../../../../scenery/js/nodes/Node.js';
 import RichText from '../../../../scenery/js/nodes/RichText.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
-import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
+import AtomInfoUtils from '../../../../shred/js/AtomInfoUtils.js';
 import AtomNameUtils from '../../../../shred/js/AtomNameUtils.js';
 import ParticleAtom from '../../../../shred/js/model/ParticleAtom.js';
 import Panel from '../../../../sun/js/Panel.js';
@@ -65,11 +65,11 @@ class TwoItemPieChartNode extends Node {
       [ particleAtom.protonCountProperty, particleAtom.neutronCountProperty, traceStringProperty ],
       protonCount => {
         if ( protonCount > 0 ) {
-          const abundance = AtomIdentifier.getNaturalAbundance(
+          const abundance = AtomInfoUtils.getNaturalAbundance(
             particleAtom,
             ABUNDANCE_DECIMAL_PLACES + 2
           );
-          if ( abundance === 0 && AtomIdentifier.existsInTraceAmounts( particleAtom ) ) {
+          if ( abundance === 0 && AtomInfoUtils.existsInTraceAmounts( particleAtom ) ) {
             return traceStringProperty.value;
           }
           else {
@@ -167,7 +167,7 @@ class TwoItemPieChartNode extends Node {
         if ( protonCount > 0 ) {
 
           // If the abundance is less than 1, then we want to show the other isotopes label and connecting line.
-          const abundanceTo6Digits = AtomIdentifier.getNaturalAbundance( particleAtom, 6 );
+          const abundanceTo6Digits = AtomInfoUtils.getNaturalAbundance( particleAtom, 6 );
           visible = abundanceTo6Digits < 1;
         }
         return visible;
@@ -199,11 +199,11 @@ class TwoItemPieChartNode extends Node {
 
         if ( protonCount > 0 ) {
 
-          const thisIsotopeAbundanceTo6Digits = AtomIdentifier.getNaturalAbundance( particleAtom, 6 );
+          const thisIsotopeAbundanceTo6Digits = AtomInfoUtils.getNaturalAbundance( particleAtom, 6 );
           const otherIsotopesAbundance = 1 - thisIsotopeAbundanceTo6Digits;
 
           // Set the slice value for the current isotope.
-          if ( thisIsotopeAbundanceTo6Digits === 0 && AtomIdentifier.existsInTraceAmounts( particleAtom ) ) {
+          if ( thisIsotopeAbundanceTo6Digits === 0 && AtomInfoUtils.existsInTraceAmounts( particleAtom ) ) {
             slices[ 0 ].value = TRACE_ABUNDANCE_IN_PIE_CHART;
           }
           else {

@@ -18,7 +18,7 @@ import Path from '../../../../scenery/js/nodes/Path.js';
 import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
-import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
+import AtomInfoUtils from '../../../../shred/js/AtomInfoUtils.js';
 import AtomNameUtils from '../../../../shred/js/AtomNameUtils.js';
 import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
 import Panel from '../../../../sun/js/Panel.js';
@@ -195,7 +195,7 @@ class IsotopeProportionsPieChart extends Node {
     possibleIsotopes.forEach( isotope => {
       let proportion: number;
       if ( this.model.showingNaturesMixProperty.get() ) {
-        proportion = AtomIdentifier.getNaturalAbundance( isotope.toNumberAtom(), NUMBER_DECIMALS + 2 );
+        proportion = AtomInfoUtils.getNaturalAbundance( isotope.toNumberAtom(), NUMBER_DECIMALS + 2 );
       }
       else {
         proportion = this.model.testChamber.getIsotopeProportion( isotope );

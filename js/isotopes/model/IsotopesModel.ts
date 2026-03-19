@@ -19,7 +19,7 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import affirm from '../../../../perennial-alias/js/browser-and-node/affirm.js';
 import SphereBucket from '../../../../phetcommon/js/model/SphereBucket.js';
 import Color from '../../../../scenery/js/util/Color.js';
-import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
+import AtomInfoUtils from '../../../../shred/js/AtomInfoUtils.js';
 import Particle from '../../../../shred/js/model/Particle.js';
 import ParticleAtom from '../../../../shred/js/model/ParticleAtom.js';
 import ShredConstants from '../../../../shred/js/ShredConstants.js';
@@ -84,7 +84,7 @@ class IsotopesModel {
       [ this.particleAtom.massNumberProperty ],
       ( massNumber: number ) => {
         return massNumber > 0 ?
-               AtomIdentifier.isStable(
+               AtomInfoUtils.isStable(
                  this.particleAtom.protonCountProperty.get(),
                  this.particleAtom.neutronCountProperty.get()
                ) : true;
@@ -221,7 +221,7 @@ class IsotopesModel {
     this.neutronBucket.reset();
 
     // Identify the most common neutron count for the given proton count, which will be used as the default isotope.
-    const mostCommonNeutronCount = AtomIdentifier.getNumNeutronsInMostCommonIsotope( protonCount );
+    const mostCommonNeutronCount = AtomInfoUtils.getNumNeutronsInMostCommonIsotope( protonCount );
 
     // Create the particles for the atom.
     _.times( protonCount, () => {
@@ -257,7 +257,7 @@ class IsotopesModel {
     this.selectedElementProtonCountProperty.reset();
 
     // Make sure the neutron count is what it should be for the default isotope.
-    const mostCommonNeutronCount = AtomIdentifier.getNumNeutronsInMostCommonIsotope(
+    const mostCommonNeutronCount = AtomInfoUtils.getNumNeutronsInMostCommonIsotope(
       this.selectedElementProtonCountProperty.value
     );
     if ( this.particleAtom.neutronCountProperty.get() !== mostCommonNeutronCount ) {

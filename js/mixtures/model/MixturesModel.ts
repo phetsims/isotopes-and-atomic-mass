@@ -21,7 +21,7 @@ import Range from '../../../../dot/js/Range.js';
 import { roundSymmetric } from '../../../../dot/js/util/roundSymmetric.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import affirm from '../../../../perennial-alias/js/browser-and-node/affirm.js';
-import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
+import AtomInfoUtils from '../../../../shred/js/AtomInfoUtils.js';
 import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopeTestChamber from './IsotopeTestChamber.js';
@@ -383,7 +383,7 @@ class MixturesModel {
   private updatePossibleIsotopesList( elementProtonCount: number ): void {
 
     // Get the list of stable isotopes for the provided element.
-    const stableIsotopes = AtomIdentifier.getStableIsotopesOfElement( elementProtonCount );
+    const stableIsotopes = AtomInfoUtils.getStableIsotopesOfElement( elementProtonCount );
 
     // Sort from lightest to heaviest.
     stableIsotopes.sort( ( atom1, atom2 ) => atom1.getAtomicMass() - atom2.getAtomicMass() );
@@ -497,14 +497,14 @@ class MixturesModel {
     const possibleIsotopesCopy = isotopeList.slice( 0 );
     const numDigitsForComparison = 10;
     possibleIsotopesCopy.sort(
-      ( atom1, atom2 ) => AtomIdentifier.getNaturalAbundance( atom2.toNumberAtom(), numDigitsForComparison ) -
-                          AtomIdentifier.getNaturalAbundance( atom1.toNumberAtom(), numDigitsForComparison )
+      ( atom1, atom2 ) => AtomInfoUtils.getNaturalAbundance( atom2.toNumberAtom(), numDigitsForComparison ) -
+                          AtomInfoUtils.getNaturalAbundance( atom1.toNumberAtom(), numDigitsForComparison )
     );
 
     // Add the isotopes.
     possibleIsotopesCopy.forEach( isotopeConfig => {
       let numToCreate = roundSymmetric(
-        NUM_NATURES_MIX_ATOMS * AtomIdentifier.getNaturalAbundance( isotopeConfig.toNumberAtom(), 5 )
+        NUM_NATURES_MIX_ATOMS * AtomInfoUtils.getNaturalAbundance( isotopeConfig.toNumberAtom(), 5 )
       );
       if ( numToCreate === 0 ) {
 
