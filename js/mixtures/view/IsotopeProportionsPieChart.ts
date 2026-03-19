@@ -19,6 +19,7 @@ import Rectangle from '../../../../scenery/js/nodes/Rectangle.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
+import AtomNameUtils from '../../../../shred/js/AtomNameUtils.js';
 import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
 import Panel from '../../../../sun/js/Panel.js';
 import PieChartNode, { PieSlice } from '../../common/view/PieChartNode.js';
@@ -38,7 +39,7 @@ const NUMBER_DECIMALS = 4;
 function chemSymbolWithNumbersNode( isotopeConfig: AtomConfig ): Node {
   const node = new Node();
 
-  const symbol = new Text( AtomIdentifier.getSymbol( isotopeConfig.protonCount ), {
+  const symbol = new Text( AtomNameUtils.getSymbol( isotopeConfig.protonCount ), {
     font: CHEMICAL_SYMBOL_FONT,
     centerX: 0,
     centerY: 0

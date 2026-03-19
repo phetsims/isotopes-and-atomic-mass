@@ -22,6 +22,7 @@ import RichText from '../../../../scenery/js/nodes/RichText.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
+import AtomNameUtils from '../../../../shred/js/AtomNameUtils.js';
 import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
 import Panel from '../../../../sun/js/Panel.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
@@ -204,7 +205,7 @@ class IsotopeTickMark extends Node {
 
     // Create the label that goes above the tick mark.
     const label = new RichText(
-      ` <sup>${isotopeConfig.getMassNumber()}</sup>${AtomIdentifier.getSymbol( isotopeConfig.protonCount )}`,
+      ` <sup>${isotopeConfig.getMassNumber()}</sup>${AtomNameUtils.getSymbol( isotopeConfig.protonCount )}`,
       {
         font: new PhetFont( 12 )
       }

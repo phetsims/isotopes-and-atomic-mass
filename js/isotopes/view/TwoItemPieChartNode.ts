@@ -24,6 +24,7 @@ import RichText from '../../../../scenery/js/nodes/RichText.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
+import AtomNameUtils from '../../../../shred/js/AtomNameUtils.js';
 import ParticleAtom from '../../../../shred/js/model/ParticleAtom.js';
 import Panel from '../../../../sun/js/Panel.js';
 import PieChartNode, { PieSlice } from '../../common/view/PieChartNode.js';
@@ -114,7 +115,7 @@ class TwoItemPieChartNode extends Node {
       [ particleAtom.protonCountProperty ],
       protonCount => {
         if ( protonCount > 0 ) {
-          return AtomIdentifier.getName( protonCount );
+          return AtomNameUtils.getName( protonCount );
         }
         else {
           return emptyStringProperty;

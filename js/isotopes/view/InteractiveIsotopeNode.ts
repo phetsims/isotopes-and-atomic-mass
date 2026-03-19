@@ -20,6 +20,7 @@ import PhetFont from '../../../../scenery-phet/js/PhetFont.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Text from '../../../../scenery/js/nodes/Text.js';
 import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
+import AtomNameUtils from '../../../../shred/js/AtomNameUtils.js';
 import Particle from '../../../../shred/js/model/Particle.js';
 import ShredStrings from '../../../../shred/js/ShredStrings.js';
 import BucketDragListener from '../../../../shred/js/view/BucketDragListener.js';
@@ -177,7 +178,7 @@ class InteractiveIsotopeNode extends Node {
     const isotopeNameStringProperty = new DerivedStringProperty(
       [
         // Using a dynamic property that updates on proton count changes and locale changes
-        AtomIdentifier.createDynamicNameProperty( isotopesModel.particleAtom.protonCountProperty ),
+        AtomNameUtils.createDynamicNameProperty( isotopesModel.particleAtom.protonCountProperty ),
         isotopesModel.particleAtom.protonCountProperty,
         isotopesModel.particleAtom.neutronCountProperty
       ], ( elementName: string, numProtons: number, numNeutrons: number ) => {

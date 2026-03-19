@@ -17,7 +17,7 @@ import DerivedStringProperty from '../../../../axon/js/DerivedStringProperty.js'
 import Property from '../../../../axon/js/Property.js';
 import { TReadOnlyProperty } from '../../../../axon/js/TReadOnlyProperty.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
+import AtomNameUtils from '../../../../shred/js/AtomNameUtils.js';
 import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import MixturesModel from './MixturesModel.js';
@@ -47,7 +47,7 @@ class NumericalIsotopeQuantityControl {
     this.isotopeConfig = isotopeConfig;
     this.centerPosition = position;
     this.captionProperty = new DerivedStringProperty(
-      [ AtomIdentifier.getName( isotopeConfig.protonCount ) ],
+      [ AtomNameUtils.getName( isotopeConfig.protonCount ) ],
       ( name: string ) => `${name}-${isotopeConfig.getMassNumber()}`
     );
 

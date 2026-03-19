@@ -18,7 +18,7 @@ import { TReadOnlyProperty } from '../../../../axon/js/TReadOnlyProperty.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import SphereBucket, { SphereBucketOptions } from '../../../../phetcommon/js/model/SphereBucket.js';
-import AtomIdentifier from '../../../../shred/js/AtomIdentifier.js';
+import AtomNameUtils from '../../../../shred/js/AtomNameUtils.js';
 import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
 import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import getIsotopeColor from './getIsotopeColor.js';
@@ -47,7 +47,7 @@ class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
       [ isotopeConfigProperty ],
       isotopeConfig => {
         if ( isotopeConfig.protonCount > 0 ) {
-          return AtomIdentifier.getName( isotopeConfig.protonCount );
+          return AtomNameUtils.getName( isotopeConfig.protonCount );
         }
         else {
           return emptyStringProperty;
