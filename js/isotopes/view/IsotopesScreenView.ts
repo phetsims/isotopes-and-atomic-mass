@@ -23,7 +23,6 @@ import ParticleCountDisplay from '../../../../shred/js/view/ParticleCountDisplay
 import SymbolNode from '../../../../shred/js/view/SymbolNode.js';
 import AccordionBox from '../../../../sun/js/AccordionBox.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
-import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 import IsotopesModel from '../model/IsotopesModel.js';
 import AtomScaleNode from './AtomScaleNode.js';
@@ -166,5 +165,4 @@ class IsotopesScreenView extends ScreenView {
   }
 }
 
-isotopesAndAtomicMass.register( 'IsotopesScreenView', IsotopesScreenView );
 export default IsotopesScreenView;

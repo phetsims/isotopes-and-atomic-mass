@@ -25,7 +25,6 @@ import AtomInfoUtils from '../../../../shred/js/AtomInfoUtils.js';
 import AtomNameUtils from '../../../../shred/js/AtomNameUtils.js';
 import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
 import Panel from '../../../../sun/js/Panel.js';
-import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 import MixturesModel from '../model/MixturesModel.js';
 
@@ -217,5 +216,4 @@ class IsotopeTickMark extends Node {
 }
 
 
-isotopesAndAtomicMass.register( 'AverageAtomicMassIndicator', AverageAtomicMassIndicator );
 export default AverageAtomicMassIndicator;

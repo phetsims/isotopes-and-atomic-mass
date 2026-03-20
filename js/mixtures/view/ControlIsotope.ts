@@ -16,7 +16,6 @@ import IsotopeNode from '../../../../shred/js/view/IsotopeNode.js';
 import ArrowButton from '../../../../sun/js/buttons/ArrowButton.js';
 import HSlider from '../../../../sun/js/HSlider.js';
 import Panel from '../../../../sun/js/Panel.js';
-import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import NumericalIsotopeQuantityControl from '../model/NumericalIsotopeQuantityControl.js';
 
 const READOUT_SIZE = new Dimension2( 30, 15 );
@@ -142,7 +141,5 @@ class ControlIsotope extends Node {
     super.dispose();
   }
 }
-
-isotopesAndAtomicMass.register( 'ControlIsotope', ControlIsotope );
 
 export default ControlIsotope;

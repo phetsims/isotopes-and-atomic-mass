@@ -24,7 +24,6 @@ import Color from '../../../../scenery/js/util/Color.js';
 import ParticleAtom from '../../../../shred/js/model/ParticleAtom.js';
 import AquaRadioButtonGroup, { AquaRadioButtonGroupItem } from '../../../../sun/js/AquaRadioButtonGroup.js';
 import scale_png from '../../../mipmaps/scale_png.js';
-import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 
 const atomicMassStringProperty = IsotopesAndAtomicMassStrings.atomicMassStringProperty;
@@ -138,5 +137,4 @@ class AtomScaleNode extends Node {
   }
 }
 
-isotopesAndAtomicMass.register( 'AtomScaleNode', AtomScaleNode );
 export default AtomScaleNode;

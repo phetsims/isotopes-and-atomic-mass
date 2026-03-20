@@ -25,7 +25,6 @@ import Particle from '../../../../shred/js/model/Particle.js';
 import ShredStrings from '../../../../shred/js/ShredStrings.js';
 import BucketDragListener from '../../../../shred/js/view/BucketDragListener.js';
 import ParticleView from '../../../../shred/js/view/ParticleView.js';
-import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 import IsotopesModel from '../model/IsotopesModel.js';
 import IsotopeAtomNode from './IsotopeAtomNode.js';
@@ -321,5 +320,4 @@ class InteractiveIsotopeNode extends Node {
   }
 }
 
-isotopesAndAtomicMass.register( 'InteractiveIsotopeNode', InteractiveIsotopeNode );
 export default InteractiveIsotopeNode;

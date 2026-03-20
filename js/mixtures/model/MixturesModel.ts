@@ -23,7 +23,6 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import affirm from '../../../../perennial-alias/js/browser-and-node/affirm.js';
 import AtomInfoUtils from '../../../../shred/js/AtomInfoUtils.js';
 import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
-import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopeTestChamber from './IsotopeTestChamber.js';
 import MonoIsotopeBucket from './MonoIsotopeBucket.js';
 import NumericalIsotopeQuantityControl from './NumericalIsotopeQuantityControl.js';
@@ -592,5 +591,4 @@ class MixturesModel {
   }
 }
 
-isotopesAndAtomicMass.register( 'MixturesModel', MixturesModel );
 export default MixturesModel;

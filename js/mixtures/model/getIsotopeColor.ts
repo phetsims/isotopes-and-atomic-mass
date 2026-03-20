@@ -12,7 +12,6 @@
 import affirm from '../../../../perennial-alias/js/browser-and-node/affirm.js';
 import Color from '../../../../scenery/js/util/Color.js';
 import AtomInfoUtils from '../../../../shred/js/AtomInfoUtils.js';
-import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 
 const ISOTOPE_COLORS = [ new Color( 180, 82, 205 ), Color.green, new Color( 255, 69, 0 ), new Color( 72, 137, 161 ) ];
 
@@ -36,7 +35,5 @@ const getIsotopeColor = ( protonCount: number, neutronCount: number ): Color => 
 
   return isotopeColorCache[ protonCount ][ neutronCount ] || Color.GRAY;
 };
-
-isotopesAndAtomicMass.register( 'getIsotopeColor', getIsotopeColor );
 
 export default getIsotopeColor;

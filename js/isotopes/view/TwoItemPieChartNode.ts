@@ -28,7 +28,6 @@ import AtomNameUtils from '../../../../shred/js/AtomNameUtils.js';
 import ParticleAtom from '../../../../shred/js/model/ParticleAtom.js';
 import Panel from '../../../../sun/js/Panel.js';
 import PieChartNode, { PieSlice } from '../../common/view/PieChartNode.js';
-import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 
 // constants
@@ -243,5 +242,4 @@ class TwoItemPieChartNode extends Node {
   }
 }
 
-isotopesAndAtomicMass.register( 'TwoItemPieChartNode', TwoItemPieChartNode );
 export default TwoItemPieChartNode;

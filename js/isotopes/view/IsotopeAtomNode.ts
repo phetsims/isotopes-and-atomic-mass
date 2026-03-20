@@ -14,7 +14,6 @@ import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransfo
 import Node from '../../../../scenery/js/nodes/Node.js';
 import ParticleAtom from '../../../../shred/js/model/ParticleAtom.js';
 import IsotopeElectronCloudView from '../../../../shred/js/view/IsotopeElectronCloudView.js';
-import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 
 class IsotopeAtomNode extends Node {
 
@@ -36,7 +35,5 @@ class IsotopeAtomNode extends Node {
     } );
   }
 }
-
-isotopesAndAtomicMass.register( 'IsotopeAtomNode', IsotopeAtomNode );
 
 export default IsotopeAtomNode;

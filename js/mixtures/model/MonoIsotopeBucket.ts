@@ -20,7 +20,6 @@ import StrictOmit from '../../../../phet-core/js/types/StrictOmit.js';
 import SphereBucket, { SphereBucketOptions } from '../../../../phetcommon/js/model/SphereBucket.js';
 import AtomNameUtils from '../../../../shred/js/AtomNameUtils.js';
 import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
-import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import getIsotopeColor from './getIsotopeColor.js';
 import PositionableAtom from './PositionableAtom.js';
 
@@ -135,5 +134,4 @@ class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
   }
 }
 
-isotopesAndAtomicMass.register( 'MonoIsotopeBucket', MonoIsotopeBucket );
 export default MonoIsotopeBucket;

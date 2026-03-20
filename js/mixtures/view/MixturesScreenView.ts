@@ -36,7 +36,6 @@ import AquaRadioButton from '../../../../sun/js/AquaRadioButton.js';
 import RectangularRadioButtonGroup, { RectangularRadioButtonGroupItem } from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
 import HSlider from '../../../../sun/js/HSlider.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
-import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 import MixturesModel, { InteractivityMode } from '../model/MixturesModel.js';
 import MonoIsotopeBucket from '../model/MonoIsotopeBucket.js';
@@ -450,5 +449,4 @@ class InteractivityModeSelectionNode extends RectangularRadioButtonGroup<Interac
   }
 }
 
-isotopesAndAtomicMass.register( 'MixturesScreenView', MixturesScreenView );
 export default MixturesScreenView;

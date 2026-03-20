@@ -9,7 +9,6 @@
 import { ObservableArray } from '../../../../axon/js/createObservableArray.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import CanvasNode, { CanvasNodeOptions } from '../../../../scenery/js/nodes/CanvasNode.js';
-import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import PositionableAtom from '../model/PositionableAtom.js';
 
 type IsotopeCanvasNodeOptions = CanvasNodeOptions;
@@ -70,5 +69,4 @@ class IsotopeCanvasNode extends CanvasNode {
   }
 }
 
-isotopesAndAtomicMass.register( 'IsotopeCanvasNode', IsotopeCanvasNode );
 export default IsotopeCanvasNode;

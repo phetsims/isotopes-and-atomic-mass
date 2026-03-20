@@ -18,7 +18,6 @@ import Rectangle from '../../../../dot/js/Rectangle.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import affirm from '../../../../perennial-alias/js/browser-and-node/affirm.js';
 import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
-import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import PositionableAtom from './PositionableAtom.js';
 
 // constants
@@ -327,5 +326,4 @@ export class IsotopeTestChamberState {
   }
 }
 
-isotopesAndAtomicMass.register( 'IsotopeTestChamber', IsotopeTestChamber );
 export default IsotopeTestChamber;

@@ -76,5 +76,3 @@ const IsotopesAndAtomicMassFluent = {
 };
 
 export default IsotopesAndAtomicMassFluent;
-
-isotopesAndAtomicMass.register('IsotopesAndAtomicMassFluent', IsotopesAndAtomicMassFluent);

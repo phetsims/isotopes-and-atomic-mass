@@ -13,7 +13,6 @@ import ScreenIcon from '../../../joist/js/ScreenIcon.js';
 import Image from '../../../scenery/js/nodes/Image.js';
 import Tandem from '../../../tandem/js/Tandem.js';
 import mixturesIcon_png from '../../mipmaps/mixturesIcon_png.js';
-import isotopesAndAtomicMass from '../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../IsotopesAndAtomicMassStrings.js';
 import MixturesModel from './model/MixturesModel.js';
 import MixturesScreenView from './view/MixturesScreenView.js';
@@ -42,5 +41,4 @@ class MixturesScreen extends Screen<MixturesModel, MixturesScreenView> {
   }
 }
 
-isotopesAndAtomicMass.register( 'MixturesScreen', MixturesScreen );
 export default MixturesScreen;

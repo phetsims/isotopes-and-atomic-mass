@@ -12,7 +12,6 @@ import Circle from '../../../../scenery/js/nodes/Circle.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
 import Path from '../../../../scenery/js/nodes/Path.js';
 import Color from '../../../../scenery/js/util/Color.js';
-import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 
 const INITIAL_ANGLE = 0;
 const DEFAULT_CENTER_X = 0;
@@ -166,5 +165,4 @@ class PieChartNode extends Node {
   }
 }
 
-isotopesAndAtomicMass.register( 'PieChartNode', PieChartNode );
 export default PieChartNode;

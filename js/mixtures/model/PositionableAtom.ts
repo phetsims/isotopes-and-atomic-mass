@@ -18,7 +18,6 @@ import Vector2 from '../../../../dot/js/Vector2.js';
 import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
 import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
 import Particle, { ParticleOptions } from '../../../../shred/js/model/Particle.js';
-import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import getIsotopeColor from './getIsotopeColor.js';
 
 type SelfOptions = EmptySelfOptions;
@@ -51,5 +50,4 @@ class PositionableAtom extends Particle {
   }
 }
 
-isotopesAndAtomicMass.register( 'PositionableAtom', PositionableAtom );
 export default PositionableAtom;

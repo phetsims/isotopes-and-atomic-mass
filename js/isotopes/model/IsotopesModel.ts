@@ -24,7 +24,6 @@ import Particle from '../../../../shred/js/model/Particle.js';
 import ParticleAtom from '../../../../shred/js/model/ParticleAtom.js';
 import ShredConstants from '../../../../shred/js/ShredConstants.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
-import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 
 type IsDraggingListener = ( isDragging: boolean ) => void;
@@ -266,5 +265,4 @@ class IsotopesModel {
   }
 }
 
-isotopesAndAtomicMass.register( 'IsotopesModel', IsotopesModel );
 export default IsotopesModel;

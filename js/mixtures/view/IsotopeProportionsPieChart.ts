@@ -23,7 +23,6 @@ import AtomNameUtils from '../../../../shred/js/AtomNameUtils.js';
 import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
 import Panel from '../../../../sun/js/Panel.js';
 import PieChartNode, { PieSlice } from '../../common/view/PieChartNode.js';
-import isotopesAndAtomicMass from '../../isotopesAndAtomicMass.js';
 import getIsotopeColor from '../model/getIsotopeColor.js';
 import MixturesModel from '../model/MixturesModel.js';
 
@@ -363,7 +362,5 @@ class IsotopeProportionsPieChart extends Node {
     }
   }
 }
-
-isotopesAndAtomicMass.register( 'IsotopeProportionsPieChart', IsotopeProportionsPieChart );
 
 export default IsotopeProportionsPieChart;

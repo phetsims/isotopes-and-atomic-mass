@@ -36,6 +36,4 @@ type StringsType = {
 
 const IsotopesAndAtomicMassStrings = getStringModule( 'ISOTOPES_AND_ATOMIC_MASS' ) as StringsType;
 
-isotopesAndAtomicMass.register( 'IsotopesAndAtomicMassStrings', IsotopesAndAtomicMassStrings );
-
 export default IsotopesAndAtomicMassStrings;
