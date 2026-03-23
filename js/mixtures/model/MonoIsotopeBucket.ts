@@ -33,6 +33,8 @@ class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
   // setting this Property.
   public readonly isotopeConfigProperty: TProperty<AtomConfig>;
 
+  public readonly particleCountProperty = new Property( 0 );
+
   private readonly disposeMonoIsotopeBucket: () => void;
 
   public constructor( initialIsotopeConfig: AtomConfig, providedOptions?: MonoIsotopeBucketOptions ) {
@@ -102,6 +104,7 @@ class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
       isotope.atomConfigurationProperty.value.neutronCount )
     ) {
       this.addParticleFirstOpen( isotope, animate );
+      this.particleCountProperty.value = this.getParticleList().length;
     }
   }
 
@@ -122,7 +125,13 @@ class MonoIsotopeBucket extends SphereBucket<PositionableAtom> {
       isotope.atomConfigurationProperty.value.neutronCount
     ) ) {
       this.addParticleNearestOpen( isotope, animate );
+      this.particleCountProperty.value = this.getParticleList().length;
     }
+  }
+
+  public override removeParticle( particle: PositionableAtom, skipLayout = false ): void {
+    super.removeParticle( particle, skipLayout );
+    this.particleCountProperty.value = this.getParticleList().length;
   }
 
   /**

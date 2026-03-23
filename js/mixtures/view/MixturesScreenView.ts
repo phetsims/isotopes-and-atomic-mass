@@ -39,8 +39,8 @@ import Tandem from '../../../../tandem/js/Tandem.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 import MixturesModel, { InteractivityMode } from '../model/MixturesModel.js';
 import MonoIsotopeBucket from '../model/MonoIsotopeBucket.js';
-import PositionableAtom from '../model/PositionableAtom.js';
 import NumericalIsotopeQuantityControl from '../model/NumericalIsotopeQuantityControl.js';
+import PositionableAtom from '../model/PositionableAtom.js';
 import AverageAtomicMassIndicator from './AverageAtomicMassIndicator.js';
 import ControlIsotope from './ControlIsotope.js';
 import IsotopeCanvasNode from './IsotopeCanvasNode.js';
@@ -112,6 +112,12 @@ class MixturesScreenView extends ScreenView {
       bucketFrontLayer.addChild( bucketFront );
       bucketFront.moveToFront();
 
+      // Make the bucket pickable when it has particles in it, and not pickable when it's empty.
+      const countListener = ( particleCount: number ) => {
+        bucketFront.pickable = particleCount > 0;
+      };
+      addedBucket.particleCountProperty.link( countListener );
+
       mixturesModel.bucketList.addItemRemovedListener( function removalListener( removedBucket: Bucket ) {
         if ( removedBucket === addedBucket ) {
           bucketHoleLayer.removeChild( bucketHole );
@@ -119,6 +125,7 @@ class MixturesScreenView extends ScreenView {
           bucketFront.removeInputListener( dragListener );
           bucketFrontLayer.removeChild( bucketFront );
           mixturesModel.bucketList.removeItemRemovedListener( removalListener );
+          addedBucket.particleCountProperty.unlink( countListener );
         }
       } );
     };
