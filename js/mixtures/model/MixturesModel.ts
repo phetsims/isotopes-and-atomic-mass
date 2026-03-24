@@ -551,14 +551,36 @@ class MixturesModel {
   }
 
   /**
-   * Remove all isotopes from the test chamber and make sure the controllers are updated correspondingly.  This was
-   * implemented to support the eraser button, but may have other usages.
+   * Remove all isotopes from the test chamber and make sure the controllers are updated correspondingly for the current
+   * interactivity mode.  Also delete any saved state. This was implemented to support the eraser button, but may have
+   * other uses.
    */
   public clearTestChamber(): void {
+
+    // state checking
     affirm( !this.showingNaturesMixProperty.value, 'Nature\'s mix should not be showing when clearing the box' );
-    this.removeAllIsotopesFromTestChamberAndModel();
-    if ( this.interactivityModeProperty.value === 'bucketsAndLargeAtoms' ) {
+
+    // convenience variables
+    const elementProtonCount = this.selectedElementProtonCountProperty.value;
+    const interactivityMode = this.interactivityModeProperty.value;
+
+    // Clear the test chamber and restore initial state for the current interactivity mode.
+    if ( interactivityMode === 'bucketsAndLargeAtoms' ) {
+      this.removeAllIsotopesFromTestChamberAndModel();
       this.fillBuckets();
+    }
+    else {
+      affirm( interactivityMode === 'slidersAndSmallAtoms' );
+      this.numericalControllerList.forEach( numericalController => {
+        numericalController.quantityProperty.value = 0;
+      } );
+    }
+
+    // Remove any saved particle state if present.
+    if ( this.savedParticleStates[ elementProtonCount ] ) {
+      if ( this.savedParticleStates[ elementProtonCount ].has( interactivityMode ) ) {
+        this.savedParticleStates[ elementProtonCount ].delete( interactivityMode );
+      }
     }
   }
 
