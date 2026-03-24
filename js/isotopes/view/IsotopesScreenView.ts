@@ -8,11 +8,11 @@
  * @author Aadish Gupta
  */
 
-import Property from '../../../../axon/js/Property.js';
 import Bounds2 from '../../../../dot/js/Bounds2.js';
 import { roundSymmetric } from '../../../../dot/js/util/roundSymmetric.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ScreenView from '../../../../joist/js/ScreenView.js';
+import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import ResetAllButton from '../../../../scenery-phet/js/buttons/ResetAllButton.js';
 import Node from '../../../../scenery/js/nodes/Node.js';
@@ -21,8 +21,9 @@ import ShredConstants from '../../../../shred/js/ShredConstants.js';
 import ExpandedPeriodicTableNode from '../../../../shred/js/view/ExpandedPeriodicTableNode.js';
 import ParticleCountDisplay from '../../../../shred/js/view/ParticleCountDisplay.js';
 import SymbolNode from '../../../../shred/js/view/SymbolNode.js';
-import AccordionBox from '../../../../sun/js/AccordionBox.js';
+import AccordionBox, { AccordionBoxOptions } from '../../../../sun/js/AccordionBox.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
+import IAAMConstants from '../../common/IAAMConstants.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 import IsotopesModel from '../model/IsotopesModel.js';
 import AtomScaleNode from './AtomScaleNode.js';
@@ -30,8 +31,6 @@ import InteractiveIsotopeNode from './InteractiveIsotopeNode.js';
 import TwoItemPieChartNode from './TwoItemPieChartNode.js';
 
 // constants
-const OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION = 12;
-
 const abundanceInNatureStringProperty = IsotopesAndAtomicMassStrings.abundanceInNatureStringProperty;
 const symbolStringProperty = IsotopesAndAtomicMassStrings.symbolStringProperty;
 
@@ -118,46 +117,34 @@ class IsotopesScreenView extends ScreenView {
       isotopesModel.particleAtom.massNumberProperty,
       { scale: 0.2 }
     );
-    const symbolBox = new AccordionBox( symbolNode, {
-      cornerRadius: 3,
-      titleNode: new Text( symbolStringProperty, {
-        font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
-        maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
-      } ),
-      fill: ShredConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
-      expandedProperty: new Property<boolean>( false ),
-      minWidth: periodicTableNode.visibleBounds.width,
-      contentAlign: 'center',
-      titleAlignX: 'left',
-      expandCollapseButtonOptions: {
-        touchAreaXDilation: OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION,
-        touchAreaYDilation: OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION
-      }
-    } );
-    symbolBox.left = periodicTableNode.visibleBounds.minX;
-    symbolBox.top = periodicTableNode.bottom + 10;
+    const symbolBox = new AccordionBox(
+      symbolNode,
+      combineOptions<AccordionBoxOptions>( {}, IAAMConstants.ACCORDION_BOX_OPTIONS, {
+        titleNode: new Text( symbolStringProperty, {
+          font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
+          maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
+        } ),
+        expandedDefaultValue: false,
+        minWidth: periodicTableNode.visibleBounds.width,
+        left: periodicTableNode.visibleBounds.minX,
+        top: periodicTableNode.bottom + 10
+      } )
+    );
     this.addChild( symbolBox );
 
-    const abundanceBox = new AccordionBox( new TwoItemPieChartNode( isotopesModel.particleAtom ), {
-      cornerRadius: 3,
-      titleNode: new Text( abundanceInNatureStringProperty, {
-        font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
-        maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
-      } ),
-      fill: ShredConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
-      expandedProperty: new Property<boolean>( false ),
-      minWidth: periodicTableNode.visibleBounds.width,
-      contentAlign: 'center',
-      contentXMargin: 0,
-      titleAlignX: 'left',
-      expandCollapseButtonOptions: {
-        touchAreaXDilation: OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION,
-        touchAreaYDilation: OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION
-      },
-      resize: false
-    } );
-    abundanceBox.left = symbolBox.left;
-    abundanceBox.top = symbolBox.bottom + 10;
+    const abundanceBox = new AccordionBox(
+      new TwoItemPieChartNode( isotopesModel.particleAtom ),
+      combineOptions<AccordionBoxOptions>( {}, IAAMConstants.ACCORDION_BOX_OPTIONS, {
+        titleNode: new Text( abundanceInNatureStringProperty, {
+          font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
+          maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
+        } ),
+        expandedDefaultValue: false,
+        minWidth: periodicTableNode.visibleBounds.width,
+        left: symbolBox.left,
+        top: symbolBox.bottom + 10
+      } )
+    );
     this.addChild( abundanceBox );
     this.addChild( atomLayer );
   }

@@ -16,6 +16,7 @@ import Range from '../../../../dot/js/Range.js';
 import { roundSymmetric } from '../../../../dot/js/util/roundSymmetric.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
 import ScreenView from '../../../../joist/js/ScreenView.js';
+import { combineOptions } from '../../../../phet-core/js/optionize.js';
 import Bucket from '../../../../phetcommon/js/model/Bucket.js';
 import ModelViewTransform2 from '../../../../phetcommon/js/view/ModelViewTransform2.js';
 import BucketFront from '../../../../scenery-phet/js/bucket/BucketFront.js';
@@ -31,11 +32,12 @@ import ShredConstants from '../../../../shred/js/ShredConstants.js';
 import BucketDragListener from '../../../../shred/js/view/BucketDragListener.js';
 import ExpandedPeriodicTableNode from '../../../../shred/js/view/ExpandedPeriodicTableNode.js';
 import ParticleView from '../../../../shred/js/view/ParticleView.js';
-import AccordionBox from '../../../../sun/js/AccordionBox.js';
+import AccordionBox, { AccordionBoxOptions } from '../../../../sun/js/AccordionBox.js';
 import AquaRadioButton from '../../../../sun/js/AquaRadioButton.js';
 import RectangularRadioButtonGroup, { RectangularRadioButtonGroupItem } from '../../../../sun/js/buttons/RectangularRadioButtonGroup.js';
 import HSlider from '../../../../sun/js/HSlider.js';
 import Tandem from '../../../../tandem/js/Tandem.js';
+import IAAMConstants from '../../common/IAAMConstants.js';
 import IsotopesAndAtomicMassStrings from '../../IsotopesAndAtomicMassStrings.js';
 import MixturesModel, { InteractivityMode } from '../model/MixturesModel.js';
 import MonoIsotopeBucket from '../model/MonoIsotopeBucket.js';
@@ -242,46 +244,31 @@ class MixturesScreenView extends ScreenView {
     this.isotopeProportionsPieChart = new IsotopeProportionsPieChart( this.model );
     this.isotopeProportionsPieChart.scale( 0.6 );
     this.isotopeProportionsPieChart.centerX = this.isotopeProportionsPieChart.centerX + 150;
-    const compositionBox = new AccordionBox( this.isotopeProportionsPieChart, {
-      cornerRadius: 3,
-      titleNode: new Text( percentCompositionStringProperty, {
-        font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
-        maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
-      } ),
-      fill: ShredConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
-      expandedProperty: new Property<boolean>( true ),
-      minWidth: periodicTableNode.width,
-      maxWidth: periodicTableNode.width,
-      contentAlign: 'center',
-      titleAlignX: 'left',
-      expandCollapseButtonOptions: {
-        touchAreaXDilation: 16,
-        touchAreaYDilation: 16
-      },
-      resize: false
-    } );
+    const compositionBox = new AccordionBox( this.isotopeProportionsPieChart,
+      combineOptions<AccordionBoxOptions>( IAAMConstants.ACCORDION_BOX_OPTIONS, {
+        titleNode: new Text( percentCompositionStringProperty, {
+          font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
+          maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
+        } ),
+        minWidth: periodicTableNode.width,
+        maxWidth: periodicTableNode.width
+      } )
+    );
     compositionBox.left = periodicTableNode.left;
     compositionBox.top = periodicTableNode.bottom + 15;
     this.addChild( compositionBox );
 
-    const averageAtomicMassBox = new AccordionBox( new AverageAtomicMassIndicator( this.model ), {
-      cornerRadius: 3,
-      titleNode: new Text( averageAtomicMassStringProperty, {
-        font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
-        maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
-      } ),
-      fill: ShredConstants.DISPLAY_PANEL_BACKGROUND_COLOR,
-      expandedProperty: new Property<boolean>( true ),
-      minWidth: periodicTableNode.width,
-      maxWidth: periodicTableNode.width,
-      contentAlign: 'center',
-      titleAlignX: 'left',
-      expandCollapseButtonOptions: {
-        touchAreaXDilation: 16,
-        touchAreaYDilation: 16
-      },
-      resize: false
-    } );
+    const averageAtomicMassBox = new AccordionBox(
+      new AverageAtomicMassIndicator( this.model ),
+      combineOptions<AccordionBoxOptions>( IAAMConstants.ACCORDION_BOX_OPTIONS, {
+        titleNode: new Text( averageAtomicMassStringProperty, {
+          font: ShredConstants.ACCORDION_BOX_TITLE_FONT,
+          maxWidth: ShredConstants.ACCORDION_BOX_TITLE_MAX_WIDTH
+        } ),
+        minWidth: periodicTableNode.width,
+        maxWidth: periodicTableNode.width
+      } )
+    );
     averageAtomicMassBox.left = compositionBox.left;
     averageAtomicMassBox.top = compositionBox.bottom + 10;
     this.addChild( averageAtomicMassBox );
