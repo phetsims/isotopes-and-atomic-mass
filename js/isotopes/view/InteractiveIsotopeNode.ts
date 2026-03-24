@@ -304,6 +304,10 @@ class InteractiveIsotopeNode extends Node {
     this.addChild( nucleonLayersNode );
     this.addChild( neutronBucketFront );
 
+    isotopesModel.neutronBucket.particleCountProperty.link( particleCount => {
+      neutronBucketFront.pickable = particleCount > 0;
+    } );
+
     Multilink.multilink(
       [
         isotopesModel.particleAtom.protonCountProperty,

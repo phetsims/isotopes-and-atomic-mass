@@ -112,7 +112,7 @@ class MixturesScreenView extends ScreenView {
       bucketFrontLayer.addChild( bucketFront );
       bucketFront.moveToFront();
 
-      // Make the bucket pickable when it has particles in it, and not pickable when it's empty.
+      // Make the bucket pickable when it has particles in it and not pickable when it's empty.
       const countListener = ( particleCount: number ) => {
         bucketFront.pickable = particleCount > 0;
       };
