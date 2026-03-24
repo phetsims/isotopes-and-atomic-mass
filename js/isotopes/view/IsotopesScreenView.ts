@@ -129,7 +129,6 @@ class IsotopesScreenView extends ScreenView {
       minWidth: periodicTableNode.visibleBounds.width,
       contentAlign: 'center',
       titleAlignX: 'left',
-      buttonAlign: 'right',
       expandCollapseButtonOptions: {
         touchAreaXDilation: OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION,
         touchAreaYDilation: OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION
@@ -151,7 +150,6 @@ class IsotopesScreenView extends ScreenView {
       contentAlign: 'center',
       contentXMargin: 0,
       titleAlignX: 'left',
-      buttonAlign: 'right',
       expandCollapseButtonOptions: {
         touchAreaXDilation: OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION,
         touchAreaYDilation: OPEN_CLOSE_BUTTON_TOUCH_AREA_DILATION

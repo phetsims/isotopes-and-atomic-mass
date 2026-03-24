@@ -254,7 +254,6 @@ class MixturesScreenView extends ScreenView {
       maxWidth: periodicTableNode.width,
       contentAlign: 'center',
       titleAlignX: 'left',
-      buttonAlign: 'right',
       expandCollapseButtonOptions: {
         touchAreaXDilation: 16,
         touchAreaYDilation: 16
@@ -277,7 +276,6 @@ class MixturesScreenView extends ScreenView {
       maxWidth: periodicTableNode.width,
       contentAlign: 'center',
       titleAlignX: 'left',
-      buttonAlign: 'right',
       expandCollapseButtonOptions: {
         touchAreaXDilation: 16,
         touchAreaYDilation: 16
