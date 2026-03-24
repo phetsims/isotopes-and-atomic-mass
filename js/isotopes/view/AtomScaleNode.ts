@@ -89,7 +89,8 @@ class AtomScaleNode extends Node {
           else {
             return value > 0 ? toFixed( value, 5 ) : '--';
           }
-        }
+        },
+        numberFormatterDependencies: [ this.displayModeProperty ]
       }
     );
 
