@@ -131,8 +131,8 @@ class MixturesModel {
       }
       else {
 
-        // Before changing anything else, save the current state for the previously selected element before transitioning
-        // to the new one.
+        // Before changing anything else, save the current state for the previously selected element before
+        // transitioning to the new one.  This allows it to be restored when transitioning back to this element.
         if ( previousProtonCount !== null ) {
           this.saveTestChamberParticleState( previousProtonCount, this.interactivityModeProperty.value );
         }
@@ -274,8 +274,15 @@ class MixturesModel {
    */
   private saveTestChamberParticleState( protonCount: number, interactivityMode: InteractivityMode ): void {
     if ( this.testChamber.containedIsotopes.length > 0 ) {
+
+      // Save the particles for the current proton count and interactivity mode.
       const particlesToSave = this.testChamber.containedIsotopes.slice( 0 );
       this.savedParticleStates[ protonCount ].set( interactivityMode, particlesToSave );
+    }
+    else if ( this.savedParticleStates[ protonCount ].has( interactivityMode ) ) {
+
+      // There are no particles in the test chamber, so delete any previously save particle state.
+      this.savedParticleStates[ protonCount ].delete( interactivityMode );
     }
   }
 
