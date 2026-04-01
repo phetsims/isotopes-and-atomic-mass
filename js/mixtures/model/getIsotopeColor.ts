@@ -19,7 +19,8 @@ const isotopeColorCache: Color[][] = [];
 
 const getIsotopeColor = ( protonCount: number, neutronCount: number ): Color => {
 
-  // Use the cached color if it has already been calculated for this isotope configuration.
+  // If no color has been defined yet, use it, otherwise use the cached color if it has already been calculated
+  // for this configuration.
   if ( !isotopeColorCache[ protonCount ] || !isotopeColorCache[ protonCount ][ neutronCount ] ) {
 
     // Sort by mass number.

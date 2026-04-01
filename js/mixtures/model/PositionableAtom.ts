@@ -13,20 +13,31 @@
  * @author James Smith
  */
 
+import BooleanProperty from '../../../../axon/js/BooleanProperty.js';
 import Property from '../../../../axon/js/Property.js';
+import TProperty from '../../../../axon/js/TProperty.js';
 import Vector2 from '../../../../dot/js/Vector2.js';
-import optionize, { EmptySelfOptions } from '../../../../phet-core/js/optionize.js';
+import optionize from '../../../../phet-core/js/optionize.js';
 import AtomConfig from '../../../../shred/js/model/AtomConfig.js';
 import Particle, { ParticleOptions } from '../../../../shred/js/model/Particle.js';
 import getIsotopeColor from './getIsotopeColor.js';
 
-type SelfOptions = EmptySelfOptions;
+type SelfOptions = {
+
+  // whether to atom should be initially active or inactive
+  initiallyActive?: boolean;
+};
 export type PositionableAtomOptions = SelfOptions & ParticleOptions;
 
 class PositionableAtom extends Particle {
 
-  // The configuration of this atom, which includes the number of protons, neutrons, and electrons.
+  // The configuration of this atom, which includes the number of protons, neutrons, and electrons.  This is mutable,
+  // and part of the intended API is to set this configuration as needed.
   public readonly atomConfigurationProperty: Property<AtomConfig>;
+
+  // A property that determines whether this atom is active or not.  Inactive atoms are not shown in the view, active
+  // ones are.
+  public readonly isActiveProperty: TProperty<boolean>;
 
   public constructor(
     initialConfig: AtomConfig,
@@ -35,13 +46,15 @@ class PositionableAtom extends Particle {
   ) {
 
     const options = optionize<PositionableAtomOptions, SelfOptions, ParticleOptions>()( {
-      particleRadius: 10
+      particleRadius: 10,
+      initiallyActive: true
     }, providedOptions );
 
     super( 'isotope', options );
 
     this.setPositionAndDestination( initialPosition );
     this.atomConfigurationProperty = new Property( initialConfig );
+    this.isActiveProperty = new BooleanProperty( options.initiallyActive );
 
     // Update the color information - which will be used by the view - based on the atom configuration.
     this.atomConfigurationProperty.link( atomConfig => {

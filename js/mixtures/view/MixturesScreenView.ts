@@ -205,13 +205,13 @@ class MixturesScreenView extends ScreenView {
       lineWidth: 1
     } );
     chamberLayer.addChild( testChamberNode );
-    this.isotopesLayer = new IsotopeCanvasNode( this.model.naturesIsotopesList, this.modelViewTransform, {
+    this.isotopesLayer = new IsotopeCanvasNode( this.model.naturesMixAtoms, this.modelViewTransform, {
       canvasBounds: this.modelViewTransform.modelToViewBounds( this.model.testChamber.getTestChamberRect() )
     } );
     this.addChild( this.isotopesLayer );
     this.isotopesLayer.visible = false;
-    this.model.naturesIsotopeUpdated.addListener( () => {
-      this.isotopesLayer.setIsotopes( this.model.naturesIsotopesList );
+    this.model.naturesMixAtomsUpdated.addListener( () => {
+      this.isotopesLayer.setIsotopes( this.model.naturesMixAtoms );
     } );
 
     const clearBoxButton = new EraserButton( {

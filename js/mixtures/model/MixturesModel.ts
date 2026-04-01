@@ -76,7 +76,7 @@ class MixturesModel {
   public readonly isotopesList: ObservableArray<PositionableAtom>;
 
   // The list of nature's isotopes that are present in the model when nature's mix is being shown.
-  public readonly naturesIsotopesList: ObservableArray<PositionableAtom>;
+  public readonly naturesMixAtoms: PositionableAtom[] = [];
 
   // The list of numerical controls that are currently present.  These allow the user to quickly add or remove isotopes.
   public readonly numericalControllerList: ObservableArray<NumericalIsotopeQuantityControl>;
@@ -86,10 +86,10 @@ class MixturesModel {
   // put into the isotope test chamber for each interactivity mode.
   private readonly savedParticleStates: Map<InteractivityMode, PositionableAtom[]>[] = [];
 
-  // An emitter that notifies listeners when nature's isotopes have been updated.  This is used so that the view can
-  // essentially get one notification when all of nature's isotopes have been added to the test chamber instead of
+  // An emitter that notifies listeners when nature's mix atoms has been updated.  This is used so that the view can
+  // essentially get one notification when all of nature's mix atom have been added to the test chamber instead of
   // hundreds of separate notifications.
-  public readonly naturesIsotopeUpdated = new Emitter();
+  public readonly naturesMixAtomsUpdated = new Emitter();
 
   public static readonly MAX_ATOMIC_NUMBER = MAX_ATOMIC_NUMBER;
   public static readonly SMALL_ISOTOPE_RADIUS = SMALL_ISOTOPE_RADIUS;
@@ -104,8 +104,17 @@ class MixturesModel {
     // Create the observable arrays that will hold the various model elements that come and go.
     this.bucketList = createObservableArray<MonoIsotopeBucket>();
     this.isotopesList = createObservableArray<PositionableAtom>();
-    this.naturesIsotopesList = createObservableArray<PositionableAtom>();
     this.numericalControllerList = createObservableArray<NumericalIsotopeQuantityControl>();
+
+    // Create the array that will hold the "Nature's Mix" atoms.  These are created once and updated as needed for
+    // better performance.  There are a few extra added because we show at least one isotope of each configuration even
+    // if its abundance is just a trace.
+    _.times( NUM_NATURES_MIX_ATOMS + 4, () => {
+      this.naturesMixAtoms.push( new PositionableAtom( new AtomConfig( 1, 0, 1 ), Vector2.ZERO, {
+        particleRadius: SMALL_ISOTOPE_RADIUS,
+        initiallyActive: false
+      } ) );
+    } );
 
     // Initialize the structure for storing and then restoring user-created mix states.
     _.times( MAX_ATOMIC_NUMBER, index => {
@@ -178,7 +187,7 @@ class MixturesModel {
         this.showNaturesMix( this.possibleIsotopesProperty.value );
       }
       else {
-        this.naturesIsotopesList.clear();
+        this.naturesMixAtoms.forEach( atom => { atom.isActiveProperty.value = false; } );
         this.testChamber.removeAllIsotopes();
 
         // If there is a previously saved user-created mix state for this element and interactivity mode, restore it.
@@ -496,7 +505,9 @@ class MixturesModel {
 
     // Clear out anything that is in the test chamber. If anything needed to be stored, it should have been done by now.
     this.removeAllIsotopesFromTestChamberAndModel();
-    this.naturesIsotopesList.clear();
+
+    // Deactivate all the "nature's mix" atoms.
+    this.naturesMixAtoms.forEach( atom => { atom.isActiveProperty.value = false; } );
 
     // Get the list of possible isotopes and then sort it by abundance so that the least abundant are added last, thus
     // assuring that they will be visible.
@@ -507,31 +518,29 @@ class MixturesModel {
                           AtomInfoUtils.getNaturalAbundance( atom1.toNumberAtom(), numDigitsForComparison )
     );
 
-    // Add the isotopes.
+    // Activate and configure the atoms that represent nature's mix.
+    let atomIndex = 0;
     possibleIsotopesCopy.forEach( isotopeConfig => {
-      let numToCreate = roundSymmetric(
+      let numberToActivate = roundSymmetric(
         NUM_NATURES_MIX_ATOMS * AtomInfoUtils.getNaturalAbundance( isotopeConfig.toNumberAtom(), 5 )
       );
-      if ( numToCreate === 0 ) {
+      if ( numberToActivate === 0 ) {
 
         // The calculated quantity was 0, but we don't want to have zero instances of this isotope in the chamber, so
         // add only one. This behavior was requested by the design team.
-        numToCreate = 1;
+        numberToActivate = 1;
       }
-      const isotopesToAdd: PositionableAtom[] = [];
-      for ( let i = 0; i < numToCreate; i++ ) {
-        const newIsotope = new PositionableAtom(
-          isotopeConfig,
-          this.testChamber.generateRandomPosition(),
-          { particleRadius: SMALL_ISOTOPE_RADIUS }
-        );
-
-        isotopesToAdd.push( newIsotope );
-        this.naturesIsotopesList.push( newIsotope );
-      }
-      this.testChamber.bulkAddIsotopesToChamber( isotopesToAdd );
+      const atomsToAddToChamber: PositionableAtom[] = [];
+      _.times( numberToActivate, () => {
+        const naturesMixAtom = this.naturesMixAtoms[ atomIndex++ ];
+        naturesMixAtom.atomConfigurationProperty.value = isotopeConfig;
+        naturesMixAtom.positionProperty.value = this.testChamber.generateRandomPosition();
+        naturesMixAtom.isActiveProperty.value = true;
+        atomsToAddToChamber.push( naturesMixAtom );
+      } );
+      this.testChamber.bulkAddIsotopesToChamber( atomsToAddToChamber );
     } );
-    this.naturesIsotopeUpdated.emit();
+    this.naturesMixAtomsUpdated.emit();
 
     // Add the isotope controllers (i.e. the buckets) for the selected element.  These are empty when nature's mix is
     // being shown, but we want to show them so that the user can see which isotopes are which.
