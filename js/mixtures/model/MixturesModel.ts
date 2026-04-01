@@ -612,6 +612,7 @@ class MixturesModel {
     const preResetProtonCount = this.selectedElementProtonCountProperty.value;
     this.selectedElementProtonCountProperty.reset();
     if ( this.selectedElementProtonCountProperty.value === preResetProtonCount ) {
+      this.isotopesList.reset();
       this.setControllers( this.interactivityModeProperty.value );
       if ( this.interactivityModeProperty.value === 'bucketsAndLargeAtoms' ) {
         this.fillBuckets();
