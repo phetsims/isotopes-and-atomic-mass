@@ -38,6 +38,11 @@ class IsotopeCanvasNode extends CanvasNode {
     let isotope;
     let i;
 
+    // Bail out right away if there is nothing to render.
+    if ( this.isotopes.length === 0 ) {
+      return;
+    }
+
     // Only calculate the radius once to save time, assumes they are all the same.
     const radius = this.modelViewTransform.modelToViewDeltaX( this.isotopes[ 0 ].radius );
     context.strokeStyle = 'black';
