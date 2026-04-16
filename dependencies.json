@@ -1,107 +1,107 @@
 {
-  "comment": "# isotopes-and-atomic-mass 1.2.0-dev.2 Thu Apr 09 2026 09:31:16 GMT-0600 (Mountain Daylight Time)",
+  "comment": "# isotopes-and-atomic-mass 1.2.0-rc.0 Thu Apr 16 2026 14:49:06 GMT-0600 (Mountain Daylight Time)",
   "assert": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "51cb1f03d29ea7ba229d27533e544e789d5a2a31",
     "branch": "main"
   },
   "axon": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "7e163ebc65c25b62312c198509aab7e8fee40c7e",
     "branch": "main"
   },
   "brand": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "3748f9717bb6c13642cccd8c76894472f81f721d",
     "branch": "main"
   },
   "chipper": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "0fac309874e77101ebe2d691c98992f32e741a92",
     "branch": "main"
   },
   "dot": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "f248be38a13ed00972ab2f492a268804260e1a6c",
     "branch": "main"
   },
   "isotopes-and-atomic-mass": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
-    "branch": "main"
+    "sha": "e09df5c3cf79eaeb53844c956f93a9b02b1ada5d",
+    "branch": "1.2"
   },
   "joist": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "10d8ea050753ab782b79b205daf4cfc71a6eb56c",
     "branch": "main"
   },
   "kite": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "b7686ed3ecbae95ae93bdbe16b8eec7141e2a013",
     "branch": "main"
   },
   "perennial-alias": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "107a46d224bc1afe15754916f3297c05e09d2eb3",
     "branch": "main"
   },
   "phet-core": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "32a5205cb8820e4fb8cee3507d65475cab4345f4",
     "branch": "main"
   },
   "phet-io": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "5e438dabecaabbe545e9b9ed423bf3d2eabdff57",
     "branch": "main"
   },
   "phet-io-sim-specific": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "a6ec2fed894ddeb2035cc8ec7d02593deb99b685",
     "branch": "main"
   },
   "phet-io-wrappers": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "696f404867622676b34f01aaf00be625d85dceb0",
     "branch": "main"
   },
   "phetcommon": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "92defd570c6cbfe33eb8fb29946d7a12086e8102",
     "branch": "main"
   },
   "phetmarks": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "713daf9612fc6eb3e4108435305222836927cf43",
     "branch": "main"
   },
   "query-string-machine": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "26dc5594df5bcdcb115ea78143e5d969869f1398",
     "branch": "main"
   },
   "scenery": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "a9c8f5a04edc0af01833122d3224c0e662f29732",
     "branch": "main"
   },
   "scenery-phet": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "65e2a89b63a6eda34b4614ba34718a066ec2dc52",
     "branch": "main"
   },
   "sherpa": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "b1925a3d429456999b2abd3bae51df1269d10bcf",
     "branch": "main"
   },
   "shred": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "f1a7da74ae61ec0397dbeb0672fdb5ecfafa43a1",
     "branch": "main"
   },
   "studio": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "7f882558cee5fb5d24453da125887aed804b6eb8",
     "branch": "main"
   },
   "sun": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "f642d78122acbd42795a45dfa07231c50f20778e",
     "branch": "main"
   },
   "tambo": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "619bc99a152b42220384f612af42ed8d4d8198ce",
     "branch": "main"
   },
   "tandem": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "1941b7519a9b24fc4dbda60e63dc993a50cf2f63",
     "branch": "main"
   },
   "twixt": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "8a83e0017b1388c7fd36419ed78200693d3bc944",
     "branch": "main"
   },
   "utterance-queue": {
-    "sha": "9f09238135fedee939cac520506b67d738f968f3",
+    "sha": "a1043edf202165df9cf93da6a24ad56b9ca578d6",
     "branch": "main"
   }
 }
