@@ -105,7 +105,13 @@ class MixturesScreenView extends ScreenView {
     // buckets
     const addBucketView = ( addedBucket: MonoIsotopeBucket ) => {
       const bucketHole = new BucketHole( addedBucket, this.modelViewTransform );
-      const bucketFront = new BucketFront( addedBucket, this.modelViewTransform );
+      const bucketFront = new BucketFront( addedBucket, this.modelViewTransform, {
+
+        // Adjust the gradient luminance a bit to improve contrast with the label, see
+        // https://github.com/phetsims/isotopes-and-atomic-mass/issues/137.
+        gradientLuminanceLeft: -0.3,
+        gradientLuminanceRight: -0.9
+      } );
       const dragListener = new BucketDragListener( addedBucket, bucketFront, this.modelViewTransform );
       bucketFront.addInputListener( dragListener );
 
