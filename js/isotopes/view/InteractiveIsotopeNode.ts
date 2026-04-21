@@ -62,7 +62,13 @@ class InteractiveIsotopeNode extends Node {
 
     // Add the components that comprise the bucket that holds the neutrons.
     const neutronBucketHole = new BucketHole( isotopesModel.neutronBucket, modelViewTransform );
-    const neutronBucketFront = new BucketFront( isotopesModel.neutronBucket, modelViewTransform );
+    const neutronBucketFront = new BucketFront( isotopesModel.neutronBucket, modelViewTransform, {
+
+      // Adjust the gradient luminance a bit to improve contrast with the label, see
+      // https://github.com/phetsims/isotopes-and-atomic-mass/issues/137.
+      gradientLuminanceLeft: 0,
+      gradientLuminanceRight: -1
+    } );
     neutronBucketFront.addInputListener( new BucketDragListener(
       isotopesModel.neutronBucket,
       neutronBucketFront,
