@@ -83,7 +83,7 @@ class TwoItemPieChartNode extends Node {
 
     // Create the number display for the abundance of the current isotope.
     const abundanceDisplay = new Panel(
-      new Text( abundanceStringProperty, { font: new PhetFont( 14 ), maxWidth: 100 } ),
+      new Text( abundanceStringProperty, { font: new PhetFont( 14 ), maxWidth: 80 } ),
       {
         align: 'center',
         lineWidth: 1.5,
