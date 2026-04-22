@@ -51,8 +51,6 @@ class InteractiveIsotopeNode extends Node {
 
     const isotopeAtomNode = new IsotopeAtomNode( isotopesModel.particleAtom, bottomPoint, modelViewTransform );
     this.addChild( isotopeAtomNode );
-
-    // Add the label that will sit above the atom.
     const myIsotopeLabel = new Text( myIsotopeStringProperty, {
       font: new PhetFont( { size: 16, weight: 'bold' } ),
       fill: 'black',
@@ -60,12 +58,7 @@ class InteractiveIsotopeNode extends Node {
       maxWidth: 100
     } );
     this.addChild( myIsotopeLabel );
-
-    const updateMyIsotopeLabelPosition = (): void => {
-      myIsotopeLabel.centerX = isotopeAtomNode.centerX;
-      myIsotopeLabel.bottom = isotopeAtomNode.top - 5;
-    };
-    myIsotopeLabel.boundsProperty.link( updateMyIsotopeLabelPosition );
+    myIsotopeLabel.bottom = isotopeAtomNode.top - 5;
 
     // Add the components that comprise the bucket that holds the neutrons.
     const neutronBucketHole = new BucketHole( isotopesModel.neutronBucket, modelViewTransform );
@@ -330,7 +323,7 @@ class InteractiveIsotopeNode extends Node {
         if ( protonCount > 0 ) {
           updateElementNamePosition( protonCount );
           updateStabilityIndicator( protonCount, neutronCount );
-          updateMyIsotopeLabelPosition();
+          myIsotopeLabel.bottom = isotopeAtomNode.top - 5;
         }
       }
     );
